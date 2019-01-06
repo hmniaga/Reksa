@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "SSISReksa", "SSISReksa\SSISReksa.dtproj", "{0BA5E942-1E54-45D5-8DBC-1524D2AB278B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0BA5E942-1E54-45D5-8DBC-1524D2AB278B}.Development|Default.ActiveCfg = Development
+		{0BA5E942-1E54-45D5-8DBC-1524D2AB278B}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38F834A6-3556-437E-A195-27EC62E63C7D}
+	EndGlobalSection
+EndGlobal

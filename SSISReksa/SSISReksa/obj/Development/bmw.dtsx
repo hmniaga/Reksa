@@ -1,0 +1,2464 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="1/6/2019 9:52:16 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-JNB8KMO"
+  DTS:CreatorName="DESKTOP-JNB8KMO\Zenbook"
+  DTS:Description="SSIS Package Description"
+  DTS:DTSID="{5D633B27-4709-4F3D-9C59-D74C8B2AE29D}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.0900.40"
+  DTS:LocaleID="1033"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="bmw"
+  DTS:VersionGUID="{8C92F393-A917-49F8-80C4-06FB6C854685}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{51B377CB-A047-409F-B6DF-A1D05C72E791}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=reksa.database.windows.net;User ID=reksa_admin;Initial Catalog=SQL_REKSA;Provider=SQLNCLI11;Auto Translate=false;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAG0n+Dk6vGEa74+H6DeW23QAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAA5QiJ0ll2IKQcnpLGkbFIJScuXfblEtXYTjLpOLnfcogAAAAAOgAAAAAIAACAAAABFIA3L29u+GYX7goL8f2zaINIbwyDAIB2fJmAyT9BteCAAAABtZQXymhMRt/yQtGWtjeMyd+3L+Qs2x8nEtQjyobvMZ0AAAAAxA0ua0K+/2LnmAjET2rqmoHOF+a5A7MkUBBG6InyNpzW4aBuDYU9VS7R6JBawVG8PQFUBzder8QRwtEqR4ggJ</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{029AEFE2-BEA5-4351-9B6A-A9D2600B014A}"
+      DTS:ObjectName="SourceConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=.;Initial Catalog=SQL_REKSA2;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Data Flow Task 1"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DTSID="{D58DDD45-B1F4-4C28-A53F-8F8DD06800C9}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Data Flow Task 1"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - BMWJobInterval_TM"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobInterval_TM]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalId]"
+                      cachedDataType="i4"
+                      cachedName="IntervalId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalId]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalId]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="250"
+                      cachedName="IntervalName"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalName]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalName]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalDurationType]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="IntervalDurationType"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDurationType]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDurationType]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalType]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="IntervalType"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalType]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalType]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalDailyFreqType]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="IntervalDailyFreqType"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyFreqType]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreqType]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalDailyFreq]"
+                      cachedDataType="i4"
+                      cachedName="IntervalDailyFreq"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyFreq]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreq]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalWeeklyDay]"
+                      cachedDataType="i4"
+                      cachedName="IntervalWeeklyDay"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalWeeklyDay]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalWeeklyDay]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalMonthlyDay]"
+                      cachedDataType="i4"
+                      cachedName="IntervalMonthlyDay"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalMonthlyDay]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalMonthlyDay]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalDailyStartTime]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="IntervalDailyStartTime"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyStartTime]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyStartTime]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalDailyEndTime]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="IntervalDailyEndTime"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyEndTime]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyEndTime]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalStartDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="IntervalStartDate"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalStartDate]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalStartDate]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalNeverExpire]"
+                      cachedDataType="bool"
+                      cachedName="IntervalNeverExpire"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalNeverExpire]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalNeverExpire]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].Columns[IntervalEndDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="IntervalEndDate"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalEndDate]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalEndDate]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalId]"
+                      dataType="i4"
+                      name="IntervalId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      name="IntervalName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDurationType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalDurationType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyFreqType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalDailyFreqType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyFreq]"
+                      dataType="i4"
+                      name="IntervalDailyFreq" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalWeeklyDay]"
+                      dataType="i4"
+                      name="IntervalWeeklyDay" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalMonthlyDay]"
+                      dataType="i4"
+                      name="IntervalMonthlyDay" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyStartTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="IntervalDailyStartTime" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalDailyEndTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="IntervalDailyEndTime" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalStartDate]"
+                      dataType="dbTimeStamp"
+                      name="IntervalStartDate" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalNeverExpire]"
+                      dataType="bool"
+                      name="IntervalNeverExpire" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input].ExternalColumns[IntervalEndDate]"
+                      dataType="dbTimeStamp"
+                      name="IntervalEndDate" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination 1 - BMWJobListDetail_TR"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobListDetail_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[PluginId]"
+                      cachedDataType="i4"
+                      cachedName="PluginId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[PluginId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[PluginId]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[JobID]"
+                      cachedDataType="i8"
+                      cachedName="JobID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[JobID]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[JobID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[ConnId]"
+                      cachedDataType="i4"
+                      cachedName="ConnId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[ConnId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[ConnId]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[SourceTable]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="SourceTable"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[SourceTable]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[SourceTable]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[DestinationTable]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="DestinationTable"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[DestinationTable]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[DestinationTable]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[FileName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="FileName"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileName]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileName]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[FileDTF]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="FileDTF"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileDTF]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileDTF]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[FileTXT]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="FileTXT"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileTXT]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileTXT]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[FileRAR]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="FileRAR"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileRAR]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileRAR]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].Columns[TemplateId]"
+                      cachedDataType="i4"
+                      cachedName="TemplateId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[TemplateId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[TemplateId]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[PluginId]"
+                      dataType="i4"
+                      name="PluginId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[JobID]"
+                      dataType="i8"
+                      name="JobID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[ConnId]"
+                      dataType="i4"
+                      name="ConnId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[SourceTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="SourceTable" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[DestinationTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="DestinationTable" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileDTF]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileDTF" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileTXT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileTXT" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[FileRAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileRAR" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input].ExternalColumns[TemplateId]"
+                      dataType="i4"
+                      name="TemplateId" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination 2 - BMWJobList_TM"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobList_TM]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].Columns[JobID]"
+                      cachedDataType="i4"
+                      cachedName="JobID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobID]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].Columns[JobGroup]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="JobGroup"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobGroup]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobGroup]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].Columns[JobName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="JobName"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobName]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobName]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].Columns[JobDescription]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="255"
+                      cachedName="JobDescription"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobDescription]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobDescription]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].Columns[IntervalId]"
+                      cachedDataType="i4"
+                      cachedName="IntervalId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[IntervalId]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[IntervalId]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobID]"
+                      dataType="i4"
+                      name="JobID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobGroup]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="JobGroup" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="JobName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[JobDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="255"
+                      name="JobDescription" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input].ExternalColumns[IntervalId]"
+                      dataType="i4"
+                      name="IntervalId" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination 3 - BMWJobParamTable_TR"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobParamTable_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamId]"
+                      cachedDataType="i4"
+                      cachedName="ParamId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamId]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamId]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamType1]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="ParamType1"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType1]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType1]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamType2]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="ParamType2"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType2]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType2]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamType3]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="ParamType3"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType3]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType3]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamType4]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="ParamType4"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType4]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType4]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamType5]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="ParamType5"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType5]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType5]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamValue]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="ParamValue"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamValue]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamValue]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].Columns[ParamDescription]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="ParamDescription"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamDescription]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamDescription]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamId]"
+                      dataType="i4"
+                      name="ParamId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType1" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType2" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType3" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType4]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType4" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamType5]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType5" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamValue]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="ParamValue" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input].ExternalColumns[ParamDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="ParamDescription" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination 4 - BMWReksaJobProcessParam_TR"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWReksaJobProcessParam_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">true</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].Columns[ProcessParamId]"
+                      cachedDataType="i8"
+                      cachedName="ProcessParamId"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[ProcessParamId]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[ProcessParamId]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].Columns[JobGUID]"
+                      cachedDataType="guid"
+                      cachedName="JobGUID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[JobGUID]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[JobGUID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].Columns[PushNMonthBit]"
+                      cachedDataType="bool"
+                      cachedName="PushNMonthBit"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[PushNMonthBit]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[PushNMonthBit]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].Columns[AccountNumber]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="19"
+                      cachedName="AccountNumber"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[AccountNumber]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[AccountNumber]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].Columns[TranCode]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="TranCode"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[TranCode]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[TranCode]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[ProcessParamId]"
+                      dataType="i8"
+                      name="ProcessParamId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[JobGUID]"
+                      dataType="guid"
+                      name="JobGUID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[PushNMonthBit]"
+                      dataType="bool"
+                      name="PushNMonthBit" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[AccountNumber]"
+                      codePage="1252"
+                      dataType="str"
+                      length="19"
+                      name="AccountNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input].ExternalColumns[TranCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="TranCode" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source - BMWJobInterval_TM"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobInterval_TM]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalId]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalId]"
+                      name="IntervalId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalName]"
+                      length="250"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalName]"
+                      name="IntervalName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDurationType]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDurationType]"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDurationType]"
+                      name="IntervalDurationType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalType]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalType]"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalType]"
+                      name="IntervalType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreqType]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyFreqType]"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreqType]"
+                      name="IntervalDailyFreqType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreq]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyFreq]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyFreq]"
+                      name="IntervalDailyFreq"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalWeeklyDay]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalWeeklyDay]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalWeeklyDay]"
+                      name="IntervalWeeklyDay"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalMonthlyDay]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalMonthlyDay]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalMonthlyDay]"
+                      name="IntervalMonthlyDay"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyStartTime]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyStartTime]"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyStartTime]"
+                      name="IntervalDailyStartTime"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyEndTime]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyEndTime]"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalDailyEndTime]"
+                      name="IntervalDailyEndTime"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalStartDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalStartDate]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalStartDate]"
+                      name="IntervalStartDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalNeverExpire]"
+                      dataType="bool"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalNeverExpire]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalNeverExpire]"
+                      name="IntervalNeverExpire"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalEndDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalEndDate]"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].Columns[IntervalEndDate]"
+                      name="IntervalEndDate"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalId]"
+                      dataType="i4"
+                      name="IntervalId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      name="IntervalName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDurationType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalDurationType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyFreqType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="IntervalDailyFreqType" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyFreq]"
+                      dataType="i4"
+                      name="IntervalDailyFreq" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalWeeklyDay]"
+                      dataType="i4"
+                      name="IntervalWeeklyDay" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalMonthlyDay]"
+                      dataType="i4"
+                      name="IntervalMonthlyDay" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyStartTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="IntervalDailyStartTime" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalDailyEndTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="IntervalDailyEndTime" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalStartDate]"
+                      dataType="dbTimeStamp"
+                      name="IntervalStartDate" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalNeverExpire]"
+                      dataType="bool"
+                      name="IntervalNeverExpire" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalEndDate]"
+                      dataType="dbTimeStamp"
+                      name="IntervalEndDate" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalId]"
+                      name="IntervalId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="250"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalName]"
+                      name="IntervalName" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDurationType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDurationType]"
+                      name="IntervalDurationType" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalType]"
+                      name="IntervalType" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyFreqType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyFreqType]"
+                      name="IntervalDailyFreqType" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyFreq]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyFreq]"
+                      name="IntervalDailyFreq" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalWeeklyDay]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalWeeklyDay]"
+                      name="IntervalWeeklyDay" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalMonthlyDay]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalMonthlyDay]"
+                      name="IntervalMonthlyDay" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyStartTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyStartTime]"
+                      name="IntervalDailyStartTime" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyEndTime]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalDailyEndTime]"
+                      name="IntervalDailyEndTime" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalStartDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalStartDate]"
+                      name="IntervalStartDate" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalNeverExpire]"
+                      dataType="bool"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalNeverExpire]"
+                      name="IntervalNeverExpire" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalEndDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[IntervalEndDate]"
+                      name="IntervalEndDate" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source 1 - BMWJobListDetail_TR"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobListDetail_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[PluginId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[PluginId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[PluginId]"
+                      name="PluginId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[JobID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[JobID]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[JobID]"
+                      name="JobID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[ConnId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[ConnId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[ConnId]"
+                      name="ConnId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[SourceTable]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[SourceTable]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[SourceTable]"
+                      name="SourceTable"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[DestinationTable]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[DestinationTable]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[DestinationTable]"
+                      name="DestinationTable"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileName]"
+                      name="FileName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileDTF]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileDTF]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileDTF]"
+                      name="FileDTF"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileTXT]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileTXT]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileTXT]"
+                      name="FileTXT"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileRAR]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileRAR]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[FileRAR]"
+                      name="FileRAR"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[TemplateId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[TemplateId]"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].Columns[TemplateId]"
+                      name="TemplateId"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[PluginId]"
+                      dataType="i4"
+                      name="PluginId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[JobID]"
+                      dataType="i8"
+                      name="JobID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[ConnId]"
+                      dataType="i4"
+                      name="ConnId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[SourceTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="SourceTable" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[DestinationTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="DestinationTable" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileDTF]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileDTF" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileTXT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileTXT" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[FileRAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="FileRAR" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output].ExternalColumns[TemplateId]"
+                      dataType="i4"
+                      name="TemplateId" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[PluginId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[PluginId]"
+                      name="PluginId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[JobID]"
+                      dataType="i8"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[JobID]"
+                      name="JobID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ConnId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ConnId]"
+                      name="ConnId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[SourceTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[SourceTable]"
+                      name="SourceTable" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[DestinationTable]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[DestinationTable]"
+                      name="DestinationTable" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      name="FileName" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileDTF]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileDTF]"
+                      name="FileDTF" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileTXT]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileTXT]"
+                      name="FileTXT" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileRAR]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[FileRAR]"
+                      name="FileRAR" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[TemplateId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[TemplateId]"
+                      name="TemplateId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source 2 - BMWJobList_TM"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobList_TM]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobID]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobID]"
+                      name="JobID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobGroup]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobGroup]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobGroup]"
+                      name="JobGroup"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobName]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobName]"
+                      name="JobName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobDescription]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[JobDescription]"
+                      name="JobDescription"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[IntervalId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalId]"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].Columns[IntervalId]"
+                      name="IntervalId"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobID]"
+                      dataType="i4"
+                      name="JobID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobGroup]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="JobGroup" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="JobName" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[JobDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="255"
+                      name="JobDescription" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output].ExternalColumns[IntervalId]"
+                      dataType="i4"
+                      name="IntervalId" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobID]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobID]"
+                      name="JobID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobGroup]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobGroup]"
+                      name="JobGroup" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobName]"
+                      name="JobName" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[JobDescription]"
+                      name="JobDescription" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[IntervalId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[IntervalId]"
+                      name="IntervalId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source 3 - BMWJobParamTable_TR"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWJobParamTable_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamId]"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamId]"
+                      name="ParamId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType1]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType1]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType1]"
+                      name="ParamType1"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType2]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType2]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType2]"
+                      name="ParamType2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType3]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType3]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType3]"
+                      name="ParamType3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType4]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType4]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType4]"
+                      name="ParamType4"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType5]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType5]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamType5]"
+                      name="ParamType5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamValue]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamValue]"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamValue]"
+                      name="ParamValue"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamDescription]"
+                      length="100"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].Columns[ParamDescription]"
+                      name="ParamDescription"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamId]"
+                      dataType="i4"
+                      name="ParamId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType1" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType2" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType3" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType4]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType4" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamType5]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="ParamType5" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamValue]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="ParamValue" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output].ExternalColumns[ParamDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="ParamDescription" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamId]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamId]"
+                      name="ParamId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType1]"
+                      name="ParamType1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType2]"
+                      name="ParamType2" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType3]"
+                      name="ParamType3" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType4]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType4]"
+                      name="ParamType4" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType5]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamType5]"
+                      name="ParamType5" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamValue]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamValue]"
+                      name="ParamValue" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamDescription]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ParamDescription]"
+                      name="ParamDescription" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Source 4 - BMWReksaJobProcessParam_TR"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[BMWReksaJobProcessParam_TR]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[ProcessParamId]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[ProcessParamId]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[ProcessParamId]"
+                      name="ProcessParamId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[JobGUID]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[JobGUID]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[JobGUID]"
+                      name="JobGUID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[PushNMonthBit]"
+                      dataType="bool"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[PushNMonthBit]"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[PushNMonthBit]"
+                      name="PushNMonthBit"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[AccountNumber]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[AccountNumber]"
+                      length="19"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[AccountNumber]"
+                      name="AccountNumber"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[TranCode]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[TranCode]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].Columns[TranCode]"
+                      name="TranCode"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[ProcessParamId]"
+                      dataType="i8"
+                      name="ProcessParamId" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[JobGUID]"
+                      dataType="guid"
+                      name="JobGUID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[PushNMonthBit]"
+                      dataType="bool"
+                      name="PushNMonthBit" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[AccountNumber]"
+                      codePage="1252"
+                      dataType="str"
+                      length="19"
+                      name="AccountNumber" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output].ExternalColumns[TranCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="TranCode" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ProcessParamId]"
+                      dataType="i8"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ProcessParamId]"
+                      name="ProcessParamId" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[JobGUID]"
+                      dataType="guid"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[JobGUID]"
+                      name="JobGUID" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[PushNMonthBit]"
+                      dataType="bool"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[PushNMonthBit]"
+                      name="PushNMonthBit" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[AccountNumber]"
+                      codePage="1252"
+                      dataType="str"
+                      length="19"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[AccountNumber]"
+                      name="AccountNumber" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[TranCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[TranCode]"
+                      name="TranCode" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output]"
+              endId="Package\Data Flow Task 1\Destination - BMWJobInterval_TM.Inputs[Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source - BMWJobInterval_TM.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output1]"
+              endId="Package\Data Flow Task 1\Destination 1 - BMWJobListDetail_TR.Inputs[Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source 1 - BMWJobListDetail_TR.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output2]"
+              endId="Package\Data Flow Task 1\Destination 2 - BMWJobList_TM.Inputs[Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source 2 - BMWJobList_TM.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output3]"
+              endId="Package\Data Flow Task 1\Destination 3 - BMWJobParamTable_TR.Inputs[Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source 3 - BMWJobParamTable_TR.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Data Flow Task 1.Paths[OLE DB Source Output4]"
+              endId="Package\Data Flow Task 1\Destination 4 - BMWReksaJobProcessParam_TR.Inputs[Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Data Flow Task 1\Source 4 - BMWReksaJobProcessParam_TR.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Preparation SQL Task 1"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:DTSID="{3A77AAC6-CBB4-4D3B-954F-5DFF47282F21}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Preparation SQL Task 1"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{51B377CB-A047-409F-B6DF-A1D05C72E791}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE [dbo].[BMWJobInterval_TM]&#xA;GO&#xA;TRUNCATE TABLE [dbo].[BMWJobListDetail_TR]&#xA;GO&#xA;TRUNCATE TABLE [dbo].[BMWJobList_TM]&#xA;GO&#xA;TRUNCATE TABLE [dbo].[BMWJobParamTable_TR]&#xA;GO&#xA;TRUNCATE TABLE [dbo].[BMWReksaJobProcessParam_TR]&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{F82CB43E-5129-4638-AE81-90B494DD68ED\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{F82CB43E-5129-4638-AE81-90B494DD68ED}"
+      DTS:From="Package\Preparation SQL Task 1"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{F82CB43E-5129-4638-AE81-90B494DD68ED}"
+      DTS:To="Package\Data Flow Task 1" />
+  </DTS:PrecedenceConstraints>
+</DTS:Executable>
