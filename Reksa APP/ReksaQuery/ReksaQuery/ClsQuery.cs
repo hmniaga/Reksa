@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace ReksaQuery
 {
     public class ClsQuery
     {
 
-        string m_strServer = "", m_strUserName = "", m_strPassword = "", m_strDatabase = "", m_strProvider = "SQLOLEDB", _strCon = "",
+        string m_strServer = "", m_strUserName = "", m_strPassword = "", m_strDatabase = "", m_strProvider = "", _strCon = "",
             _strGuid = System.Guid.NewGuid().ToString(),
             strShownUser = "[User]";
 
@@ -198,8 +198,10 @@ namespace ReksaQuery
         {
             if (strUser != "" && strPass != "")
             {
-                return "Provider=" + strProvider + ";Initial Catalog=" + strDatabase + ";" +
-                    "User Id=" + strUser + ";Password=" + strPass + ";Data Source = " + strServer;
+                //return "Provider=" + strProvider + ";Initial Catalog=" + strDatabase + ";" +
+                //    "User Id=" + strUser + ";Password=" + strPass + ";Data Source = " + strServer;
+                return "Server = " + strServer + ";Initial Catalog=" + strDatabase + ";" + "Persist Security Info=False" +
+                    ";User ID=" + strUser + ";Password=" + strPass + ";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             }
             else
             {
@@ -210,13 +212,13 @@ namespace ReksaQuery
         #region "Start Connection"
         private bool TryLogin()
         {
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(_strCon);
+            SqlConnection con = new SqlConnection(_strCon);
             try
             {
                 con.Open();
                 blnAlreadyLogin = true;
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, _ErrorExtHandled, _ReplaceUser,
                     m_strUserName, strShownUser);
@@ -296,24 +298,24 @@ namespace ReksaQuery
         }
 
         private static string GetParamValue(string strProc,
-            System.Data.OleDb.OleDbParameter[] dbParam)
+            List<SqlParameter> dbParam)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("exec " + strProc + " ");
             string strStart = "", strEnd = "", strValue;
             if (dbParam != null)
             {
-                for (int i = 0; i < dbParam.Length; i++)
+                for (int i = 0; i < dbParam.Count; i++)
                 {
                     strValue = "";
-                    if ((dbParam[i].OleDbType == System.Data.OleDb.OleDbType.VarChar)
-                        || (dbParam[i].OleDbType == System.Data.OleDb.OleDbType.Char)
-                        || (dbParam[i].OleDbType == System.Data.OleDb.OleDbType.VarWChar))
+                    if ((dbParam[i].SqlDbType == System.Data.SqlDbType.VarChar)
+                        || (dbParam[i].SqlDbType == System.Data.SqlDbType.Char)
+                        || (dbParam[i].SqlDbType == System.Data.SqlDbType.NVarChar))
                     {
                         if (dbParam[i].Value != null)
                         {
                             strStart = "'";
-                            if (i < dbParam.Length - 1)
+                            if (i < dbParam.Count - 1)
                                 strEnd = "' , ";
                             else
                                 strEnd = "'";
@@ -323,7 +325,7 @@ namespace ReksaQuery
                         else
                         {
                             strStart = "";
-                            if (i < dbParam.Length - 1)
+                            if (i < dbParam.Count - 1)
                                 strEnd = " , ";
                             else
                                 strEnd = "";
@@ -336,8 +338,8 @@ namespace ReksaQuery
                     {
                         if (dbParam[i].Value != null)
                         {
-                            if (dbParam[i].OleDbType == System.Data.OleDb.OleDbType.VarBinary ||
-                                dbParam[i].OleDbType == System.Data.OleDb.OleDbType.Binary)
+                            if (dbParam[i].SqlDbType == System.Data.SqlDbType.VarBinary ||
+                                dbParam[i].SqlDbType == System.Data.SqlDbType.Binary)
                                 strValue = HexaToString((byte[])dbParam[i].Value);
                             else
                                 strValue = dbParam[i].Value.ToString();
@@ -345,7 +347,7 @@ namespace ReksaQuery
                         else
                             strValue = "NULL";
 
-                        if (i < dbParam.Length - 1)
+                        if (i < dbParam.Count - 1)
                             strEnd = ", ";
                         else
                             strEnd = "";
@@ -357,7 +359,7 @@ namespace ReksaQuery
         }
 
         private static byte[] ConvertToByte(string strProc,
-            System.Data.OleDb.OleDbParameter[] dbParam)
+            List<SqlParameter> dbParam)
         {
             return System.Text.Encoding.Default.GetBytes(GetParamValue(strProc, dbParam));
         }
@@ -365,8 +367,7 @@ namespace ReksaQuery
         private static bool ExecDebugCommand(string strDBName, string strParam, out int DebugNo,
             string Guid)
         {
-            DebugNo = -1;
-            System.Data.OleDb.OleDbParameter[] dbPrm = new System.Data.OleDb.OleDbParameter[3];
+            DebugNo = -1;            
             bool blnConFound = false;
             string ConDefDebug = "";
             if (ConDebug.ContainsKey(Guid))
@@ -380,8 +381,8 @@ namespace ReksaQuery
                 return true;
             }
 
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(ConDefDebug);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(ConDefDebug);
+            SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = 30;
             cmd.Connection = con;
@@ -392,19 +393,12 @@ namespace ReksaQuery
                 if (con.State == System.Data.ConnectionState.Closed)
                     con.Open();
 
-                dbPrm[0] = new System.Data.OleDb.OleDbParameter("@bParam",
-                    System.Data.OleDb.OleDbType.VarChar, strParam.Length);
-                dbPrm[0].Direction = System.Data.ParameterDirection.Input;
-                dbPrm[0].Value = strParam;
-
-                dbPrm[1] = new System.Data.OleDb.OleDbParameter("@cDb",
-                    System.Data.OleDb.OleDbType.VarChar, 150);
-                dbPrm[1].Direction = System.Data.ParameterDirection.Input;
-                dbPrm[1].Value = strDBName;
-
-                dbPrm[2] = new System.Data.OleDb.OleDbParameter("@bDebugNo",
-                    System.Data.OleDb.OleDbType.Integer);
-                dbPrm[2].Direction = System.Data.ParameterDirection.Output;
+                List<SqlParameter> dbPrm = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@bParam", SqlDbType = System.Data.SqlDbType.NVarChar, Value = strParam, Direction = System.Data.ParameterDirection.Input},
+                new SqlParameter() { ParameterName = "@cDb", SqlDbType = System.Data.SqlDbType.NVarChar, Value = strDBName, Direction = System.Data.ParameterDirection.Input },
+                new SqlParameter() { ParameterName = "@bDebugNo", SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output }
+                };
 
                 cmd.Parameters.Add(dbPrm[0]);
                 cmd.Parameters.Add(dbPrm[1]);
@@ -435,9 +429,8 @@ namespace ReksaQuery
         {
             DebugNo = -1;
 
-            System.Data.OleDb.OleDbParameter[] dbPrm = new System.Data.OleDb.OleDbParameter[3];
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = 30;
             cmd.Connection = con;
@@ -448,20 +441,13 @@ namespace ReksaQuery
                 if (con.State == System.Data.ConnectionState.Closed)
                     con.Open();
 
-                dbPrm[0] = new System.Data.OleDb.OleDbParameter("@bParam",
-                    System.Data.OleDb.OleDbType.VarBinary, 8000);
-                dbPrm[0].Direction = System.Data.ParameterDirection.Input;
-                dbPrm[0].Value = bytParam;
-
-                dbPrm[1] = new System.Data.OleDb.OleDbParameter("@cDb",
-                    System.Data.OleDb.OleDbType.VarChar, 150);
-                dbPrm[1].Direction = System.Data.ParameterDirection.Input;
-                dbPrm[1].Value = con.Database;
-
-                dbPrm[2] = new System.Data.OleDb.OleDbParameter("@bDebugNo",
-                    System.Data.OleDb.OleDbType.Integer);
-                dbPrm[2].Direction = System.Data.ParameterDirection.Output;
-
+                List<SqlParameter> dbPrm = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@bParam", SqlDbType = System.Data.SqlDbType.VarBinary, Value = bytParam, Direction = System.Data.ParameterDirection.Input},
+                new SqlParameter() { ParameterName = "@cDb", SqlDbType = System.Data.SqlDbType.NVarChar, Value = con.Database, Direction = System.Data.ParameterDirection.Input },
+                new SqlParameter() { ParameterName = "@bDebugNo", SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output }
+                };
+                
                 cmd.Parameters.Add(dbPrm[0]);
                 cmd.Parameters.Add(dbPrm[1]);
                 cmd.Parameters.Add(dbPrm[2]);
@@ -494,7 +480,7 @@ namespace ReksaQuery
             return true;
         }
 
-        private static void SettingError(System.Data.OleDb.OleDbException oleErr,
+        private static void SettingError(SqlException oleErr,
             bool ExtError, bool ReplaceError,
             string strUser, string strReplaced)
         {
@@ -525,7 +511,7 @@ namespace ReksaQuery
                 m_strUserName, strShownUser, _ShowDebug);
         }
 
-        public bool ExecProc(string strProc, ref System.Data.OleDb.OleDbParameter[] dbParam)
+        public bool ExecProc(string strProc, ref List<SqlParameter> dbParam)
         {
             if (!CheckTanggal(StartDate))
                 return false;
@@ -542,8 +528,8 @@ namespace ReksaQuery
         {
             bool iRet = true;
             int DebugNo = 0;
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             dsResult = new System.Data.DataSet();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = intTimeout;
@@ -557,11 +543,11 @@ namespace ReksaQuery
 
                 if (iRet)
                 {
-                    System.Data.OleDb.OleDbDataAdapter sqlAdp = new System.Data.OleDb.OleDbDataAdapter(cmd);
+                    SqlDataAdapter sqlAdp = new SqlDataAdapter(cmd);
                     sqlAdp.Fill(dsResult);
                 }
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
                 dsResult = null;
@@ -610,7 +596,7 @@ namespace ReksaQuery
         }
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
-            bool ExtError, ref System.Data.OleDb.OleDbParameter[] dbParam,
+            bool ExtError, ref List<SqlParameter> dbParam,
             out System.Data.DataSet dsResult,
             bool ReplaceError, string strUser, string strUserReplace, bool UseDebug)
         {
@@ -618,8 +604,8 @@ namespace ReksaQuery
 
             int DebugNo = 0;
 
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             dsResult = new System.Data.DataSet();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = intTimeout;
@@ -628,7 +614,7 @@ namespace ReksaQuery
             string Param = "";
             if (dbParam != null)
             {
-                for (int i = 0; i < dbParam.Length; i++)
+                for (int i = 0; i < dbParam.Count; i++)
                     cmd.Parameters.Add(dbParam[i]);
             }
             try
@@ -641,11 +627,11 @@ namespace ReksaQuery
 
                 if (iRet)
                 {
-                    System.Data.OleDb.OleDbDataAdapter sqlAdp = new System.Data.OleDb.OleDbDataAdapter(cmd);
+                    SqlDataAdapter sqlAdp = new SqlDataAdapter(cmd);
                     sqlAdp.Fill(dsResult);
                 }
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
                 dsResult = null;
@@ -694,15 +680,9 @@ namespace ReksaQuery
             return iRet;
         }
 
-        /// <summary>
-        /// Exec SQL procedure
-        /// </summary>
-        /// <param name="strProc">Nama stored proc yang akan di exec</param>
-        /// <param name="dbParam">array OleDBParameter utk pengisian parameter</param>
-        /// <param name="dsResult">output DataSet result dari exec stored proc</param>
-        /// <returns>True --> berhasil, False --> gagal</returns>
+      
         public bool ExecProc(string strProc,
-                ref System.Data.OleDb.OleDbParameter[] dbParam,
+                ref List<SqlParameter> dbParam,
                 out System.Data.DataSet dsResult)
         {
             dsResult = null;
@@ -715,34 +695,17 @@ namespace ReksaQuery
                 _ErrorExtHandled, ref dbParam, out dsResult, _ReplaceUser
                 , m_strUserName, strShownUser, _ShowDebug);
         }
-        /// <summary>
-        /// Exec SQL procedure
-        /// </summary>
-        /// <param name="strProc">Nama stored proc yang akan di exec</param>
-        /// <param name="dbParam">array OleDBParameter utk pengisian parameter</param>
-        /// <param name="drResult">output DataSet result dari exec stored proc</param>
-        /// <returns></returns>
-        public bool ExecProc(string strProc,
-                ref System.Data.OleDb.OleDbParameter[] dbParam,
-                out System.Data.OleDb.OleDbDataReader drResult)
-        {
-            _strCon = SetupConnection(m_strProvider, m_strServer, m_strDatabase,
-                m_strUserName, m_strPassword, m_UseSSL);
-            return fnExecProc(_strGuid, strProc, _strCon, m_intTimeout, _ErrorExtHandled,
-                ref dbParam, out drResult, _ReplaceUser, m_strUserName,
-                strShownUser, _ShowDebug);
-        }
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon,
             int intTimeout, bool ExtError,
-            ref System.Data.OleDb.OleDbParameter[] dbParam,
+            ref List<SqlParameter> dbParam,
             bool ReplaceError, string strUser, string strUserReplace, bool UseDebug)
         {
             bool iRet = true;
 
             int DebugNo = 0;
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = intTimeout;
             cmd.CommandText = strProc;
@@ -750,7 +713,7 @@ namespace ReksaQuery
             string Param = "";
             if (dbParam != null)
             {
-                for (int i = 0; i < dbParam.Length; i++)
+                for (int i = 0; i < dbParam.Count; i++)
                     cmd.Parameters.Add(dbParam[i]);
             }
             try
@@ -765,9 +728,9 @@ namespace ReksaQuery
                 {
                     if (cmd.Connection.State == System.Data.ConnectionState.Closed) cmd.Connection.Open();
                     cmd.ExecuteNonQuery();
-                }
+                    }
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
                 iRet = false;
@@ -815,14 +778,14 @@ namespace ReksaQuery
         }
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
-            bool ExtError, ref System.Data.OleDb.OleDbParameter[] dbParam,
-            out System.Data.OleDb.OleDbDataReader drResult,
+            bool ExtError, ref List<SqlParameter> dbParam,
+            out SqlDataReader drResult,
             bool ReplaceError, string strUser, string strUserReplace, bool UseDebug)
         {
             bool iRet = true;
             int DebugNo = 0;
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = intTimeout;
             cmd.CommandText = strProc;
@@ -831,7 +794,7 @@ namespace ReksaQuery
             string Param = "";
             if (dbParam != null)
             {
-                for (int i = 0; i < dbParam.Length; i++)
+                for (int i = 0; i < dbParam.Count; i++)
                     cmd.Parameters.Add(dbParam[i]);
             }
             try
@@ -848,7 +811,7 @@ namespace ReksaQuery
                     drResult = cmd.ExecuteReader();
                 }
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
                 drResult = null;
@@ -907,14 +870,14 @@ namespace ReksaQuery
         /// <param name="drResult">Data reader hasil exec proc</param>
         /// <returns></returns>
         public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
-            bool ExtError, out System.Data.OleDb.OleDbDataReader drResult,
+            bool ExtError, out SqlDataReader drResult,
             bool ReplaceError, string strUser, string strUserReplace, bool UseDebug)
         {
             bool iRet = true;
             int DebugNo = 0;
 
-            System.Data.OleDb.OleDbConnection con = new System.Data.OleDb.OleDbConnection(strCon);
-            System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand();
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.CommandTimeout = intTimeout;
             cmd.CommandText = strProc;
@@ -932,7 +895,7 @@ namespace ReksaQuery
                     drResult = cmd.ExecuteReader();
                 }
             }
-            catch (System.Data.OleDb.OleDbException oleEx)
+            catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
                 drResult = null;
