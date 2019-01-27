@@ -1,0 +1,52 @@
+﻿@model Reksa.Models.SearchComponentModel
+@Html.Kendo().TextBox().Name(Model.Name + "Text").HtmlAttributes(new { onkeyup = Model.Name + "_onKeyUp()" }).Value(Model.Value).Enable(Model.Enabled)
+@Html.Kendo().Button().HtmlAttributes(new { type = "button" }).Name(Model.Name + "Btn").Content("...").Events(ev => ev.Click(Model.Name + "_openDialog")).Enable(Model.Enabled)
+@Html.Kendo().TextBox().Name(Model.Name + "Text2").HtmlAttributes(new { @readonly = "readonly", type = (Model.DisplayText2 ? "text" : "hidden") }).Value(Model.Value2).Enable(Model.Enabled)
+@Html.Kendo().TextBox().Name(Model.Name + "Values").HtmlAttributes(new { type = "hidden" }).Enable(Model.Enabled)
+@Html.Kendo().TextBox().Name(Model.Name).HtmlAttributes(new { type = "hidden" }).Value(Model.Value).Enable(Model.Enabled)
+<div class="SearchWindow">
+    @(Html.Kendo().Window()
+               .Name(Model.Name + "Window")
+               .Title(Model.Title)
+               .Content("Loading ...")
+               .LoadContentFrom(Model.ContentAction, Model.ContentController, Model.ContentRouteValues)
+               .Iframe(true)
+               .Modal(true)
+               .Draggable()
+               .Visible(false)
+               .Width(Model.Width)
+               .Height(Model.Height)
+    )
+</div>
+<script type="text/javascript">
+    function @{@Model.Name}_openDialog() {
+        $("#@{@Model.Name}Window").data("kendoWindow").open().center();
+    }
+
+    function @{@Model.Name}_onKeyUp() {
+        $("#@{@Model.Name}").val("");
+        $("#@{@Model.Name}Text2").val("");
+        $("#@{@Model.Name}Values").val("");
+    }
+
+    window.@{@Model.Name}_cancelWindow = function () {
+        $("#@{@Model.Name}Window").data("kendoWindow").close();
+    };
+    window.@{@Model.Name}_okWindow = function () {
+        var selectedId = $("#@{@Model.Name}Window .k-content-frame").contents().find("#SelectedId").val();
+        var selectedText = $("#@{@Model.Name}Window .k-content-frame").contents().find("#SelectedText").val();
+        var selectedValues = $("#@{@Model.Name}Window .k-content-frame").contents().find("#SelectedValues").val(); // separated by ;
+        $("#@{@Model.Name}").val(selectedId);
+        $("#@{@Model.Name}Text").val(selectedId);
+        $("#@{@Model.Name}Text2").val(selectedText);
+        $("#@{@Model.Name}Values").val(selectedValues);
+
+        $("#@{@Model.Name}Window").data("kendoWindow").close();
+    };
+
+    $("#@{@Model.Name}Text").on("input", function (e) {
+        $("#@{@Model.Name}").val("");
+        $("#@{@Model.Name}Text2").val("");
+        $("#@{@Model.Name}Values").val("");
+    });
+</script>

@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Reksa</title>
+
+    <link rel="stylesheet" href="~/lib/assets/plugins/morris/morris.css">
+    <link href="~/lib/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/responsive.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/lib/kendo/style/kendo.common.min.css" />
+    <link rel="stylesheet" href="~/lib/kendo/style/kendo.default.min.css" />
+
+    <script src="~/lib/assets/js/modernizr.min.js"></script>
+    <script src="~/lib/kendo/js/jquery.min.js"></script>
+    <script src="~/lib/kendo/js/kendo.all.min.js"></script>
+    <script src="~/lib/kendo/js/kendo.aspnetmvc.min.js"></script>
+    @RenderSection("scripts", required: false)
+
+</head>
+
+<body class="fixed-left">
+    <!-- Begin page -->
+    <div id="wrapper">
+        <!-- Top Bar Start -->
+        <div class="topbar">
+            <!-- LOGO -->
+            <div class="topbar-left">
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Home")" class="logo"><i class="fa fa-home icon-c-logo"></i><span>Reksa<i class="ion-social-buffer"></i>Dana</span></a>
+                </div>
+            </div>
+
+            <!-- Button mobile view to collapse sidebar menu -->
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="">
+                        <div class="pull-left">
+                            <button class="button-menu-mobile open-left waves-effect waves-light">
+                                <i class="md md-menu"></i>
+                            </button>
+                            <span class="clearfix"></span>
+                        </div>
+                                               
+                        <ul class="nav navbar-nav navbar-right pull-right">
+                            <li class="dropdown top-menu-item-xs">
+                                <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="icon-bell"></i> <span class="badge badge-xs badge-danger">2</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg">
+                                    <li class="notifi-title"><span class="label label-default pull-right">New 2</span>Notification</li>
+                                    <li class="list-group slimscroll-noti notification-list">
+                                        
+                                        <!-- list item-->
+                                        <a href="javascript:void(0);" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left p-r-10">
+                                                    <em class="fa fa-bell-o noti-custom"></em>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">Updates</h5>
+                                                    <p class="m-0">
+                                                        <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- list item-->
+                                        <a href="javascript:void(0);" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left p-r-10">
+                                                    <em class="fa fa-user-plus noti-pink"></em>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">New user registered</h5>
+                                                    <p class="m-0">
+                                                        <small>You have 10 unread messages</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="list-group-item text-right">
+                                            <small class="font-600">See all notifications</small>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="hidden-xs">
+                                <a href="#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen"></i></a>
+                            </li>
+                            <li class="hidden-xs">
+                                <a href="#" class="right-bar-toggle waves-effect waves-light"><i class="icon-settings"></i></a>
+                            </li>
+                            <li class="dropdown top-menu-item-xs">
+                                <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-user"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0)"><i class="ti-user m-r-10 text-custom"></i> Profile</a></li>
+                                    <li><a href="javascript:void(0)"><i class="ti-settings m-r-10 text-custom"></i> Settings</a></li>
+                                    <li><a href="javascript:void(0)"><i class="ti-lock m-r-10 text-custom"></i> Lock screen</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="@Url.Action("Login", "Authentication")"><i class="ti-power-off m-r-10 text-danger"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <!-- Top Bar End -->
+
+        <div class="left side-menu">
+            <div class="sidebar-inner slimscrollleft">
+                <div id="sidebar-menu">
+                    <ul>
+                        <li class="text-muted menu-title">Reksa - Menu</li>
+
+                        <li class="has_sub">
+                            <a href="@Url.Action("Index", "Home")" class="waves-effect"><i class="fa fa-home"></i> <span> Home </span></a>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-cog"></i> <span> Setting </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("Index", "Parameter")">Parameter Global</a></li>
+                                <li><a href="@Url.Action("SubscriptionFee", "Parameter")">Parameter Subscription Fee</a></li>
+                                <li><a href="@Url.Action("RedemptionFee", "Parameter")">Parameter Redemption Fee</a></li>
+                                <li><a href="@Url.Action("MaintenanceFee", "Parameter")">Parameter Maintenance Fee</a></li>
+                                <li><a href="@Url.Action("UpFrontSellingFee", "Parameter")">Parameter Up Front & Selling Fee</a></li>
+                                <li><a href="@Url.Action("SwitchingFee", "Parameter")">Parameter Switching Fee</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-large"></i> <span> Master </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                @*<li><a href="@Url.Action("Client", "Master")">Client</a></li>*@
+                                <li><a href="@Url.Action("Customer", "Customer")">Nasabah</a></li>
+                                <li><a href="@Url.Action("InfoProduk", "Master")">Info Produk</a></li>
+                                <li><a href="@Url.Action("UnitNasabah", "Master")">Unit Nasabah Ditawarkan</a></li>
+                                <li><a href="@Url.Action("UnitDitawarkan", "Master")">Unit Ditawarkan</a></li>
+                                <li><a href="@Url.Action("Event", "Master")">Event</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-usd"></i> <span> Transaksi </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("Transaksi", "Transaksi")">Transaksi</a></li>
+                                <li><a href="@Url.Action("Tunggakan", "Transaksi")">Tunggakan</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-file"></i> <span> Generate Report </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("NFSUpload", "Report")">NFS Upload/Download File</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-briefcase"></i> <span> Transaksi TT </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("TTCompletion", "TransaksiTT")">Parameter TT Completion</a></li>
+                                <li><a href="@Url.Action("TTOutgoing", "TransaksiTT")">Outgoing TT</a></li>
+                                <li><a href="@Url.Action("OtorTTOutgoing", "TransaksiTT")">Otorisasi Outgoing TT</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bank"></i> <span> PO </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("CutMaintenanceFee", "PO")">Cut Maintenance Fee</a></li>
+                                <li><a href="@Url.Action("CutRedemptionFee", "PO")">Cut Redemption Fee</a></li>
+                                <li><a href="@Url.Action("DiscountRedempFee", "PO")">Discount Redemption Fee</a></li>
+                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Adjust Redemption Date</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+                @RenderBody()
+                <footer class="footer text-right">
+                    ©2019. All rights reserved.
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery  -->
+    @*<script src="~/lib/assets/js/jquery.min.js"></script>*@
+    <script src="~/lib/assets/js/bootstrap.min.js"></script>
+    <script src="~/lib/assets/js/detect.js"></script>
+    <script src="~/lib/assets/js/fastclick.js"></script>
+    <script src="~/lib/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/lib/assets/js/jquery.blockUI.js"></script>
+    <script src="~/lib/assets/js/waves.js"></script>
+    <script src="~/lib/assets/js/wow.min.js"></script>
+    <script src="~/lib/assets/js/jquery.nicescroll.js"></script>
+    <script src="~/lib/assets/js/jquery.scrollTo.min.js"></script>
+    <!-- jQuery  -->
+    <script src="~/lib/assets/plugins/peity/jquery.peity.min.js"></script>
+    <script src="~/lib/assets/plugins/waypoints/lib/jquery.waypoints.js"></script>
+    <script src="~/lib/assets/plugins/counterup/jquery.counterup.min.js"></script>
+    <script src="~/lib/assets/plugins/morris/morris.min.js"></script>
+    <script src="~/lib/assets/plugins/raphael/raphael-min.js"></script>
+    <script src="~/lib/assets/plugins/jquery-knob/jquery.knob.js"></script>
+    <script src="~/lib/assets/pages/jquery.dashboard.js"></script>
+    <script src="~/lib/assets/js/jquery.core.js"></script>
+    <script src="~/lib/assets/js/jquery.app.js"></script>
+
+    <script>
+        var resizefunc = [];
+    </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $('.counter').counterUp({
+                delay: 100,
+                time: 1200
+            });
+
+            $(".knob").knob();
+
+        });
+    </script>
+</body>
+</html>

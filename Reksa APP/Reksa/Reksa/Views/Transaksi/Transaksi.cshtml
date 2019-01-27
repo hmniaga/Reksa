@@ -1,0 +1,250 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.TransaksiListViewModel
+
+@{
+    ViewData["Title"] = "Transaksi";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Transaksi</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+
+            <div class="col-md-12" style="padding-top:4%">
+                <div class="input-group">
+                    <button class="btn btn-default waves-effect waves-light" hidden>
+                        <span class="btn-label">
+                            <i class="fa fa-refresh"></i>
+                        </span>
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        Add
+                    </button>
+
+                    <button class="btn btn-info waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                        Edit
+                    </button>
+
+                    <button class="btn btn-danger waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button class="btn btn-warning waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        Save
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion-transaksi">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-subscription" aria-expanded="false" class="collapsed">
+                                    Subscription
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-subscription" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_Subscription.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-redemption" aria-expanded="false" class="collapsed">
+                                    Redemption
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-redemption" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_Redemption.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-reksaberjangka" aria-expanded="false" class="collapsed">
+                                    Reksadana Berjangka
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-reksaberjangka" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ReksaBerjangka.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-switchingnonrdb" aria-expanded="false" class="collapsed">
+                                    Switching Non RDB
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-switchingnonrdb" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_SwitchingNonRDB.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-switchingrdb" aria-expanded="false" class="collapsed">
+                                    Switching RDB
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-switchingrdb" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_SwitchingRDB.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-booking" aria-expanded="false" class="collapsed">
+                                    Booking
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-booking" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_Booking.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="CIFNoModal" tabindex="-1" role="dialog" aria-labelledby="CIFNoModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="KotaModal" tabindex="-1" role="dialog" aria-labelledby="KotaModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="PropinsiModal" tabindex="-1" role="dialog" aria-labelledby="PropinsiModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="NegaraModal" tabindex="-1" role="dialog" aria-labelledby="NegaraModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="NIKModal" tabindex="-1" role="dialog" aria-labelledby="NIKModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="AgenModal" tabindex="-1" role="dialog" aria-labelledby="AgenModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="JenisRekModal" tabindex="-1" role="dialog" aria-labelledby="JenisRekModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="BankModal" tabindex="-1" role="dialog" aria-labelledby="BankModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="RekRelasiModal" tabindex="-1" role="dialog" aria-labelledby="RekRelasiModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ReferentorModal" tabindex="-1" role="dialog" aria-labelledby="ReferentorModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="SellerModal" tabindex="-1" role="dialog" aria-labelledby="SellerModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="WaperdModal" tabindex="-1" role="dialog" aria-labelledby="WaperdModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

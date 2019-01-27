@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Search Office";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchOffice() {
+        var value = $("#OfficeSearchComponentSearchTxt").val();
+        var grid = $("#OfficeSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowOfficeSelect(e) {
+        var data = this.dataItem(this.select());
+        var OfficeId = $.trim(data.OfficeId);
+        var OfficeName = $.trim(data.AgentDesc);
+        
+        $("#OfficeSelectedId").val(OfficeId);
+        $("#OfficeSelectedName").val(OfficeName);
+    };
+
+    $("#OfficeSelectButton").on("click", function () {
+        var selectedId = $("#OfficeSelectedId").val();
+        var selectedName = $("#OfficeSelectedName").val();
+
+        $("input[name='OfficeModel.OfficeId']").val(selectedId).change();
+        $("input[name='OfficeModel.AgentDesc']").val(selectedName);
+    });
+
+    $("#OfficeSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#OfficeSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.OfficeModel>()
+                    .Name("OfficeSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.OfficeId);
+                        columns.Bound(m => m.AgentDesc);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowOfficeSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.OfficeId);
+                        })
+                        .Read(read => read.Action("SearchOfficeData", "Global", new { search = search, criteria = criteria }))
+                    )
+        )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("OfficeSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("OfficeSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchOffice")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="OfficeSelectedId" name="OfficeSelectedId" value="" />
+        <input type="hidden" id="OfficeSelectedName" name="OfficeSelectedName" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="OfficeSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

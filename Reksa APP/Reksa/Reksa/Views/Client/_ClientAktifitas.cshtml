@@ -1,0 +1,50 @@
+﻿@model Reksa.ViewModels.ClientListViewModel
+
+<div class="col-md-12" style="padding-bottom: 100px; vertical-align: middle;">
+    <div class="col-md-3">
+        @(Html.Kendo().RadioButton().Name("Transaksi").Label("Transaksi"))
+        @(Html.Kendo().RadioButton().Name("Balance").Label("Balance"))
+    </div>
+    <div class="col-md-8">
+        <div class="col-xs-1 no-rl-padding">
+            <label>Periode</label>
+        </div>
+        <div class="col-md-3">@(Html.Kendo().DatePicker().Name("StartDateAct"))</div>
+
+        <div class="col-xs-1 no-rl-padding">
+            <label>S/D</label>
+        </div>
+        <div class="col-md-3">
+            @(Html.Kendo().DatePicker().Name("EndDateAct"))
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12" style="padding-bottom: 20px; vertical-align: middle;">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Unit Bal Efektif</label>
+    </div>
+    <div class="col-md-2">
+        @(Html.Kendo().NumericTextBox().Name("UnitBal"))
+    </div>
+    <div class="col-xs-2 no-rl-padding">
+        <label>Nom Bal Efektif</label>
+    </div>
+    <div class="col-md-2">
+        @(Html.Kendo().NumericTextBox().Name("NomBal"))
+    </div>
+</div>
+
+<div class="col-md-12">
+    @(Html.Kendo().Grid(Model.ClientActivity)
+                            .Name("GridAktifitas")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.BlockId);
+                                columns.Bound(p => p.BlockAmount);
+                                columns.Bound(p => p.Id);
+                                columns.Bound(p => p.Supervisor);
+                            }).Pageable()
+
+    )
+</div>

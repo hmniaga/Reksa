@@ -1,0 +1,269 @@
+﻿@model Reksa.ViewModels.TransaksiListViewModel
+
+
+<div class="col-md-6">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Kode Kantor</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("KodeKantor").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchKantor", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBox().Name("NamaKantor").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No CIF</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("CIFNo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBox().Name("CIFName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No Referensi</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("NoReferensi").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchReferensi", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBox().Name("NamaReferensi").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SID</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("NoSID").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Shareholder ID</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("NoShareholder").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Rekening IDR</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("RekIDR").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Rekening USD</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("RekUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Rekening</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("Rekening").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-border panel-custom">
+            <div class="panel-heading">
+                <h3 class="panel-title">Booking</h3>
+            </div>
+            <div class="panel-body col-md-6">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">No Transaksi</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("RekIDR").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                        </div>
+                        <label class="col-sm-3 control-label">Tanggal Transaksi</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("TanggalTransaksi"))
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Kode Produk</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchProduk", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBox().Name("NamaProduk").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Client Code</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("ClientCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBox().Name("ClientName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Nominal</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("CurrCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBox().Name("CurrencyName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="input-group">
+                            @*@(Html.Kendo().CheckBoxFor(model => model.ClientModel.Flag).Label("Existing").HtmlAttributes(new { @class = "CoGroup_CIFNOExisting" }))*@
+                            <div class="checkbox checkbox-custom checkbox-circle">
+                                @Html.Kendo().CheckBox().Name("fullamount").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Full Amount")
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Subscription Fee</label>
+                        <div class="input-group">
+                            @*@(Html.Kendo().CheckBoxFor(model => model.ClientModel.Flag).Label("Existing").HtmlAttributes(new { @class = "CoGroup_CIFNOExisting" }))*@
+                            <div class="checkbox checkbox-custom checkbox-circle">
+                                @Html.Kendo().CheckBox().Name("feeedit").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit")
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="input-group">
+                            <button class="btn btn-default waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                Ädd
+                            </button>
+
+                            <button class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                @*@(Html.Kendo().Grid(Model.Subscription)
+                                                .Name("GridAktifitas")
+                                                .Columns(columns =>
+                                                {
+                                                    columns.Bound(p => p.BlockId);
+                                                    columns.Bound(p => p.BlockAmount);
+                                                    columns.Bound(p => p.Id);
+                                                    columns.Bound(p => p.Supervisor);
+                                                }).Pageable()
+
+                    )*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Inputter</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBox().Name("Inputter").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                </div>
+            </div>
+        </form>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Seller</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBox().Name("SellerCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchSeller", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBox().Name("SellerName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                </div>
+            </div>
+        </form>
+
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Kode WAPERD</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBox().Name("WaperdCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchWaperd", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBox().Name("WaperdName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                </div>
+            </div>
+        </form>
+
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">NIK Referrantor</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBox().Name("ReferentorCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBox().Name("ReferentorName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,209 @@
+﻿@model Reksa.ViewModels.ParameterListViewModel
+
+@{
+    ViewData["Title"] = "Parameter";
+}
+
+<div class="col-lg-12">
+
+    <div class="col-md-3">
+        <div class="panel panel-default" style="padding-bottom:100%">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Submenu</a>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @(Html.Kendo().TreeView().Name("tvParameter").Items(treeview =>
+                    {
+                        treeview.Add().Text("Parameter")
+                            .Expanded(true)
+                            .Items(root =>
+                            {
+                                root.Add().Text("Agent")
+                                    .Expanded(true)
+                                    .SpriteCssClasses("ti-folder");
+
+                                root.Add().Text("Fund")
+                                    .Expanded(true)
+                                    .SpriteCssClasses("folder");
+
+                                root.Add().Text("Bank")
+                                    .SpriteCssClasses("html");
+
+                                root.Add().Text("NAV")
+                                    .SpriteCssClasses("html");
+
+                                root.Add().Text("Dividen")
+                                    .SpriteCssClasses("html");
+
+                                root.Add().Text("Kurs")
+                                    .SpriteCssClasses("html");
+                            });
+                    })
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Parameter</a>
+                </h4>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6" style="padding-bottom: 30px">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">@ViewData["label0"]</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" })
+
+                                        <span class="input-group-btn">
+                                            <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                        </span>
+
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" })
+
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden"})
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-default waves-effect waves-light" id=myButton>
+                                <span class="btn-label">
+                                    <i class="fa fa-refresh"></i>
+                                </span>
+                                Refresh
+                            </button>
+                            <script>
+                                 var url = '@Html.Raw(Url.Action("Index", "Parameter"))';
+                                 $("#myButton").click(function(){
+                                     location.href = url + '?ProdukId=' + $("#ProdId").val()
+                                });
+
+                                @*var urlAction = '@Html.Raw(Url.Action("Index", "Parameter"))';
+                                $(document).ready(function () {
+                                    $("#myButton").click(function () {
+                                        $.ajax({
+                                            url: urlAction + '?ProdukId=' + $("#ProdId").val() , success: function (result) {
+                                                $("#GridParam").html(result);
+                                            }
+                                        });
+                                    });
+                                });*@
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">@ViewData["label1"]</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("label1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                    </div>
+                                </div>
+                            </form>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">@ViewData["label2"]</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("label2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">@ViewData["label3"]</label>
+                                    <div class="input-group">
+                                        @(Html.Kendo().DatePicker().Name("TanggalValuta").Enable(false))
+                                    </div>
+                                </div>
+                            </form>
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">@ViewData["label4"]</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("label4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="padding-top:4%">
+                        <div class="input-group">
+                            <button class="btn btn-primary waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                Add
+                            </button>
+
+                            <button class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Edit
+                            </button>
+
+                            <button class="btn btn-danger waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                Delete
+                            </button>
+
+                            <button class="btn btn-warning waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-save"></i>
+                                </span>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        @(Html.Kendo().Grid(Model.Parameter)
+                                    .Name("GridParam")
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(p => p.Kode);
+                                        columns.Bound(p => p.Deskripsi);
+                                        columns.Bound(p => p.OfficeId);
+                                        columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}");
+                                    }).Pageable()
+                                    .Selectable(selectable => selectable
+                                        .Mode(GridSelectionMode.Single))
+                                    //.DataSource(dataSource => dataSource
+                                    //.Ajax()
+                                    //.Read(read => read.Action("Index", "Parameter", new { ProdukId = "ProductCode" })))
+                                    )
+                    </div>
+                </div>
+                <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

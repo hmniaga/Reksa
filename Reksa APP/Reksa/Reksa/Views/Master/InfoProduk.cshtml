@@ -1,0 +1,170 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.CustomerListViewModel
+
+@{
+    ViewData["Title"] = "Info Produk";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Info Produk</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Produk</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(true)
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+
+                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.AgentDesc).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "AgentDesc" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-default waves-effect waves-light" id=myButton>
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+            </div>
+            <div class="col-md-4" style="padding-bottom: 30px">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"></label>
+                        <div class="input-group">
+                            <h1 id="labelStatus">Default</h1>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Begin Buttons -->
+            <div class="col-md-12" style="padding-top:2%">
+                <div class="input-group">
+                    <button id="buttonadd" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        New
+                    </button>
+
+                    <button id="buttonedit" class="btn btn-info waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                        Edit
+                    </button>
+
+                    <button id="buttondelete" class="btn btn-danger waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button id="buttonsave" class="btn btn-warning waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        Save
+                    </button>
+                </div>
+            </div>
+            <!-- End Buttons -->
+            <!-- Begin Accordions -->
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion-nasabah">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-identitas" aria-expanded="false" class="collapsed">
+                                    General Info
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-identitas" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @*@{
+                                    Html.RenderPartial("_InfoProdukGeneralInfo.cshtml", Model);
+                                }*@
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-aktifitas" aria-expanded="false" class="collapsed">
+                                    Fee
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-aktifitas" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @*@{
+                                    Html.RenderPartial("_InfoProdukFee.cshtml", Model);
+                                }*@
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-blokir" aria-expanded="false" class="collapsed">
+                                    Reksa Dana Berjangka
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-blokir" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @*@{
+                                    Html.RenderPartial("_InfoProdukReksaBerjangka.cshtml", Model);
+                                }*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Accordions -->
+        </div>
+        <!-- Begin Modals -->
+        <div class="modal fade" id="OffcieModal" tabindex="-1" role="dialog" aria-labelledby="OffcieModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="CustomerModal" tabindex="-1" role="dialog" aria-labelledby="CustomerModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <!-- End Modals -->
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#buttonadd").click(function () {
+            $("#labelStatus").text("NEW");
+        });
+        $("#buttonedit").click(function () {
+            $("#labelStatus").text("UPDATING");
+        });
+        $("#buttondelete").click(function () {
+            $("#labelStatus").text("DELETE");
+        });
+        $("#buttonsave").click(function () {
+            $("#labelStatus").text("SAVE");
+        });
+    });
+
+</script>
+

@@ -1,0 +1,295 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.ClientListViewModel
+
+@{
+    ViewData["Title"] = "Client";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Nasabah</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+
+            <div class="col-md-6" style="padding-bottom: 30px">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Produk</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "Client_ProdCode" }).Enable(true)
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchProduct", "Global", new { seq = 0, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+
+                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "Client_ProductName" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Nasabah</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm" })
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchClient", "Global", new { seq = 0, type = "MB" })" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-default waves-effect waves-light" id=myButton>
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+            </div>
+
+            <div class="col-md-4" style="padding-bottom: 30px">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Jenis Nasabah</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("JenisNasabah").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label"></label>
+                        <div class="input-group">
+                            <h1>Default</h1>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-md-12" style="padding-top:4%">
+                <div class="input-group">
+                    <button class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        Add
+                    </button>
+
+                    <button class="btn btn-info waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                        Edit
+                    </button>
+
+                    <button class="btn btn-danger waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button class="btn btn-warning waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        Save
+                    </button>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion-nasabah">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-identitas" aria-expanded="false" class="collapsed">
+                                    Identitas
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-identitas" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientIdentitas.cshtml");
+                                }
+                            </div>
+                        </div>
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-detail" aria-expanded="false" class="collapsed">
+                                    Detail
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-detail" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientDetail.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-aktifitas" aria-expanded="false" class="collapsed">
+                                    Aktifitas
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-aktifitas" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientAktifitas.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-blokir" aria-expanded="false" class="collapsed">
+                                    Blokir
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-blokir" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientBlokir.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-dokumen" aria-expanded="false" class="collapsed">
+                                    Dokumen
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-dokumen" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientBlokir.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-konfirmasi" aria-expanded="false" class="collapsed">
+                                    Konfirmasi
+                                </a>
+                            </h4>
+                        </div>
+
+                        <div id="collapse-konfirmasi" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                @{
+                                    Html.RenderPartial("_ClientBlokir.cshtml");
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="CIFNoModal" tabindex="-1" role="dialog" aria-labelledby="CIFNoModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        
+        <div class="modal fade" id="PropinsiModal" tabindex="-1" role="dialog" aria-labelledby="PropinsiModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <div class="modal fade" id="NegaraModal" tabindex="-1" role="dialog" aria-labelledby="NegaraModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="NIKModal" tabindex="-1" role="dialog" aria-labelledby="NIKModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="AgenModal" tabindex="-1" role="dialog" aria-labelledby="AgenModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="JenisRekModal" tabindex="-1" role="dialog" aria-labelledby="JenisRekModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="BankModal" tabindex="-1" role="dialog" aria-labelledby="BankModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="RekRelasiModal" tabindex="-1" role="dialog" aria-labelledby="RekRelasiModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ReferentorModal" tabindex="-1" role="dialog" aria-labelledby="ReferentorModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="SellerModal" tabindex="-1" role="dialog" aria-labelledby="SellerModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="WaperdModal" tabindex="-1" role="dialog" aria-labelledby="WaperdModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

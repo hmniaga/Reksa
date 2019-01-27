@@ -1,0 +1,144 @@
+﻿@model Reksa.ViewModels.CustomerListViewModel
+
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">NPWP Milik Sendiri/ Suami</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nomor NPWP</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 120%" }).Enable(false)
+                            </div>
+                        </div>
+                    </form>
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nama NPWP</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%" }).Enable(false)
+                            </div>
+                        </div>
+                    </form>
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("DateDikeluarkan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">NPWP Masih 1 Kartu Keluarga</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nomor NPWP</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBox().Name("NPWP").HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 380px" }).Enable(false)
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nama NPWP</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 380px" }).Enable(false)
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kepemilikan</label>
+                            <div class="input-group">
+                                @Html.Kendo().DropDownList().Name("cbKepemilikanNPWPKK").BindTo(new List<string>() { "Karyawan", "Non Karyawan" }).HtmlAttributes(new { @style = "width: 150px" })                              
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 300px" }).Enable(false)
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("dtpTglNPWPKK").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">Surat Pernyataan Tidak Memiliki NPWP</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Alasan</label>
+                            <div class="input-group">
+                                @Html.Kendo().DropDownList().Name("cbAlasan").BindTo(new List<string>() { "Karyawan", "Non Karyawan" }).HtmlAttributes(new { @style = "width: 300px" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nomor Dokumen</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 200px" }).Enable(false)
+                                <button id="buttoncreateSID" class="btn btn-info waves-effect waves-light">
+                                    <span class="btn-label">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                    Generate No Dok
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal Dokumen</label>
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("tanggaldokumen").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

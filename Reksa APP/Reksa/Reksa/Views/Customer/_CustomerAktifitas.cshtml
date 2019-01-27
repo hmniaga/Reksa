@@ -1,0 +1,137 @@
+﻿@model Reksa.ViewModels.CustomerListViewModel
+
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">Tabel Client Code</h3>
+        <div class="row">
+            <div class="col-md-12">
+                @(Html.Kendo().Grid(Model.CustomerListClient)
+                .Name("GridClient")
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.Pilih);
+                    columns.Bound(p => p.ProdCode);
+                    columns.Bound(p => p.ProdName);
+                    columns.Bound(p => p.ClientId);
+                    columns.Bound(p => p.ClientCode);
+                    columns.Bound(p => p.NAV);
+                    columns.Bound(p => p.UnitBalance);
+                    columns.Bound(p => p.UnitNominal);
+                    columns.Bound(p => p.Flag);
+                    columns.Bound(p => p.CIFStatus);
+                    columns.Bound(p => p.RDBNonRDB);
+                    columns.Bound(p => p.FlagClientCodeTA);
+                }).Pageable()
+                )
+            </div>
+            <div class="col-md-6" style="padding-top:5%">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Jangka Waktu</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                            <label class="col-sm-1 control-label">Bulan</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6" style="padding-top:5%">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Frek Pendebetan</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Tanggal Jatuh Tempo</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                            @(Html.Kendo().CheckBox().Name("chkAutoRedemp").Label("Auto Redemp").Enable(false))
+                            @(Html.Kendo().CheckBox().Name("chkAsuransi").Label("Asuransi").Enable(false))
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">Tabel Aktifitas berdasarkan Transaski</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("StarDateAct").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" }).Enable(false))
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-sm-1" style="text-align:center">
+                    <label class="col-sm-3 control-label">S/D</label>
+                </div>
+
+                <div class="col-md-3">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("EndDateAct").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" }).Enable(false))
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button id="buttonviewActivity" class="btn btn-info waves-effect waves-light">
+                                    <span class="btn-label">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                    View Activity
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+                @(Html.Kendo().Grid(Model.CustomerActivity)
+                .Name("GridActivity")
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.TanggalTransaksi);
+                    columns.Bound(p => p.KeteranganTransaksi);
+                    columns.Bound(p => p.DebetNom);
+                    columns.Bound(p => p.KreditNom);
+                    columns.Bound(p => p.KreditNom);
+                    columns.Bound(p => p.Fee);
+                    columns.Bound(p => p.SaldoNom);
+                    columns.Bound(p => p.NAV);
+                    columns.Bound(p => p.ChannelTransaksi);
+                    columns.Bound(p => p.Operator);
+                    columns.Bound(p => p.Checker);
+                }).Pageable()
+                )
+            </div>
+        </div>
+    </div>
+</div>

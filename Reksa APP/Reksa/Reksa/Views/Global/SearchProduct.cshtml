@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Search Product";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+    string type = (string)ViewBag.Type;
+    int seq = (int)ViewBag.Seq;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchProduct() {
+        var value = $("#ProductSearchComponentSearchTxt").val();
+        var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowProductSelect(e) {
+        var data = this.dataItem(this.select());
+        var ProdCode = $.trim(data.ProdCode);
+        var ProdName = $.trim(data.ProdName);
+        var ProdId = $.trim(data.ProdId);
+
+        $("#ProductSelectedCode").val(ProdCode);
+        $("#ProductSelectedName").val(ProdName);
+        $("#ProductSelectedId").val(ProdId);
+    };
+
+    $("#ProductSelectButton").on("click", function () {
+        var selectedCode = $("#ProductSelectedCode").val();
+        var selectedName = $("#ProductSelectedName").val();
+        var selectedId = $("#ProductSelectedId").val();
+
+        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
+        $("input[name='ProductModel.ProdName']").val(selectedName);
+        $("input[name='ProductModel.ProdId']").val(selectedId);
+
+    });
+
+    $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#ProductSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
+                    .Name("ProductSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.ProdCode);
+                        columns.Bound(m => m.ProdName);
+                        columns.Bound(m => m.ProdId);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowProductSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.ProdCode);
+                        })
+                        .Read(read => read.Action("SearchProductData", "Global", new { search = search, criteria = criteria }))
+                    )
+        )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("ProductSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("ProductSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchProduct")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="ProductSelectedCode" name="ProductSelectedCode" value="" />
+        <input type="hidden" id="ProductSelectedName" name="ProductSelectedName" value="" />
+        <input type="hidden" id="ProductSelectedId" name="ProductSelectedCId" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="ProductSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

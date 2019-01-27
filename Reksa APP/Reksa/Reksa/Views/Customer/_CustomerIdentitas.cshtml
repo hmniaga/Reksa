@@ -1,0 +1,275 @@
+﻿@model Reksa.ViewModels.CustomerListViewModel
+
+<div class="col-md-8">
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">SID</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Shareholder ID</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.ShareholderID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 45%;" }).Enable(false)
+                <button id="buttoncreateSID" class="btn btn-info waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    Create Shareholder ID
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Nama Pemilik</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tempat/Tanggal Lahir</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFBirthPlace).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                @(Html.Kendo().DatePickerFor(model => model.CustomerIdentitas.CIFBirthDay).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100px;" }).Enable(false))
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">KTP</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFIDNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No. HP</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.HP).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Email</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.Email).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tanggal Bergabung</label>
+            <div class="input-group">
+                @(Html.Kendo().DatePickerFor(model => model.CustomerIdentitas.CreateDate).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No Rekening IDR</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Nama Rekening IDR</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No Rekening USD</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountIdUSD).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Nama Rekening USD</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountNameUSD).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No Rekening MultiCurrency</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountIdMC).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Nama Rekening MultiCurrency</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.AccountNameMC).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Karyawan</label>
+            <div class="input-group">
+                @(Html.Kendo().DropDownList().Name("Status").BindTo(new List<string>() { "Karyawan", "Non Karyawan" }))
+            </div>
+        </div>
+    </form>
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">NIK</label>
+            <div class="input-group" style="width: 50%">
+                @Html.Kendo().TextBoxFor(model => model.Referentor.EMPLID).HtmlAttributes(new { @class = "form-control input-sm", @id = "EmployeeId" }).Enable(true)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+
+                @Html.Kendo().TextBoxFor(model => model.Referentor.NAME).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "EmployeeName" }).Enable(false)
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="col-md-4">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Jenis Risk Profile</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.RiskProfileModel.RiskProfile).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+            </div>
+        </div>
+    </form>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Last Update Risk Profile</label>
+            <div class="input-group">
+                @(Html.Kendo().DatePickerFor(model => model.RiskProfileModel.LastUpdate).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
+            </div>
+        </div>
+    </form>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Expired Date Risk Profile</label>
+            <div class="input-group">
+                @(Html.Kendo().DatePickerFor(model => model.CustomerIdentitas.DateExpRiskProfile).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">Dokumen</h3>
+        <div class="row">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">                    
+                    <div class="input-group">
+                        <label class="col-sm-6 control-label">Daftar Kelengkapan Dokumen</label>
+                        @(Html.Kendo().CheckBox().Name("chkKuesioner")
+                            .Label("Kuesioner Profil Resiko")
+                            .HtmlAttributes(new { @class = "col-sm-6 control-label"})
+                            .Enable(false))
+
+                        @(Html.Kendo().CheckBox().Name("chkKetentuan")
+                            .HtmlAttributes(new { @class = "col-sm-6 control-label"})
+                            .Label("Ketentuan Umum")
+                            .Enable(false))
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 class="panel-title">Alamat Pengiriman Surat</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form" style="padding-top:2%; padding-bottom:2%">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Surat Konfirmasi dikirim ke</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DropDownList().Name("Konfirmasi")
+                                        .BindTo(new List<string>() { "Alamat Nasabah", "Kantor Cabang Pemilik Nasabah Reksadana" })
+                                        
+                            )
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form" style="padding-top:2%; padding-bottom:2%">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Last Updated Date</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-12">
+                @(Html.Kendo().Grid(Model.CustomerKonfirmasiAddress)
+                        .Name("GridKonfAddress")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(p => p.Pilih);
+                            columns.Bound(p => p.KodePos);
+                            columns.Bound(p => p.AddressLine1);
+                            columns.Bound(p => p.AddressLine2);
+                            columns.Bound(p => p.AddressLine3);
+                            columns.Bound(p => p.AddressLine4);
+                            columns.Bound(p => p.AlamatUtama);
+                            columns.Bound(p => p.KodeAlamat);
+                            columns.Bound(p => p.AlamatSID);
+                            columns.Bound(p => p.PeriodThere);
+                            columns.Bound(p => p.PeriodThereCode);
+                            columns.Bound(p => p.JenisAlamat);
+                            columns.Bound(p => p.StaySince);
+                            columns.Bound(p => p.Kelurahan);
+                            columns.Bound(p => p.Kecamatan);
+                            columns.Bound(p => p.Kota);
+                            columns.Bound(p => p.Provinsi);
+                        }).Pageable()
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="KotaModal" tabindex="-1" role="dialog" aria-labelledby="KotaModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+

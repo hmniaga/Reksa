@@ -1,0 +1,11 @@
+C:\Users\Hp\source\repos\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.deps.json
+C:\Users\Hp\source\repos\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.runtimeconfig.json
+C:\Users\Hp\source\repos\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.runtimeconfig.dev.json
+C:\Users\Hp\source\repos\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.dll
+C:\Users\Hp\source\repos\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.pdb
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.csprojAssemblyReference.cache
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.csproj.CoreCompileInputs.cache
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfoInputs.cache
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfo.cs
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.dll
+C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.pdb

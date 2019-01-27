@@ -1,0 +1,16 @@
+﻿@*@using Kendo.Mvc.UI
+@model Reksa.ViewModels.MasterListViewModel
+
+<div class="col-md-12">
+    @(Html.Kendo().Grid(Model.ClientBlokir)
+                            .Name("GridBlokir")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.BlockDate);
+                                columns.Bound(p => p.Inputter);
+                                columns.Bound(p => p.Supervisor);
+                                columns.Bound(p => p.BlockExpiry).Format("{0:dd MMMM yyyy}");
+                            }).Pageable()
+
+    )
+</div>*@

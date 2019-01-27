@@ -1,0 +1,210 @@
+﻿<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Tgl Bergabung</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-1" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-10 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @(Html.Kendo().DatePicker().Name("TanggalBergabung"))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Kode Agen</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Jenis Rekening</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-1" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-10 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @*@(Html.Kendo().DropDownListFor(model => model.ClientModel.Status)
+                        .OptionLabel(" ")
+                        .HtmlAttributes(new { style = "width: 100px" })
+                        )*@
+                    @(Html.Kendo().DropDownList().Name("JenisRek").BindTo(new List<string>() { "Nasabah", "Non Nasabah" }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Bank</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Rek Relasi</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>No Rekening</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-1" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-10 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("NoShareHolder").HtmlAttributes(new { @class = "k-textbox", style = "width: 200%;", maxlength = 2000 })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Nama Rekening</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-1" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-10 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("NoShareHolder").HtmlAttributes(new { @class = "k-textbox", style = "width: 200%;", maxlength = 2000 })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Referentor</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Inputter</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-1" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-10 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("NoShareHolder").HtmlAttributes(new { @class = "k-textbox", style = "width: 200%;", maxlength = 2000 })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Seller</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        <label>Kode WAPERD</label>
+    </div>
+    <div class="col-md-8" style="padding-left:0px;padding-right:10px;">
+        <div class="cif-row col-md-8" id="cif-MB-2" style="padding-left:0px; padding-bottom: 2px; vertical-align: middle;">
+            <div class="col-md-12 no-rl-padding">
+                <div class="col-md-4 col-xs-4 no-rl-padding">
+                    @Html.Kendo().TextBox().Name("KodeAgen")
+                </div>
+                <div class="col-md-1 col-xs-1 text-center" style="padding-left:5px;">
+                    <a href="@Url.Action("SearchCIFNo", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </div>
+                <div class="col-md-4 col-xs-4 " style="padding-left:0px;">
+                    @Html.Kendo().TextBox().Name("NamaAgen")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-xs-2 no-rl-padding">
+        @(Html.Kendo().CheckBox().Name("chkBerjangka").Label("Nasabah Reksadana Berjangka"))
+    </div>
+</div>

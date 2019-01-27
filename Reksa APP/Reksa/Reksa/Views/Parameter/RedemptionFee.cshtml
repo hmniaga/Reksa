@@ -1,0 +1,590 @@
+﻿@model Reksa.ViewModels.ParameterListViewModel
+
+@{
+    ViewData["Title"] = "Redemption Fee";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Redemption Fee</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+            <div class="col-md-6">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Produk</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @class = "form-control input-sm" })
+
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+
+                            @Html.Kendo().TextBox().Name("ProdukName").HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-default waves-effect waves-light" id=myButton>
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+            </div>
+            <!-- Begin Buttons -->
+            <div class="col-md-12" style="padding-top:4%">
+                <div class="input-group">
+                    <button class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        Add
+                    </button>
+
+                    <button class="btn btn-info waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                        Edit
+                    </button>
+
+                    <button class="btn btn-danger waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-trash"></i>
+                        </span>
+                        Delete
+                    </button>
+
+                    <button class="btn btn-warning waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        Save
+                    </button>
+                </div>
+            </div>
+            <!-- End Buttons -->
+            <!-- Begin Accordions -->
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion-subsfee">
+                    <div class="panel panel-default">
+                        <!-- Begin Redemption Fee -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-subsfee" aria-expanded="false" class="collapsed">
+                                    Redemption Fee
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-subsfee" class="panel-collapse collapse">
+                            <div class="col-md-12">
+                                <div class="card-box">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card-box">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="card-box">
+                                                            <h3 class="panel-title">Percentage Non Karyawan</h3>
+                                                            <form class="form-horizontal" role="form">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Minimum % Fee</label>
+                                                                    <div class="input-group">
+                                                                        @Html.Kendo().TextBox().Name("MinFeeNonKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                            <form class="form-horizontal" role="form">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Maksimum % Fee</label>
+                                                                    <div class="input-group">
+                                                                        @Html.Kendo().TextBox().Name("MaxFeeNonKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="card-box">
+                                                            <h3 class="panel-title">Percentage Karyawan</h3>
+                                                            <form class="form-horizontal" role="form">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Minimum % Fee</label>
+                                                                    <div class="input-group">
+                                                                        @Html.Kendo().TextBox().Name("MinFeeKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                            <form class="form-horizontal" role="form">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-3 control-label">Maksimum % Fee</label>
+                                                                    <div class="input-group">
+                                                                        @Html.Kendo().TextBox().Name("MaxFeeKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card-box">
+                                                <h3 class="panel-title">Pencairan</h3>
+                                                <div class="row">
+                                                    <div class="col-md-12" style="padding-top:3%">
+                                                        <h3 class="panel-title">Apakah pada saat pencairan, apakah fee ikut dibagikan ?</h3>
+                                                    </div>
+                                                    <div class="col-md-4" style="padding-top:3%">
+                                                    @(Html.Kendo().CheckBox().Name("chkKuesioner")
+                                                        .Label("Ya")
+                                                        .HtmlAttributes(new { @class = "col-sm-6 control-label" })
+                                                        .Enable(false))
+                                                        </div>
+                                                    <div class="col-md-4" style="padding-top:3%">
+                                                        @(Html.Kendo().CheckBox().Name("chkKetentuan")
+                                                        .HtmlAttributes(new { @class = "col-sm-6 control-label" })
+                                                        .Label("Tidak")
+                                                        .Enable(false))
+                                                    </div>
+                                                </div>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card-box">
+                                                <h3 class="panel-title">Non Flat/ Flat Dalam Bulan</h3>
+                                                <div class="row">
+                                                    <div class="col-md-4" style="padding-top:3%">
+                                                        @(Html.Kendo().CheckBox().Name("chkKuesioner")
+                                                        .Label("Flat")
+                                                        .HtmlAttributes(new { @class = "col-sm-6 control-label" })
+                                                        .Enable(false))
+                                                    </div>
+                                                    <div class="col-md-4" style="padding-top:3%">
+                                                        @(Html.Kendo().CheckBox().Name("chkKetentuan")
+                                                        .HtmlAttributes(new { @class = "col-sm-6 control-label" })
+                                                        .Label("Non Flat")
+                                                        .Enable(false))
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Redemption Fee -->
+                        <!-- Begin Percentage Tiering -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-percentiering" aria-expanded="false" class="collapsed">
+                                    Percentage Tiering
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-percentiering" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <form class="form-horizontal" role="form">
+                                                <label class="col-sm-4 control-label">Status</label>
+                                                <div class="input-group m-t-10">
+                                                    @(Html.Kendo().DropDownList().Name("Status")
+                                                            .BindTo(new List<string>() { "Karyawan", "Non Karyawan" }))
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <form class="form-horizontal" role="form">
+                                                <label class="col-sm-4 control-label">Periode</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBox().Name("Persetujuan").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:180px" }).Enable(false)
+                                                    <span class="input-group-addon">
+                                                        Bulan
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <form class="form-inline">
+                                                <label class="col-sm-4 control-label">Max Redemption Fee</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12" style="padding-top:2%">
+                                        <button class="btn btn-default waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                            Tambah
+                                        </button>
+
+                                        <button class="btn btn-danger waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                            Hapus
+                                        </button>
+
+                                        <button class="btn btn-warning waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-save"></i>
+                                            </span>
+                                            Simpan
+                                        </button>
+
+                                        <button class="btn btn-danger waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-crosshairs"></i>
+                                            </span>
+                                            Batal
+                                        </button>
+                                        @*@(Html.Kendo().Grid(Model.CustomerActivity)
+                        .Name("GridKonfAddress")
+                        .Columns(columns =>
+                        {
+                        columns.Bound(p => p.BlockId);
+                        columns.Bound(p => p.BlockAmount);
+                        columns.Bound(p => p.Id);
+                        columns.Bound(p => p.Supervisor);
+                        }).Pageable()
+                        )*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Percentage Tiering -->
+                        <!-- Begin Tiering Notification -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-tiering" aria-expanded="false" class="collapsed">
+                                    Tiering Notification
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-tiering" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <form class="form-horizontal" role="form">
+                                                <label class="col-sm-4 control-label">Dari Persentase</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @class = "form-control input-sm" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <form class="form-horizontal" role="form">
+                                                <label class="col-sm-3 control-label">Sampai</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @class = "form-control input-sm" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <form class="form-horizontal" role="form">
+                                                <label class="col-sm-4 control-label">Persetujuan</label>
+                                                <div class="input-group">
+                                                    @Html.Kendo().TextBox().Name("Persetujuan").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:250px" }).Enable(false)
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" style="padding-top:2%">
+                                        <h3 class="panel-title">*) Tiering Notification ini hanya untuk Non Karyawan</h3>
+                                    </div>
+                                    <div class="col-md-12" style="padding-top:2%">
+                                        <button class="btn btn-default waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                            Tambah
+                                        </button>
+
+                                        <button class="btn btn-danger waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                            Hapus
+                                        </button>
+
+                                        <button class="btn btn-warning waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-save"></i>
+                                            </span>
+                                            Simpan
+                                        </button>
+
+                                        <button class="btn btn-danger waves-effect waves-light">
+                                            <span class="btn-label">
+                                                <i class="fa fa-crosshairs"></i>
+                                            </span>
+                                            Batal
+                                        </button>
+                                        @*@(Html.Kendo().Grid(Model.CustomerActivity)
+                        .Name("GridKonfAddress")
+                        .Columns(columns =>
+                        {
+                        columns.Bound(p => p.BlockId);
+                        columns.Bound(p => p.BlockAmount);
+                        columns.Bound(p => p.Id);
+                        columns.Bound(p => p.Supervisor);
+                        }).Pageable()
+                        )*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Tiering Notification -->
+                        <!-- Begin Setting GL -->
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-settinggl" aria-expanded="false" class="collapsed">
+                                    Setting GL
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse-settinggl" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <label>Nama GL</label>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <label>Nomor GL</label>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <label>&nbsp;</label>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:120px">
+                                            <label>Office Id</label>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:30px">
+                                            <label>Persentase</label>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10">
+                                            <label for="NoGL1">Nomor GL 1</label>
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10" style="padding-left:100px">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10">
+                                            <label for="NoGL1">Nomor GL 2</label>
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10">
+                                            <label for="NoGL1">Nomor GL 3</label>
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10">
+                                            <label for="NoGL1">Nomor GL 4</label>
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10">
+                                            <label for="NoGL1">Nomor GL 5</label>
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <form class="form-inline">
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <label></label>
+                                            <div class="input-group m-t-10">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <div class="input-group m-t-10">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <div class="input-group m-t-10">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:150px">
+                                            <div class="input-group m-t-10">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-r-10" style="padding-left:180px">
+                                            <div class="input-group m-t-10">
+                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                <span class="input-group-addon">
+                                                    %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Setting GL -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Accordions -->
+        </div>
+    </div>
+</div>

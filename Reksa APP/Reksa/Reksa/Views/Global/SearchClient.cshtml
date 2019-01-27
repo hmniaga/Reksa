@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "Search Client";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+    string type = (string)ViewBag.Type;
+    int seq = (int)ViewBag.Seq;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchClient() {
+        var value = $("#ClientSearchComponentSearchTxt").val();
+        var grid = $("#ClientSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowClientSelect(e) {
+        var data = this.dataItem(this.select());
+        var dataId = $.trim(data.id);
+        var dataValue = $.trim(data.ClientName);
+        var dataCat = $.trim(data.GroupClient);
+
+        $("#ClientSelectedId").val(dataId);
+        $("#ClientSelectedText").val(dataValue);
+        $("#ClientSelectedCat").val(dataCat);
+    };
+
+    $("#ClientSelectButton").on("click", function () {
+        var selectedId = $("#ClientSelectedId").val();
+        var selectedText = $("#ClientSelectedText").val();
+        var selectedCat = $("#ClientSelectedCat").val();
+        var parameterSeq = $("#ClientParameterSeq").val();
+        var parameterType = $("#ClientParameterType").val();
+
+        if (parameterSeq && parameterSeq > 0) {
+            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdCode").val(selectedId).change();
+            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdName").val(selectedText);
+        } else {
+            $("input[name='ClientModel.ClientCode']").val(selectedId).change();
+            $("input[name='ClientModel.ClientName']").val(selectedText);
+        }
+    });
+
+    $("#ClientSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#ClientSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.ClientModel>()
+            .Name("ClientSearchComponentGrid")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.ClientCode);
+                columns.Bound(m => m.ClientName);
+                columns.Bound(m => m.ClientId);
+                columns.Bound(m => m.CIFNo);
+            })
+            @*.ToolBar(toolbar =>
+            {
+                toolbar.Template(@<text>
+                <div class="toolbar">
+                    @Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search)
+                    @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("ClientSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchClient"))
+                    )
+                </div>
+                </text>);
+            })*@
+            .Events(events => events.Change("onRowClientSelect"))
+            .Pageable()
+            .Scrollable()
+            .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .Model(model =>
+                {
+                    model.Id(m => m.ClientCode);
+                })
+                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria }))
+            )
+        )
+
+        <input type="hidden" id="ClientSelectedId" name="ClientSelectedId" value="" />
+        <input type="hidden" id="ClientSelectedText" name="ClientSelectedText" value="" />
+        <input type="hidden" id="ClientSelectedCat" name="ClientSelectedCat" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="ClientSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>
