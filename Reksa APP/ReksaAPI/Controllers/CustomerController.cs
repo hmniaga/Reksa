@@ -31,7 +31,7 @@ namespace ReksaAPI.Controllers
         }
 
         [Route("api/Customer/Refresh")]
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public JsonResult Refresh([FromQuery]string CIFNO, [FromQuery]int NIK, [FromQuery]string Guid)
         {
             List<CustomerIdentitasModel> listCust = new List<CustomerIdentitasModel>();
