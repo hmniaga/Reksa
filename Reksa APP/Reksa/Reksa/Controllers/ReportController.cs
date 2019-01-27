@@ -11,6 +11,7 @@ namespace Reksa.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
+    // nico controller
     public class ReportController : Controller
     {
         #region "Default Var"
