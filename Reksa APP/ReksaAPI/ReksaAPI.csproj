@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Reference Include="ReksaQuery">
-      <HintPath>..\..\..\Documents\- PROJECTS -\Project\Reksa\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.dll</HintPath>
+      <HintPath>..\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.dll</HintPath>
     </Reference>
   </ItemGroup>
 
