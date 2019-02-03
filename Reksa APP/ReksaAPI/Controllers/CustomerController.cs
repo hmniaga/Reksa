@@ -47,7 +47,7 @@ namespace ReksaAPI.Controllers
         }
 
         [Route("api/Customer/GetConfAddress")]
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public JsonResult GetConfAddress([FromQuery]int Type, [FromQuery]string CIFNO, [FromQuery]string Branch, [FromQuery]int Id, [FromQuery]int NIK, [FromQuery]string Guid)
         {
             List<KonfirmasiAddressModel> listKonfAddress = new List<KonfirmasiAddressModel>();
@@ -85,6 +85,56 @@ namespace ReksaAPI.Controllers
             decimal decTotal, decOutstandingUnit;
             cls.ReksaRefreshBlokir(intClientId, intNIK, strGuid, ref listBlokir, out decTotal, out decOutstandingUnit);
             return Json(new { listBlokir, decTotal, decOutstandingUnit });
+        }        
+
+        [Route("api/Customer/ValidateOfficeId")]
+        [HttpGet("{id}")]
+        public JsonResult ValidateOfficeId([FromQuery]string OfficeId)
+        {
+            int isAllowed;
+            cls.ReksaValidateOfficeId(OfficeId, out isAllowed);
+            return Json(isAllowed);
+        }
+
+        [Route("api/Customer/FlagClientId")]
+        [HttpGet("{id}")]
+        public string FlagClientId([FromQuery]int ClientId, [FromQuery]int NIK, [FromQuery]int Flag)
+        {
+            string strErr;
+            cls.ReksaFlagClientId(ClientId, NIK, Flag, out strErr);
+            return strErr;
+        }
+
+        [Route("api/Customer/CekExpRiskProfileParam")]
+        public JsonResult CekExpRiskProfileParam()
+        {
+            string strErr;
+            int intExpRiskProfileYear;
+            int intExpRiskProfileDay;
+            cls.ReksaCekExpRiskProfileParam(out intExpRiskProfileYear, out intExpRiskProfileDay, out strErr);
+            return Json(new { intExpRiskProfileYear, intExpRiskProfileDay, strErr }); 
+        }
+
+        [Route("api/Customer/MaintainBlokir")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainBlokir([FromQuery]int intType, [FromQuery]int intClientId,
+            [FromQuery]int intBlockId, [FromQuery]decimal decBlockAmount, [FromQuery]string strBlockDesc,
+            [FromQuery]DateTime dtExpiryDate, [FromQuery]bool isAccepted, [FromQuery]int intNIK, [FromQuery]string strGuid)
+        {            
+            string strErrMsg;
+            cls.ReksaMaintainBlokir(intType, intClientId, intBlockId, decBlockAmount, 
+                strBlockDesc, dtExpiryDate, isAccepted, intNIK, strGuid, out strErrMsg);
+            return Json(new { strErrMsg });
+        }
+
+        [Route("api/Customer/SaveExpRiskProfile")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainBlokir([FromQuery]DateTime dtRiskProfile, [FromQuery]DateTime dtExpRiskProfile,
+            [FromQuery]long CIFNo)
+        {
+            string strErrMsg;
+            cls.ReksaSaveExpRiskProfile(dtRiskProfile, dtExpRiskProfile, CIFNo, out strErrMsg);
+            return Json(new { strErrMsg });
         }
 
         [Route("api/Customer/CekExpRiskProfile")]
@@ -96,6 +146,16 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaCekExpRiskProfile(DateRiskProfile, CIFNo);
             return Json(list);
         }
+
+
+        [Route("api/Customer/GetDocStatus")]
+        [HttpGet("{id}")]
+        public JsonResult GetDocStatus([FromQuery]string CIFNo)
+        {
+            string strDocTermCond, strDocRiskProfile;
+            cls.ReksaGetDocStatus(CIFNo, out strDocTermCond, out strDocRiskProfile);
+            return Json(new { strDocTermCond, strDocRiskProfile });
+        }        
         private JsonResult Json(object p, object allowGet)
         {
             throw new NotImplementedException();
