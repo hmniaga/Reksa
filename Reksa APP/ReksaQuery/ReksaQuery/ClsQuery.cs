@@ -694,7 +694,7 @@ namespace ReksaQuery
             return fnExecProc(_strGuid, strProc, _strCon, m_intTimeout,
                 _ErrorExtHandled, ref dbParam, out dsResult, _ReplaceUser
                 , m_strUserName, strShownUser, _ShowDebug);
-        }
+        }        
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon,
             int intTimeout, bool ExtError,
@@ -932,6 +932,114 @@ namespace ReksaQuery
                         str[0] = _strGuid;
                         str[1] = "Warning : Default Connection for Debug not found, showing to screen !";
                         str[2] = "exec " + strProc;
+                    }
+                    queDebug.Enqueue(str);
+                }
+            }
+            if (con.State == System.Data.ConnectionState.Open) con.Close();
+            if (cmd != null) cmd.Dispose();
+            cmd = null;
+            con = null;
+            //}
+            return iRet;
+        }
+
+        public bool ExecProc(string strProc,
+                ref List<SqlParameter> dbParam,
+                out System.Data.DataSet dsResult, out SqlCommand cmdOut)
+        {
+            dsResult = null;
+            cmdOut = new SqlCommand();
+            if (!CheckTanggal(StartDate))
+                return false;
+
+            _strCon = SetupConnection(m_strProvider, m_strServer, m_strDatabase,
+                m_strUserName, m_strPassword, m_UseSSL);
+            return fnExecProc(_strGuid, strProc, _strCon, m_intTimeout,
+                _ErrorExtHandled, ref dbParam, out dsResult, _ReplaceUser
+                , m_strUserName, strShownUser, _ShowDebug, out cmdOut);
+        }
+
+        public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
+            bool ExtError, ref List<SqlParameter> dbParam,
+            out System.Data.DataSet dsResult,
+            bool ReplaceError, string strUser, string strUserReplace, bool UseDebug, 
+            out SqlCommand cmdOut)
+        {
+            bool iRet = true;
+            cmdOut = new SqlCommand();
+
+            int DebugNo = 0;
+
+            SqlConnection con = new SqlConnection(strCon);
+            SqlCommand cmd = new SqlCommand();
+            dsResult = new System.Data.DataSet();
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.CommandTimeout = intTimeout;
+            cmd.CommandText = strProc;
+            cmd.Connection = con;
+            string Param = "";
+            if (dbParam != null)
+            {
+                for (int i = 0; i < dbParam.Count; i++)
+                {
+                    cmd.Parameters.Add(dbParam[i]);
+                }                   
+            }
+            try
+            {
+                if (UseDebug)
+                {
+                    Param = GetParamValue(strProc, dbParam);
+                    iRet = ExecDebugCommand(con.Database, Param, out DebugNo, _strGuid);
+                }
+
+                if (iRet)
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    SqlDataAdapter sqlAdp = new SqlDataAdapter(cmd);
+                    sqlAdp.Fill(dsResult);
+                    cmdOut = cmd;                    
+                }
+            }
+            catch (SqlException oleEx)
+            {
+                SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
+                dsResult = null;
+                iRet = false;
+            }
+            catch (Exception ex)
+            {
+                if (!ExtError)
+                    InsertErrorMessage(ex.Source.ToString(), ex.Message.ToString());
+                else
+                {
+                    string[] str = new string[2];
+                    str[0] = ex.Source;
+                    str[1] = ex.Message;
+                    queError.Enqueue(str);
+                }
+                dsResult = null;
+                iRet = false;
+            }
+            finally
+            {
+                if (UseDebug)
+                {
+
+                    string[] str = new string[2];
+                    if (DebugNo != -2)
+                    {
+                        str[0] = _strGuid;
+                        str[1] = "exec Debug " + DebugNo.ToString();
+                    }
+                    else
+                    {
+                        str = new string[3];
+                        str[0] = _strGuid;
+                        str[1] = "Warning : Default Connection for Debug not found, showing to screen !";
+                        str[2] = Param;
                     }
                     queDebug.Enqueue(str);
                 }
