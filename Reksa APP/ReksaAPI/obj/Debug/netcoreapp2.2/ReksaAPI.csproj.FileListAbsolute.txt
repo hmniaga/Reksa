@@ -34,3 +34,21 @@ C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorTargetAs
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CopyComplete
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.dll
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.pdb
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csprojAssemblyReference.cache
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CoreCompileInputs.cache
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorAssemblyInfo.cache
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorAssemblyInfo.cs
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.AssemblyInfoInputs.cache
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.AssemblyInfo.cs
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.dll
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.pdb
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.deps.json
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.runtimeconfig.json
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.runtimeconfig.dev.json
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.dll
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.pdb
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.dll
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.pdb
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.dll.config
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Zenbook\Documents\GitHub\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CopyComplete
