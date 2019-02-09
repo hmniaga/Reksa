@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Reksa.Models;
 using Reksa.ViewModels;
-using System.Net.Http;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System;
+using Newtonsoft.Json.Linq;
 
 namespace Reksa.Controllers
 {
@@ -20,6 +21,7 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+
         public ActionResult Index(int ProdukId)
         {
             ViewData["Label0"] = "Produk";
@@ -55,9 +57,57 @@ namespace Reksa.Controllers
         {
             return View();
         }
-        public IActionResult SubscriptionFee()
+        public IActionResult SubscriptionFee(int ProdukId)
         {
-            return View();
+            List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
+            List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
+            List<ReksaListGLFeeSubs> listReksaListGLFeeSubs = new List<ReksaListGLFeeSubs>();
+            ReksaParamFeeSubs listFee = new ReksaParamFeeSubs();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateParamFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=SUBS").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+
+                JObject strObject = JObject.Parse(stringData);
+
+                JToken strTokenParamFeeSubs = strObject["listReksaParamFeeSubs"];
+                JToken strTokenTiering = strObject["listReksaTieringNotificationSubs"];
+                JToken strTokenGL = strObject["listReksaListGLFeeSubs"];
+                string strJsonParamFeeSubs = JsonConvert.SerializeObject(strTokenParamFeeSubs);
+                string strJsonTiering = JsonConvert.SerializeObject(strTokenTiering);
+                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
+
+                listReksaParamFeeSubs = JsonConvert.DeserializeObject<List<ReksaParamFeeSubs>>(strJsonParamFeeSubs);
+                listReksaTieringNotificationSubs = JsonConvert.DeserializeObject<List<ReksaTieringNotificationSubs>>(strJsonTiering);
+                listReksaListGLFeeSubs = JsonConvert.DeserializeObject<List<ReksaListGLFeeSubs>>(strJsonGL);
+
+            }
+
+            ParameterSubscriptionFeeListViewModel vModel = new ParameterSubscriptionFeeListViewModel();
+            if (listReksaParamFeeSubs.Count > 0)
+            {
+                listFee = listReksaParamFeeSubs[0];
+                vModel.ReksaParamFeeSubs = listFee;
+                vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
+                vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
+            }
+            else
+            {
+                listFee.maxPctFeeEmployee = 0;
+                listFee.maxPctFeeNonEmployee = 0;
+                listFee.minPctFeeEmployee = 0;
+                listFee.minPctFeeNonEmployee = 0;
+            }
+
+            vModel.ReksaParamFeeSubs = listFee;
+            vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
+            vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
+
+            return View(vModel);
         }
         public IActionResult RedemptionFee()
         {
