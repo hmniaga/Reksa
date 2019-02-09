@@ -33,9 +33,14 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult PopulateParamFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
         {
+            List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
+            List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
+            List<ReksaListGLFeeSubs> listReksaListGLFeeSubs = new List<ReksaListGLFeeSubs>();
+
             DataSet dsOut = new DataSet();
-            cls.ReksaPopulateParamFee(NIK, strModule, ProdId, TrxType, ref dsOut);
-            return Json(dsOut);
+            cls.ReksaPopulateParamFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFeeSubs, ref listReksaTieringNotificationSubs, ref listReksaListGLFeeSubs);
+            //return Json(dsOut);
+            return Json(new { listReksaParamFeeSubs, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
         }
 
         

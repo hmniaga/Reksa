@@ -1025,9 +1025,9 @@ namespace ReksaAPI
             return list;
         }
 
-        public void ReksaPopulateParamFee(int intNIK, string strModule, int intProdId, string strTrxType, ref DataSet dsOut)
+        public void ReksaPopulateParamFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ReksaParamFeeSubs> listParamFeeSubs, ref List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs, ref List<ReksaListGLFeeSubs> listReksaListGLFeeSubs)
         {
-            dsOut = new DataSet();
+            DataSet dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -1044,7 +1044,16 @@ namespace ReksaAPI
                     {
                         DataTable dtOut1 = dsOut.Tables[0];
                         DataTable dtOut2 = dsOut.Tables[1];
-                     }
+                        DataTable dtOut3 = dsOut.Tables[2];
+
+                        List<ReksaParamFeeSubs> resultParamFeeSubs = this.MapListOfObject<ReksaParamFeeSubs>(dtOut1);
+                        List<ReksaTieringNotificationSubs> resultTieringNotificationSubs = this.MapListOfObject<ReksaTieringNotificationSubs>(dtOut2);
+                        List<ReksaListGLFeeSubs> resultListGLFeeSubs = this.MapListOfObject<ReksaListGLFeeSubs>(dtOut3);
+
+                        listParamFeeSubs.AddRange(resultParamFeeSubs);
+                        listReksaTieringNotificationSubs.AddRange(resultTieringNotificationSubs);
+                        listReksaListGLFeeSubs.AddRange(resultListGLFeeSubs);
+                    }
                 }
             }
             catch (Exception ex)
