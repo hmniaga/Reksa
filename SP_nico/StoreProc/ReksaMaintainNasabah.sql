@@ -50,7 +50,6 @@ END REVISED
     , @pcAccountIdMCTA          varchar(19) = null  
     , @pcAccountNameMCTA            varchar(100) = null
 
-with encryption     
 as    
     
 set nocount on      
@@ -172,7 +171,7 @@ where a.ACCTNO in (
 
 insert #tmpValidateOffice
 select a.ACCTNO, a.BRANCH, b.office_name
-from DDTNEW_v a with(nolock)
+from DDTNE1W_v a with(nolock)
 join office_information_sibs_v b with(nolock)
     on a.BRANCH = convert(int, b.office_id_sibs)
 where a.ACCTNO in ( 
