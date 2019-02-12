@@ -109,14 +109,74 @@ namespace Reksa.Controllers
 
             return View(vModel);
         }
+
+        //Nico
+        public IActionResult MaintenanceFee()
+        {
+            ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
+            return View(vModel);
+        }
+        public IActionResult RefreshMaintenanceFee(int ProdukId)
+        {
+            List<ParamMFeeModel> listReksaParamMFee = new List<ParamMFeeModel>();
+            List<ProductMFeeModel> listReksaProductMFees = new List<ProductMFeeModel>();
+            List<ListGLMFeeModel> listReksaListGLMFee = new List<ListGLMFeeModel>();
+
+            ParamMFeeModel listFee = new ParamMFeeModel();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateMFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=MFEE").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+
+                JObject strObject = JObject.Parse(stringData);
+
+                JToken strTokenParamMFee = strObject["listReksaParamMFee"];
+                JToken strTokenProduct = strObject["listReksaProductMFees"];
+                JToken strTokenGL = strObject["listReksaListGLMFee"];
+                string strJsonParamMFee = JsonConvert.SerializeObject(strTokenParamMFee);
+                string strJsonProduct = JsonConvert.SerializeObject(strTokenProduct);
+                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
+
+                listReksaParamMFee = JsonConvert.DeserializeObject<List<ParamMFeeModel>>(strJsonParamMFee);
+                listReksaProductMFees = JsonConvert.DeserializeObject<List<ProductMFeeModel>>(strJsonProduct);
+                listReksaListGLMFee = JsonConvert.DeserializeObject<List<ListGLMFeeModel>>(strJsonGL);
+
+            }
+
+            ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
+            if (listReksaParamMFee.Count > 0)
+            {
+                listFee = listReksaParamMFee[0];
+                vModel.ParamMFee = listFee;
+                vModel.ProductMFee = listReksaProductMFees;
+                vModel.ListGLMFee = listReksaListGLMFee;
+            }
+            else
+            {
+                listFee.PeriodEfektif = 0;
+                listFee.prodId = 0;
+            }
+
+            vModel.ParamMFee = listFee;
+            vModel.ProductMFee= listReksaProductMFees;
+            vModel.ListGLMFee = listReksaListGLMFee;
+
+            return View("MaintenanceFee",vModel);
+        }
+
+        // Nico end
         public IActionResult RedemptionFee()
         {
             return View();
         }
-        public IActionResult MaintenanceFee()
-        {
-            return View();
-        }
+        //public IActionResult MaintenanceFee()
+        //{
+        //    return View();
+        //}
         public IActionResult UpFrontSellingFee()
         {
             return View();
