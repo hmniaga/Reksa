@@ -21,7 +21,7 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Parameter/Refresh")]
         [HttpGet("{id}")]
-        public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface,  [FromQuery]int NIK, [FromQuery]string Guid)
+        public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface, [FromQuery]int NIK, [FromQuery]string Guid)
         {
             List<ParameterModel> list = new List<ParameterModel>();
             DataSet dsOut = new DataSet();
@@ -43,6 +43,24 @@ namespace ReksaAPI.Controllers
             return Json(new { listReksaParamFeeSubs, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
         }
 
-        
+        //Nico
+        [Route("api/Parameter/PopulateMFee")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateParamMFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
+        {
+            List<ReksaParamMFee> listReksaParamMFee = new List<ReksaParamMFee>();
+            List<ReksaProductMFee> listReksaProductMFees = new List<ReksaProductMFee>();
+            List<ReksaListGLMFee> listReksaListGLMFee = new List<ReksaListGLMFee>();
+
+            DataSet dsOut = new DataSet();
+            cls.ReksaPopulateMFee(NIK, strModule, ProdId, TrxType, ref listReksaParamMFee, ref listReksaProductMFees, ref listReksaListGLMFee);
+            //return Json(dsOut);
+            return Json(new { listReksaParamMFee, listReksaProductMFees, listReksaListGLMFee });
+        }
+        //Nico End
     }
 }
+
+
+    
+

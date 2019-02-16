@@ -1,5 +1,4 @@
-﻿
-CREATE proc [dbo].[ReksaPopulateParamFee]  
+﻿ALTER proc [dbo].[ReksaPopulateParamFee]  
 /*  
  CREATED BY    : liliana  
  CREATION DATE : 20121029
@@ -10,7 +9,7 @@ CREATE proc [dbo].[ReksaPopulateParamFee]
   20130418, liliana, BATOY12006, tambah order by 
  END REVISED  
    
- exec dbo.ReksaPopulateParamFee '10001','Pro Reksa 2', 2, 'SUBS' 
+ exec dbo.ReksaPopulateParamFee '10001','Pro Reksa 2', 54, 'MFEE' 
  
 */  
 @pnNIK			int,
@@ -26,6 +25,14 @@ DECLARE
 @nErrNo							int,
 @nOK							int,
 @nFeeId							int
+
+--create table xLog (
+--NIK			int	null,
+--Module		varchar(50)	null,
+--ProdId		int		null,
+--TrxType		varchar(50)	null)
+insert xLog
+select @pnNIK, @pcModule, @nProdId, @cTrxType
 
 if(@cTrxType not in ('SUBS','REDEMP','SWC','MFEE','UPFRONT','SELLING'))
 begin
@@ -126,17 +133,30 @@ begin
 end
 else if(@cTrxType = 'MFEE')
 begin
+	
 	select TrxType, ProdId, PeriodEfektifMFee as PeriodEfektif
 	from dbo.ReksaParamFee_TM
 	where TrxType = 'MFEE'
 	and ProdId = @nProdId
 
-	select AUMMin, AUMMax, NispPct as NISPPct, FundMgrPct as FundMgrPct, MaintFee as MaintenanceFee
-	from dbo.ReksaProductMaintenanceFee_TR
-	where ProdId = @nProdId
---20130418, liliana, BATOY12006, begin
-	order by AUMMin
---20130418, liliana, BATOY12006, end	
+	if exists ( select top 1* from 	dbo.ReksaProductMaintenanceFee_TR
+	where ProdId = @nProdId)
+	begin
+
+		select AUMMin, AUMMax, NispPct as NISPPct, FundMgrPct as FundMgrPct, MaintFee as MaintenanceFee
+		from dbo.ReksaProductMaintenanceFee_TR
+		where ProdId = @nProdId
+		order by AUMMin
+	end
+	else
+	begin
+
+		select AUMMin, AUMMax, NispPct as NISPPct, FundMgrPct as FundMgrPct, MaintFee as MaintenanceFee
+		from dbo.ReksaProductMaintenanceFee_TR
+		where ProdId = @nProdId
+		union all
+		select 0,0,0,0,0
+	end
 
 	select TrxType, ProdId, Sequence, GLName, GLNumber, Percentage, OfficeId
 	from dbo.ReksaListGLFee_TM
@@ -195,4 +215,3 @@ ERROR:
 
 	raiserror (@cErrMessage ,16,1);
 	return 1
-GO
