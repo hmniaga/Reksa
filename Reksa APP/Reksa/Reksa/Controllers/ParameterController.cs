@@ -57,7 +57,15 @@ namespace Reksa.Controllers
         {
             return View();
         }
-        public IActionResult SubscriptionFee(int ProdukId)
+
+//Alvin, begin
+        public IActionResult SubscriptionFee()
+        {
+            ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
+            return View(vModel1);
+        }
+
+        public IActionResult RefreshSubscriptionFee(int ProdukId)
         {
             List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
             List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
@@ -107,8 +115,9 @@ namespace Reksa.Controllers
             vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
             vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
 
-            return View(vModel);
+            return View("SubscriptionFee", vModel);
         }
+//Alvin, end
 
         //Nico
         public IActionResult MaintenanceFee()

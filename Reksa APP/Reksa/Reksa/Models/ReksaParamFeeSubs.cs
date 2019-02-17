@@ -8,7 +8,7 @@ namespace Reksa.Models
     public class ReksaParamFeeSubs
     {
         public string trxType { get; set; }
-        public int prodId { get; set; }
+        public int? prodId { get; set; }
         public decimal? minPctFeeEmployee { get; set; }
         public decimal? maxPctFeeEmployee { get; set; }
         public decimal? minPctFeeNonEmployee { get; set; }
