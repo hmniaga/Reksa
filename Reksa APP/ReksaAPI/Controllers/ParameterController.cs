@@ -74,6 +74,23 @@ namespace ReksaAPI.Controllers
             return Json(new { listRedempFee, listRedempFeeTieringNotif, listRedempFeeGL, listRedempFeePercentageTiering });
         }
         //indra end
+
+        //Harja
+        [Route("api/Parameter/PopulateUpFrontSellingFee")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateParamUpFrontSelling([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
+        {
+            List<ReksaParamUpFrontSelling> listReksaParamFee = new List<ReksaParamUpFrontSelling>();
+            List<ReksaListGLUpFrontSelling> listReksaListGL = new List<ReksaListGLUpFrontSelling>();
+
+            DataSet dsOut = new DataSet();
+            cls.ReksaPopulateUpFrontSellFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFee, ref listReksaListGL);
+            //return Json(dsOut);
+            return Json(new { listReksaParamFee, listReksaListGL });
+        }
+
+
+        //Harja End
     }
 }
 
