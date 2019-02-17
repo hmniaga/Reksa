@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Reksa.Models;
 using Reksa.ViewModels;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
-using System;
-using Newtonsoft.Json.Linq;
 
 namespace Reksa.Controllers
 {
@@ -21,7 +20,6 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
-
         public ActionResult Index(int ProdukId)
         {
             ViewData["Label0"] = "Produk";
@@ -33,12 +31,31 @@ namespace Reksa.Controllers
             List<ParameterModel> list = new List<ParameterModel>();
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
+                client.BaseAddress = new Uri(_strAPIUrl);                
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+
+                //HttpRequestMessage responseToken = client.SendAsync()
+                //string strToken = responseToken.Content.ReadAsStringAsync().Result;
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", strToken);
                 client.DefaultRequestHeaders.Accept.Add(contentType);
                 HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=" + ProdukId + "&TreeInterface=SAC&NIK=10137&Guid=a1b2").Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
+                if (response.IsSuccessStatusCode)
+                {
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
+                }
+                else
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        return View("~/Views/Authentication/Error403.cshtml");
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        return View("~/Views/Authentication/Error400.cshtml");
+                    }                    
+                }
+                
             }
 
             ParameterListViewModel vModel = new ParameterListViewModel();
@@ -51,140 +68,25 @@ namespace Reksa.Controllers
                 //ViewData["Value2"] = listData[0].Deskripsi;
                 //ViewData["Value3"] = listData[0].TanggalValuta;                
             }
+            ModelState.Clear();
             return View(vModel);
         }
         public IActionResult ParameterGlobal()
         {
             return View();
         }
-
         public IActionResult SubscriptionFee()
         {
-            ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
-            return View(vModel1);
+            return View();
         }
-
-        public IActionResult RefreshSubscriptionFee(int ProdukId)
-        {
-            List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
-            List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
-            List<ReksaListGLFeeSubs> listReksaListGLFeeSubs = new List<ReksaListGLFeeSubs>();
-            ReksaParamFeeSubs listFee = new ReksaParamFeeSubs();
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateParamFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=SUBS").Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-
-                JObject strObject = JObject.Parse(stringData);
-
-                JToken strTokenParamFeeSubs = strObject["listReksaParamFeeSubs"];
-                JToken strTokenTiering = strObject["listReksaTieringNotificationSubs"];
-                JToken strTokenGL = strObject["listReksaListGLFeeSubs"];
-                string strJsonParamFeeSubs = JsonConvert.SerializeObject(strTokenParamFeeSubs);
-                string strJsonTiering = JsonConvert.SerializeObject(strTokenTiering);
-                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
-
-                listReksaParamFeeSubs = JsonConvert.DeserializeObject<List<ReksaParamFeeSubs>>(strJsonParamFeeSubs);
-                listReksaTieringNotificationSubs = JsonConvert.DeserializeObject<List<ReksaTieringNotificationSubs>>(strJsonTiering);
-                listReksaListGLFeeSubs = JsonConvert.DeserializeObject<List<ReksaListGLFeeSubs>>(strJsonGL);
-
-            }
-
-            ParameterSubscriptionFeeListViewModel vModel = new ParameterSubscriptionFeeListViewModel();
-            if (listReksaParamFeeSubs.Count > 0)
-            {
-                listFee = listReksaParamFeeSubs[0];
-                vModel.ReksaParamFeeSubs = listFee;
-                vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
-                vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
-            }
-            else
-            {
-                listFee.maxPctFeeEmployee = 0;
-                listFee.maxPctFeeNonEmployee = 0;
-                listFee.minPctFeeEmployee = 0;
-                listFee.minPctFeeNonEmployee = 0;
-            }
-
-            vModel.ReksaParamFeeSubs = listFee;
-            vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
-            vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
-
-            return View("SubscriptionFee", vModel);
-        }
-
-        //Nico
-        public IActionResult MaintenanceFee()
-        {
-            ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
-            return View(vModel);
-        }
-
-        public IActionResult RefreshMaintenanceFee(int ProdukId)
-        {
-            List<ParamMFeeModel> listReksaParamMFee = new List<ParamMFeeModel>();
-            List<ProductMFeeModel> listReksaProductMFees = new List<ProductMFeeModel>();
-            List<ListGLMFeeModel> listReksaListGLMFee = new List<ListGLMFeeModel>();
-
-            ParamMFeeModel listFee = new ParamMFeeModel();
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateMFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=MFEE").Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-
-                JObject strObject = JObject.Parse(stringData);
-
-                JToken strTokenParamMFee = strObject["listReksaParamMFee"];
-                JToken strTokenProduct = strObject["listReksaProductMFees"];
-                JToken strTokenGL = strObject["listReksaListGLMFee"];
-                string strJsonParamMFee = JsonConvert.SerializeObject(strTokenParamMFee);
-                string strJsonProduct = JsonConvert.SerializeObject(strTokenProduct);
-                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
-
-                listReksaParamMFee = JsonConvert.DeserializeObject<List<ParamMFeeModel>>(strJsonParamMFee);
-                listReksaProductMFees = JsonConvert.DeserializeObject<List<ProductMFeeModel>>(strJsonProduct);
-                listReksaListGLMFee = JsonConvert.DeserializeObject<List<ListGLMFeeModel>>(strJsonGL);
-
-            }
-
-            ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
-            if (listReksaParamMFee.Count > 0)
-            {
-                listFee = listReksaParamMFee[0];
-                vModel.ParamMFee = listFee;
-                vModel.ProductMFee = listReksaProductMFees;
-                vModel.ListGLMFee = listReksaListGLMFee;
-            }
-            else
-            {
-                listFee.PeriodEfektif = 0;
-                listFee.prodId = 0;
-            }
-
-            vModel.ParamMFee = listFee;
-            vModel.ProductMFee= listReksaProductMFees;
-            vModel.ListGLMFee = listReksaListGLMFee;
-
-            return View("MaintenanceFee",vModel);
-        }
-
-        // Nico end
         public IActionResult RedemptionFee()
         {
             return View();
         }
-        //public IActionResult MaintenanceFee()
-        //{
-        //    return View();
-        //}
+        public IActionResult MaintenanceFee()
+        {
+            return View();
+        }
         public IActionResult UpFrontSellingFee()
         {
             return View();

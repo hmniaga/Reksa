@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReksaQuery\ReksaQuery\ReksaQuery.csproj" />
+    <Reference Include="ReksaQuery">
+      <HintPath>..\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
