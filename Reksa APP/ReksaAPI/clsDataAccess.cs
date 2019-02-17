@@ -1102,15 +1102,23 @@ namespace ReksaAPI
 
         //End Nico
 
+<<<<<<< HEAD
         //Harja
         public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType, 
             ref List<ReksaParamUpFrontSelling> listReksaParamFee, 
             ref List<ReksaListGLUpFrontSelling> listReksaListGL)
+=======
+        //Indra
+        public void ReksaPopulateRedempFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ParameterRedempFee> listRedempFee, ref List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif, ref List<ParameterRedempFeeGL> listRedempFeeGL, ref List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering)
+>>>>>>> Indra
         {
             DataSet dsOut = new DataSet();
             try
             {
+<<<<<<< HEAD
                 strTrxType = strTrxType.ToUpper().Replace("FEE", "").Trim();
+=======
+>>>>>>> Indra
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
@@ -1125,12 +1133,27 @@ namespace ReksaAPI
                     {
                         DataTable dtOut1 = dsOut.Tables[0];
                         DataTable dtOut2 = dsOut.Tables[1];
+<<<<<<< HEAD
 
                         List<ReksaParamUpFrontSelling> resultReksaParam = this.MapListOfObject<ReksaParamUpFrontSelling>(dtOut2);
                         List<ReksaListGLUpFrontSelling> resultReksaListGL = this.MapListOfObject<ReksaListGLUpFrontSelling>(dtOut1);
 
                         listReksaParamFee.AddRange(resultReksaParam);
                         listReksaListGL.AddRange(resultReksaListGL);
+=======
+                        DataTable dtOut3 = dsOut.Tables[2];
+                        DataTable dtOut4 = dsOut.Tables[3];
+
+                        List<ParameterRedempFee> resultRedempFee = this.MapListOfObject<ParameterRedempFee>(dtOut1);
+                        List<ParameterRedempFeeTieringNotif> resultRedempFeeTieringNotif = this.MapListOfObject<ParameterRedempFeeTieringNotif>(dtOut2);
+                        List<ParameterRedempFeeGL> resultRedempFeeGL = this.MapListOfObject<ParameterRedempFeeGL>(dtOut3);
+                        List<ParameterRedempFeePercentageTiering> resultRedempFeePercentageTiering = this.MapListOfObject<ParameterRedempFeePercentageTiering>(dtOut3);
+
+                        listRedempFee.AddRange(resultRedempFee);
+                        listRedempFeeTieringNotif.AddRange(resultRedempFeeTieringNotif);
+                        listRedempFeeGL.AddRange(resultRedempFeeGL);
+                        listRedempFeePercentageTiering.AddRange(resultRedempFeePercentageTiering);
+>>>>>>> Indra
                     }
                 }
             }
@@ -1139,9 +1162,14 @@ namespace ReksaAPI
                 throw ex;
             }
         }
+<<<<<<< HEAD
 
         //Harja End
 
+=======
+        //Indra end
+        //Nico 
+>>>>>>> Indra
         public void ReksaMaintainSubsFee(int intNIK, string strModule, int intProdId,
             decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
             decimal decMaxPctFeeNonEmployee, string XMLTieringNotif, string XMLSettingGL, string strProcessType,
