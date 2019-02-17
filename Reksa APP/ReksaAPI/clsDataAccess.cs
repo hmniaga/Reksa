@@ -41,7 +41,7 @@ namespace ReksaAPI
                 //    str = initUser.GetUserLogin(SCPAuth);
                 //}
                 _ReksaUserName = _config.GetValue<string>("SQLConnection:Username");
-                _ReksaPassword = _config.GetValue<string>("SQLConnection:Password"); 
+                _ReksaPassword = _config.GetValue<string>("SQLConnection:Password");
                 _ReksaServer = _config.GetValue<string>("SQLConnection:Server");
             }
             catch (Exception ex)
@@ -527,7 +527,7 @@ namespace ReksaAPI
                 throw ex;
             }
         }
-        
+
         public string ReksaGenerateShareholderID()
         {
             string shareholderID = "";
@@ -552,7 +552,7 @@ namespace ReksaAPI
             return shareholderID;
         }
 
-        public void ReksaGetConfAddress(int intType, string strCIFNo, string strBranch,int intID, out string strMessage, int intNIK, string strGuid, ref List<KonfirmasiAddressModel> listKonfAdress, ref List<BranchModel> listBranch)
+        public void ReksaGetConfAddress(int intType, string strCIFNo, string strBranch, int intID, out string strMessage, int intNIK, string strGuid, ref List<KonfirmasiAddressModel> listKonfAdress, ref List<BranchModel> listBranch)
         {
             DataSet dsOut = new DataSet();
             strMessage = "";
@@ -643,7 +643,7 @@ namespace ReksaAPI
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
                         DataTable dtOut = dsOut.Tables[0];
-                       List<ListClientModel> resultClient = this.MapListOfObject<ListClientModel>(dtOut);
+                        List<ListClientModel> resultClient = this.MapListOfObject<ListClientModel>(dtOut);
 
                         listClient.AddRange(resultClient);
                     }
@@ -761,7 +761,7 @@ namespace ReksaAPI
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
                         DocTermCondition = dsOut.Tables[0].Rows[0]["DocTermCondition"].ToString();
-                        DocRiskProfile = dsOut.Tables[0].Rows[0]["DocRiskProfile"].ToString();                       
+                        DocRiskProfile = dsOut.Tables[0].Rows[0]["DocRiskProfile"].ToString();
                     }
                 }
             }
@@ -788,7 +788,7 @@ namespace ReksaAPI
                         RiskProfile = dsOut.Tables[1].Rows[0]["RiskProfile"].ToString();
                         DateTime.TryParse(dsOut.Tables[1].Rows[0]["LastUpdate"].ToString(), out LastUpdate);
                         int.TryParse(dsOut.Tables[1].Rows[0]["IsRegistered"].ToString(), out IsRegistered);
-                        int.TryParse(dsOut.Tables[1].Rows[0]["ExpRiskProfileYear"].ToString(), out ExpRiskProfileYear); 
+                        int.TryParse(dsOut.Tables[1].Rows[0]["ExpRiskProfileYear"].ToString(), out ExpRiskProfileYear);
                     }
                 }
             }
@@ -821,7 +821,7 @@ namespace ReksaAPI
             catch (Exception ex)
             {
                 throw ex;
-            }            
+            }
         }
 
         public void ReksaValidateOfficeId(string strOfficeId, out int isAllowed)
@@ -837,7 +837,7 @@ namespace ReksaAPI
                 };
 
                 SqlCommand cmdOut = new SqlCommand();
-                if (this.ExecProc("ReksaValidateOfficeId", ref dbParam, out dsOut, out cmdOut ))
+                if (this.ExecProc("ReksaValidateOfficeId", ref dbParam, out dsOut, out cmdOut))
                 {
                     int.TryParse(cmdOut.Parameters["@pbIsAllowed"].Value.ToString(), out isAllowed);
                 }
@@ -869,7 +869,7 @@ namespace ReksaAPI
             }
             catch (Exception ex)
             {
-                strErrMsg = ex.Message.ToString();                               
+                strErrMsg = ex.Message.ToString();
             }
         }
 
@@ -882,7 +882,7 @@ namespace ReksaAPI
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
-                {};
+                { };
 
                 SqlCommand cmdOut = new SqlCommand();
                 if (this.ExecProc("ReksaCekExpRiskProfileParam", ref dbParam, out dsOut))
@@ -900,9 +900,9 @@ namespace ReksaAPI
             }
         }
 
-        public void ReksaMaintainBlokir(int intType, int intClientId, 
+        public void ReksaMaintainBlokir(int intType, int intClientId,
             int intBlockId, decimal decBlockAmount, string strBlockDesc,
-            DateTime dtExpiryDate, bool isAccepted, int intNIK, string strGuid, 
+            DateTime dtExpiryDate, bool isAccepted, int intNIK, string strGuid,
             out string strErrMsg)
         {
             DataSet dsOut = new DataSet();
@@ -1035,7 +1035,7 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }                    
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
                 };
 
                 if (this.ExecProc("ReksaPopulateParamFee", ref dbParam, out dsOut))
@@ -1102,23 +1102,15 @@ namespace ReksaAPI
 
         //End Nico
 
-<<<<<<< HEAD
         //Harja
-        public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType, 
-            ref List<ReksaParamUpFrontSelling> listReksaParamFee, 
+        public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType,
+            ref List<ReksaParamUpFrontSelling> listReksaParamFee,
             ref List<ReksaListGLUpFrontSelling> listReksaListGL)
-=======
-        //Indra
-        public void ReksaPopulateRedempFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ParameterRedempFee> listRedempFee, ref List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif, ref List<ParameterRedempFeeGL> listRedempFeeGL, ref List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering)
->>>>>>> Indra
         {
             DataSet dsOut = new DataSet();
             try
             {
-<<<<<<< HEAD
                 strTrxType = strTrxType.ToUpper().Replace("FEE", "").Trim();
-=======
->>>>>>> Indra
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
@@ -1133,27 +1125,12 @@ namespace ReksaAPI
                     {
                         DataTable dtOut1 = dsOut.Tables[0];
                         DataTable dtOut2 = dsOut.Tables[1];
-<<<<<<< HEAD
 
                         List<ReksaParamUpFrontSelling> resultReksaParam = this.MapListOfObject<ReksaParamUpFrontSelling>(dtOut2);
                         List<ReksaListGLUpFrontSelling> resultReksaListGL = this.MapListOfObject<ReksaListGLUpFrontSelling>(dtOut1);
 
                         listReksaParamFee.AddRange(resultReksaParam);
                         listReksaListGL.AddRange(resultReksaListGL);
-=======
-                        DataTable dtOut3 = dsOut.Tables[2];
-                        DataTable dtOut4 = dsOut.Tables[3];
-
-                        List<ParameterRedempFee> resultRedempFee = this.MapListOfObject<ParameterRedempFee>(dtOut1);
-                        List<ParameterRedempFeeTieringNotif> resultRedempFeeTieringNotif = this.MapListOfObject<ParameterRedempFeeTieringNotif>(dtOut2);
-                        List<ParameterRedempFeeGL> resultRedempFeeGL = this.MapListOfObject<ParameterRedempFeeGL>(dtOut3);
-                        List<ParameterRedempFeePercentageTiering> resultRedempFeePercentageTiering = this.MapListOfObject<ParameterRedempFeePercentageTiering>(dtOut3);
-
-                        listRedempFee.AddRange(resultRedempFee);
-                        listRedempFeeTieringNotif.AddRange(resultRedempFeeTieringNotif);
-                        listRedempFeeGL.AddRange(resultRedempFeeGL);
-                        listRedempFeePercentageTiering.AddRange(resultRedempFeePercentageTiering);
->>>>>>> Indra
                     }
                 }
             }
@@ -1162,14 +1139,9 @@ namespace ReksaAPI
                 throw ex;
             }
         }
-<<<<<<< HEAD
 
         //Harja End
 
-=======
-        //Indra end
-        //Nico 
->>>>>>> Indra
         public void ReksaMaintainSubsFee(int intNIK, string strModule, int intProdId,
             decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
             decimal decMaxPctFeeNonEmployee, string XMLTieringNotif, string XMLSettingGL, string strProcessType,
@@ -1376,15 +1348,15 @@ namespace ReksaAPI
                 SqlCommand cmdOut = new SqlCommand();
                 if (this.ExecProc("ReksaValidateGL", ref dbParam, out dsOut, out cmdOut))
                 {
-                    strNamaGL =cmdOut.Parameters["@pcNamaGL"].Value.ToString();
+                    strNamaGL = cmdOut.Parameters["@pcNamaGL"].Value.ToString();
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-        }        
-        #endregion      
+        }
+        #endregion
     }
 }
 
