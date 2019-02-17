@@ -44,6 +44,25 @@ namespace ReksaAPI.Models
         public string OfficeId { get; set; }
     }
 
+    //Harja
+    public class ReksaParamUpFrontSelling
+    {
+        public decimal PercentDefault { get; set; }
+        public int ProdId { get; set; }
+        public string TrxType { get; set; }
+    }
+    public class ReksaListGLUpFrontSelling
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public int Sequence { get; set; }
+        public string GLName { get; set; }
+        public int GLNumber { get; set; }
+        public decimal Percentage { get; set; }
+        public string OfficeId { get; set; }
+    }
+    //Harja End
+
     //NIco
 
     public class ReksaParamMFee
@@ -51,9 +70,8 @@ namespace ReksaAPI.Models
         public string trxType { get; set; }
         public int prodId { get; set; }
         public int PeriodEfektif { get; set; }
-
     }
-
+    
     public class ReksaProductMFee
     {
         public decimal AUMMin { get; set; }

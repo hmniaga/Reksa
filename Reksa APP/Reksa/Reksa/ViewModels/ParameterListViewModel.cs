@@ -30,4 +30,12 @@ namespace Reksa.ViewModels
         
     }
     //Nico end
+
+    //Harja
+    public class ParameterUpFrontSellFeeListViewModel
+    {
+        public ProductModel ProductModel { get; set; }
+        public List<ParamUpFrontSellGLModel> ListGL { get; set; }
+        public ParamUpFrontSellingModel ParamUpFrontSelling { get; set; }
+    }
 }

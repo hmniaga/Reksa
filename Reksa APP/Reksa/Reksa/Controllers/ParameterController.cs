@@ -57,14 +57,7 @@ namespace Reksa.Controllers
         {
             return View();
         }
-
-        public IActionResult SubscriptionFee()
-        {
-            ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
-            return View(vModel1);
-        }
-
-        public IActionResult RefreshSubscriptionFee(int ProdukId)
+        public IActionResult SubscriptionFee(int ProdukId)
         {
             List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
             List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
@@ -114,7 +107,7 @@ namespace Reksa.Controllers
             vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
             vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
 
-            return View("SubscriptionFee", vModel);
+            return View(vModel);
         }
 
         //Nico
@@ -123,7 +116,6 @@ namespace Reksa.Controllers
             ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
             return View(vModel);
         }
-
         public IActionResult RefreshMaintenanceFee(int ProdukId)
         {
             List<ParamMFeeModel> listReksaParamMFee = new List<ParamMFeeModel>();
@@ -185,10 +177,65 @@ namespace Reksa.Controllers
         //{
         //    return View();
         //}
+
+        //Harja
         public IActionResult UpFrontSellingFee()
         {
-            return View();
+            ParameterUpFrontSellFeeListViewModel vModel = new ParameterUpFrontSellFeeListViewModel();
+            return View(vModel);
+        } //RefreshMaintenanceUpFrontSelling
+
+        public IActionResult RefreshMaintenanceUpFrontSelling(int ProdukId , string FeeType)
+        {
+            List<ParamUpFrontSellingModel> listReksaParamUpFrontSelling = new List<ParamUpFrontSellingModel>();
+            List<ParamUpFrontSellGLModel> listReksaListGL = new List<ParamUpFrontSellGLModel>();
+
+            ParamUpFrontSellingModel listFee = new ParamUpFrontSellingModel();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateUpFrontSellingFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=" + FeeType).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+
+                JObject strObject = JObject.Parse(stringData);
+                
+                JToken strTokenParam = strObject["listReksaParamFee"];
+                JToken strTokenGL = strObject["listReksaListGL"];
+                string strJsonParamMaintenance = JsonConvert.SerializeObject(strTokenParam);
+                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
+
+                listReksaParamUpFrontSelling = JsonConvert.DeserializeObject<List<ParamUpFrontSellingModel>>(strJsonParamMaintenance);
+                listReksaListGL = JsonConvert.DeserializeObject<List<ParamUpFrontSellGLModel>>(strJsonGL);
+
+            }
+
+            ParameterUpFrontSellFeeListViewModel vModel = new ParameterUpFrontSellFeeListViewModel();
+            if (listReksaParamUpFrontSelling.Count > 0)
+            {
+                listFee = listReksaParamUpFrontSelling[0];
+            }
+            else
+            {
+                listFee.PercentDefault = 0;
+                listFee.ProdId = 0;
+                listFee.TrxType = "";
+            }
+
+            while(listReksaListGL.Count < 5)
+            {
+                listReksaListGL.Add(new ParamUpFrontSellGLModel());
+            }
+
+            vModel.ListGL = listReksaListGL;
+            vModel.ParamUpFrontSelling = listFee;
+
+            return View("UpFrontSellingFee", vModel);
         }
+
+        //Harja End
         public IActionResult SwitchingFee()
         {
             return View();
