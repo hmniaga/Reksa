@@ -58,6 +58,22 @@ namespace ReksaAPI.Controllers
             return Json(new { listReksaParamMFee, listReksaProductMFees, listReksaListGLMFee });
         }
         //Nico End
+        //indra start
+        [Route("api/Parameter/PopulateRedempFee")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateParamRedempFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
+        {
+            List<ParameterRedempFee> listRedempFee = new List<ParameterRedempFee>();
+            List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif = new List<ParameterRedempFeeTieringNotif>();
+            List<ParameterRedempFeeGL> listRedempFeeGL = new List<ParameterRedempFeeGL>();
+            List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering = new List<ParameterRedempFeePercentageTiering>();
+
+            DataSet dsOut = new DataSet();
+            cls.ReksaPopulateRedempFee(NIK, strModule, ProdId, TrxType, ref listRedempFee, ref listRedempFeeTieringNotif, ref listRedempFeeGL,ref listRedempFeePercentageTiering);
+            //return Json(dsOut);
+            return Json(new { listRedempFee, listRedempFeeTieringNotif, listRedempFeeGL, listRedempFeePercentageTiering });
+        }
+        //indra end
     }
 }
 

@@ -169,10 +169,70 @@ namespace Reksa.Controllers
         }
 
         // Nico end
-        public IActionResult RedemptionFee()
+        //Indra Start
+        public IActionResult RedemptionFee(int ProdukId)
         {
-            return View();
+            ParameterRedempFeeViewModel vModel = new ParameterRedempFeeViewModel();
+            return View(vModel);
         }
+
+        public IActionResult RefreshRedemptionFee(int ProdukId)
+        {
+            ParameterRedempFeeViewModel vModel = new ParameterRedempFeeViewModel();
+            ParameterRedempFee redempFee = new ParameterRedempFee();
+            List<ParameterRedempFee> listRedempFee = new List<ParameterRedempFee>();
+            List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif = new List<ParameterRedempFeeTieringNotif>();
+            List<ParameterRedempFeeGL> listRedempFeeGL = new List<ParameterRedempFeeGL>();
+            List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering = new List<ParameterRedempFeePercentageTiering>();
+
+
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateRedempFee?NIK=10137&strModule=ProReksa&ProdId=" + ProdukId + "&TrxType=REDEMP").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+
+                JObject strObject = JObject.Parse(stringData);
+
+                JToken strTokenParameterRedempFee = strObject["listRedempFee"];
+                JToken strTokenNotif = strObject["listRedempFeeTieringNotif"];
+                JToken strTokenGL = strObject["listRedempFeeGL"];
+                JToken strTokenTiering = strObject["listRedempFeePercentageTiering"];
+
+                string strJsonParameterRedempFee = JsonConvert.SerializeObject(strTokenParameterRedempFee);
+                string strJsonNotif = JsonConvert.SerializeObject(strTokenNotif);
+                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
+                string strJsonTiering = JsonConvert.SerializeObject(strTokenTiering);
+
+                listRedempFee = JsonConvert.DeserializeObject<List<ParameterRedempFee>>(strJsonParameterRedempFee);
+                listRedempFeeTieringNotif = JsonConvert.DeserializeObject<List<ParameterRedempFeeTieringNotif>>(strJsonNotif);
+                listRedempFeeGL = JsonConvert.DeserializeObject<List<ParameterRedempFeeGL>>(strJsonGL);
+                listRedempFeePercentageTiering = JsonConvert.DeserializeObject<List<ParameterRedempFeePercentageTiering>>(strJsonTiering);
+
+            }
+
+            if (listRedempFee.Count > 0)
+            {
+                redempFee = listRedempFee[0];
+            }
+            else
+            {
+                redempFee.MinPctFeeEmployee = 0;
+                redempFee.MaxPctFeeEmployee = 0;
+                redempFee.MinPctFeeNonEmployee = 0;
+                redempFee.MaxPctFeeNonEmployee = 0;
+            }
+
+            vModel.RedempFee = redempFee;
+            vModel.RedempFeeGL = listRedempFeeGL;
+            vModel.RedempFeePercentageTiering = listRedempFeePercentageTiering;
+            vModel.RedempFeeTieringNotif = listRedempFeeTieringNotif;
+            return View("RedemptionFee", vModel);
+        }
+        //Indra End
         //public IActionResult MaintenanceFee()
         //{
         //    return View();
