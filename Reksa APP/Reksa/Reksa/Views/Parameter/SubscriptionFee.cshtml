@@ -1,4 +1,4 @@
-﻿@using Kendo.Mvc.UI
+﻿
 @model Reksa.ViewModels.ParameterSubscriptionFeeListViewModel
 
 @{
@@ -43,7 +43,7 @@
                     Refresh
                 </button>
                 <script>
-                        var url = '@Html.Raw(Url.Action("SubscriptionFee", "Parameter"))';
+                        var url = '@Html.Raw(Url.Action("RefreshSubscriptionFee", "Parameter"))';
                         $("#myButton").click(function(){
                             location.href = url + '?ProdukId=' + $("#ProdId").val()
                     });
@@ -117,15 +117,16 @@
                                             <div class="input-group">
                                                 @*@Html.Kendo().TextBox().Name("MinFeeNonKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })*@
                                                 @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeNonEmployee).HtmlAttributes(new { @class = "form-control input-sm" })
+
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-horizontal" role="form">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Maksimum % Fee</label>
-                                            <div class="input-group">
-                                                @*@Html.Kendo().TextBox().Name("MaxFeeNonKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })*@
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeNonEmployee).HtmlAttributes(new { @class = "form-control input-sm" })
+            </div>
+        </form>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Maksimum % Fee</label>
+                <div class="input-group">
+                    @*@Html.Kendo().TextBox().Name("MaxFeeNonKaryawan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" })*@
+                                            @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeNonEmployee).HtmlAttributes(new { @class = "form-control input-sm" })
                                             </div>
                                         </div>
                                     </form>
@@ -233,16 +234,18 @@
                                             </span>
                                             Batal
                                         </button>
-                                        @*@(Html.Kendo().Grid(Model.CustomerActivity)
-                                            .Name("GridKonfAddress")
-                                            .Columns(columns =>
-                                            {
-                                            columns.Bound(p => p.BlockId);
-                                            columns.Bound(p => p.BlockAmount);
-                                            columns.Bound(p => p.Id);
-                                            columns.Bound(p => p.Supervisor);
-                                            }).Pageable()
-                                            )*@
+                                        @(Html.Kendo().Grid<Reksa.Models.ReksaTieringNotificationSubs>(Model.ReksaTieringNotificationSubs)
+                                                            .Name("GridProduct")
+                                                            .Columns(columns =>
+                                                            {
+                                                                columns.Bound(p => p.ProdId);
+                                                                columns.Bound(p => p.PercentFrom);
+                                                                columns.Bound(p => p.PercentTo);
+                                                                columns.Bound(p => p.MustApproveBy);
+                                                            }).Pageable()
+
+                                        )
+
                                     </div>
                                 </div>
                             </div>
@@ -281,27 +284,27 @@
                                         <div class="form-group m-r-10">
                                             <label for="NoGL1">Nomor GL 1</label>
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLNumber).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].Percentage).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
                                                 <span class="input-group-addon">
                                                     %
                                                 </span>
@@ -313,27 +316,27 @@
                                         <div class="form-group m-r-10">
                                             <label for="NoGL1">Nomor GL 2</label>
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLNumber).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].Percentage).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
                                                 <span class="input-group-addon">
                                                     %
                                                 </span>
@@ -345,27 +348,27 @@
                                         <div class="form-group m-r-10">
                                             <label for="NoGL1">Nomor GL 3</label>
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLNumber).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].Percentage).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
                                                 <span class="input-group-addon">
                                                     %
                                                 </span>
@@ -377,27 +380,27 @@
                                         <div class="form-group m-r-10">
                                             <label for="NoGL1">Nomor GL 4</label>
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLNumber).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].Percentage).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
                                                 <span class="input-group-addon">
                                                     %
                                                 </span>
@@ -409,27 +412,27 @@
                                         <div class="form-group m-r-10">
                                             <label for="NoGL1">Nomor GL 5</label>
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLNumber).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
                                             </div>
                                         </div>
                                         <div class="form-group m-r-10">
                                             <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].Percentage).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" })
                                                 <span class="input-group-addon">
                                                     %
                                                 </span>

@@ -11,8 +11,8 @@ namespace Reksa.Models
         public int ProdId { get; set; }
         public int Sequence { get; set; }
         public string GLName { get; set; }
-        public int GLNumber { get; set; }
-        public decimal Percentage { get; set; }
+        public int? GLNumber { get; set; }
+        public decimal? Percentage { get; set; }
         public string OfficeId { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace Reksa.Models
     {
         public string trxType { get; set; }
         public int prodId { get; set; }
-        public decimal minPctFeeEmployee { get; set; }
-        public decimal maxPctFeeEmployee { get; set; }
-        public decimal minPctFeeNonEmployee { get; set; }
-        public decimal maxPctFeeNonEmployee { get; set; }
+        public decimal? minPctFeeEmployee { get; set; }
+        public decimal? maxPctFeeEmployee { get; set; }
+        public decimal? minPctFeeNonEmployee { get; set; }
+        public decimal? maxPctFeeNonEmployee { get; set; }
     }
 }
