@@ -1101,6 +1101,47 @@ namespace ReksaAPI
         }
 
         //End Nico
+
+        //Harja
+        public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType, 
+            ref List<ReksaParamUpFrontSelling> listReksaParamFee, 
+            ref List<ReksaListGLUpFrontSelling> listReksaListGL)
+        {
+            DataSet dsOut = new DataSet();
+            try
+            {
+                strTrxType = strTrxType.ToUpper().Replace("FEE", "").Trim();
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc("ReksaPopulateParamFee", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut1 = dsOut.Tables[0];
+                        DataTable dtOut2 = dsOut.Tables[1];
+
+                        List<ReksaParamUpFrontSelling> resultReksaParam = this.MapListOfObject<ReksaParamUpFrontSelling>(dtOut2);
+                        List<ReksaListGLUpFrontSelling> resultReksaListGL = this.MapListOfObject<ReksaListGLUpFrontSelling>(dtOut1);
+
+                        listReksaParamFee.AddRange(resultReksaParam);
+                        listReksaListGL.AddRange(resultReksaListGL);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //Harja End
+
         public void ReksaMaintainSubsFee(int intNIK, string strModule, int intProdId,
             decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
             decimal decMaxPctFeeNonEmployee, string XMLTieringNotif, string XMLSettingGL, string strProcessType,
