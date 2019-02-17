@@ -5,78 +5,78 @@
     <div class="card-box">
         <div class="row">
             <div class="col-md-12">
+                <!-- Begin Search Client -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Client Code</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(true)
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Client Code</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientCode" }).Enable(true)
+                            <span class="input-group-btn">
+                                <a id="searchClient" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientName" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
 
-                                <span class="input-group-btn">
-                                    <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                                </span>
-
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "AgentDesc" }).Enable(false)
-                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Search Client -->
             </div>
             <div class="col-md-12">
+                <!-- Begin Unit Blokir -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Unit Blokir</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("UnitBlokir").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(true)
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Unit Blokir</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("UnitBlokir").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Unit Blokir -->
+                <!-- Begin Tgl Blokir -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Tgl Blokir</label>
-                            <div class="input-group">
-                                @(Html.Kendo().DatePickerFor(model => model.BlokirModel.TanggalBlokir).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Tgl Blokir</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("TanggalBlokir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Tgl Blokir -->
             </div>
             <div class="col-md-12">
+                <!-- Begin Outstanding Unit -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Outstanding Unit</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("UnutBlokir").HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Outstanding Unit</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decOutStanding).HtmlAttributes(new { @id = "decOutStanding", @class = "form-control input-sm" }).Enable(false)
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Outstanding Unit -->
+                <!-- Begin Tgl Expiry Blokir -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Tgl Expiry Blokir</label>
-                            <div class="input-group">
-                                @(Html.Kendo().DatePickerFor(model => model.BlokirModel.TanggalExpiryBlokir).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Tgl Expiry Blokir</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("TanggalExpiryBlokir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Tgl Expiry Blokir -->
             </div>
             <div class="col-md-12">
+                <!-- Begin Jml Unit Blokir -->
                 <div class="col-md-6">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Jml Unit Blokir</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("UnutBlokir").HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Jml Unit Blokir</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decTotal).HtmlAttributes(new { @id = "decTotal", @class = "form-control input-sm" }).Enable(false)
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End Jml Unit Blokir -->
             </div>
         </div>
     </div>
@@ -86,14 +86,18 @@
                     .Name("GridBlokir")
                     .Columns(columns =>
                     {
-                        columns.Bound(p => p.BlockId);
-                        columns.Bound(p => p.Status);
-                        columns.Bound(p => p.TanggalBlokir).Format("{0:dd MMMM yyyy}");
-                        columns.Bound(p => p.TanggalExpiryBlokir).Format("{0:dd MMMM yyyy}");
-                        columns.Bound(p => p.UnitBlokir).Format("{0:###,###.##}");
-                        columns.Bound(p => p.Inputter);
-                        columns.Bound(p => p.Supervisor); 
-                    }).Pageable().Selectable()
+                        columns.Bound(p => p.BlockId).Width(100).Title("Block Id");
+                        columns.Bound(p => p.Status).Width(100).Title("Status");
+                        columns.Bound(p => p.TanggalBlokir).Format("{0:dd MMMM yyyy}").Width(150).Title("Tanggal Blokir");
+                        columns.Bound(p => p.TanggalExpiryBlokir).Format("{0:dd MMMM yyyy}").Width(200).Title("Tanggal Expiry Blokir");
+                        columns.Bound(p => p.UnitBlokir).Format("{0:###,###.##}").Width(150).Title("Unit Blokir");
+                        columns.Bound(p => p.Inputter).Width(100).Title("Inputter");
+                        columns.Bound(p => p.Supervisor).Width(100).Title("Supervisor"); 
+                    }).Pageable()
+                .Scrollable(s => s.Height(250))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.Change("onRowBlokirSelect"))
 
     )
 </div>
@@ -103,5 +107,15 @@
         <div class="modal-content"></div>
     </div>
 </div>
+
+<script>
+    function onRowBlokirSelect(e) {
+        var data = this.dataItem(this.select());
+        $("#UnitBlokir").val(data.UnitBlokir);
+        $("#TanggalBlokir").val(data.TanggalBlokir.getDate() + '/' + (data.TanggalBlokir.getMonth() + 1) + '/' + data.TanggalBlokir.getFullYear());        
+        $("#TanggalExpiryBlokir").val(data.TanggalExpiryBlokir.getDate() + '/' + (data.TanggalExpiryBlokir.getMonth() + 1) + '/' + data.TanggalExpiryBlokir.getFullYear());              
+    };
+
+</script>
 
 

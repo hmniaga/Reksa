@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Search Currency";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchCurrency() {
+        var value = $("#CurrencySearchComponentSearchTxt").val();
+        var grid = $("#CurrencySearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowCurrencySelect(e) {
+        var data = this.dataItem(this.select());
+        var CurrencyCode = $.trim(data.CurrencyCode);
+        var CurrencyName = $.trim(data.CurrencyName);
+
+        $("#CurrencySelectedCurrencyCode").val(CurrencyCode);
+        $("#CurrencySelectedCurrencyName").val(CurrencyName);
+    };
+
+    $("#CurrencySelectButton").on("click", function () {
+        var selectedCurrencyCode = $("#CurrencySelectedCurrencyCode").val();
+        var selectedCurrencyName = $("#CurrencySelectedCurrencyName").val();
+        alert(selectedCurrencyCode);
+
+        $("input[name='CurrencyModel.CurrencyCode']").val(selectedCurrencyCode).change();
+        $("input[name='CurrencyModel.CurrencyName']").val(selectedCurrencyName);
+
+    });
+
+    $("#CurrencySearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#CurrencySearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.CurrencyModel>()
+                    .Name("CurrencySearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.CurrencyCode).Title("Currency Code");
+                        columns.Bound(m => m.CurrencyName).Title("Currency Name");
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowCurrencySelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.CurrencyCode);
+                        })
+                        .Read(read => read.Action("SearchCurrencyData", "Global", new { search = search, criteria = criteria }))
+                    )
+        )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("CurrencySearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("CurrencySearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchCurrency")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="CurrencySelectedCurrencyCode" name="CurrencySelectedCurrencyCode" value="" />
+        <input type="hidden" id="CurrencySelectedCurrencyName" name="CurrencySelectedCurrencyName" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="CurrencySelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

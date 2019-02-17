@@ -21,7 +21,7 @@
     function onRowOfficeSelect(e) {
         var data = this.dataItem(this.select());
         var OfficeId = $.trim(data.OfficeId);
-        var OfficeName = $.trim(data.AgentDesc);
+        var OfficeName = $.trim(data.OfficeName);
         
         $("#OfficeSelectedId").val(OfficeId);
         $("#OfficeSelectedName").val(OfficeName);
@@ -32,7 +32,7 @@
         var selectedName = $("#OfficeSelectedName").val();
 
         $("input[name='OfficeModel.OfficeId']").val(selectedId).change();
-        $("input[name='OfficeModel.AgentDesc']").val(selectedName);
+        $("input[name='OfficeModel.OfficeName']").val(selectedName);
     });
 
     $("#OfficeSearchComponentSearchTxt").on("keypress", function (e) {
@@ -55,7 +55,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.OfficeId);
-                        columns.Bound(m => m.AgentDesc);
+                        columns.Bound(m => m.OfficeName);
                     })
                     .ToolBar(toolbar =>
                     {

@@ -14,5 +14,7 @@ namespace Reksa.Models
         public decimal UnitBlokir { get; set; }
         public string Inputter { get; set; }
         public string Supervisor { get; set; }
+        public decimal? decTotal { get; set; }
+        public decimal? decOutStanding { get; set; }
     }
 }

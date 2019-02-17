@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ReksaAPI.Models
 {
-    public class BlokirModel
+    public class CustomerBlokirModel
     {
         public string BlockId { get; set; }
         public string Status { get; set; }

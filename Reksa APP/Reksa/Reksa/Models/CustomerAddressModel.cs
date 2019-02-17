@@ -28,6 +28,6 @@ namespace Reksa.Models
         public string Kecamatan { get; set; }
         public string Kota { get; set; }
         public string Provinsi { get; set; }
-        public string LastUpdatedDate { get; set; }
+        public DateTime? LastUpdatedDate { get; set; }
     }
 }

@@ -8,5 +8,9 @@ namespace Reksa.Controllers
         {
             return View("Login");
         }
+        public ActionResult Error400()
+        {
+            return View("Error400");
+        }
     }
 }

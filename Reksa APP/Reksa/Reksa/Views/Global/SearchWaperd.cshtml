@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Search Waperd";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchWaperd() {
+        var value = $("#WaperdSearchComponentSearchTxt").val();
+        var grid = $("#WaperdSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowWaperdSelect(e) {
+        var data = this.dataItem(this.select());
+        var WaperdNo = $.trim(data.WaperdNo);
+        var DateExpire = $.trim(data.DateExpire);
+
+        $("#WaperdSelectedWaperdNo").val(WaperdNo);
+        $("#WaperdSelectedDateExpire").val(DateExpire);
+    };
+
+    $("#WaperdSelectButton").on("click", function () {
+        var selectedWaperdNo = $("#WaperdSelectedWaperdNo").val();
+        var selectedDateExpire = $("#WaperdSelectedDateExpire").val();
+
+      
+        $("input[name='WaperdModel.WaperdNo']").val(selectedWaperdNo).change();
+        $("input[name='WaperdModel.DateExpire']").val(selectedDateExpire);
+    });
+
+    $("#WaperdSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#WaperdSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.WaperdModel>()
+            .Name("WaperdSearchComponentGrid")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.WaperdNo);
+                columns.Bound(m => m.DateExpire).Format("{0:dd MMMM yyyy}").Title("Tanggal Expired");
+            })
+            @*.ToolBar(toolbar =>
+            {
+                toolbar.Template(@<text>
+                <div class="toolbar">
+                    @Html.Kendo().TextBox().Name("WaperdSearchComponentSearchTxt").Value(search)
+                    @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("WaperdSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchWaperd"))
+                    )
+                </div>
+                </text>);
+            })*@
+            .Events(events => events.Change("onRowWaperdSelect"))
+            .Pageable()
+            .Scrollable()
+            .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .Model(model =>
+                {
+                    model.Id(m => m.WaperdNo);
+                })
+                .Read(read => read.Action("SearchWaperdData", "Global", new { search = search, criteria = criteria }))
+            )
+        )
+        <input type="hidden" id="WaperdSelectedWaperdNo" name="WaperdSelectedWaperdNo" value="" />
+        <input type="hidden" id="WaperdSelectedDateExpire" name="WaperdSelectedDateExpire" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="WaperdSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

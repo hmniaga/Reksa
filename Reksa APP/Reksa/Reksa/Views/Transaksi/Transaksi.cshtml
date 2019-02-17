@@ -5,7 +5,8 @@
     ViewData["Title"] = "Transaksi";
 }
 
-<div class="panel panel-default">
+<!-- Begin Contents -->
+<div class="panel panel-default" id="contentTransaksi">
     <div class="panel-heading">
         <h4 class="m-t-0 header-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Transaksi</a>
@@ -13,47 +14,56 @@
     </div>
     <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
         <div class="panel-body">
-
+            <!-- Begin Button -->
             <div class="col-md-12" style="padding-top:4%">
                 <div class="input-group">
-                    <button class="btn btn-default waves-effect waves-light" hidden>
+                    <button id=ButtonRefresh class="btn btn-default waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-refresh"></i>
                         </span>
                         Refresh
                     </button>
-                    <button class="btn btn-primary waves-effect waves-light">
+                    <button id="buttonadd" class="btn btn-default waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-plus"></i>
                         </span>
-                        Add
+                        New
                     </button>
 
-                    <button class="btn btn-info waves-effect waves-light">
+                    <button id="buttonedit" class="btn btn-info waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-edit"></i>
                         </span>
                         Edit
                     </button>
 
-                    <button class="btn btn-danger waves-effect waves-light">
+                    <button id="buttondelete" class="btn btn-danger waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-trash"></i>
                         </span>
                         Delete
                     </button>
 
-                    <button class="btn btn-warning waves-effect waves-light">
+                    <button id="buttonsave" style="display:none;" class="btn btn-warning waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-save"></i>
                         </span>
                         Save
                     </button>
+                    <button id="buttonCancel" style="display:none;" class="btn btn-pink waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-remove"></i>
+                        </span>
+                        Cancel
+                    </button>
                 </div>
             </div>
+            <!-- End Button -->
+            <!-- Begin Accordion -->
             <div class="col-md-12">
                 <div class="panel-group" id="accordion-transaksi">
                     <div class="panel panel-default">
+                        <!-- Begin Accordion Subscription -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-subscription" aria-expanded="false" class="collapsed">
@@ -68,6 +78,8 @@
                                 }
                             </div>
                         </div>
+                        <!-- End Accordion Subscription -->
+                        <!-- Begin Accordion Redemption -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-redemption" aria-expanded="false" class="collapsed">
@@ -75,7 +87,6 @@
                                 </a>
                             </h4>
                         </div>
-
                         <div id="collapse-redemption" class="panel-collapse collapse">
                             <div class="panel-body">
                                 @{
@@ -83,7 +94,8 @@
                                 }
                             </div>
                         </div>
-
+                        <!-- End Accordion Redemption -->
+                        <!-- Begin Accordion Reksa Berjangka -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-reksaberjangka" aria-expanded="false" class="collapsed">
@@ -91,7 +103,6 @@
                                 </a>
                             </h4>
                         </div>
-
                         <div id="collapse-reksaberjangka" class="panel-collapse collapse">
                             <div class="panel-body">
                                 @{
@@ -99,7 +110,8 @@
                                 }
                             </div>
                         </div>
-
+                        <!-- End Accordion Reksa Berjangka -->
+                        <!-- Begin Accordion Switching Non Rdb -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-switchingnonrdb" aria-expanded="false" class="collapsed">
@@ -107,7 +119,6 @@
                                 </a>
                             </h4>
                         </div>
-
                         <div id="collapse-switchingnonrdb" class="panel-collapse collapse">
                             <div class="panel-body">
                                 @{
@@ -115,7 +126,8 @@
                                 }
                             </div>
                         </div>
-
+                        <!-- End Accordion Switching Non Rdb -->
+                        <!-- Begin Accordion Switching RDB -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-switchingrdb" aria-expanded="false" class="collapsed">
@@ -123,7 +135,6 @@
                                 </a>
                             </h4>
                         </div>
-
                         <div id="collapse-switchingrdb" class="panel-collapse collapse">
                             <div class="panel-body">
                                 @{
@@ -131,7 +142,8 @@
                                 }
                             </div>
                         </div>
-
+                        <!-- End Accordion Switching RDB -->
+                        <!-- Begin Accordion Booking -->
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion-transaksi" href="#collapse-booking" aria-expanded="false" class="collapsed">
@@ -139,7 +151,6 @@
                                 </a>
                             </h4>
                         </div>
-
                         <div id="collapse-booking" class="panel-collapse collapse">
                             <div class="panel-body">
                                 @{
@@ -147,104 +158,239 @@
                                 }
                             </div>
                         </div>
-
+                        <!-- Begin Accordion Booking -->
                     </div>
                 </div>
-
             </div>
+            <!-- End Accordion -->
         </div>
-
-
-        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="CIFNoModal" tabindex="-1" role="dialog" aria-labelledby="CIFNoModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="KotaModal" tabindex="-1" role="dialog" aria-labelledby="KotaModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="PropinsiModal" tabindex="-1" role="dialog" aria-labelledby="PropinsiModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="NegaraModal" tabindex="-1" role="dialog" aria-labelledby="NegaraModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="NIKModal" tabindex="-1" role="dialog" aria-labelledby="NIKModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="AgenModal" tabindex="-1" role="dialog" aria-labelledby="AgenModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="JenisRekModal" tabindex="-1" role="dialog" aria-labelledby="JenisRekModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="BankModal" tabindex="-1" role="dialog" aria-labelledby="BankModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="RekRelasiModal" tabindex="-1" role="dialog" aria-labelledby="RekRelasiModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="ReferentorModal" tabindex="-1" role="dialog" aria-labelledby="ReferentorModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="SellerModal" tabindex="-1" role="dialog" aria-labelledby="SellerModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="WaperdModal" tabindex="-1" role="dialog" aria-labelledby="WaperdModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#buttonadd").click(function () {
+            //$("#SID").prop('disabled', false);
+            $("#ButtonRefresh").hide();
+            $("#buttonadd").hide();
+            $("#buttonedit").hide();
+            $("#buttondelete").hide();
+            $("#buttonsave").show();
+            $("#buttonCancel").show();
+            clearAll();
+        });
+        $("#buttonedit").click(function () {
+            $("#ButtonRefresh").hide();
+            $("#buttonadd").hide();
+            $("#buttonedit").hide();
+            $("#buttondelete").hide();
+            $("#buttonsave").show();
+            $("#buttonCancel").show();
+        });
+        $("#buttondelete").click(function () {
+        });
+        $("#buttonsave").click(function () {
+        });
+        $("#buttonCancel").click(function () {
+            $("#ButtonRefresh").show();
+            $("#buttonadd").show();
+            $("#buttonedit").show();
+            $("#buttondelete").show();
+            $("#buttonsave").hide();
+            $("#buttonCancel").hide();
+        });
+    });
+
+    var idAccordions;
+    $(function () {
+        $('.collapse').on('shown.bs.collapse', function (e) {
+            var currAccordion = e.currentTarget.id;
+            if (currAccordion == "collapse-subscription") {
+                idAccordions = "SUBS";
+                clearSubscription();
+            } else if (currAccordion == "collapse-redemption") {
+                idAccordions = "REDEMP";
+                clearRedemption();
+            } else if (currAccordion == "collapse-reksaberjangka") {
+                idAccordions = "SUBSRDB";
+            } else if (currAccordion == "collapse-switchingnonrdb") {
+                idAccordions = "SWCNONRDB";
+            } else if (currAccordion == "collapse-switchingrdb") {
+                idAccordions = "SWCRDB";
+            } else if (currAccordion == "collapse-booking") {
+                idAccordions = "BOOK";
+            }
+        })
+    })
+
+    $("#ButtonRefresh").click(function () {
+        var CIFNo;
+        var RefID;
+        if (idAccordions == "SUBS")
+        {
+            CIFNo = $("#CIFNoSubs").val();
+            RefID = $("#RefIDSubs").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshTransaction',
+                data: { RefID: RefID, CIFNo: CIFNo, idAccordions: idAccordions },
+                success: function (data) {
+                        RefreshSubscription(data);                    
+                }
+            });
+        }
+        else if (idAccordions == "REDEMP")
+        {
+            CIFNo = $("#CIFNoRedemp").val();
+            RefID = $("#RefIDRedemp").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshTransaction',
+                data: { RefID: RefID, CIFNo: CIFNo, idAccordions: idAccordions },
+                success: function (data) {
+                    RefreshRedemption(data);                    
+                }
+            });
+        }
+        else if (idAccordions == "SUBSRDB") {
+            CIFNo = $("#CIFNoRDB").val();
+            RefID = $("#RefIDRDB").val(); 
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshTransaction',
+                data: { RefID: RefID, CIFNo: CIFNo, idAccordions: idAccordions },
+                success: function (data) {
+                    RefreshRDB(data);                   
+                }
+            });
+        }
+        else if (idAccordions == "SWCNONRDB") {
+            CIFNo = $("#CIFNoSwc").val();
+            RefID = $("#RefIDSwc").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshTransaction',
+                data: { RefID: RefID, CIFNo: CIFNo, idAccordions: idAccordions },
+                success: function (data) {
+                    RefreshSwc(data);                    
+                }
+            });
+        }
+        
+    });
+
+    function RefreshSubscription(data)
+    {
+        $("#CIFSIDSubs").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurSubs").val(data.TransactionSubsDetail.Umur);
+        $("#ShareHolderIdSubs").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileSubs").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskSubs").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRSubs").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRSubs").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDSubs").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDSubs").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCSubs").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCSubs").val(data.CustomerIdentitas.AccountNameMC);
+        $("#InputterSubs").val(data.TransactionSubsDetail.Inputter);
+        $("#SellerIdSubs").val(data.TransactionSubsDetail.Seller);
+        $("#WaperdNoSubs").val(data.TransactionSubsDetail.Waperd);
+        $("#TglExpireSubs").val(data.TransactionSubsDetail.Inputter);
+        $("#NIKRefIDSubs").val("");        
+
+        var dataSource = new kendo.data.DataSource(
+        {
+            data: data.ListSubscription
+        });
+        var Subsgrid = $('#GridViewSubs').data('kendoGrid');
+        Subsgrid.setDataSource(dataSource);
+        Subsgrid.dataSource.page(1);
+        
+    }
+
+    function RefreshRedemption(data) {
+        $("#CIFSIDRedemp").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurRedemp").val(data.TransactionSubsDetail.Umur);
+        $("#ShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskRedemp").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRRedemp").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRRedemp").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDRedemp").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDRedemp").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCRedemp").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCRedemp").val(data.CustomerIdentitas.AccountNameMC);
+        $("#InputterRedemp").val(data.TransactionSubsDetail.Inputter);
+
+            var dataSource = new kendo.data.DataSource(
+                {
+                    data: data.ListRedemption
+                });
+            var Redempgrid = $('#GridViewRedemp').data('kendoGrid');
+            Redempgrid.setDataSource(dataSource);
+            Redempgrid.dataSource.page(1);
+        
+    }
+
+    function RefreshRDB(data) {
+        $("#CIFSIDRDB").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurRDB").val(data.TransactionSubsDetail.Umur);
+        $("#ShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRRDB").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRRDB").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDRDB").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDRDB").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCRDB").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCRDB").val(data.CustomerIdentitas.AccountNameMC);
+        $("#InputterRDB").val(data.TransactionSubsDetail.Inputter);
+
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: data.ListSubsRDB
+            });
+        var RDBgrid = $('#GridViewRDB').data('kendoGrid');
+        RDBgrid.setDataSource(dataSource);
+        RDBgrid.dataSource.page(1);
+
+    }
+
+    function RefreshSwc(data)
+    {
+        $("#CIFSIDSwc").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurSwc").val(data.TransactionSubsDetail.Umur);
+        $("#ShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskSwc").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRSwc").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRSwc").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDSwc").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDSwc").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCSwc").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCSwc").val(data.CustomerIdentitas.AccountNameMC);
+        $("#InputterSwc").val(data.TransactionSubsDetail.Inputter);
+    }
+
+    function clearRedemption()
+    {
+        $("#CIFNoRedemp").val("");
+        $("#CIFNameRedemp").val("");
+        $("#RefIDRedemp").val("");
+        $("#RefNameRedemp").val("");
+        
+    }
+
+    function clearSubscription() {
+        $("#CIFNoSubs").val("");
+        $("#CIFNameSubs").val("");
+        $("#RefIDSubs").val("");
+        $("#RefNameSubs").val("");
+    }
+
+</script>
 

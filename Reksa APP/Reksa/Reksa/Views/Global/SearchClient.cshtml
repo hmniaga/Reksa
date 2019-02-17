@@ -24,17 +24,17 @@
         var data = this.dataItem(this.select());
         var dataId = $.trim(data.id);
         var dataValue = $.trim(data.ClientName);
-        var dataCat = $.trim(data.GroupClient);
+        var dataClientId = $.trim(data.ClientId);
 
         $("#ClientSelectedId").val(dataId);
         $("#ClientSelectedText").val(dataValue);
-        $("#ClientSelectedCat").val(dataCat);
+        $("#ClientSelectedClientId").val(dataClientId);
     };
 
     $("#ClientSelectButton").on("click", function () {
         var selectedId = $("#ClientSelectedId").val();
         var selectedText = $("#ClientSelectedText").val();
-        var selectedCat = $("#ClientSelectedCat").val();
+        var selectedClientId = $("#ClientSelectedClientId").val();
         var parameterSeq = $("#ClientParameterSeq").val();
         var parameterType = $("#ClientParameterType").val();
 
@@ -44,6 +44,7 @@
         } else {
             $("input[name='ClientModel.ClientCode']").val(selectedId).change();
             $("input[name='ClientModel.ClientName']").val(selectedText);
+            $("input[name='ClientModel.ClientId']").val(selectedClientId);
         }
     });
 
@@ -103,7 +104,7 @@
 
         <input type="hidden" id="ClientSelectedId" name="ClientSelectedId" value="" />
         <input type="hidden" id="ClientSelectedText" name="ClientSelectedText" value="" />
-        <input type="hidden" id="ClientSelectedCat" name="ClientSelectedCat" value="" />
+        <input type="hidden" id="ClientSelectedClientId" name="ClientSelectedClientId" value="" />
     </div>
     <div class="modal-footer">
         <button type="submit" id="ClientSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">

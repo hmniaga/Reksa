@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace Reksa.Models
 {
-    public class TransactionModel
+    public class ReferensiModel
     {
+        public string RefID { get; set; }
+        public System.DateTime? tanggalTransaksi { get; set; }
     }
 }

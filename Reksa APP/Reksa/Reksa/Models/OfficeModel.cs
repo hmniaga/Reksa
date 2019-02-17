@@ -8,6 +8,6 @@ namespace Reksa.Models
     public class OfficeModel
     {
         public string OfficeId { get; set; }
-        public string AgentDesc { get; set; }
+        public string OfficeName { get; set; }
 }
 }

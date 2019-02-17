@@ -4,67 +4,83 @@
     <div class="card-box">
         <h3 class="panel-title">Tabel Client Code</h3>
         <div class="row">
+            <!-- Begin Grid Client -->
             <div class="col-md-12">
                 @(Html.Kendo().Grid(Model.CustomerListClient)
-                .Name("GridClient")
-                .Columns(columns =>
-                {
-                    columns.Bound(p => p.Pilih);
-                    columns.Bound(p => p.ProdCode);
-                    columns.Bound(p => p.ProdName);
-                    columns.Bound(p => p.ClientId);
-                    columns.Bound(p => p.ClientCode);
-                    columns.Bound(p => p.NAV);
-                    columns.Bound(p => p.UnitBalance);
-                    columns.Bound(p => p.UnitNominal);
-                    columns.Bound(p => p.Flag);
-                    columns.Bound(p => p.CIFStatus);
-                    columns.Bound(p => p.RDBNonRDB);
-                    columns.Bound(p => p.FlagClientCodeTA);
-                }).Pageable()
-                )
+                        .Name("GridClient")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(p => p.Pilih)
+                            .ClientTemplate("<input type='checkbox' onclick='onCheckBoxClickClient(this)' value= '#= ProdCode #' " +
+                            "# if (Pilih) { #" +
+                            "checked='checked'" +
+                            "# } #" +
+                            "/>")
+                            .ClientHeaderTemplate("<input type='checkbox' id='chkSelectAllClient' onclick='checkAllClient(this)'/>")
+                            .Width(30).Title("Pilih")
+                            .Sortable(false);
+                            columns.Bound(p => p.ProdCode).Hidden();
+                            columns.Bound(p => p.ProdCode).Width(150).Title("Kode Produk");
+                            columns.Bound(p => p.ProdName).Width(170).Title("Nama Produk");
+                            columns.Bound(p => p.ClientId).Width(100).Title("Client Id");
+                            columns.Bound(p => p.ClientCode).Width(100).Title("Client Code");
+                            columns.Bound(p => p.NAV).Width(100).Title("NAV");
+                            columns.Bound(p => p.UnitBalance).Format("{0:###,###.##}").Width(200).Title("Unit Balance");
+                            columns.Bound(p => p.UnitNominal).Format("{0:###,###.##}").Width(200).Title("Unit Nominal");
+                            columns.Bound(p => p.Flag).Width(100).Title("Flag");
+                            columns.Bound(p => p.CIFStatus).Width(150).Title("CIF Status");
+                            columns.Bound(p => p.RDBNonRDB).Width(200).Title("RDB/Non RDB");
+                        }).Pageable()
+                        .Scrollable(s => s.Height(250))
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Events(events => events.Change("onRowClientSelect")))
             </div>
+            <!-- End Grid Client -->
+            <!-- Begin Jangka Waktu -->
             <div class="col-md-6" style="padding-top:5%">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Jangka Waktu</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
-                            <label class="col-sm-1 control-label">Bulan</label>
-                        </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Jangka Waktu</label>
+                    <div class="input-group m-t-5">
+                        @Html.Kendo().TextBox().Name("JangkaWaktu").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                        <span class="input-group-addon">Bulan</span>
+
                     </div>
-                </form>
+                </div>
             </div>
+            <!-- End Jangka Waktu -->
+            <!-- Begin Frek Pendebetan -->
             <div class="col-md-6" style="padding-top:5%">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Frek Pendebetan</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFSID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
-                        </div>
+                <div class="form-group">
+                    <div class="input-group m-t-5">
+                        <label class="col-sm-12 control-label">Frek Pendebetan</label>
+                        <span class="input-group-btn"></span>
+                        @Html.Kendo().TextBox().Name("FrekDebet").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
                     </div>
-                </form>
+                </div>
             </div>
+            <!-- End Frek Pendebetan -->
+            <!-- Begin Tanggal Jatuh Tempo -->
             <div class="col-md-6">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Tanggal Jatuh Tempo</label>
-                        <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
-                        </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Tanggal Jatuh Tempo</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                     </div>
-                </form>
+                </div>
             </div>
+            <!-- End Tanggal Jatuh Tempo -->
+            <!-- Begin Auto Redemp -->
             <div class="col-md-6">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <div class="input-group">
-                            @(Html.Kendo().CheckBox().Name("chkAutoRedemp").Label("Auto Redemp").Enable(false))
-                            @(Html.Kendo().CheckBox().Name("chkAsuransi").Label("Asuransi").Enable(false))
-                        </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        @(Html.Kendo().CheckBox().Name("chkAutoRedemp").Label("Auto Redemp").Enable(false))
+                        <span class="input-group-btn"></span>
+                        @(Html.Kendo().CheckBox().Name("chkAsuransi").Label("Asuransi").Enable(false))
                     </div>
-                </form>
+                </div>
             </div>
+            <!-- End Auto Redemp -->
         </div>
     </div>
 </div>
@@ -73,65 +89,178 @@
         <h3 class="panel-title">Tabel Aktifitas berdasarkan Transaski</h3>
         <div class="row">
             <div class="col-md-12">
+                <!-- Begin StartDate -->
                 <div class="col-md-3">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"></label>
-                            <div class="input-group">
-                                @(Html.Kendo().DatePicker().Name("StarDateAct").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" }).Enable(false))
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("StarDateAct").
+                                                                                                                HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                                .Format("{0:dd/MM/yyyy}")
+                            )
                         </div>
-                    </form>
+                    </div>
                 </div>
-
+                <!-- End StartDate -->
                 <div class="col-sm-1" style="text-align:center">
                     <label class="col-sm-3 control-label">S/D</label>
                 </div>
-
+                <!-- Begin EndDate -->
                 <div class="col-md-3">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                @(Html.Kendo().DatePicker().Name("EndDateAct").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" }).Enable(false))
-                            </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("EndDateAct")
+                                                                                                .HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                .Format("{0:dd/MM/yyyy}")
+                            )
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- End EndDate -->
+                <!-- Begin Button View Activity-->
                 <div class="col-md-3">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <button id="buttonviewActivity" class="btn btn-info waves-effect waves-light">
-                                    <span class="btn-label">
-                                        <i class="fa fa-search"></i>
-                                    </span>
-                                    View Activity
-                                </button>
-                            </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <button id="buttonviewActivity" class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                View Activity
+                            </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
 
+                </div>
+                <!-- End Button View Activity-->
             </div>
+            <!-- Begin Grid Activity-->
             <div class="col-md-12">
                 @(Html.Kendo().Grid(Model.CustomerActivity)
-                .Name("GridActivity")
-                .Columns(columns =>
-                {
-                    columns.Bound(p => p.TanggalTransaksi);
-                    columns.Bound(p => p.KeteranganTransaksi);
-                    columns.Bound(p => p.DebetNom);
-                    columns.Bound(p => p.KreditNom);
-                    columns.Bound(p => p.KreditNom);
-                    columns.Bound(p => p.Fee);
-                    columns.Bound(p => p.SaldoNom);
-                    columns.Bound(p => p.NAV);
-                    columns.Bound(p => p.ChannelTransaksi);
-                    columns.Bound(p => p.Operator);
-                    columns.Bound(p => p.Checker);
-                }).Pageable()
-                )
+                        .Name("GridActivity")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(p => p.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Width(150).Title("Tanggal Transaksi");
+                            columns.Bound(p => p.KeteranganTransaksi).Width(100).Title("Keterangan");
+                            columns.Bound(p => p.DebetNom).Format("{0:###,###.##}").Width(150).Title("Nominal Debit");
+                            columns.Bound(p => p.KreditNom).Format("{0:###,###.##}").Width(150).Title("Nominal Kredit");
+                            columns.Bound(p => p.Fee).Width(85).Title("Fee");
+                            columns.Bound(p => p.SaldoNom).Format("{0:###,###.##}").Width(150).Title("Nominal Saldo");
+                            columns.Bound(p => p.NAV).Width(85).Title("NAV");
+                            columns.Bound(p => p.ChannelTransaksi).Width(85).Title("Channel");
+                            columns.Bound(p => p.Operator).Width(85).Title("Operator");
+                            columns.Bound(p => p.Checker).Width(85).Title("Checker");
+                        }).Pageable()
+                        .Scrollable(s => s.Height(250))
+                        .Sortable()
+                        .Selectable(selectable => selectable
+                                        .Mode(GridSelectionMode.Single))
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        ))
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function checkAllClient(e) {
+    var state = $(e).is(':checked');
+    var grid = $('#GridClient').data('GridClient');
+    $.each(grid.dataSource.view(), function () {
+        if (this['Pilih'] != state)
+            this.dirty = true;
+
+        this['Pilih'] = state;
+    });
+    grid.refresh();
+}
+function onCheckBoxClickClient(e) {
+    var state = $(e).is(':checked');
+    var guid = e.value;
+
+    var grid = $('#GridClient').data('GridClient');
+    grid.refresh();
+
+    grid.tbody.find("tr[role='row']").each(function () {
+        var dataItem = grid.dataItem(this);
+
+        if (dataItem.Guid == guid) {
+            dataItem.Select = state;
+        }
+    })
+
+    var chkAll = $('#chkSelectAllClient').is(':checked');
+    var isCheckedAll = true;
+    var countTrue = 0;
+    var countFalse = 0;
+    var countAll = 0;
+
+    $.each(grid.dataSource.view(), function () {
+        if (this['Select'] == true) {
+            countTrue = countTrue + 1;
+        }
+        else {
+            countFalse = countFalse + 1;
+            isCheckedAll = false;
+        }
+        countAll = countAll + 1;
+    });
+    if (countFalse == 0 || (countFalse == 1 && !state)) {
+        $('#chkSelectAllClient').prop("checked", state);
+    }
+
+    grid.refresh();
+    }
+
+var clientCode;
+var clientId;
+    function onRowClientSelect(e) {
+        var data = this.dataItem(this.select());
+        clientCode = $.trim(data.ClientCode);
+        clientId = $.trim(data.ClientId);
+
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetDataRDB',
+            data: { strClientCode: clientCode},
+            success: function (data) {
+                if (listRDB != null)
+                {
+                    $("#JangkaWaktu").val(data.listRDB[0].JangkaWaktu);
+                    var dateJT = new Date(data.listRDB[0].JatuhTempo);                  
+                    $("#DateJatuhTempo").val(dateJT.getDate() + '/' + (dateJT.getMonth() + 1) + '/' + dateJT.getFullYear()); 
+                    $("#chkAutoRedemp").val(data.listRDB[0].AutoRedemption);
+                    $("#chkAsuransi").val(data.listRDB[0].Asuransi);
+                    $("#FrekDebet").val(data.listRDB[0].FrekPendebetan);
+                }
+            }
+        });
+    };
+    
+    $("#buttonviewActivity").click(function () {
+        var dtStart = $("#StarDateAct").val();
+        var dtEnd = $("#EndDateAct").val(); 
+        $.ajax({
+            type: "GET",
+            url: "/Customer/ViewActivityData",
+            data: { intSelectedClient: clientId, strStart: dtStart, strEnd: dtEnd },
+            dataType: "json",
+            success: function (data) {
+                if (data.CustomerActivity.length != 0)
+                {
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: data.CustomerActivity
+                        });
+                    var Actgrid = $('#GridActivity').data('kendoGrid');
+                    Actgrid.setDataSource(dataSource);
+                    Actgrid.dataSource.page(1);
+                } else
+                {
+                    $("#GridActivity").data('kendoGrid').dataSource.data([]);
+                }
+            }
+        });
+    });
+
+</script>

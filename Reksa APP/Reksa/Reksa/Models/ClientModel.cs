@@ -7,7 +7,7 @@ namespace Reksa.Models
 {
     public class ClientModel
     {
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public string ProdCode { get; set; }
         public string ClientCode { get; set; }
         public string ClientName { get; set; }
