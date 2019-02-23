@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Otorisasi\" />
     <Folder Include="wwwroot\lib\assets\plugins\jstree\themes\default\" />
   </ItemGroup>
 

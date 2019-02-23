@@ -403,6 +403,28 @@ namespace ReksaAPI
         #endregion
 
         #region "GLOBAL"
+        public List<SearchModel.FrekuensiDebet> ReksaPopulateCombo()
+        {
+            DataSet dsOut = new DataSet();
+            List<SearchModel.FrekuensiDebet> list = new List<SearchModel.FrekuensiDebet>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateCombo", ref dbParam, out dsOut))
+                {
+                    DataTable dtOut = dsOut.Tables[0];
+
+                    List<SearchModel.FrekuensiDebet> result = this.MapListOfObject<SearchModel.FrekuensiDebet>(dtOut);
+                    list.AddRange(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
+
         public int ReksaHitungUmur(string strCIFNo)
         {
             int intUmur = 0;
@@ -1451,9 +1473,7 @@ namespace ReksaAPI
             }
         }
 
-        public void ReksaMaintainBlokir(int intType, int intClientId, 
-            int intBlockId, decimal decBlockAmount, string strBlockDesc,
-            DateTime dtExpiryDate, bool isAccepted, int intNIK, string strGuid, 
+        public void ReksaMaintainBlokir(CustomerBlokirModel Blokir, string strBlockDesc, bool isAccepted, int intNIK, string strGuid, 
             out string strErrMsg)
         {
             DataSet dsOut = new DataSet();
@@ -1462,12 +1482,12 @@ namespace ReksaAPI
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.Int, Value = intType, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnClientId", SqlDbType = System.Data.SqlDbType.Int, Value = intClientId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnBlockId", SqlDbType = System.Data.SqlDbType.Int, Value = intBlockId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pmBlockAmount", SqlDbType = System.Data.SqlDbType.Decimal, Value = decBlockAmount, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.Int, Value = Blokir.intType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnClientId", SqlDbType = System.Data.SqlDbType.Int, Value = Blokir.ClientId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnBlockId", SqlDbType = System.Data.SqlDbType.Int, Value = Blokir.BlockId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmBlockAmount", SqlDbType = System.Data.SqlDbType.Decimal, Value = Blokir.UnitBlokir, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pmBlockDesc", SqlDbType = System.Data.SqlDbType.VarChar, Value = strBlockDesc, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pdExpiryDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtExpiryDate, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdExpiryDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = Blokir.TanggalExpiryBlokir, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pbAccepted", SqlDbType = System.Data.SqlDbType.Bit, Value = isAccepted, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input}
@@ -1607,6 +1627,64 @@ namespace ReksaAPI
                 blnResult = false;
             }
             return blnResult;
+        }
+        #endregion
+
+        #region "MASTER"
+        public decimal ReksaInqUnitNasabahDitwrkan(string strCIFNo, string strProdCode, int intNIK, string strGUID, DateTime dtCurrDate)
+        {
+            decimal sisaUnit = 0;
+            DataSet ds = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcCIFNo", Value = strCIFNo, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode", Value = strProdCode, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnSisaUnit", SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Output, Size = 25, Scale = 13 },
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcGuid", Value = strGUID, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdCurrDate", Value = dtCurrDate, SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaInqUnitNasDitwrkan", ref dbParam, out ds, out cmdOut))
+                {
+                    decimal.TryParse(cmdOut.Parameters["@pnSisaUnit"].Value.ToString(), out sisaUnit);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return sisaUnit;
+        }
+        public decimal ReksaInqUnitDitwrkan(string strProdCode, int intNIK, string strGUID, DateTime dtCurrDate)
+        {
+            decimal sisaUnit = 0;
+            DataSet ds = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcProdCode", Value = strProdCode, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnSisaUnit", SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Output, Size = 25, Scale = 13 },
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcGuid", Value = strGUID, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdCurrDate", Value = dtCurrDate, SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaInqUnitDitwrkan", ref dbParam, out ds, out cmdOut))
+                {
+                    decimal.TryParse(cmdOut.Parameters["@pnSisaUnit"].Value.ToString(), out sisaUnit);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return sisaUnit;
         }
         #endregion
 
@@ -1889,10 +1967,10 @@ namespace ReksaAPI
 
         #region "TRANSACTION"
         public void ReksaRefreshTransactionNew(string strRefID, int intNIK, string strGuid, string strTranType, 
-            ref List<TransactionSubscriptionModel.SubscriptionDetail> listSubsDetail, 
-            ref List<TransactionSubscriptionModel.SubscriptionList> listSubs,
-            ref List<TransactionSubscriptionModel.SubscriptionRDBList> listSubsRDB,
-            ref List<TransactionSubscriptionModel.RedemptionList> listRedemp)
+            ref List<TransactionModel.SubscriptionDetail> listSubsDetail, 
+            ref List<TransactionModel.SubscriptionList> listSubs,
+            ref List<TransactionModel.SubscriptionRDBList> listSubsRDB,
+            ref List<TransactionModel.RedemptionList> listRedemp)
         {
             DataSet dsOut = new DataSet();
             try
@@ -1913,10 +1991,10 @@ namespace ReksaAPI
                         DataTable dtOut1 = dsOut.Tables[1];
                         DataTable dtOut2 = dsOut.Tables[2];
                         DataTable dtOut3 = dsOut.Tables[3];
-                        List<TransactionSubscriptionModel.SubscriptionDetail> resultSubs = this.MapListOfObject<TransactionSubscriptionModel.SubscriptionDetail>(dtOut);
-                        List<TransactionSubscriptionModel.SubscriptionList> resultSubsList = this.MapListOfObject<TransactionSubscriptionModel.SubscriptionList>(dtOut1);
-                        List<TransactionSubscriptionModel.RedemptionList> resultRedempList = this.MapListOfObject<TransactionSubscriptionModel.RedemptionList>(dtOut2);
-                        List<TransactionSubscriptionModel.SubscriptionRDBList> resultSubsRDBList = this.MapListOfObject<TransactionSubscriptionModel.SubscriptionRDBList>(dtOut3);
+                        List<TransactionModel.SubscriptionDetail> resultSubs = this.MapListOfObject<TransactionModel.SubscriptionDetail>(dtOut);
+                        List<TransactionModel.SubscriptionList> resultSubsList = this.MapListOfObject<TransactionModel.SubscriptionList>(dtOut1);
+                        List<TransactionModel.RedemptionList> resultRedempList = this.MapListOfObject<TransactionModel.RedemptionList>(dtOut2);
+                        List<TransactionModel.SubscriptionRDBList> resultSubsRDBList = this.MapListOfObject<TransactionModel.SubscriptionRDBList>(dtOut3);
 
                         listSubsDetail.AddRange(resultSubs);
                         listSubs.AddRange(resultSubsList);
@@ -1963,7 +2041,7 @@ namespace ReksaAPI
         }
 
         public void ReksaRefreshSwitching(string strRefID, int intNIK, string strGUID,
-            ref List<TransactionSwitchingNonRDBModel.Detail> listDetailSwcNonRDB)
+            ref List<TransactionModel.SwitchingNonRDBModel> listDetailSwcNonRDB)
         {
             DataSet dsOut = new DataSet();
             try
@@ -1980,7 +2058,7 @@ namespace ReksaAPI
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
                         DataTable dtOut = dsOut.Tables[0];
-                        List<TransactionSwitchingNonRDBModel.Detail> resultSwcNonRDB = this.MapListOfObject<TransactionSwitchingNonRDBModel.Detail>(dtOut);
+                        List<TransactionModel.SwitchingNonRDBModel> resultSwcNonRDB = this.MapListOfObject<TransactionModel.SwitchingNonRDBModel>(dtOut);
                         listDetailSwcNonRDB.AddRange(resultSwcNonRDB);
                     }
                 }
@@ -1992,7 +2070,7 @@ namespace ReksaAPI
         }
 
         public void ReksaRefreshSwitchingRDB(string strRefID, int intNIK, string strGUID,
-            ref List<TransactionSwitchingRDBModel.Detail> listDetailSwcRDB)
+            ref List<TransactionModel.SwitchingRDBModel> listDetailSwcRDB)
         {
             DataSet dsOut = new DataSet();
             try
@@ -2009,7 +2087,7 @@ namespace ReksaAPI
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
                         DataTable dtOut = dsOut.Tables[0];
-                        List<TransactionSwitchingRDBModel.Detail> resultSwcRBD = this.MapListOfObject<TransactionSwitchingRDBModel.Detail>(dtOut);
+                        List<TransactionModel.SwitchingRDBModel> resultSwcRBD = this.MapListOfObject<TransactionModel.SwitchingRDBModel>(dtOut);
                         listDetailSwcRDB.AddRange(resultSwcRBD);
                     }
                 }
@@ -2021,7 +2099,7 @@ namespace ReksaAPI
         }
 
         public void ReksaRefreshBookingNew(string strRefID, int intNIK, string strGUID,
-                    ref List<TransactionBookingModel.Detail> listDetailBooking)
+                    ref List<TransactionModel.BookingModel> listDetailBooking)
         {
             DataSet dsOut = new DataSet();
             try
@@ -2038,7 +2116,7 @@ namespace ReksaAPI
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
                         DataTable dtOut = dsOut.Tables[0];
-                        List<TransactionBookingModel.Detail> resultBooking = this.MapListOfObject<TransactionBookingModel.Detail>(dtOut);
+                        List<TransactionModel.BookingModel> resultBooking = this.MapListOfObject<TransactionModel.BookingModel>(dtOut);
                         listDetailBooking.AddRange(resultBooking);
                     }
                 }
@@ -2073,34 +2151,6 @@ namespace ReksaAPI
                 throw ex;
             }
             return unitBalance;
-        }
-
-        public decimal ReksaInqUnitDitwrkan(string strProdCode, int intNIK, string strGUID, DateTime dtCurrDate)
-        {
-            decimal sisaUnit = 0;
-            DataSet ds = new DataSet();
-            try
-            {
-                List<SqlParameter> dbParam = new List<SqlParameter>()
-                {
-                    new SqlParameter() { ParameterName = "@pcProdCode", Value = strProdCode, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnSisaUnit", SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Output, Size = 25, Scale = 13 },
-                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcGuid", Value = strGUID, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pdCurrDate", Value = dtCurrDate, SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Input}
-                };
-
-                SqlCommand cmdOut = new SqlCommand();
-                if (this.ExecProc(QueryReksa(), "ReksaInqUnitDitwrkan", ref dbParam, out ds, out cmdOut))
-                {
-                    decimal.TryParse(cmdOut.Parameters["@pnSisaUnit"].Value.ToString(), out sisaUnit);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return sisaUnit;
         }
 
         public decimal ReksaGetLatestNAV(int intProdId, int intNIK, string strGUID)
@@ -2295,7 +2345,7 @@ namespace ReksaAPI
                     resultFee.FeeCCY = cmdOut.Parameters["@pcFeeCCY"].Value.ToString();
                     decimal.TryParse(cmdOut.Parameters["@pnFee"].Value.ToString(), out Fee);
                     resultFee.Fee = Fee;
-                    decimal.TryParse(cmdOut.Parameters["@pdPercentageFeeOutput"].Value.ToString(), out PercentageFeeOutput);
+                    decimal.TryParse(cmdOut.Parameters["@pdPercentageOutput"].Value.ToString(), out PercentageFeeOutput);
                     resultFee.PercentageOutput = PercentageFeeOutput;                   
                 }
             }

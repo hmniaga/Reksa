@@ -43,6 +43,10 @@
                                     .SpriteCssClasses("html");
                             });
                     })
+                    .Events(events => events
+                .Select("onSelect")
+                
+            )
                         )
                     </div>
                 </div>
@@ -63,7 +67,7 @@
                         <div class="col-md-6" style="padding-bottom: 30px">
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">@ViewData["label0"]</label>
+                                    <label id ="label0" class="col-sm-3 control-label">@ViewData["label0"]</label>
                                     <div class="input-group">
                                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" })
 
@@ -86,24 +90,7 @@
                                     <i class="fa fa-refresh"></i>
                                 </span>
                                 Refresh
-                            </button>
-                            <script>
-                                 var url = '@Html.Raw(Url.Action("Index", "Parameter"))';
-                                 $("#myButton").click(function(){
-                                     location.href = url + '?ProdukId=' + $("#ProdId").val()
-                                });
-
-                                @*var urlAction = '@Html.Raw(Url.Action("Index", "Parameter"))';
-                                $(document).ready(function () {
-                                    $("#myButton").click(function () {
-                                        $.ajax({
-                                            url: urlAction + '?ProdukId=' + $("#ProdId").val() , success: function (result) {
-                                                $("#GridParam").html(result);
-                                            }
-                                        });
-                                    });
-                                });*@
-                            </script>
+                            </button>                            
                         </div>
                     </div>
 
@@ -111,17 +98,17 @@
                         <div class="col-md-6">
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">@ViewData["label1"]</label>
+                                    <label id ="label1" class="col-sm-4 control-label">@ViewData["label1"]</label>
                                     <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("label1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                        @Html.Kendo().TextBox().Name("input1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
                                     </div>
                                 </div>
                             </form>
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">@ViewData["label2"]</label>
+                                    <label id ="label2" class="col-sm-4 control-label">@ViewData["label2"]</label>
                                     <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("label2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                        @Html.Kendo().TextBox().Name("input2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
                                     </div>
                                 </div>
                             </form>
@@ -129,7 +116,7 @@
                         <div class="col-md-6">
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">@ViewData["label3"]</label>
+                                    <label id ="label3" class="col-sm-4 control-label">@ViewData["label3"]</label>
                                     <div class="input-group">
                                         @(Html.Kendo().DatePicker().Name("TanggalValuta").Enable(false))
                                     </div>
@@ -137,9 +124,9 @@
                             </form>
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">@ViewData["label4"]</label>
+                                    <label id ="label4" class="col-sm-4 control-label">@ViewData["label4"]</label>
                                     <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("label4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+                                        @Html.Kendo().TextBox().Name("input4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
                                     </div>
                                 </div>
                             </form>
@@ -148,32 +135,39 @@
 
                     <div class="col-md-12" style="padding-top:4%">
                         <div class="input-group">
-                            <button class="btn btn-primary waves-effect waves-light">
+                            <button id="btnAdd" class="btn btn-primary waves-effect waves-light">
                                 <span class="btn-label">
                                     <i class="fa fa-plus"></i>
                                 </span>
                                 Add
                             </button>
 
-                            <button class="btn btn-info waves-effect waves-light">
+                            <button id="btnEdit" class="btn btn-info waves-effect waves-light">
                                 <span class="btn-label">
                                     <i class="fa fa-edit"></i>
                                 </span>
                                 Edit
                             </button>
 
-                            <button class="btn btn-danger waves-effect waves-light">
+                            <button id="btnDelete" class="btn btn-danger waves-effect waves-light">
                                 <span class="btn-label">
                                     <i class="fa fa-trash"></i>
                                 </span>
                                 Delete
                             </button>
 
-                            <button class="btn btn-warning waves-effect waves-light">
+                            <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="display:none;">
                                 <span class="btn-label">
                                     <i class="fa fa-save"></i>
                                 </span>
                                 Save
+                            </button>
+
+                            <button id="btnCancel" class="btn btn-pink waves-effect waves-light" style="display:none;">
+                                <span class="btn-label">
+                                    <i class="fa fa-remove"></i>
+                                </span>
+                                Cancel
                             </button>
                         </div>
                     </div>
@@ -189,12 +183,11 @@
                                         columns.Bound(p => p.OfficeId);
                                         columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}");
                                     }).Pageable()
+                                    .Scrollable(s => s.Height(250))
                                     .Selectable(selectable => selectable
                                         .Mode(GridSelectionMode.Single))
-                                    //.DataSource(dataSource => dataSource
-                                    //.Ajax()
-                                    //.Read(read => read.Action("Index", "Parameter", new { ProdukId = "ProductCode" })))
-                                    )
+                            .Events(events => events.Change("onRowParamSelect"))
+)
                     </div>
                 </div>
                 <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
@@ -207,3 +200,98 @@
     </div>
 
 </div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#btnAdd").click(function () {
+            $("#btnAdd").hide();
+            $("#btnEdit").hide();
+            $("#btnDelete").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();
+            clearAll();
+            disableAll(1);
+        });
+        $("#btnEdit").click(function () {
+            $("#btnAdd").hide();
+            $("#btnEdit").hide();
+            $("#btnDelete").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();  
+            disableAll(1);
+        });
+        $("#btnDelete").click(function () {
+           
+        });
+        $("#btnSave").click(function () {
+
+
+        });
+        $("#btnCancel").click(function () {
+            $("#btnAdd").show();
+            $("#btnEdit").show();
+            $("#btnDelete").show();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            disableAll(0);
+        });
+    }); 
+
+    function onSelect(e)
+    {
+        alert(this.text(e.node));
+        switch (this.text(e.node))
+        {
+            case "Agent":
+                $("#label1").val("Kode");
+                $("#label2").val("Keterangan");
+                $("#label3").val("Tanggal Libur");
+                $("#label4").val("Kode");
+                break;
+        }
+        
+    }
+
+    function clearAll() {
+        $("#input1").val("");
+        $("#input2").val("");
+        $("#TanggalValuta").val("");
+        $("#input4").val("");        
+    }
+    function disableAll(intType) {
+        if (intType == 1) {
+            $("#input1").prop('disabled', false);
+            $("#input2").prop('disabled', false);
+            $("#input4").prop('disabled', false);
+            var datepicker = $("#TanggalValuta").data("kendoDatePicker");
+            datepicker.enable(true);
+            //$("#TanggalValuta").datepicker("option", "disabled", true);
+        }
+        else
+        {
+            $("#input1").prop('disabled', true);
+            $("#input2").prop('disabled', true);
+            $("#input4").prop('disabled', true);
+            var datepicker = $("#TanggalValuta").data("kendoDatePicker");
+            datepicker.enable(false);           
+        }
+    }
+
+
+var url = '@Html.Raw(Url.Action("Index", "Parameter"))';
+$("#myButton").click(function(){
+location.href = url + '?ProdukId=' + $("#ProdId").val()
+});
+
+function onRowParamSelect(e) {
+    var data = this.dataItem(this.select());
+    $("#input1").val(data.Kode);
+    $("#input2").val(data.Deskripsi);
+    var TanggalValuta = new Date(data.TanggalValuta);
+    $("#TanggalValuta").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());       
+    $("#input4").val(data.OfficeId);
+};
+    
+</script>

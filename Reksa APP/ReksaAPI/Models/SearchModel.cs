@@ -67,7 +67,7 @@ namespace ReksaAPI.Models
         public class Switching
         {
             public string RefID { get; set; }
-            public string TanggalTransaksi { get; set; }
+            public System.DateTime TanggalTransaksi { get; set; }
             public string TranId { get; set; }
         }
         public class TransaksiClientNew
@@ -98,5 +98,9 @@ namespace ReksaAPI.Models
             public System.DateTime DateExpire { get; set; }
         }
 
+        public class FrekuensiDebet
+        {
+            public int FrekuensiPendebetan { get; set; }
+        }
     }
 }

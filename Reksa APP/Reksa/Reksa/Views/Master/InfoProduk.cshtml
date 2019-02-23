@@ -1,5 +1,5 @@
 ﻿@using Kendo.Mvc.UI
-@model Reksa.ViewModels.CustomerListViewModel
+@model Reksa.ViewModels.MasterListViewModel
 
 @{
     ViewData["Title"] = "Info Produk";
@@ -14,20 +14,19 @@
     <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
         <div class="panel-body">
             <div class="col-md-6">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Produk</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(true)
+                <!-- Begin Kode Product -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Kode Produk</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
 
-                            <span class="input-group-btn">
-                                <a href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                            </span>
-
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.AgentDesc).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "AgentDesc" }).Enable(false)
-                        </div>
+                        <span class="input-group-btn">
+                            <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        </span>
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
                     </div>
-                </form>
+                </div>
+                <!-- End Kode Product -->
             </div>
             <div class="col-md-2">
                 <button class="btn btn-default waves-effect waves-light" id=myButton>
@@ -83,50 +82,50 @@
             <!-- End Buttons -->
             <!-- Begin Accordions -->
             <div class="col-md-12">
-                <div class="panel-group" id="accordion-nasabah">
+                <div class="panel-group" id="accordion-infoproduk">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-identitas" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-general" aria-expanded="false" class="collapsed">
                                     General Info
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapse-identitas" class="panel-collapse collapse">
+                        <div id="collapse-general" class="panel-collapse collapse">
                             <div class="panel-body">
-                                @*@{
-                                    Html.RenderPartial("_InfoProdukGeneralInfo.cshtml", Model);
-                                }*@
+                                @{
+                                    Html.RenderPartial("_InfoProdukGeneral.cshtml", Model);
+                                }
                             </div>
                         </div>
 
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-aktifitas" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-fee" aria-expanded="false" class="collapsed">
                                     Fee
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapse-aktifitas" class="panel-collapse collapse">
+                        <div id="collapse-fee" class="panel-collapse collapse">
                             <div class="panel-body">
-                                @*@{
+                                @{
                                     Html.RenderPartial("_InfoProdukFee.cshtml", Model);
-                                }*@
+                                }
                             </div>
                         </div>
 
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-blokir" aria-expanded="false" class="collapsed">
+                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-rdb" aria-expanded="false" class="collapsed">
                                     Reksa Dana Berjangka
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapse-blokir" class="panel-collapse collapse">
+                        <div id="collapse-rdb" class="panel-collapse collapse">
                             <div class="panel-body">
-                                @*@{
-                                    Html.RenderPartial("_InfoProdukReksaBerjangka.cshtml", Model);
-                                }*@
+                                @{
+                                    Html.RenderPartial("_InfoProdukRDB.cshtml", Model);
+                                }
                             </div>
                         </div>
                     </div>

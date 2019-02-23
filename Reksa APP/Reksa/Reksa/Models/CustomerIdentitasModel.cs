@@ -51,6 +51,7 @@ namespace Reksa.Models
         public DateTime DateExpRiskProfile { get; set; }
         public bool blnDocTermCond { get; set; }
         public bool blnDocRiskProfile { get; set; }
-        public string strAddressType { get; set; }        
+        public string strAddressType { get; set; } 
+        public int Umur { get; set; }
     }
 }

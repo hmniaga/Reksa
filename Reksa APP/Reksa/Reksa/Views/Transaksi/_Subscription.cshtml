@@ -59,14 +59,12 @@
                         </div>
                     </div>
                 <!-- Begin Input Shareholder ID -->
-                <form class="form-horizontal" role="form">
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Shareholder ID</label>
                         <div class="input-group">
                             @Html.Kendo().TextBox().Name("ShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                         </div>
                     </div>
-                </form>
                 <!-- End Input Shareholder ID -->
             </div>
             <div class="col-md-6" style="padding-left:100px">
@@ -159,7 +157,6 @@
                     </div>
                     <!-- End Tgl Transaksi -->
                     <!-- Begin Kode Product -->
-                    <form class="form-horizontal" role="form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Kode Produk</label>
                             <div class="input-group">
@@ -171,7 +168,6 @@
                                 @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdNameSubs" }).Enable(false)
                             </div>
                         </div>
-                    </form>
                     <!-- End Kode Product -->
                     <!-- Begin Client Code -->
                     <form class="form-horizontal" role="form">
@@ -519,6 +515,8 @@
             }
         });
     }  
+
+    
 
 
 

@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Search Booking";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchSwitching() {
+        var value = $("#SwitchingSearchComponentSearchTxt").val();
+        var grid = $("#SwitchingSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function onRowSwitchingSelect(e) {
+        var data = this.dataItem(this.select());
+        var RefID = $.trim(data.RefID);
+        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+
+        $("#SwitchingSelectedRefID").val(RefID);
+        $("#SwitchingSelectedtanggalTransaksi").val(tanggalTransaksi);
+    };
+
+    $("#SwitchingSelectButton").on("click", function () {
+        var selectedRefID = $("#SwitchingSelectedRefID").val();
+        var selectedtanggalTransaksi = $("#SwitchingSelectedtanggalTransaksi").val();
+
+        $("input[name='BookingModel.RefID']").val(selectedRefID).change();
+        $("input[name='BookingModel.TanggalTransaksi']").val(selectedtanggalTransaksi);
+
+    });
+
+    $("#SwitchingSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#SwitchingSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.BookingModel>()
+                    .Name("SwitchingSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.RefID).Title("No Switching");
+                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.BookingId);
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowSwitchingSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.RefID);
+                        })
+                        .Read(read => read.Action("SearchSwitchingData", "Global", new { search = search, criteria = criteria }))
+                    )
+        )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("SwitchingSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("SwitchingSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchSwitching")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="SwitchingSelectedRefID" name="SwitchingSelectedRefID" value="" />
+        <input type="hidden" id="SwitchingSelectedtanggalTransaksi" name="SwitchingSelectedtanggalTransaksi" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="SwitchingSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿
+@using Kendo.Mvc.UI
+@model Reksa.ViewModels.TransaksiListViewModel
+
+@{
+    ViewData["Title"] = "Outgoing TT";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Outgoing TT</a>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <!-- Begin Kode Product -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Kode Produk</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCodeRedemp" }).Enable(false)
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdNameRedemp" }).Enable(false)
+                </div>
+            </div>
+            <!-- End Kode Product -->
+            <!-- Begin Client Code -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Client Code</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientCodeRedemp" }).Enable(false)
+
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientNameRedemp" }).Enable(false)
+                </div>
+            </div>
+            <!-- End Client Code -->
+        </div>
+        <div class="col-md-12" style="padding-bottom:5%">
+            @(Html.Kendo().Grid(Model.ListSubscription)
+                    .Name("GridTunggakan")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.NoTrx).Width(100).Title("No Transaksi");
+                        columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
+                        columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
+                        columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
+                        columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
+                        columns.Bound(p => p.Nominal).Width(150).Title("Nominal");
+                        columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
+                        columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
+                        columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount");
+                        columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
+                        columns.Bound(p => p.JenisFee).Width(150).Title("JenisFee");
+                        columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
+                    })
+                    .Pageable()
+                    .Scrollable(s => s.Height(250))
+                    .Selectable(selectable => selectable
+                    .Mode(GridSelectionMode.Single))
+                    //.Events(events => events.Change("onRowTunggakanSelect"))
+            )
+
+        </div>
+    </div>
+</div>

@@ -51,7 +51,10 @@ namespace Reksa.Controllers
         public ActionResult Customer()
         {
             CustomerListViewModel vModel = new CustomerListViewModel();
-            List<ParameterModel> listParam = new List<ParameterModel>();            
+            List<ParameterModel> listParam = new List<ParameterModel>();
+            CustomerIdentitasModel custModel = new CustomerIdentitasModel();
+            custModel.NasabahId = 0;
+            vModel.CustomerIdentitas = custModel;
             vModel.OfficeModel = new OfficeModel();
             vModel.OfficeModel.OfficeId = _strBranch;
             RefreshParameter("KNP", _intNIK, out listParam);
@@ -196,8 +199,22 @@ namespace Reksa.Controllers
             string strShareHolderID = GenShareHolderID();
             return Json(new { strShareHolderID });
         }
-        public ActionResult MaintainCustomer(CustomerListViewModel custModel)
+        public JsonResult GetAlamatCabang(string CIFNO, string Branch, int intId)
         {
+            CustomerListViewModel vModel = new CustomerListViewModel();
+            GetAlamatCabang(CIFNO, Branch, intId, out List<BranchAddressModel> listBranchAddress);
+            if (listBranchAddress.Count > 0)
+            {
+                vModel.CustomerBranchAddress = listBranchAddress[0];
+            }                
+            return Json(vModel);
+        }
+
+        [HttpPost]
+        public ActionResult MaintainBlokir([FromBody] BlokirModel blokirModel)
+        {
+
+            MaintainBlokirData(blokirModel);
             return View("Customer");
         }
         private JsonResult Json(object p, object allowGet)
@@ -280,10 +297,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                strGuid = Guid.NewGuid().ToString();
-                Branch = "01010";
-                intNIK = 10137;
-                HttpResponseMessage response = client.GetAsync("/api/Customer/GetConfAddress?Type="+ Type + "&CIFNO="+ CIFNO + "&Branch="+ Branch + "&Id="+ intId + "&Guid="+ strGuid + "&NIK=" + intNIK).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Customer/GetConfAddress?Type="+ Type + "&CIFNO="+ CIFNO + "&Branch="+ _strBranch + "&Id="+ intId + "&Guid="+ _strGuid + "&NIK=" + _intNIK).Result;
                 string strJson = response.Content.ReadAsStringAsync().Result;
                 JObject strObject = JObject.Parse(strJson);
                 JToken intAddressType = strObject["intAddressType"];
@@ -436,6 +450,37 @@ namespace Reksa.Controllers
                 }
             }
 
+        }
+
+        private void GetAlamatCabang(string CIFNO, string Branch, int intId, out List<BranchAddressModel> listBranchAddress)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Customer/GetAlamatCabang?Branch="+ Branch + "&CIFNO=" + CIFNO + "&Id=" + intId).Result;
+                string strJson = response.Content.ReadAsStringAsync().Result;
+                JObject strObject = JObject.Parse(strJson);
+                JToken strBranch = strObject["listBranchAddress"];
+                string strJsonBranchAddress = JsonConvert.SerializeObject(strBranch);
+                listBranchAddress = JsonConvert.DeserializeObject<List<BranchAddressModel>>(strJsonBranchAddress);
+
+            }
+        }
+        private void MaintainBlokirData(BlokirModel blokir)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                var Content = new StringContent(JsonConvert.SerializeObject(blokir));
+                Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+
+                var request = client.PostAsync("/api/Customer/MaintainBlokir", Content);
+
+                var response = request.Result.Content.ReadAsStringAsync().Result;
+
+            }
         }
     }
 }

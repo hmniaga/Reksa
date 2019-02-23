@@ -1,0 +1,103 @@
+﻿@model Reksa.ViewModels.OtorisasiListViewModel
+
+@{
+    ViewData["Title"] = "Otorisasi Parameter Fee";
+}
+
+<div class="col-md-3">
+    <div class="panel panel-default" style="padding-bottom:100%">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Authorization</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @(Html.Kendo().TreeView().Name("tvOtorisasi").Items(treeview =>
+                                {
+                                    treeview.Add().Text("Authorization")
+                                        .Expanded(true)
+                                        .Items(root =>
+                                        {
+                                            root.Add().Text("Transaksi")
+                                                .Expanded(true)
+                                                .SpriteCssClasses("ti-folder");
+
+                                            root.Add().Text("Product")
+                                                .Expanded(true)
+                                                .SpriteCssClasses("folder");
+                                        });
+                                })
+                                .Events(events => events
+                            .Select("onSelect")
+
+                        )
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Begin Button -->
+<div class="col-md-9">
+    <div class="input-group">
+        <button id=btnProcess class="btn btn-info waves-effect waves-light">
+            <span class="btn-label">
+                <i class="fa fa-search"></i>
+            </span>
+            View Selected Data Detail
+        </button>
+    </div>
+</div>
+<!-- End Button -->
+
+
+<div class="col-md-9">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Detail</a>
+            </h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+            <div class="panel-body">
+                <div class="row">
+                    @(Html.Kendo().Grid(Model.Detail)
+                                .Name("GridOtorisasiDetail")
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
+                                    columns.Bound(p => p.TranId).Width(100).Title("TranId");
+                                    columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
+                                    columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
+                                    columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
+                                    columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
+                                    columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
+                                }).Pageable()
+                            .Scrollable(s => s.Height(450))
+                            .Selectable(selectable => selectable
+                            .Mode(GridSelectionMode.Single))
+                            //.Events(events => events.Change("onRowBlokirSelect"))
+                    )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function onSelect(e) {
+        alert(this.text(e.node));
+        switch (this.text(e.node)) {
+            case "Agent":
+                $("#label1").val("Kode");
+                $("#label2").val("Keterangan");
+                $("#label3").val("Tanggal Libur");
+                $("#label4").val("Kode");
+                break;
+        }
+
+    }
+
+</script>

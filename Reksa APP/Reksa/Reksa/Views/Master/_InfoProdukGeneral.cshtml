@@ -1,0 +1,133 @@
+﻿@model Reksa.ViewModels.MasterListViewModel
+<!-- Begin Produk -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">Produk</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("ShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label class="col-xs-1 control-label"></label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("ShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Produk -->
+<!-- Begin Jenis Dana Reksa -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">Jenis Dana Reksa</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Jenis Dana Reksa -->
+<!-- Begin Manager Investasi -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">Manager Investasi</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Manager Investasi -->
+<!-- Begin Norek MI -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">No Rek MI</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Norek MI -->
+<!-- Begin Bank Custody -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">Bank Custody</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Bank Custody -->
+<!-- Begin Norek Custody -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">No Rek Custody</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Norek Custody -->
+<!-- Begin Mata Uang -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">Mata Uang</label>
+            <div class="input-group">
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
+
+                <span class="input-group-btn">
+                    <a href="@Url.Action("SearchJenisRDB", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                </span>
+                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Mata Uang -->
+<!-- Begin S-INVEST Fund Code -->
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="form-group">
+        <div class="col-md-6">
+            <label class="col-sm-3 control-label">S-INVEST Fund Code</label>
+            <div class="input-group">
+                @Html.Kendo().TextBox().Name("ShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End S-INVEST Fund Code -->

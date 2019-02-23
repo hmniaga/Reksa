@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using ReksaAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,15 +20,15 @@ namespace ReksaAPI.Controllers
             cls = new clsDataAccess(_config);
         }
 
-        [Route("api/Parameter/Refresh")]
-        [HttpGet("{id}")]
-        public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface,  [FromQuery]int NIK, [FromQuery]string Guid)
-        {
-            List<ParameterModel> list = new List<ParameterModel>();
-            DataSet dsOut = new DataSet();
-            list = cls.ReksaRefreshParameter(ProdId, TreeInterface, NIK, Guid);
-            return Json(list);
-        }
+            [Route("api/Parameter/Refresh")]
+            [HttpGet("{id}")]
+            public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface,  [FromQuery]int NIK, [FromQuery]string Guid)
+            {
+                List<ParameterModel> list = new List<ParameterModel>();
+                DataSet dsOut = new DataSet();
+                list = cls.ReksaRefreshParameter(ProdId, TreeInterface, NIK, Guid);
+                return Json(list);
+            }
 
         [Route("api/Parameter/PopulateParamFee")]
         [HttpGet("{id}")]
@@ -35,7 +36,7 @@ namespace ReksaAPI.Controllers
         {
             DataSet dsOut = new DataSet();
             cls.ReksaPopulateParamFee(NIK, strModule, ProdId, TrxType, ref dsOut);
-            return Json(dsOut);
+            return Json(JsonConvert.SerializeObject(dsOut));
         }
 
         

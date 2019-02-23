@@ -16,7 +16,7 @@
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientName" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
-
+                            @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
                         </div>
                     </div>
                 </div>
@@ -111,9 +111,12 @@
 <script>
     function onRowBlokirSelect(e) {
         var data = this.dataItem(this.select());
+        $("#BlokirId").val(data.BlockId);
         $("#UnitBlokir").val(data.UnitBlokir);
-        $("#TanggalBlokir").val(data.TanggalBlokir.getDate() + '/' + (data.TanggalBlokir.getMonth() + 1) + '/' + data.TanggalBlokir.getFullYear());        
-        $("#TanggalExpiryBlokir").val(data.TanggalExpiryBlokir.getDate() + '/' + (data.TanggalExpiryBlokir.getMonth() + 1) + '/' + data.TanggalExpiryBlokir.getFullYear());              
+        var TanggalBlokir = new Date(data.TanggalBlokir);
+        $("#TanggalBlokir").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());        
+        var TanggalExpiryBlokir = new Date(data.TanggalExpiryBlokir);
+        $("#TanggalExpiryBlokir").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());              
     };
 
 </script>

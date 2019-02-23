@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    string errorMessage = (string)TempData["ErrorMessage"];
+    string successMessage = (string)TempData["SuccessMessage"];
+    string warningMessage = (string)TempData["WarningMessage"];
+}
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -46,7 +53,7 @@
                             </button>
                             <span class="clearfix"></span>
                         </div>
-                                               
+
                         <ul class="nav navbar-nav navbar-right pull-right">
                             <li class="dropdown top-menu-item-xs">
                                 <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
@@ -55,7 +62,7 @@
                                 <ul class="dropdown-menu dropdown-menu-lg">
                                     <li class="notifi-title"><span class="label label-default pull-right">New 2</span>Notification</li>
                                     <li class="list-group slimscroll-noti notification-list">
-                                        
+
                                         <!-- list item-->
                                         <a href="javascript:void(0);" class="list-group-item">
                                             <div class="media">
@@ -148,7 +155,6 @@
                                 <li><a href="@Url.Action("InfoProduk", "Master")">Info Produk</a></li>
                                 <li><a href="@Url.Action("UnitNasabah", "Master")">Unit Nasabah Ditawarkan</a></li>
                                 <li><a href="@Url.Action("UnitDitawarkan", "Master")">Unit Ditawarkan</a></li>
-                                <li><a href="@Url.Action("Event", "Master")">Event</a></li>
                             </ul>
                         </li>
 
@@ -170,9 +176,9 @@
                         <li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-briefcase"></i> <span> Transaksi TT </span> <span class="menu-arrow"></span> </a>
                             <ul class="list-unstyled">
-                                <li><a href="@Url.Action("TTCompletion", "TransaksiTT")">Parameter TT Completion</a></li>
-                                <li><a href="@Url.Action("TTOutgoing", "TransaksiTT")">Outgoing TT</a></li>
-                                <li><a href="@Url.Action("OtorTTOutgoing", "TransaksiTT")">Otorisasi Outgoing TT</a></li>
+                                <li><a href="@Url.Action("ParameterTT", "Transaksi")">Parameter TT Completion</a></li>
+                                <li><a href="@Url.Action("OutgoingTT", "Transaksi")">Outgoing TT</a></li>
+                                <li><a href="@Url.Action("OtorOutgoingTT", "Transaksi")">Otorisasi Outgoing TT</a></li>
                             </ul>
                         </li>
 
@@ -186,12 +192,44 @@
                             </ul>
                         </li>
 
+                        <li class="has_sub">
+                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-search"></i> <span> Otorisasi </span> <span class="menu-arrow"></span> </a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("ParameterFee", "Otorisasi")">Otorisasi Parameter Fee</a></li>
+                                <li><a href="@Url.Action("ParameterReksadana", "Otorisasi")">Otorisasi Parameter Reksadana</a></li>
+                                <li><a href="@Url.Action("WM", "Otorisasi")">Otorisasi WM</a></li>
+                                <li><a href="@Url.Action("NFS", "Otorisasi")">Otorisasi NFS Generate Upload</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
                     <div class="clearfix"></div>
                 </div>
                 <div class="clearfix"></div>
             </div>
         </div>
+    </div>
+    <div id="alert-messages">
+        @if (@successMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Success!</strong> @successMessage
+            </div>
+        }
+        @if (@errorMessage != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                <strong>Error!</strong> @errorMessage
+            </div>
+        }
+        @if (@warningMessage != null)
+        {
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> @warningMessage
+            </div>
+        }
     </div>
     <div class="content-page">
         <!-- Start content -->

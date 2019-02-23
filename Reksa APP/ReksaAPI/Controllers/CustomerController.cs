@@ -49,6 +49,18 @@ namespace ReksaAPI.Controllers
             cls.ReksaGetConfAddress(Type, CIFNO, Branch, Id, out intAddressType, out strMessage, NIK, Guid, ref listKonfAddress, ref listBranch);
             return Json(new { intAddressType, listKonfAddress, listBranch, strMessage });
         }
+
+
+        [Route("api/Customer/GetAlamatCabang")]
+        [HttpGet("{id}")]
+        public JsonResult GetAlamatCabang([FromQuery]string Branch, [FromQuery]string CIFNO, [FromQuery]int Id)
+        {
+            List<CustomerIdentitasModel.AlamatCabangDetail> listBranchAddress = new List<CustomerIdentitasModel.AlamatCabangDetail>();
+            cls.ReksaGetAlamatCabang(Branch, CIFNO, Id, ref listBranchAddress);
+            return Json(new { listBranchAddress });
+        }
+        
+
         [Route("api/Customer/GetAccountRelationDetail")]
         [HttpGet("{id}")]
         public JsonResult GetAccountRelationDetail([FromQuery]string AccountNum, [FromQuery]int Type)
@@ -124,14 +136,12 @@ namespace ReksaAPI.Controllers
         }
 
         [Route("api/Customer/MaintainBlokir")]
-        [HttpGet("{id}")]
-        public JsonResult MaintainBlokir([FromQuery]int intType, [FromQuery]int intClientId,
-            [FromQuery]int intBlockId, [FromQuery]decimal decBlockAmount, [FromQuery]string strBlockDesc,
-            [FromQuery]DateTime dtExpiryDate, [FromQuery]bool isAccepted, [FromQuery]int intNIK, [FromQuery]string strGuid)
+        [HttpPost]
+        public JsonResult MaintainBlokir([FromBody] CustomerBlokirModel Blokir)
         {            
             string strErrMsg;
-            cls.ReksaMaintainBlokir(intType, intClientId, intBlockId, decBlockAmount, 
-                strBlockDesc, dtExpiryDate, isAccepted, intNIK, strGuid, out strErrMsg);
+            cls.ReksaMaintainBlokir(Blokir, 
+                "", false, 10137, "7ijsfs39", out strErrMsg);
             return Json(new { strErrMsg });
         }
 

@@ -1,0 +1,66 @@
+﻿
+@using Kendo.Mvc.UI
+@model Reksa.ViewModels.POListViewModel
+
+@{
+    ViewData["Title"] = "CutMaintenanceFee";
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Cut Maintenance Fee</a>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <!-- Begin StartDate -->
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("StarDateAct").
+                                                                                                                    HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                                    .Format("{0:dd/MM/yyyy}")
+                        )
+                    </div>
+                </div>
+            </div>
+            <!-- End StartDate -->
+            <div class="col-sm-1" style="text-align:center">
+                <label class="col-sm-3 control-label">S/D</label>
+            </div>
+            <!-- Begin EndDate -->
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("EndDateAct")
+                                                                                                    .HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                    .Format("{0:dd/MM/yyyy}")
+                        )
+                    </div>
+                </div>
+            </div>
+            <!-- End EndDate -->
+        </div>
+
+        <!-- Begin Buttons -->
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="input-group">
+                    <button id="buttonadd" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        View
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- End Buttons -->
+    </div>
+</div>
+
+

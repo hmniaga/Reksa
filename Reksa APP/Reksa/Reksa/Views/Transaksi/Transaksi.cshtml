@@ -12,7 +12,6 @@
             <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Transaksi</a>
         </h4>
     </div>
-    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
         <div class="panel-body">
             <!-- Begin Button -->
             <div class="col-md-12" style="padding-top:4%">
@@ -269,10 +268,34 @@
             RefID = $("#RefIDSwc").val();
             $.ajax({
                 type: 'GET',
-                url: '/Transaksi/RefreshTransaction',
-                data: { RefID: RefID, CIFNo: CIFNo, idAccordions: idAccordions },
+                url: '/Transaksi/RefreshSwitching',
+                data: { RefID: RefID, CIFNo: CIFNo },
                 success: function (data) {
                     RefreshSwc(data);                    
+                }
+            });
+        }
+        else if (idAccordions == "SWCRDB") {
+            CIFNo = $("#CIFNoSwcRDB").val();
+            RefID = $("#SwitchingRDBRefID").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshSwitchingRDB',
+                data: { RefID: RefID, CIFNo: CIFNo },
+                success: function (data) {
+                    RefreshSwcRDB(data);
+                }
+            });
+        }
+        else if (idAccordions == "BOOK") {
+            CIFNo = $("#CIFNoBook").val();
+            RefID = $("#RefIDBook").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Transaksi/RefreshBooking',
+                data: { RefID: RefID, CIFNo: CIFNo },
+                success: function (data) {
+                    RefreshBooking(data);
                 }
             });
         }
@@ -297,7 +320,15 @@
         $("#SellerIdSubs").val(data.TransactionSubsDetail.Seller);
         $("#WaperdNoSubs").val(data.TransactionSubsDetail.Waperd);
         $("#TglExpireSubs").val(data.TransactionSubsDetail.Inputter);
-        $("#NIKRefIDSubs").val("");        
+        $("#NIKRefIDSubs").val(data.TransactionSubsDetail.Referentor);        
+
+        ValidateReferentor($("#NIKRefIDSubs").val(), function (output) {
+            $("#NIKRefNameSubs").val(output);
+        });
+
+        ValidateReferentor($("#SellerIdSubs").val(), function (output) {
+            $("#SellerNameSubs").val(output);
+        });
 
         var dataSource = new kendo.data.DataSource(
         {
@@ -321,17 +352,28 @@
         $("#AccRekeningUSDRedemp").val(data.CustomerIdentitas.AccountIdUSD);
         $("#NameRekeningUSDRedemp").val(data.CustomerIdentitas.AccountNameUSD);
         $("#AccRekeningMCRedemp").val(data.CustomerIdentitas.AccountIdMC);
-        $("#NameRekeningMCRedemp").val(data.CustomerIdentitas.AccountNameMC);
-        $("#InputterRedemp").val(data.TransactionSubsDetail.Inputter);
+        $("#NameRekeningMCRedemp").val(data.CustomerIdentitas.AccountNameMC);        
 
-            var dataSource = new kendo.data.DataSource(
-                {
-                    data: data.ListRedemption
-                });
-            var Redempgrid = $('#GridViewRedemp').data('kendoGrid');
-            Redempgrid.setDataSource(dataSource);
-            Redempgrid.dataSource.page(1);
-        
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: data.ListRedemption
+            });
+        var Redempgrid = $('#GridViewRedemp').data('kendoGrid');
+        Redempgrid.setDataSource(dataSource);
+        Redempgrid.dataSource.page(1);
+
+        $("#InputterRedemp").val(data.TransactionSubsDetail.Inputter);
+        $("#SellerIdRedemp").val(data.TransactionSubsDetail.Seller);
+        $("#WaperdNoRedemp").val(data.TransactionSubsDetail.Waperd);
+        $("#ReferrantorIdRedemp").val(data.TransactionSubsDetail.Referentor);
+
+        ValidateReferentor($("#SellerIdRedemp").val(), function (output) {
+            $("#SellerNameRedemp").val(output);
+        });
+
+        ValidateReferentor($("#ReferrantorIdRedemp").val(), function (output) {
+            $("#ReferrantorNameRedemp").val(output);
+        });        
     }
 
     function RefreshRDB(data) {
@@ -347,7 +389,6 @@
         $("#NameRekeningUSDRDB").val(data.CustomerIdentitas.AccountNameUSD);
         $("#AccRekeningMCRDB").val(data.CustomerIdentitas.AccountIdMC);
         $("#NameRekeningMCRDB").val(data.CustomerIdentitas.AccountNameMC);
-        $("#InputterRDB").val(data.TransactionSubsDetail.Inputter);
 
         var dataSource = new kendo.data.DataSource(
             {
@@ -357,12 +398,25 @@
         RDBgrid.setDataSource(dataSource);
         RDBgrid.dataSource.page(1);
 
+        $("#InputterRDB").val(data.TransactionSubsDetail.Inputter);
+        $("#SellerIdRDB").val(data.TransactionSubsDetail.Seller);
+        $("#WaperdNoRDB").val(data.TransactionSubsDetail.Waperd);
+        $("#ReferrantorIdRDB").val(data.TransactionSubsDetail.Referentor);
+
+        ValidateReferentor($("#SellerIdRDB").val(), function (output) {
+            $("#SellerNameRDB").val(output);
+        });
+
+        ValidateReferentor($("#ReferrantorIdRDB").val(), function (output) {
+            $("#ReferrantorNameRDB").val(output);
+        });  
+
     }
 
     function RefreshSwc(data)
     {
         $("#CIFSIDSwc").val(data.CustomerIdentitas.CIFSID);
-        $("#UmurSwc").val(data.TransactionSubsDetail.Umur);
+        $("#UmurSwc").val(data.CustomerIdentitas.Umur);
         $("#ShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
         $("#JenisRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
         var dateLast = new Date(data.RiskProfileModel.LastUpdate);
@@ -373,8 +427,148 @@
         $("#NameRekeningUSDSwc").val(data.CustomerIdentitas.AccountNameUSD);
         $("#AccRekeningMCSwc").val(data.CustomerIdentitas.AccountIdMC);
         $("#NameRekeningMCSwc").val(data.CustomerIdentitas.AccountNameMC);
-        $("#InputterSwc").val(data.TransactionSubsDetail.Inputter);
+        $("#NoTransaksiSwc").val(data.TransactionSwitching.TranCode);
+        var TglTransaksiSwc = new Date(data.TransactionSwitching.TranDate);
+        $("#TglTransaksiSwc").val(TglTransaksiSwc.getDate() + '/' + (TglTransaksiSwc.getMonth() + 1) + '/' + TglTransaksiSwc.getFullYear());
+                
+        $("#ProdCodeSwcOut").val(data.TransactionSwitching.ProdCodeSwcOut);
+        ValidateProduk($("#ProdCodeSwcOut").val(), function (output) {
+            $("#ProdNameSwcOut").val(output[0].ProdName);
+            $("#ClientCodeSwcOut").val(data.TransactionSwitching.ClientCodeSwcOut);
+            ValidateClient($("#ClientCodeSwcOut").val(), output[0].ProdId, function (result) {
+                alert(result);
+                $("#ClientNameSwcOut").val(result);
+            });
+        });
+        $("#ProdCodeSwcIn").val(data.TransactionSwitching.ProdCodeSwcIn);
+        $("#ClientCodeSwcIn").val(data.TransactionSwitching.ClientCodeSwcIn);
+        $('#PhoneOrderSwc').prop('checked', data.PhoneOrder);
+        $('#FeeeditSwc').prop('checked', data.IsFeeEdit);
+        $("#JumlahUnitSwc").val(data.TransactionSwitching.TranUnit);
+        $("#FeeSwc").val(data.TransactionSwitching.SwitchingFee);
+        $("#PercentageFeeSwc").val(data.TransactionSwitching.Percentage);
+        $("#currFeeSwc").text(data.TransactionSwitching.TranCCY);        
+
+        $("#InputterSwc").val(data.TransactionSwitching.Inputter);
+        $("#SellerIdSwc").val(data.TransactionSwitching.Seller);
+        $("#WaperdNoSwc").val(data.TransactionSwitching.Waperd);
+        $("#ReferrantorIDSwc").val(data.TransactionSwitching.Referentor);
+
+        ValidateReferentor($("#SellerIdSwc").val(), function (output) {
+            $("#SellerNameSwc").val(output);
+        });
+
+        ValidateReferentor($("#ReferrantorIDSwc").val(), function (output) {
+            $("#ReferrantorNameSwc").val(output);
+        });     
     }
+
+    function RefreshSwcRDB(data) {
+        $("#CIFSIDSwcRDB").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurSwcRDB").val(data.CustomerIdentitas.Umur);
+        $("#ShareHolderIdSwcRDB").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileSwcRDB").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskSwcRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRSwcRDB").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRSwcRDB").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDSwcRDB").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDSwcRDB").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCSwcRDB").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCSwcRDB").val(data.CustomerIdentitas.AccountNameMC);
+
+        $("#NoTransaksiSwcRDB").val(data.TransactionSwitchingRDB.TranCode);
+        var TglTransaksiSwcRDB = new Date(data.TransactionSwitchingRDB.TranDate);
+        $("#TglTransaksiSwcRDB").val(TglTransaksiSwcRDB.getDate() + '/' + (TglTransaksiSwcRDB.getMonth() + 1) + '/' + TglTransaksiSwcRDB.getFullYear());
+
+
+        $("#ProdCodeSwcRDBOut").val(data.TransactionSwitchingRDB.ProdCodeSwcOut);
+        ValidateProduk($("#ProdCodeSwcRDBOut").val(), function (output) {
+            $("#ProdNameSwcRDBOut").val(output[0].ProdName);
+            $("#ClientCodeSwcRDBOut").val(data.TransactionSwitchingRDB.ClientCodeSwcOut);
+            ValidateClient($("#ClientCodeSwcRDBOut").val(), output[0].ProdId, function (result) {                
+                $("#ClientNameSwcRDBOut").val(result);
+            });
+        });
+        $("#ProdCodeSwcRDBIn").val(data.TransactionSwitchingRDB.ProdCodeSwcIn);
+        ValidateProduk($("#ProdCodeSwcRDBIn").val(), function (output) {
+            $("#ProdNameSwcRDBIn").val(output[0].ProdName);
+            $("#ClientCodeSwcRDBIn").val(data.TransactionSwitchingRDB.ClientCodeSwcIn);
+            ValidateClient($("#ClientCodeSwcRDBIn").val(), output[0].ProdId, function (result) {
+                $("#ClientNameSwcRDBIn").val(result);
+            });
+        });
+
+        $('#PhoneOrderSwcRDB').prop('checked', data.PhoneOrder);
+        $('#FeeeditSwcRDB').prop('checked', data.IsFeeEdit);
+        $("#JumlahUnitSwcRDB").val(data.TransactionSwitchingRDB.TranUnit);
+        $("#FeeSwcRDB").val(data.TransactionSwitchingRDB.SwitchingFee);
+        $("#PercentageFeeSwcRDB").val(data.TransactionSwitchingRDB.Percentage);
+        $("#currFeeSwcRDB").text(data.TransactionSwitchingRDB.TranCCY);
+        $("#JangkaWaktuSwcRDB").val(data.TransactionSwitchingRDB.JangkaWaktu);
+        var JatuhTempoSwcRDB = new Date(data.TransactionSwitchingRDB.JatuhTempo);
+        $("#JatuhTempoSwcRDB").val(JatuhTempoSwcRDB.getDate() + '/' + (JatuhTempoSwcRDB.getMonth() + 1) + '/' + JatuhTempoSwcRDB.getFullYear());
+
+        $("#AutoRedempSwcRDB").data('kendoDropDownList').value(data.TransactionSwitchingRDB.AutoRedemption);
+        $("#AsuransiSwcRDB").data('kendoDropDownList').value(data.TransactionSwitchingRDB.Asuransi);
+                      
+
+        $("#InputterSwcRDB").val(data.TransactionSwitchingRDB.Inputter);
+        $("#SellerIdSwcRDB").val(data.TransactionSwitchingRDB.Seller);
+        $("#WaperdNoSwcRDB").val(data.TransactionSwitchingRDB.Waperd);
+        $("#ReferrantorIDSwcRDB").val(data.TransactionSwitchingRDB.Referentor);
+
+        ValidateReferentor($("#SellerIdSwcRDB").val(), function (output) {
+            $("#SellerNameSwcRDB").val(output);
+        });
+
+        ValidateReferentor($("#ReferrantorIDSwc").val(), function (output) {
+            $("#ReferrantorNameSwcRDB").val(output);
+        }); 
+    }
+
+    function RefreshBooking(data) {
+        $("#CIFSIDBook").val(data.CustomerIdentitas.CIFSID);
+        $("#UmurBook").val(data.CustomerIdentitas.Umur);
+        $("#ShareHolderIdBook").val(data.CustomerIdentitas.ShareholderID);
+        $("#JenisRiskProfileBook").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#LastUpdatedRiskBook").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#AccRekeningIDRBook").val(data.CustomerIdentitas.AccountId);
+        $("#NameRekeningIDRBook").val(data.CustomerIdentitas.AccountName);
+        $("#AccRekeningUSDBook").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#NameRekeningUSDBook").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#AccRekeningMCBook").val(data.CustomerIdentitas.AccountIdMC);
+        $("#NameRekeningMCBook").val(data.CustomerIdentitas.AccountNameMC);
+
+        $("#KodeBooking").val(data.TransactionBooking.BookingCode);
+        var TglTransaksiBook = new Date(data.TransactionBooking.BookingDate);
+        $("#TglTransaksiBook").val(TglTransaksiBook.getDate() + '/' + (TglTransaksiBook.getMonth() + 1) + '/' + TglTransaksiBook.getFullYear());
+        $("#ProdCodeBook").val(data.TransactionBooking.ProdCode);        
+        ValidateProduk($("#ProdCodeBook").val(), function (output) {
+            $("#ProdNameBook").val(output[0].ProdName);
+        });
+        $("#ClientCodeBook").val(data.TransactionBooking.ClientCode);
+        $("#CurrCodeBook").val(data.TransactionBooking.BookingCCY);
+        ValidateCurrency($("#CurrCodeBook").val(), function (output) {
+            $("#CurrNameBook").val(output);
+        });
+        $("#NominalBook").val(data.TransactionBooking.BookingAmt);
+        $("#FeeBook").val(data.TransactionBooking.SubcFee);
+        $("#currFeeBook").text(data.TransactionBooking.BookingCCY);
+        $("#PercentageFeeBook").val(data.TransactionBooking.PercentageFee);
+        $("#InputterBook").val(data.TransactionBooking.Inputter);
+        $("#SellerIdBook").val(data.TransactionBooking.Seller);
+        $("#WaperdNoBook").val(data.TransactionBooking.Waperd);
+        $("#ReferentorIdBook").val(data.TransactionBooking.Referentor);
+        ValidateReferentor($("#SellerIdBook").val(), function (output) {
+            $("#SellerNameBook").val(output);
+        }); 
+        ValidateReferentor($("#ReferentorIdBook").val(), function (output) {
+            $("#ReferentorNameBook").val(output);
+        }); 
+    }
+
 
     function clearRedemption()
     {
@@ -390,6 +584,62 @@
         $("#CIFNameSubs").val("");
         $("#RefIDSubs").val("");
         $("#RefNameSubs").val("");
+    }
+
+    function ValidateReferentor(ReferentorID, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateReferentor',
+            data: { Col1: ReferentorID, Col2: '', Validate: 1 },
+            success: function (data) {
+                result(data[0].NAME);
+            }
+        });
+    }
+
+    function ValidateWaperd(WaperdID, result) {
+        var WaperdID = $("#WaperdNoSubs").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateWaperd',
+            data: { Col1: WaperdID, Col2: '', Validate: 1 },
+            success: function (data) {
+                result(data[0].DateExpire);
+            }
+        });
+    }
+
+    function ValidateProduk(ProductCode, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateProduct',
+            data: { Col1: ProductCode, Col2: '', Validate: 1 },
+            success: function (data) {
+                result(data);
+            }
+        });
+    }
+
+    function ValidateClient(ClientCode, ProdId, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateClient',
+            data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
+            success: function (data) {
+                result(data[0].ClientName);
+            }
+        });
+    } 
+
+    function ValidateCurrency(CurrCode, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateCurrency',
+            data: { Col1: CurrCode, Col2: '', Validate: 1 },
+            success: function (data) {
+                result(data[0].CurrencyName);
+            }
+        });
     }
 
 </script>

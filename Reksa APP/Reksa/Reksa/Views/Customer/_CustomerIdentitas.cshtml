@@ -309,7 +309,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Cabang</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeIdCabang" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeIdCabang" }).Enable(true)
 
                         <span class="input-group-btn">
                             <a id="searchOfficeCabang" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
@@ -415,32 +415,7 @@
             dropdownlist.select(0);
             onChangeAddressType();
         }
-    }   
-
-    function ValidateReferentor() {
-        var ReferentorID = $("#EmployeeId").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateReferentor',
-            data: { Col1: ReferentorID, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#EmployeeName").val(data[0].NAME);
-            }
-        });
-    }
-
-    function ValidateOffice() {
-        var OfficeID = $("#OfficeIdCabang").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateOffice',
-            data: { Col1: OfficeID, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#OfficeNameCabang").val(data[0].AgentDesc);
-            }
-        });
-    }
-    
+    }      
 
     function checkAll(e) {
         var state = $(e).is(':checked');
@@ -508,4 +483,53 @@
             }
         });
     }
+
+    $("#OfficeIdCabang").change(function () {
+        ValidateOffice($("#OfficeIdCabang").val(), function (output) {
+            $("#OfficeNameCabang").val(output);
+            GetAlamatCabang();
+        });
+    }); 
+
+  
+
+    $("#EmployeeId").change(function () {
+        ValidateReferentor($("#EmployeeId").val(), function (output) {
+            $("#EmployeeName").val(output);
+        });
+    });  
+    
+    function ValidateReferentor(ReferentorID, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateReferentor',
+            data: { Col1: ReferentorID, Col2: '', Validate: 1 },
+            success: function (data) {
+                result(data[0].NAME);
+            }
+        });
+    }
+
+
+    function GetAlamatCabang() {
+        var Cifno = $("#CIFNo").val();
+        var BranchId = $("#OfficeIdCabang").val();
+        var intId = $("#idNasabah").val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetAlamatCabang',
+            data: { CIFNO: Cifno, Branch: BranchId, intId: intId },
+            success: function (data) {
+                $("#AddressLine1").val(data.CustomerBranchAddress.AddressLine1);
+                $("#AddressLine2").val(data.CustomerBranchAddress.AddressLine2);
+                $("#PostalCode").val(data.CustomerBranchAddress.PostalCode);
+                $("#Kota").val(data.CustomerBranchAddress.Kota);
+                $("#Province").val(data.CustomerBranchAddress.Province);
+                var LastUpdatedDate = new Date(data.CustomerBranchAddress.LastUpdated);
+                $("#LastUpdatedDate").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
+            }
+        });
+    }
+
 </script>

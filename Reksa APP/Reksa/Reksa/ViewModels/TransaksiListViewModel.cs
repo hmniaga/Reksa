@@ -8,10 +8,14 @@ namespace Reksa.ViewModels
 {
     public class TransaksiListViewModel
     {
-        public TransactionSubscriptionModel.SubscriptionDetail TransactionSubsDetail { get; set; }
-        public List<TransactionSubscriptionModel.SubscriptionList> ListSubscription { get; set; }
-        public List<TransactionSubscriptionModel.RedemptionList> ListRedemption { get; set; }
-        public List<TransactionSubscriptionModel.SubscriptionRDBList> ListSubsRDB { get; set; }
+        public TransactionModel.SubscriptionDetail TransactionSubsDetail { get; set; }
+        public List<TransactionModel.SubscriptionList> ListSubscription { get; set; }
+        public List<TransactionModel.RedemptionList> ListRedemption { get; set; }
+        public List<TransactionModel.SubscriptionRDBList> ListSubsRDB { get; set; }
+        public TransactionModel.SwitchingNonRDBModel TransactionSwitching { get; set; }
+        public TransactionModel.SwitchingRDBModel TransactionSwitchingRDB { get; set; }
+        public TransactionModel.BookingModel TransactionBooking { get; set; }
+        public List<TransactionModel.FrekuensiDebet> FrekuensiDebet{ get; set; }
         public CustomerIdentitasModel CustomerIdentitas { get; set; }
         public RiskProfileModel RiskProfileModel { get; set; }
         public ProductModel ProductModel { get; set; }
@@ -21,6 +25,8 @@ namespace Reksa.ViewModels
         public CurrencyModel CurrencyModel { get; set; }
         public ReferensiModel ReferensiModel { get; set; }
         public ReferentorModel ReferentorModel { get; set; }
+        public BookingModel BookingModel { get; set; }
+        public SwitchingModel SwitchingModel { get; set; }
         public WaperdModel WaperdModel { get; set; }
     }
 }

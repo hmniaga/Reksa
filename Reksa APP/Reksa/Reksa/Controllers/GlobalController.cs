@@ -20,6 +20,66 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl =  _config.GetValue<string>("APIServices:url");
         }
+
+
+        public ActionResult SearchBooking(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchBookingData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<BookingModel> list = new List<BookingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBooking?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<BookingModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult ValidateBooking(string Col1, string Col2, int Validate, string criteria)
+        {
+            List<SwitchingModel> list = new List<SwitchingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBooking?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate + "&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
+            }
+            return Json(list);
+        }
+
+
         public ActionResult SearchClient(string search, string criteria, string type, int seq = 0)
         {
             ViewBag.Search = search;
@@ -494,6 +554,124 @@ namespace Reksa.Controllers
 
             return Json(result);
         }
+
+
+        public ActionResult SearchSwitching(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchSwitchingData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<SwitchingModel> list = new List<SwitchingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitching?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult ValidateSwitching(string Col1, string Col2, int Validate, string criteria)
+        {
+            List<SwitchingModel> list = new List<SwitchingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitching?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate + "&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
+            }
+            return Json(list);
+        }
+
+        public ActionResult SearchSwitchingRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchSwitchingRDBData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<SwitchingModel> list = new List<SwitchingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitchingRDB?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult ValidateSwitchingRDB(string Col1, string Col2, int Validate, string criteria)
+        {
+            List<SwitchingModel> list = new List<SwitchingModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitchingRDB?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate + "&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
+            }
+            return Json(list);
+        }
+
+
+
         public ActionResult SearchWaperd(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -535,6 +713,20 @@ namespace Reksa.Controllers
             }
 
             return Json(result);
+        }
+        public ActionResult ValidateWaperd(string Col1, string Col2, int Validate)
+        {
+            List<WaperdModel> list = new List<WaperdModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcWaperd?Col1="+ Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<WaperdModel>>(stringData);
+            }
+            return Json(list);
         }
 
 

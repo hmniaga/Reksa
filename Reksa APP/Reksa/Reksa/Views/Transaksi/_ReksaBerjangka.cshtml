@@ -299,7 +299,7 @@
                         <div class="input-group">
                             @Html.Kendo().TextBox().Name("FeeRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)
                             <span class="input-group-btn"></span>
-                            <label id="currFeeSubs" class="col-sm-3 control-label">CURR</label>
+                            <label id="currFeeRDB" class="col-sm-3 control-label">CURR</label>
                             <span class="input-group-btn"></span>
                             @Html.Kendo().TextBox().Name("PercentageFeeRDB").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)
                             <span class="input-group-btn"></span>
@@ -377,12 +377,12 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Seller</label>
                             <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new {@id = "SellerIdRDB", @class = "form-control input-sm" }).Enable(false)
 
                                 <span class="input-group-btn">
                                     <a href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#SellerRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
-                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "SellerNameRDB", @class = "form-control input-sm" }).Enable(false)
                             </div>
                         </div>
                     </form>
@@ -390,18 +390,18 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Kode WAPERD</label>
                             <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "WaperdNoRDB", @class = "form-control input-sm" }).Enable(false)
 
                                 <span class="input-group-btn">
                                     <a href="@Url.Action("SearchWaperd", "Global")" data-toggle="modal" data-target="#WaperdRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
-                                @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "WaperdNameRDB", @class = "form-control input-sm" }).Enable(false)
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Tgl Expire</label>
                             <div class="input-group">
-                                @Html.Kendo().TextBox().Name("WaperdCode").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                                @Html.Kendo().TextBox().Name("TglExpiredRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
                             </div>
                         </div>
                     </form>
@@ -409,12 +409,12 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">NIK Referrantor</label>
                             <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "ReferrantorIdRDB", @class = "form-control input-sm" }).Enable(false)
 
                                 <span class="input-group-btn">
                                     <a href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#NIKRefRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
-                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "ReferrantorNameRDB", @class = "form-control input-sm" }).Enable(false)
                             </div>
                         </div>
                     </form>
@@ -481,11 +481,19 @@
         var DateTrx = new Date(data.TglTrx);
         $("#TglTransaksiRDB").val(DateTrx.getDate() + '/' + (DateTrx.getMonth() + 1) + '/' + DateTrx.getFullYear());
         $("#ClientCodeRDB").val(data.ClientCode);
-        $("#CurrCodeRDB").val(data.CCY);
-       
-
         $('#FeeeditRDB').prop('checked', data.EditFee);
         $('#PhoneOrderRDB').prop('checked', data.PhoneOrder);
+        $("#CurrCodeRDB").val(data.CCY);
+        ValidateCurrCodeRDB();
+        $("#NominalRDB").val(data.Nominal);
+        $("#jangkawaktuRDB").val(data.JangkaWaktu);
+        var dateJatuhTempo = new Date(data.JatuhTempo);
+        $("#dateJatuhTempo").val(dateJatuhTempo.getDate() + '/' + (dateJatuhTempo.getMonth() + 1) + '/' + dateJatuhTempo.getFullYear());
+
+        $("#currFeeRDB").text(data.CCY);
+        $("#InputterRDB").val(data.Inputter);
+        
+        
 
         var KodeProduk = data.KodeProduk;
         var ClientCode = data.ClientCode;
@@ -546,6 +554,18 @@
             data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
             success: function (data) {
                 $("#ClientNameRDB").val(data[0].ClientName);
+            }
+        });
+    }
+
+    function ValidateCurrCodeRDB() {
+        var CurrCode = $("#CurrCodeRDB").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateCurrency',
+            data: { Col1: CurrCode, Col2: '', Validate: 1 },
+            success: function (data) {
+                $("#CurrNameRDB").val(data[0].CurrencyName);
             }
         });
     }

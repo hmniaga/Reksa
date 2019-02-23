@@ -1,0 +1,64 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.MasterListViewModel
+
+@{
+    ViewData["Title"] = "Unit Ditawarkan";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Inquiry Unit Ditawarkan</a>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <!-- Begin Kode Product -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Product Code</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" })
+                    <span class="input-group-btn">
+                        <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+                </div>
+            </div>
+            <!-- End Kode Product -->
+            <!-- Begin Input Sisa Unit -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Sisa Unit Yang Dapat Ditawarkan</label>
+                <div class="input-group">
+                    @Html.Kendo().TextBox().Name("SisaUnit").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                </div>
+            </div>
+            <!-- End Input Sisa Unit -->
+        </div>
+
+        <!-- Begin Buttons -->
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="input-group">
+                    <button id="buttonadd" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        Inquiry
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- End Buttons -->
+    </div>
+</div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" id="CustomerModal" tabindex="-1" role="dialog" aria-labelledby="CustomerModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>

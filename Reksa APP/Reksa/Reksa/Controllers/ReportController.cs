@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Reksa.Models;
 using Reksa.ViewModels;
 using Reksa.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace Reksa.Controllers
 {
@@ -14,18 +15,20 @@ namespace Reksa.Controllers
     public class ReportController : Controller
     {
         #region "Default Var"
-        private readonly ReksaDBContext _ReksaDBContext;
         public string strModule;
-        public int _intNIK;
-        public string _strGuid;
+        public int _intNIK = 10137;
+        public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
-        public string _strBranch;
+        public string _strBranch = "01010";
         public int _intClassificationId;
+        private IConfiguration _config;
+        private string _strAPIUrl;
         #endregion
 
-        public ReportController(ReksaDBContext Context)
+        public ReportController(IConfiguration iconfig)
         {
-            _ReksaDBContext = Context;
+            _config = iconfig;
+            _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
 
         public IActionResult NFSUpload()

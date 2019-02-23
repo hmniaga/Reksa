@@ -9,6 +9,7 @@ namespace Reksa.ViewModels
 {
     public class MasterListViewModel
     {
-        
+        public ProductModel ProductModel { get; set; }
+        public CustomerModel CustomerModel { get; set; }
     }
 }

@@ -25,10 +25,10 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult RefreshTransactionNew([FromQuery]string RefID, [FromQuery]string CIFNO, [FromQuery]int NIK, [FromQuery]string Guid, [FromQuery]string TranType)
         {            
-            List<TransactionSubscriptionModel.SubscriptionDetail> listSubsDetail = new List<TransactionSubscriptionModel.SubscriptionDetail>();
-            List<TransactionSubscriptionModel.SubscriptionList> listSubs = new List<TransactionSubscriptionModel.SubscriptionList>();
-            List<TransactionSubscriptionModel.SubscriptionRDBList> listSubsRDB = new List<TransactionSubscriptionModel.SubscriptionRDBList>();
-            List<TransactionSubscriptionModel.RedemptionList> listRedemp = new List<TransactionSubscriptionModel.RedemptionList>();
+            List<TransactionModel.SubscriptionDetail> listSubsDetail = new List<TransactionModel.SubscriptionDetail>();
+            List<TransactionModel.SubscriptionList> listSubs = new List<TransactionModel.SubscriptionList>();
+            List<TransactionModel.SubscriptionRDBList> listSubsRDB = new List<TransactionModel.SubscriptionRDBList>();
+            List<TransactionModel.RedemptionList> listRedemp = new List<TransactionModel.RedemptionList>();
             cls.ReksaRefreshTransactionNew(RefID, NIK, Guid, TranType, ref listSubsDetail, ref listSubs, ref listSubsRDB, ref listRedemp);
             return Json(new { listSubsDetail, listSubs, listSubsRDB, listRedemp });
         }
@@ -46,7 +46,7 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult RefreshSwitching([FromQuery]string RefID, [FromQuery]int NIK, [FromQuery]string GUID)
         {
-            List<TransactionSwitchingNonRDBModel.Detail> listDetailSwcNonRDB = new List<TransactionSwitchingNonRDBModel.Detail>();
+            List<TransactionModel.SwitchingNonRDBModel> listDetailSwcNonRDB = new List<TransactionModel.SwitchingNonRDBModel>();
             cls.ReksaRefreshSwitching(RefID, NIK, GUID, ref listDetailSwcNonRDB);
             return Json(new { listDetailSwcNonRDB });
         }
@@ -55,7 +55,7 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult RefreshSwitchingRDB([FromQuery]string RefID, [FromQuery]int NIK, [FromQuery]string GUID)
         {
-            List<TransactionSwitchingRDBModel.Detail> listDetailSwcRDB = new List<TransactionSwitchingRDBModel.Detail>();
+            List<TransactionModel.SwitchingRDBModel> listDetailSwcRDB = new List<TransactionModel.SwitchingRDBModel>();
             cls.ReksaRefreshSwitchingRDB(RefID, NIK, GUID, ref listDetailSwcRDB);
             return Json(new { listDetailSwcRDB });
         }
@@ -64,7 +64,7 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult RefreshBookingNew([FromQuery]string RefID, [FromQuery]int NIK, [FromQuery]string GUID)
         {
-            List<TransactionBookingModel.Detail> listDetailBooking = new List<TransactionBookingModel.Detail>();
+            List<TransactionModel.BookingModel> listDetailBooking = new List<TransactionModel.BookingModel>();
             cls.ReksaRefreshBookingNew(RefID, NIK, GUID, ref listDetailBooking);
             return Json(new { listDetailBooking });
         }
@@ -77,15 +77,7 @@ namespace ReksaAPI.Controllers
             unitBalance = cls.ReksaGetLatestBalance(ClientID, NIK, GUID);
             return Json(new { unitBalance });
         }
-
-        [Route("api/Transaction/InqUnitDitwrkan")]
-        [HttpGet("{id}")]
-        public JsonResult InqUnitDitwrkan([FromQuery]string ProdCode, [FromQuery]int NIK, [FromQuery]string GUID, [FromQuery]DateTime CurrDate)
-        {
-            decimal sisaUnit;
-            sisaUnit = cls.ReksaInqUnitDitwrkan(ProdCode, NIK, GUID, CurrDate);
-            return Json(new { sisaUnit });
-        }
+        
 
         [Route("api/Transaction/GetLatestNAV")]
         [HttpGet("{id}")]
@@ -123,7 +115,7 @@ namespace ReksaAPI.Controllers
         }
 
         [Route("api/Transaction/CalculateSwitchingFee")]
-        [HttpGet("{id}")]
+        [HttpGet]
         public JsonResult CalculateSwitchingFee([FromBody]CalculateFeeModel.SwitchingRequest feeModel)
         {
             CalculateFeeModel.SwitchingResponses resultFee = new CalculateFeeModel.SwitchingResponses();
@@ -142,7 +134,9 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Transaction/CalculateBookingFee")]
         [HttpGet("{id}")]
-        public JsonResult CalculateBookingFee([FromQuery]string CIFNo, [FromQuery]decimal Amount, [FromQuery]string ProductCode, [FromQuery]bool IsByPercent, [FromQuery]bool IsFeeEdit, [FromQuery]decimal PercentageFeeInput)
+        public JsonResult CalculateBookingFee([FromQuery]string CIFNo, [FromQuery]decimal Amount, 
+            [FromQuery]string ProductCode, [FromQuery]bool IsByPercent, [FromQuery]bool IsFeeEdit, 
+            [FromQuery]decimal PercentageFeeInput)
         {
             cls.ReksaCalcBookingFee(CIFNo, Amount, ProductCode, IsByPercent, IsFeeEdit, PercentageFeeInput
             , out decimal PercentageFeeOutput, out string FeeCCY, out decimal Fee);

@@ -30,6 +30,14 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaGetTreeView(NIK, Module, MenuName);
             return Json(list);
         }
+        [Route("api/Global/PopulateCombo")]
+        [HttpGet]
+        public JsonResult PopulateCombo()
+        {
+            List<SearchModel.FrekuensiDebet> list = new List<SearchModel.FrekuensiDebet>();
+            list = cls.ReksaPopulateCombo();
+            return Json(list);
+        }        
         [Route("api/Global/HitungUmur")]
         [HttpGet("{id}")]
         public JsonResult HitungUmur([FromQuery]string CIFNo)
