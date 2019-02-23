@@ -34,3 +34,21 @@ C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CopyCo
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.dll
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.pdb
 C:\Users\Hp\source\repos\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csprojAssemblyReference.cache
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.deps.json
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.runtimeconfig.json
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.runtimeconfig.dev.json
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.dll
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaAPI.pdb
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.dll
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.pdb
+C:\Reksa\Reksa APP\ReksaAPI\bin\Debug\netcoreapp2.2\ReksaQuery.dll.config
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csprojAssemblyReference.cache
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CoreCompileInputs.cache
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorAssemblyInfo.cache
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorAssemblyInfo.cs
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.AssemblyInfoInputs.cache
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.AssemblyInfo.cs
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.RazorTargetAssemblyInfo.cache
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.csproj.CopyComplete
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.dll
+C:\Reksa\Reksa APP\ReksaAPI\obj\Debug\netcoreapp2.2\ReksaAPI.pdb

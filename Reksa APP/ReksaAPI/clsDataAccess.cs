@@ -1721,9 +1721,9 @@ namespace ReksaAPI
             return list;
         }
 
-        public void ReksaPopulateParamFee(int intNIK, string strModule, int intProdId, string strTrxType, ref DataSet dsOut)
+        public void ReksaPopulateParamFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ReksaParamFeeSubs> listParamFeeSubs, ref List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs, ref List<ReksaListGLFeeSubs> listReksaListGLFeeSubs)
         {
-            dsOut = new DataSet();
+            DataSet dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -1731,7 +1731,7 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }                    
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
                 };
 
                 if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut))
@@ -1740,7 +1740,16 @@ namespace ReksaAPI
                     {
                         DataTable dtOut1 = dsOut.Tables[0];
                         DataTable dtOut2 = dsOut.Tables[1];
-                     }
+                        DataTable dtOut3 = dsOut.Tables[2];
+
+                        List<ReksaParamFeeSubs> resultParamFeeSubs = this.MapListOfObject<ReksaParamFeeSubs>(dtOut1);
+                        List<ReksaTieringNotificationSubs> resultTieringNotificationSubs = this.MapListOfObject<ReksaTieringNotificationSubs>(dtOut2);
+                        List<ReksaListGLFeeSubs> resultListGLFeeSubs = this.MapListOfObject<ReksaListGLFeeSubs>(dtOut3);
+
+                        listParamFeeSubs.AddRange(resultParamFeeSubs);
+                        listReksaTieringNotificationSubs.AddRange(resultTieringNotificationSubs);
+                        listReksaListGLFeeSubs.AddRange(resultListGLFeeSubs);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1748,6 +1757,127 @@ namespace ReksaAPI
                 throw ex;
             }
         }
+
+        //Nico
+        public void ReksaPopulateMFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ReksaParamMFee> listReksaParamMFee, ref List<ReksaProductMFee> listReksaProductMFee, ref List<ReksaListGLMFee> listReksaListGLMFee)
+        {
+            DataSet dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut1 = dsOut.Tables[0];
+                        DataTable dtOut2 = dsOut.Tables[1];
+                        DataTable dtOut3 = dsOut.Tables[2];
+
+                        List<ReksaParamMFee> resultReksaParamMFee = this.MapListOfObject<ReksaParamMFee>(dtOut1);
+                        List<ReksaProductMFee> resultReksaProductMFee = this.MapListOfObject<ReksaProductMFee>(dtOut2);
+                        List<ReksaListGLMFee> resultReksaListGLMFee = this.MapListOfObject<ReksaListGLMFee>(dtOut3);
+
+                        listReksaParamMFee.AddRange(resultReksaParamMFee);
+                        listReksaProductMFee.AddRange(resultReksaProductMFee);
+                        listReksaListGLMFee.AddRange(resultReksaListGLMFee);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //End Nico
+
+        //Harja
+        public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType,
+            ref List<ReksaParamUpFrontSelling> listReksaParamFee,
+            ref List<ReksaListGLUpFrontSelling> listReksaListGL)
+        {
+            DataSet dsOut = new DataSet();
+            try
+            {
+                strTrxType = strTrxType.ToUpper().Replace("FEE", "").Trim();
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut1 = dsOut.Tables[0];
+                        DataTable dtOut2 = dsOut.Tables[1];
+
+                        List<ReksaParamUpFrontSelling> resultReksaParam = this.MapListOfObject<ReksaParamUpFrontSelling>(dtOut2);
+                        List<ReksaListGLUpFrontSelling> resultReksaListGL = this.MapListOfObject<ReksaListGLUpFrontSelling>(dtOut1);
+
+                        listReksaParamFee.AddRange(resultReksaParam);
+                        listReksaListGL.AddRange(resultReksaListGL);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        //Harja End
+        //Indra
+        public void ReksaPopulateRedempFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ParameterRedempFee> listRedempFee, ref List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif, ref List<ParameterRedempFeeGL> listRedempFeeGL, ref List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering)
+        {
+            DataSet dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut1 = dsOut.Tables[0];
+                        DataTable dtOut2 = dsOut.Tables[1];
+                        DataTable dtOut3 = dsOut.Tables[2];
+                        DataTable dtOut4 = dsOut.Tables[3];
+
+                        List<ParameterRedempFee> resultRedempFee = this.MapListOfObject<ParameterRedempFee>(dtOut1);
+                        List<ParameterRedempFeeTieringNotif> resultRedempFeeTieringNotif = this.MapListOfObject<ParameterRedempFeeTieringNotif>(dtOut2);
+                        List<ParameterRedempFeeGL> resultRedempFeeGL = this.MapListOfObject<ParameterRedempFeeGL>(dtOut3);
+                        List<ParameterRedempFeePercentageTiering> resultRedempFeePercentageTiering = this.MapListOfObject<ParameterRedempFeePercentageTiering>(dtOut3);
+
+                        listRedempFee.AddRange(resultRedempFee);
+                        listRedempFeeTieringNotif.AddRange(resultRedempFeeTieringNotif);
+                        listRedempFeeGL.AddRange(resultRedempFeeGL);
+                        listRedempFeePercentageTiering.AddRange(resultRedempFeePercentageTiering);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //Indra end
 
         public void ReksaMaintainSubsFee(int intNIK, string strModule, int intProdId,
             decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
@@ -1955,7 +2085,7 @@ namespace ReksaAPI
                 SqlCommand cmdOut = new SqlCommand();
                 if (this.ExecProc(QueryReksa(), "ReksaValidateGL", ref dbParam, out dsOut, out cmdOut))
                 {
-                    strNamaGL =cmdOut.Parameters["@pcNamaGL"].Value.ToString();
+                    strNamaGL = cmdOut.Parameters["@pcNamaGL"].Value.ToString();
                 }
             }
             catch (Exception ex)

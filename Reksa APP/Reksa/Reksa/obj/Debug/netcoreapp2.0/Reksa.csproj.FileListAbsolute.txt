@@ -9,3 +9,13 @@ C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfoI
 C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfo.cs
 C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.dll
 C:\Users\Hp\source\repos\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.pdb
+C:\Reksa\Reksa APP\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.deps.json
+C:\Reksa\Reksa APP\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.runtimeconfig.json
+C:\Reksa\Reksa APP\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.runtimeconfig.dev.json
+C:\Reksa\Reksa APP\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.dll
+C:\Reksa\Reksa APP\Reksa\Reksa\bin\Debug\netcoreapp2.0\Reksa.pdb
+C:\Reksa\Reksa APP\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.csproj.CoreCompileInputs.cache
+C:\Reksa\Reksa APP\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfoInputs.cache
+C:\Reksa\Reksa APP\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.AssemblyInfo.cs
+C:\Reksa\Reksa APP\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.dll
+C:\Reksa\Reksa APP\Reksa\Reksa\obj\Debug\netcoreapp2.0\Reksa.pdb

@@ -6,3 +6,11 @@ C:\Users\Hp\Documents\- PROJECTS -\Project\Reksa\ReksaQuery\ReksaQuery\obj\Debug
 C:\Users\Hp\Documents\- PROJECTS -\Project\Reksa\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.csproj.CoreCompileInputs.cache
 C:\Users\Hp\Documents\- PROJECTS -\Project\Reksa\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.dll
 C:\Users\Hp\Documents\- PROJECTS -\Project\Reksa\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.pdb
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.dll.config
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.dll
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\bin\Debug\ReksaQuery.pdb
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.Properties.Resources.resources
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.csproj.GenerateResource.cache
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.csproj.CoreCompileInputs.cache
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.dll
+C:\Reksa\Reksa APP\ReksaQuery\ReksaQuery\obj\Debug\ReksaQuery.pdb
