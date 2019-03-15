@@ -1,4 +1,6 @@
 ﻿@model Reksa.ViewModels.OtorisasiListViewModel
+@using Reksa.Models
+@using Kendo.Mvc.UI.Fluent
 
 @{
     ViewData["Title"] = "Otorisasi Parameter Global";
@@ -14,25 +16,15 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12">
-                    @(Html.Kendo().TreeView().Name("tvOtorisasi").Items(treeview =>
-                                {
-                                    treeview.Add().Text("Authorization")
-                                        .Expanded(true)
-                                        .Items(root =>
-                                        {
-                                            root.Add().Text("Transaksi")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("ti-folder");
-
-                                            root.Add().Text("Product")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("folder");
-                                        });
-                                })
-                                .Events(events => events
-                            .Select("onSelect")
-
-                        )
+                    @(Html.Kendo().TreeView().Name("TreeViewOtorParamGlobal")
+                                    .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                                    {
+                                        mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>
+                                           {
+                                        item.Id = node.InterfaceTypeId.ToString(); item.Text = node.Caption; item.Expanded = node.Expanded;
+                                    }).Children(node => node.Children));
+                                    }).Events(events => events.Select("onSelect")
+                                    )
                     )
                 </div>
             </div>
@@ -43,7 +35,13 @@
 <!-- Begin Button -->
 <div class="col-md-9">
     <div class="input-group">
-        <button id=btnProcess class="btn btn-info waves-effect waves-light">
+        <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
+            <span class="btn-label">
+                <i class="fa fa-refresh"></i>
+            </span>
+            Refresh
+        </button>
+        <button id=btnApprove class="btn btn-info waves-effect waves-light">
             <span class="btn-label">
                 <i class="fa fa-cogs"></i>
             </span>
@@ -70,22 +68,41 @@
         <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
             <div class="panel-body">
                 <div class="row">
-                    @(Html.Kendo().Grid(Model.Detail)
-                                .Name("GridOtorisasiDetail")
-                                .Columns(columns =>
-                                {
-                                    columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                    columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                    columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                    columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                    columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                    columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                    columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                }).Pageable()
-                            .Scrollable(s => s.Height(450))
-                            .Selectable(selectable => selectable
-                            .Mode(GridSelectionMode.Single))
-                            //.Events(events => events.Change("onRowBlokirSelect"))
+                    @(Html.Kendo().Grid(Model.AuthParamGlobal)
+                    .Name("GridAuthGlobalParam")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(p => p.CheckB)
+                        .ClientTemplate("<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= Id #' " +
+                        "# if (CheckB) { #" +
+                        "checked='checked'" +
+                        "# } #" +
+                        "/>")
+                        .ClientHeaderTemplate("<input type='checkbox'  id='chkSelectAll' onclick='checkAll(this)' />")
+                        .Width(80).Title("Pilih")
+                        .Sortable(false);
+                        columns.Bound(p => p.TipeAction).Width(200);
+                        columns.Bound(p => p.Id).Hidden().Width(200);
+                        columns.Bound(p => p.Kode).Width(200);
+                        columns.Bound(p => p.Deskripsi).Width(200);
+                        columns.Bound(p => p.ProdId).Hidden().Width(200);
+                        columns.Bound(p => p.Desc2).Hidden().Width(200);
+                        columns.Bound(p => p.Desc5).Hidden().Width(200);
+                        columns.Bound(p => p.TglEfektif).Hidden().Width(200);
+                        columns.Bound(p => p.TglExpire).Hidden().Width(200);
+                        columns.Bound(p => p.Keterangan).Hidden().Width(200);
+                        columns.Bound(p => p.MinSwitchRedempt).Hidden().Width(200);
+                        columns.Bound(p => p.JenisSwitchRedempt).Hidden().Width(200);
+                        columns.Bound(p => p.SwitchingFeeNonKaryawan).Hidden().Width(200);
+                        columns.Bound(p => p.SwitchingFeeKaryawan).Hidden().Width(200);
+                        columns.Bound(p => p.OfficeId).Hidden().Width(200);
+                        columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}").Width(200);
+                        columns.Bound(p => p.LastUpdate).Width(200);
+                        columns.Bound(p => p.LastUser).Width(200);
+                    }).Pageable()
+                    .Scrollable(s => s.Height(600))
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
                     )
                 </div>
             </div>
@@ -93,17 +110,290 @@
     </div>
 </div>
 <script>
-    function onSelect(e) {
-        alert(this.text(e.node));
-        switch (this.text(e.node)) {
-            case "Agent":
-                $("#label1").val("Kode");
-                $("#label2").val("Keterangan");
-                $("#label3").val("Tanggal Libur");
-                $("#label4").val("Kode");
-                break;
-        }
+    var IdInterface;
+    var treename;
 
+    $("#btnRefresh").click(function () {
+        subRefresh();
+    });
+
+    $('#btnApprove').click(function (e) {
+        subApprove(true);
+    });
+
+    $('#btnReject').click(function (e) {
+        subApprove(false);
+    });
+
+    function onSelect(e) {
+        var dataItem = this.dataItem(e.node);
+        IdInterface = dataItem.id;
+        treename = dataItem.text;
+        subRefresh();
     }
 
+    function checkAll(e) {
+        var state = $(e).is(':checked');
+        var grid = $('#GridAuthGlobalParam').data('kendoGrid');
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] != state)
+                this.dirty = true;
+
+            this['CheckB'] = state;
+        });
+        grid.refresh();
+    }
+
+    function onCheckBoxClick(e) {
+        var state = $(e).is(':checked');
+        var value = e.value;
+        var grid = $('#GridAuthGlobalParam').data('kendoGrid');
+        grid.refresh();
+
+        grid.tbody.find("tr[role='row']").each(function () {
+        var dataItem = grid.dataItem(this);
+            if (dataItem.Id == value) {
+            dataItem.CheckB = state;
+        }
+        })
+
+        var chkAll = $('#chkSelectAll').is(':checked');
+        var isCheckedAll = true;
+        var countTrue = 0;
+        var countFalse = 0;
+        var countAll = 0;
+
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] == true) {
+                countTrue = countTrue + 1;
+            }
+            else {
+                countFalse = countFalse + 1;
+                isCheckedAll = false;
+            }
+            countAll = countAll + 1;
+        });
+        if (countFalse == 0 || (countFalse == 1 && !state)) {
+            $('#chkSelectAll').prop("checked", state);
+        }
+        grid.refresh();
+    }
+
+    function subRefresh()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Otorisasi/PopulateVerifyGlobalParam',
+            data: { InterfaceId: IdInterface},
+            success: function (data) {
+                console.log(data.AuthParamGlobal);
+                if (data.AuthParamGlobal.length != 0)
+                {
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: data.AuthParamGlobal
+                        });
+                    var AuthParamgrid = $('#GridAuthGlobalParam').data('kendoGrid');
+                    AuthParamgrid.setDataSource(dataSource);
+                    AuthParamgrid.dataSource.pageSize(15);
+                    AuthParamgrid.dataSource.page(1);
+                    AuthParamgrid.select("tr:eq(0)");
+
+                    AuthParamgrid.hideColumn('Id');
+                    AuthParamgrid.hideColumn('MinSwitchRedempt');
+                    AuthParamgrid.hideColumn('JenisSwitchRedempt');
+                    AuthParamgrid.hideColumn('SwitchingFeeNonKaryawan');
+                    AuthParamgrid.hideColumn('SwitchingFeeKaryawan');
+                    AuthParamgrid.hideColumn('ProductCode');
+                    AuthParamgrid.hideColumn('Desc5');
+
+                    $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("Deskripsi")
+                    $("#GridAuthGlobalParam th[data-field=Kode]").html("Kode")
+                    $("#GridAuthGlobalParam th[data-field=ProdId]").html("ProdId")
+
+                    if (IdInterface == 'PFP')
+                        AuthParamgrid.showColumn('Id');
+
+                    AuthParamgrid.hideColumn('TanggalValuta');
+                    AuthParamgrid.hideColumn('ProdId');
+                    AuthParamgrid.hideColumn('Desc2');
+                    AuthParamgrid.hideColumn('TglEfektif');
+                    AuthParamgrid.hideColumn('TglExpire');
+                    AuthParamgrid.hideColumn('Keterangan');
+                    $("#GridAuthGlobalParam th[data-field=Desc2]").html("Desc2")
+                    $("#GridAuthGlobalParam th[data-field=Desc5]").html("Desc5")
+
+                    if ((IdInterface == 'MNI') || (IdInterface == 'CTD')) {
+                        AuthParamgrid.hideColumn('OfficeId');
+                        AuthParamgrid.showColumn('Desc2');
+                        if (IdInterface == "MNI") {
+                            $("#GridAuthGlobalParam th[data-field=Kode]").html("ManInvCode")
+                            $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("ManInvDescription")
+                            $("#GridAuthGlobalParam th[data-field=Desc2]").html("KSEICode")
+                        }
+                        else if (IdInterface == "CTD") {
+                            $("#GridAuthGlobalParam th[data-field=Kode]").html("CustodyCode")
+                            $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("CustodyDescription")
+                            $("#GridAuthGlobalParam th[data-field=Desc2]").html("KSEICode")
+                        }
+                    }
+                    else if (IdInterface == "GFM") {
+                        AuthParamgrid.showColumn('Desc2');
+                        $("#GridAuthGlobalParam th[data-field=Desc2]").html("Biaya")
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("GiftCode")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("GiftDescription")
+                    }
+                    else if (IdInterface == "WPR") {
+                        AuthParamgrid.showColumn('Desc2');
+                        AuthParamgrid.showColumn('Desc5');
+                        AuthParamgrid.showColumn('TglExpire');
+                        AuthParamgrid.showColumn('Keterangan');
+
+                        $("#GridAuthGlobalParam th[data-field=Desc2]").html("Nama")
+                        $("#GridAuthGlobalParam th[data-field=Desc5]").html("Job Title")
+                    }
+                    else if (IdInterface == "RSB") {
+                        AuthParamgrid.showColumn('Desc2');
+                        AuthParamgrid.showColumn('Desc5');
+                        $("#GridAuthGlobalParam th[data-field=Desc2]").html("Red.FeeAsuransi")
+                        $("#GridAuthGlobalParam th[data-field=Desc5]").html("Red.FeeNonAsuransi")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("SubsPercentFee")
+                        AuthParamgrid.showColumn('Keterangan');
+                        AuthParamgrid.showColumn('JenisSwitchRedempt');
+                        $("#GridAuthGlobalParam th[data-field=Keterangan]").html("Swc.FeeAsuransi")
+                        $("#GridAuthGlobalParam th[data-field=JenisSwitchRedempt]").html("Swc.FeeNonAsuransi")
+                    }
+                    else if (IdInterface == "PFP") {
+                        AuthParamgrid.showColumn('Deskripsi');
+                        AuthParamgrid.hideColumn('TanggalValuta');
+                        AuthParamgrid.showColumn('ProdId');
+                        AuthParamgrid.hideColumn('Id');
+
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("FrekPendebetan")
+                        $("#GridAuthGlobalParam th[data-field=ProdId]").html("MinJangkaWaktu")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("Kelipatan")
+                    }
+                    else if (IdInterface == "MSC") {
+                        AuthParamgrid.showColumn('Deskripsi');
+                        AuthParamgrid.hideColumn('TanggalValuta');
+                        AuthParamgrid.showColumn('JenisSwitchRedempt');
+
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("Min Subsc")
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("Product")
+                        $("#GridAuthGlobalParam th[data-field=JenisSwitchRedempt]").html("IsEmployee")
+                    }
+                    else if (IdInterface == "SWC") {
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("ProdSwitchIn")
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("ProdSwitchOut")
+                        AuthParamgrid.showColumn('MinSwitchRedempt');
+                        AuthParamgrid.showColumn('JenisSwitchRedempt');
+                        $("#GridAuthGlobalParam th[data-field=JenisSwitchRedempt]").html("JenisSwitchRedempt")
+                        AuthParamgrid.showColumn('SwitchingFeeNonKaryawan');
+                        AuthParamgrid.showColumn('SwitchingFeeKaryawan');
+                        AuthParamgrid.hideColumn('TanggalValuta');
+                    }
+                    else if (IdInterface == "RTY") {
+                        AuthParamgrid.showColumn('Desc2');
+                        $("#GridAuthGlobalParam th[data-field=Desc2]").html("ReksadanaTypeEnglish")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("ReksadanaType")
+                    }
+                    else if (IdInterface == "RPP") {
+                        AuthParamgrid.showColumn('Desc2');
+                        AuthParamgrid.hideColumn('LastUpdate');
+
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("KodeProduct")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("NamaProduk")
+                        $("#GridAuthGlobalParam th[data-field=Desc2]").html("RiskProfileProduct")
+                    }
+                    else if ((IdInterface == "SAC") || (IdInterface == "SFC") || (IdInterface == "SBC")
+                        || (IdInterface == "SNV") || (IdInterface == "SDV") || (IdInterface == "SKR")) {
+                        AuthParamgrid.showColumn('ProductCode');
+
+                        if (IdInterface == "SAC") {
+                            $("#GridAuthGlobalParam th[data-field=Kode]").html("AgentCode")
+                            $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("AgentDescription")
+                            $("#GridAuthGlobalParam th[data-field=ProdId]").html("Product")
+                        }
+                        else if (IdInterface == "SFC") {
+                            $("#GridAuthGlobalParam th[data-field=Kode]").html("FundCode")
+                            $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("FundDescription")
+                            $("#GridAuthGlobalParam th[data-field=ProdId]").html("Product")
+                        }
+                        else if (IdInterface == "SBC") {
+                            $("#GridAuthGlobalParam th[data-field=Kode]").html("BankCode")
+                            $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("BankDescription")
+                            $("#GridAuthGlobalParam th[data-field=ProdId]").html("Product")
+                        }
+                    }
+                    else if (IdInterface == "RDD") {
+                        AuthParamgrid.showColumn('ProductCode');
+                        AuthParamgrid.showColumn('TanggalValuta');
+
+                        $("#GridAuthGlobalParam th[data-field=TanggalValuta]").html("ValueDate")
+                    }
+                    else if (IdInterface == "GFP") {
+                        AuthParamgrid.showColumn('ProductCode');
+                        AuthParamgrid.showColumn('Desc2');
+                        AuthParamgrid.showColumn('TglEfektif');
+                        AuthParamgrid.showColumn('TglExpire');
+
+                        $("#GridAuthGlobalParam th[data-field=Kode]").html("GiftCode")
+                        $("#GridAuthGlobalParam th[data-field=Deskripsi]").html("MinSubscription")
+                        $("#GridAuthGlobalParam th[data-field=ProdId]").html("Term")
+                    }
+                    else
+                    {
+                        AuthParamgrid.hideColumn('OfficeId');
+                    }
+                }
+                else
+                {
+                    $("#GridAuthGlobalParam").data('kendoGrid').dataSource.data([]);
+                }
+            }
+        });
+    }
+
+    function subApprove(isApprove)
+    {
+        var grid = $("#GridAuthGlobalParam").data("kendoGrid");
+        grid.refresh();
+        var dataItems = "";
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+
+            if (dataItem.CheckB == true) {
+                dataItems += dataItem.Id + "|";
+            }
+        })
+        if (dataItems == "")
+            alert("No data selected!");
+        else {
+            var message;
+            if (isApprove == true)
+                message = 'approve';
+            else
+                message = 'reject';
+
+            if (confirm('Are you sure to ' + message +' this data?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Otorisasi/AuthorizeGlobalParam",
+                    data: { listId: dataItems, InterfaceId: IdInterface, isApprove: isApprove },
+                    success: function (data) {
+                        if (isApprove == true)
+                            document.getElementById("sa-approved").click();
+                        else
+                            document.getElementById("sa-rejected").click();
+
+                        subRefresh();
+                    }
+                });
+            }
+            else {
+                e.preventDefault();
+            }
+        }
+    }
+    
 </script>

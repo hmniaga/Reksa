@@ -24,7 +24,7 @@
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoBook" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchCustomerBook", "Global")" data-toggle="modal" data-target="#CustomerBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameBook" })
                     </div>
@@ -37,7 +37,7 @@
                         @Html.Kendo().TextBoxFor(model => model.BookingModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefIDBook" })
 
                         <span class="input-group-btn">
-                            <a onclick="onsearchRefBook();" data-toggle="modal" data-target="#ReferensiBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id ="srcRefBook" onclick="onsearchRefBook();"  href="" data-toggle="modal" data-target="#ReferensiBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.BookingModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefTglBook" }).Format("{0:dd MMMM yyyy}")
                     </div>
@@ -45,9 +45,8 @@
                 <script>
                     function onsearchRefBook() {
                         var CIFNo = $('#CIFNoBook').val();
-                        $.post("@Url.Action("SearchBooking", "Global")" + "?criteria=" + CIFNo, function (response) {
-                            $("#ReferensiBookModal").html(response);
-                            });
+                        var url = '@Html.Raw(Url.Action("SearchBooking", "Global"))';
+                        $('#srcRefBook').attr('href', url + '?criteria=' + CIFNo);  
                     }
                 </script>
                 <!-- End Search RefID -->

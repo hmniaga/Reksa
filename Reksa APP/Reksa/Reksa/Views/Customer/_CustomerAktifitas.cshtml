@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Tanggal Jatuh Tempo</label>
                     <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                        @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;font-size: 100%" }).Enable(false))
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                         <label class="col-sm-3 control-label"></label>
                         <div class="input-group">
                             @(Html.Kendo().DatePicker().Name("StarDateAct").
-                                                                                                                HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                                HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%; font-size: 100%" })
                                                                                                                 .Format("{0:dd/MM/yyyy}")
                             )
                         </div>
@@ -255,6 +255,7 @@ var clientId;
                     var Actgrid = $('#GridActivity').data('kendoGrid');
                     Actgrid.setDataSource(dataSource);
                     Actgrid.dataSource.page(1);
+                    Actgrid.select("tr:eq(0)");
                 } else
                 {
                     $("#GridActivity").data('kendoGrid').dataSource.data([]);

@@ -5,6 +5,7 @@ using System.Data;
 using ReksaAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data.SqlClient;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,11 +26,36 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult GetTreeView([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string MenuName)
         {
-            List<SearchModel.Agen> list = new List<SearchModel.Agen>();
+            List<TreeViewModel> list = new List<TreeViewModel>();
             DataSet dsOut = new DataSet();
             list = cls.ReksaGetTreeView(NIK, Module, MenuName);
             return Json(list);
         }
+
+        [Route("api/Global/GetCommonTreeView")]
+        [HttpGet("{id}")]
+        public JsonResult GetCommonTreeView([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string MenuName)
+        {
+            List<CommonTreeViewModel> list = new List<CommonTreeViewModel>();
+            DataSet dsOut = new DataSet();
+            list = cls.ReksaGetCommonTreeView(NIK, Module, MenuName);
+            return Json(list);
+        }
+
+        [Route("api/Global/GlobalQuery")]
+        [HttpGet("{id}")]
+        public JsonResult GlobalQuery(string strPopulate, [FromQuery]string SelectedId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+
+            DataSet dsResult = new DataSet();
+            DataTable dt = new DataTable();
+            List<SqlParameter> listParam = new List<SqlParameter>();
+            string strCommand = cls.fnCreateCommand1(strPopulate, dt, NIK, GUID, out listParam, out string selectedId, 0);
+            dsResult = cls.ReksaGlobalQuery(strCommand, listParam);
+            return Json(dsResult);
+        }
+
+
         [Route("api/Global/PopulateCombo")]
         [HttpGet]
         public JsonResult PopulateCombo()
@@ -94,11 +120,11 @@ namespace ReksaAPI.Controllers
         public JsonResult GetSrcCustomer([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
         {
             List<SearchModel.Customer> list = new List<SearchModel.Customer>();
-            if (cls.setCFMAST(""))
-            {
+            //if (cls.setCFMAST(""))
+            //{
                 list = cls.ReksaSrcCustomer(Col1, Col2, Validate);
                 //cls.clearDATA("CFMAST_v");
-            }
+            //}
             return Json(list);
         }
         [Route("api/Global/GetSrcClient")]
@@ -110,6 +136,16 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcClient(Col1, Col2, Validate, ProdId);
             return Json(list);
         }
+
+        [Route("api/Global/GetSrcClientbyCIF")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcClientbyCIF([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string CIFNo)
+        {
+            List<SearchModel.Client> list = new List<SearchModel.Client>();
+            list = cls.ReksaSrcClientbyCIF(Col1, Col2, Validate, CIFNo);
+            return Json(list);
+        }
+
         [Route("api/Global/GetSrcCity")]
         [HttpGet("{id}")]
         public JsonResult GetSrcCity([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)

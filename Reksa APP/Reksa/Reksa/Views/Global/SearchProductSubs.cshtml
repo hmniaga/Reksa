@@ -8,9 +8,9 @@
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchProduct() {
-        var value = $("#ProductSearchComponentSearchTxt").val();
-        var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
+    function onSearchProductSubs() {
+        var value = $("#ProductSubsSearchComponentSearchTxt").val();
+        var grid = $("#ProductSubsSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -31,33 +31,33 @@
         }
     }
 
-    function onRowProductSelect(e) {
+    function onRowProductSubsSelect(e) {
         var data = this.dataItem(this.select());
         var ProdCode = $.trim(data.ProdCode);
         var ProdName = $.trim(data.ProdName);
         var ProdId = $.trim(data.ProdId);
 
-        $("#ProductSelectedCode").val(ProdCode);
-        $("#ProductSelectedName").val(ProdName);
-        $("#ProductSelectedId").val(ProdId);
+        $("#ProductSubsSelectedCode").val(ProdCode);
+        $("#ProductSubsSelectedName").val(ProdName);
+        $("#ProductSubsSelectedId").val(ProdId);
     };
 
-    $("#ProductSelectButton").on("click", function () {
-        var selectedCode = $("#ProductSelectedCode").val();
-        var selectedName = $("#ProductSelectedName").val();
-        var selectedId = $("#ProductSelectedId").val();
+    $("#ProductSubsSelectButton").on("click", function () {
+        var selectedCode = $("#ProductSubsSelectedCode").val();
+        var selectedName = $("#ProductSubsSelectedName").val();
+        var selectedId = $("#ProductSubsSelectedId").val();
 
-        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
-        $("input[name='ProductModel.ProdName']").val(selectedName);
+        $("input[id='ProdCodeSubs']").val(selectedCode).change();
+        $("input[id='ProdNameSubs']").val(selectedName);
         $("input[name='ProductModel.ProdId']").val(selectedId);
 
     });
 
-    $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ProductSubsSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ProductSearchComponentSearchBtn").click();
+            $("#ProductSubsSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -69,7 +69,7 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
-                    .Name("ProductSearchComponentGrid")
+                    .Name("ProductSubsSearchComponentGrid")
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.ProdCode);
@@ -80,7 +80,7 @@
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowProductSelect"))
+                    .Events(events => events.Change("onRowProductSubsSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -98,22 +98,22 @@
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ProductSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("ProductSubsSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ProductSearchComponentSearchBtn")
+                            .Name("ProductSubsSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchProduct")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchProductSubs")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="ProductSelectedCode" name="ProductSelectedCode" value="" />
-        <input type="hidden" id="ProductSelectedName" name="ProductSelectedName" value="" />
-        <input type="hidden" id="ProductSelectedId" name="ProductSelectedCId" value="" />
+        <input type="hidden" id="ProductSubsSelectedCode" name="ProductSubsSelectedCode" value="" />
+        <input type="hidden" id="ProductSubsSelectedName" name="ProductSubsSelectedName" value="" />
+        <input type="hidden" id="ProductSubsSelectedId" name="ProductSubsSelectedCId" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ProductSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ProductSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

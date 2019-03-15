@@ -24,7 +24,7 @@
                             @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoSubs"})
                             
                             <span class="input-group-btn">
-                                <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a href="@Url.Action("SearchCustomerSubs", "Global")" data-toggle="modal" data-target="#CustomerSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameSubs" })
                         </div>
@@ -37,7 +37,7 @@
                             @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefIDSubs" })
 
                             <span class="input-group-btn">
-                                <a href="@Url.Action("SearchReferensi", "Global", new { criteria = "SUBS" })" data-toggle="modal" data-target="#ReferensiSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a href="@Url.Action("SearchReferensiSubs", "Global", new { criteria = "SUBS" })" data-toggle="modal" data-target="#ReferensiSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefNameSubs" })
                         </div>
@@ -163,7 +163,7 @@
                                 @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCodeSubs" }).Enable(false)
 
                                 <span class="input-group-btn">
-                                    <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a href="@Url.Action("SearchProductSubs", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdNameSubs" }).Enable(false)
                             </div>
@@ -177,7 +177,7 @@
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientCodeSubs" }).Enable(false)
 
                                 <span class="input-group-btn">
-                                    <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a href="@Url.Action("SearchClientSubs", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientNameSubs" }).Enable(false)
                             </div>

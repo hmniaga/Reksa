@@ -21,7 +21,6 @@ namespace Reksa.Controllers
             _strAPIUrl =  _config.GetValue<string>("APIServices:url");
         }
 
-
         public ActionResult SearchBooking(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -47,7 +46,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBooking?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBooking?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<BookingModel>>(stringData);
             }
@@ -78,17 +77,19 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
-
-        public ActionResult SearchClient(string search, string criteria, string type, int seq = 0)
+        public ActionResult SearchClient(string search, string criteria, int ProdId)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
-            ViewBag.Seq = seq;
-            ViewBag.Type = type;
             return View();
         }
-        public ActionResult SearchClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        public ActionResult SearchClientSubs(string search, string criteria, int ProdId)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria, int ProdId)
         {
             int pageNum = request.Page;
             int pageSize = request.PageSize;
@@ -110,7 +111,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcClient?Col1=&Col2=&Validate=0&ProdId=51").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcClient?Col1=&Col2=" + search + "&Validate=0&ProdId=" + ProdId).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<ClientModel>>(stringData);
             }
@@ -141,6 +142,55 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+
+        public ActionResult SearchClientbyCIF(string search, string criteria, string CIFNo)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            ViewBag.CIFNo = CIFNo;
+            return View();
+        }
+        public ActionResult SearchClientbyCIFData([DataSourceRequest]DataSourceRequest request, string search, string criteria, string CIFNo)
+        {
+            int pageNum = request.Page;
+            int pageSize = request.PageSize;
+
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+
+            int total = 0;
+            List<ClientModel> list = new List<ClientModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("api/Global/GetSrcClientbyCIF?Col1=&Col2=" + search + "&Validate=0&CIFNo=" + CIFNo).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<ClientModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+
+
         public ActionResult SearchCurrency(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -166,7 +216,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCurrency?Col1=&Col2=&Validate=0").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCurrency?Col1=" + search + "&Col2=&Validate=0").Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<CurrencyModel>>(stringData);
             }
@@ -204,7 +254,48 @@ namespace Reksa.Controllers
 
             return View();
         }
+        public ActionResult SearchCustomerSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
 
+            return View();
+        }
+        public ActionResult SearchCustomerRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCustomerRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCustomerSwc(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCustomerSwcRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCustomerBook(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
         public ActionResult SearchCustomerData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {            
             if (request.Filters.Count > 0)
@@ -225,7 +316,7 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
-                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCustomer?Col1=&Col2=&Validate=0").Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCustomer?Col1=&Col2=" + search + "&Validate=0").Result;
                     string stringData = response.Content.ReadAsStringAsync().Result;
                     list = JsonConvert.DeserializeObject<List<CustomerModel>>(stringData);
                 }
@@ -299,7 +390,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCity?Col1=&Col2=&Validate=0").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCity?Col1=" + search + "&Col2=&Validate=0").Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<CityModel>>(stringData);
             }
@@ -343,7 +434,7 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
-                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcOffice?Col1=&Col2=&Validate=0").Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcOffice?Col1=" + search + "&Col2=&Validate=0").Result;
                     string stringData = response.Content.ReadAsStringAsync().Result;
                     list = JsonConvert.DeserializeObject<List<OfficeModel>>(stringData);
                 }
@@ -395,6 +486,15 @@ namespace Reksa.Controllers
 
             return View();
         }
+        public ActionResult SearchProductSubs(string search, string criteria, string type, int seq = 0)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            ViewBag.Seq = seq;
+            ViewBag.Type = type;
+
+            return View();
+        }
         public ActionResult SearchProductData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             int pageNum = request.Page;
@@ -417,7 +517,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcProduct?Col1=&Col2=&Validate=0&Status=1").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcProduct?Col1="+ search + "&Col2=&Validate=0&Status=1").Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<ProductModel>>(stringData);
             }
@@ -480,7 +580,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcReferentor?Col1=&Col2=&Validate=0").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcReferentor?Col1=" + search + "&Col2=&Validate=0").Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<ReferentorModel>>(stringData);
             }
@@ -511,8 +611,28 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
         public ActionResult SearchReferensi(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchReferensiSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchReferensiRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchReferensiRDB(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -537,7 +657,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTransaksiRefID?Col1=&Col2=&Validate=0&Criteria="+ criteria).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTransaksiRefID?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<ReferensiModel>>(stringData);
             }
@@ -554,8 +674,6 @@ namespace Reksa.Controllers
 
             return Json(result);
         }
-
-
         public ActionResult SearchSwitching(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -581,7 +699,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitching?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitching?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
             }
@@ -612,7 +730,6 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
         public ActionResult SearchSwitchingRDB(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -638,7 +755,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitchingRDB?Col1=&Col2=&Validate=0&Criteria=" + criteria).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcSwitchingRDB?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<SwitchingModel>>(stringData);
             }
@@ -669,9 +786,6 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
-
-
         public ActionResult SearchWaperd(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -697,7 +811,7 @@ namespace Reksa.Controllers
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcWaperd?Col1=&Col2=&Validate=0" + criteria).Result;
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcWaperd?Col1=" + search + "&Col2=&Validate=0" + criteria).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<WaperdModel>>(stringData);
             }
@@ -728,7 +842,5 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
-
     }
 }

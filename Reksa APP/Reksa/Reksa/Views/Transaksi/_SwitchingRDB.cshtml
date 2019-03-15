@@ -24,7 +24,7 @@
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoSwcRDB" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchCustomerSwcRDB", "Global")" data-toggle="modal" data-target="#CustomerSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameSwcRDB" })
                     </div>
@@ -37,18 +37,16 @@
                         @Html.Kendo().TextBox().Name("SwitchingRDBRefID").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
 
                         <span class="input-group-btn">
-                            <a onclick="onsearchSwcRDB();" data-toggle="modal" data-target="#ReferensiSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcRefSwcRDB" onclick="onsearchSwcRDB();" href="" data-toggle="modal" data-target="#ReferensiSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBox().Name("SwitchingRDBTglTrx").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" })
                     </div>
                 </div>
                 <script>
-
                     function onsearchSwcRDB() {
                         var CIFNo = $('#CIFNoSwcRDB').val();
-                        $.post("@Url.Action("SearchSwitchingRDB", "Global")" + "?criteria=" + CIFNo, function (response) {
-                            $("#ReferensiSwcRDBModal").html(response);
-                            });
+                        var url = '@Html.Raw(Url.Action("SearchSwitchingRDB", "Global"))';
+                        $('#srcRefSwcRDB').attr('href', url + '?criteria=' + CIFNo); 
                     }
                 </script>
                 <!-- End Search RefID -->

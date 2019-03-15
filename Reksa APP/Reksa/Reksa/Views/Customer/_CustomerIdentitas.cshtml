@@ -27,7 +27,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Nama Pemilik</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("CIFName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("NamaPemilik").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     <!-- End Input Nama Pemilik -->
@@ -279,22 +279,22 @@
                     .Sortable(false);
                     columns.Bound(p => p.Sequence).Hidden();
                     columns.Bound(p => p.KodePos).Width(85).Title("Kode Pos");
-                    columns.Bound(p => p.AddressLine1).Width(150).Title("AddressLine 1");
-                    columns.Bound(p => p.AddressLine2).Width(150).Title("AddressLine 2");
-                    columns.Bound(p => p.AddressLine3).Width(150).Title("AddressLine 3");
-                    columns.Bound(p => p.AddressLine4).Width(150).Title("AddressLine 4");
-                    columns.Bound(p => p.AlamatUtama).Width(150).Title("Alamat Utama");
-                    columns.Bound(p => p.KodeAlamat).Width(150).Title("Kode Alamat");
-                    columns.Bound(p => p.AlamatSID).Width(150).Title("Alamat SID");
-                    columns.Bound(p => p.PeriodThere).Width(150).Title("Period There");
+                    columns.Bound(p => p.AddressLine1).Width(200).Title("AddressLine 1");
+                    columns.Bound(p => p.AddressLine2).Width(200).Title("AddressLine 2");
+                    columns.Bound(p => p.AddressLine3).Width(200).Title("AddressLine 3");
+                    columns.Bound(p => p.AddressLine4).Width(200).Title("AddressLine 4");
+                    columns.Bound(p => p.AlamatUtama).Width(120).Title("Alamat Utama");
+                    columns.Bound(p => p.KodeAlamat).Width(120).Title("Kode Alamat");
+                    columns.Bound(p => p.AlamatSID).Width(120).Title("Alamat SID");
+                    columns.Bound(p => p.PeriodThere).Width(120).Title("Period There");
                     columns.Bound(p => p.PeriodThereCode).Width(150).Title("Period There Code");
-                    columns.Bound(p => p.JenisAlamat).Width(150).Title("Jenis Alamat");
-                    columns.Bound(p => p.StaySince).Width(150).Title("Stay Since");
-                    columns.Bound(p => p.Kelurahan).Width(150).Title("Kelurahan");
+                    columns.Bound(p => p.JenisAlamat).Width(120).Title("Jenis Alamat");
+                    columns.Bound(p => p.StaySince).Width(120).Title("Stay Since");
+                    columns.Bound(p => p.Kelurahan).Width(200).Title("Kelurahan");
                     columns.Bound(p => p.Kecamatan).Width(150).Title("Kecamatan");
                     columns.Bound(p => p.Kota).Width(150).Title("Kota");
                     columns.Bound(p => p.Provinsi).Width(150).Title("Provinsi");
-                }).Scrollable(s => s.Height(250))
+                }).Scrollable(s => s.Height(500))
                 .Selectable()
                 .Pageable()
                 )

@@ -8,56 +8,192 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
 using Newtonsoft.Json.Linq;
+using Kendo.Mvc.UI;
 
 namespace Reksa.Controllers
 {
     public class ParameterController : Controller
     {
+        #region "Default Var"
+        public string strModule = "Pro Reksa 2";
+        public int _intNIK = 10137;
+        public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
+        public string _strMenuName;
+        public string _strBranch = "01010";
+        public int _intClassificationId;
         private IConfiguration _config;
         private string _strAPIUrl;
+        #endregion
 
         public ParameterController(IConfiguration iconfig)
         {
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
-
-        public ActionResult Index(int ProdukId)
+        public ActionResult Index()
         {
-            ViewData["Label0"] = "Produk";
-            ViewData["Label1"] = "Kode";
-            ViewData["Label2"] = "Deskripsi";
-            ViewData["Label3"] = "Tanggal valuta";
-            ViewData["Label4"] = "Kode Kantor";
-
+            ViewData["label1"] = "Produk";
+            ViewData["lblSP1"] = "Kode";
+            ViewData["lblSP2"] = "Deskripsi";
+            ViewData["lblSP4"] = "Tanggal valuta";
+            ViewData["lblOffice"] = "Kode Kantor";
+            ParameterListViewModel vModel = new ParameterListViewModel();
+            List<TreeViewModel> listTree = new List<TreeViewModel>();
+            listTree = GetTreeView("mnuSetupParameter");
+            var items = new List<TreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {                
+                if (listTree[i].ParentId == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }                
+            }
+            this.ViewBag.Tree = items;
+            return View(vModel);
+        }
+        public JsonResult RefreshParam(string InterfaceId, int ProdukId)
+        {
+            ViewData["label1"] = "Produk";
+            ViewData["lblSP1"] = "Kode";
+            ViewData["lblSP2"] = "Deskripsi";
+            ViewData["lblSP4"] = "Tanggal valuta";
+            ViewData["lblOffice"] = "Kode Kantor";
             List<ParameterModel> list = new List<ParameterModel>();
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_strAPIUrl);
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=" + ProdukId + "&TreeInterface=SAC&NIK=10137&Guid=a1b2").Result;
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=" + ProdukId + "&TreeInterface="+ InterfaceId + "&NIK="+ _intNIK +"&Guid=" + _strGuid).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
             }
-
-            ParameterListViewModel vModel = new ParameterListViewModel();
+            ParameterListViewModel vModel = new ParameterListViewModel();             
             vModel.Parameter = list;
+            return Json(vModel);
+        }
+        public ActionResult Global()
+        {
+            ViewData["label1"] = "Produk";
+            ViewData["lblSP1"] = "Kode";
+            ViewData["lblSP2"] = "Deskripsi";
+            ViewData["lblSP4"] = "Tanggal valuta";
+            ViewData["lblOffice"] = "Kode Kantor";
+            ParameterListViewModel vModel = new ParameterListViewModel();
+            List<TreeViewModel> listTree = new List<TreeViewModel>();
+            listTree = GetTreeView("mnuParamGlobal");
+            var items = new List<TreeViewModel>();
 
-            if (list.Count > 0)
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
             {
-                //ViewData["Value0"] = listData[0].Kode;
-                //ViewData["Value1"] = listData[0].Kode;
-                //ViewData["Value2"] = listData[0].Deskripsi;
-                //ViewData["Value3"] = listData[0].TanggalValuta;                
+                if (listTree[i].ParentId == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
             }
+            this.ViewBag.Tree = items;
             return View(vModel);
         }
-        public IActionResult ParameterGlobal()
+        public JsonResult RefreshParamGlobal(string InterfaceId, int ProdukId)
         {
-            return View();
+            ViewData["label1"] = "Produk";
+            ViewData["lblSP1"] = "Kode";
+            ViewData["lblSP2"] = "Deskripsi";
+            ViewData["lblSP4"] = "Tanggal valuta";
+            List<ParameterModel> list = new List<ParameterModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=&TreeInterface=" + InterfaceId + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
+            }
+            ParameterListViewModel vModel = new ParameterListViewModel();
+            vModel.Parameter = list;
+            return Json(vModel);
         }
 
+        public ActionResult RefreshWARPED(int NIK)
+        {
+            bool blnResult = false;
+            string strErrMsg = "";
+            string Name = "", JobTittle = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/RefreshWARPED?NIK=" + NIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(stringData);
+                    JToken TokenResult = strObject["blnResult"];
+                    JToken TokenErrMsg = strObject["strErrMsg"];
+                    JToken TokenData = strObject["strData"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    string[] strData = JsonConvert.DeserializeObject<string[]>(JsonData);
+                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    Name = strData[0];
+                    JobTittle = strData[1];
+                }
+            }
+            catch (Exception e)
+            {
+                strErrMsg = e.Message;
+                return Json(new { blnResult, strErrMsg });
+            }
+            return Json(new { blnResult, strErrMsg, Name, JobTittle });
+        }
+
+        [HttpPost]
+        public ActionResult MaintainParamGlobal([FromBody] MaintainParamGlobal MaintParamGlobal)
+        {
+            bool blnResult = false;
+            string strErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(MaintParamGlobal));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Parameter/MaintainParameterGlobal?NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    JToken TokenResult = strObject["blnResult"];
+                    JToken TokenErrMsg = strObject["strErrMsg"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                }
+            }
+            catch (Exception e)
+            {
+                strErrMsg = e.Message;
+                return Json(new { blnResult, strErrMsg });
+            }
+            return Json(new { blnResult, strErrMsg });
+        }
+        
         //Alvin, begin
         public IActionResult SubscriptionFee()
         {
@@ -308,6 +444,21 @@ namespace Reksa.Controllers
         public IActionResult SwitchingFee()
         {
             return View();
+        }
+
+        private List<TreeViewModel> GetTreeView(string strMenuName)
+        {
+            List<TreeViewModel> list = new List<TreeViewModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetTreeView?NIK=" + _intNIK + "&Module="+ strModule + "&MenuName=" + strMenuName).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TreeViewModel>>(stringData);
+            }
+            return list;
         }
     }
 }

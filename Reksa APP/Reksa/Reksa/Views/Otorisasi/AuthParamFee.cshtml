@@ -1,4 +1,6 @@
 ﻿@model Reksa.ViewModels.OtorisasiListViewModel
+@using Reksa.Models
+@using Kendo.Mvc.UI.Fluent
 
 @{
     ViewData["Title"] = "Otorisasi Parameter Fee";
@@ -14,25 +16,12 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12">
-                    @(Html.Kendo().TreeView().Name("tvOtorisasi").Items(treeview =>
-                                {
-                                    treeview.Add().Text("Authorization")
-                                        .Expanded(true)
-                                        .Items(root =>
-                                        {
-                                            root.Add().Text("Transaksi")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("ti-folder");
-
-                                            root.Add().Text("Product")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("folder");
-                                        });
-                                })
-                                .Events(events => events
-                            .Select("onSelect")
-
-                        )
+                    @(Html.Kendo().TreeView().Name("TreeViewAuthParamFee")
+                    .BindTo((IEnumerable<CommonTreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                    {mappings.For<CommonTreeViewModel>(binding => binding.ItemDataBound((item, node) =>
+                    {item.Id = node.tree_id.ToString(); item.Text = node.tree_name; item.Expanded = node.Expanded;
+                    }).Children(node => node.Children));
+                    }).Events(events => events.Select("onSelect"))
                     )
                 </div>
             </div>
@@ -65,20 +54,20 @@
             <div class="panel-body">
                 <div class="row">
                     @(Html.Kendo().Grid(Model.Detail)
-                                .Name("GridOtorisasiDetail")
-                                .Columns(columns =>
-                                {
-                                    columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                    columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                    columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                    columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                    columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                    columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                    columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                }).Pageable()
-                            .Scrollable(s => s.Height(450))
-                            .Selectable(selectable => selectable
-                            .Mode(GridSelectionMode.Single))
+                                        .Name("GridOtorisasiDetail")
+                                        .Columns(columns =>
+                                        {
+                                            columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
+                                            columns.Bound(p => p.TranId).Width(100).Title("TranId");
+                                            columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
+                                            columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
+                                            columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
+                                            columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
+                                            columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
+                                        }).Pageable()
+                                    .Scrollable(s => s.Height(450))
+                                    .Selectable(selectable => selectable
+                                    .Mode(GridSelectionMode.Single))
                             //.Events(events => events.Change("onRowBlokirSelect"))
                     )
                 </div>
@@ -88,16 +77,9 @@
 </div>
 <script>
     function onSelect(e) {
-        alert(this.text(e.node));
-        switch (this.text(e.node)) {
-            case "Agent":
-                $("#label1").val("Kode");
-                $("#label2").val("Keterangan");
-                $("#label3").val("Tanggal Libur");
-                $("#label4").val("Kode");
-                break;
-        }
-
+        var dataItem = this.dataItem(e.node);
+        IdInterface = dataItem.id;
+        
     }
 
 </script>

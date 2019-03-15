@@ -1,16 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Search Product";
+    ViewBag.Title = "Search Referensi";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
 
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchProduct() {
-        var value = $("#ProductSearchComponentSearchTxt").val();
-        var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
+    function onSearchReferensiSubs() {
+        var value = $("#ReferensiSubsSearchComponentSearchTxt").val();
+        var grid = $("#ReferensiSubsSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -31,33 +29,29 @@
         }
     }
 
-    function onRowProductSelect(e) {
+    function onRowReferensiSubsSelect(e) {
         var data = this.dataItem(this.select());
-        var ProdCode = $.trim(data.ProdCode);
-        var ProdName = $.trim(data.ProdName);
-        var ProdId = $.trim(data.ProdId);
+        var RefID = $.trim(data.RefID);
+        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
 
-        $("#ProductSelectedCode").val(ProdCode);
-        $("#ProductSelectedName").val(ProdName);
-        $("#ProductSelectedId").val(ProdId);
+        $("#ReferensiSubsSelectedRefID").val(RefID);
+        $("#ReferensiSubsSelectedtanggalTransaksi").val(tanggalTransaksi);
     };
 
-    $("#ProductSelectButton").on("click", function () {
-        var selectedCode = $("#ProductSelectedCode").val();
-        var selectedName = $("#ProductSelectedName").val();
-        var selectedId = $("#ProductSelectedId").val();
+    $("#ReferensiSubsSelectButton").on("click", function () {
+        var selectedRefID = $("#ReferensiSubsSelectedRefID").val();
+        var selectedtanggalTransaksi = $("#ReferensiSubsSelectedtanggalTransaksi").val();
 
-        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
-        $("input[name='ProductModel.ProdName']").val(selectedName);
-        $("input[name='ProductModel.ProdId']").val(selectedId);
+        $("input[id='RefIDSubs']").val(selectedRefID).change();
+        $("input[id='RefNameSubs']").val(selectedtanggalTransaksi);
 
     });
 
-    $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ReferensiSubsSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ProductSearchComponentSearchBtn").click();
+            $("#ReferensiSubsSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -68,19 +62,18 @@
         <h4>@ViewBag.Title</h4>
     </div>
     <div class="modal-body">
-        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
-                    .Name("ProductSearchComponentGrid")
+        @(Html.Kendo().Grid<Reksa.Models.ReferensiModel>()
+                    .Name("ReferensiSubsSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.ProdCode);
-                        columns.Bound(m => m.ProdName);
-                        columns.Bound(m => m.ProdId);
+                        columns.Bound(m => m.RefID).Title("No Referensi");
+                        columns.Bound(m => m.tanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowProductSelect"))
+                    .Events(events => events.Change("onRowReferensiSubsSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -90,30 +83,29 @@
                         .PageSize(20)
                         .Model(model =>
                         {
-                            model.Id(m => m.ProdCode);
+                            model.Id(m => m.RefID);
                         })
-                        .Read(read => read.Action("SearchProductData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchReferensiData", "Global", new { search = search, criteria = criteria }))
                     )
         )
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ProductSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("ReferensiSubsSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ProductSearchComponentSearchBtn")
+                            .Name("ReferensiSubsSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchProduct")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchReferensiSubs")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="ProductSelectedCode" name="ProductSelectedCode" value="" />
-        <input type="hidden" id="ProductSelectedName" name="ProductSelectedName" value="" />
-        <input type="hidden" id="ProductSelectedId" name="ProductSelectedCId" value="" />
+        <input type="hidden" id="ReferensiSubsSelectedRefID" name="ReferensiSubsSelectedRefID" value="" />
+        <input type="hidden" id="ReferensiSubsSelectedtanggalTransaksi" name="ReferensiSubsSelectedtanggalTransaksi" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ProductSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ReferensiSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

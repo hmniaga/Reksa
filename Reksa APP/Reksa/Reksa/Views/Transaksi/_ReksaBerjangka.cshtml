@@ -24,7 +24,7 @@
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoRDB" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchCustomerRDB", "Global")" data-toggle="modal" data-target="#CustomerRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameRDB" })
                     </div>
@@ -37,7 +37,7 @@
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefIDRDB" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchReferensi", "Global", new { criteria = "SUBSRDB" })" data-toggle="modal" data-target="#ReferensiRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchReferensiRDB", "Global", new { criteria = "SUBSRDB" })" data-toggle="modal" data-target="#ReferensiRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefNameRDB" }).Format("{0:dd MMMM yyyy}")
                     </div>

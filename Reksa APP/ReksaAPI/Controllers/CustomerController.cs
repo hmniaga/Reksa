@@ -147,7 +147,7 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Customer/SaveExpRiskProfile")]
         [HttpGet("{id}")]
-        public JsonResult MaintainBlokir([FromQuery]DateTime dtRiskProfile, [FromQuery]DateTime dtExpRiskProfile,
+        public JsonResult SaveExpRiskProfile([FromQuery]DateTime dtRiskProfile, [FromQuery]DateTime dtExpRiskProfile,
             [FromQuery]long CIFNo)
         {
             string strErrMsg;

@@ -9,6 +9,9 @@ namespace Reksa.ViewModels
 {
     public class OtorisasiListViewModel
     {
+        public List<OtorisasiModel.AuthParamGlobal> AuthParamGlobal { get; set; }
         public List<OtorisasiModel.Detail> Detail{ get; set; }
+        public List<OtorisasiModel.MainTranksasi> MainTranksasi { get; set; }
+        public List<OtorisasiModel.MainProduct> MainProduct { get; set; }
     }
 }

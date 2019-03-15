@@ -1,6 +1,181 @@
 ﻿@using Kendo.Mvc.UI
-@model Reksa.ViewModels.RepostListViewModel
+@model Reksa.ViewModels.ReportListViewModel
 
 @{
     ViewData["Title"] = "NFS Upload";
 }
+
+
+<!-- Begin Contents -->
+<div class="panel panel-default" id="contentCustomer">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">NFS Upload</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+            <div class="col-md-6">
+                <!-- Begin DropDown File Action -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">File Action</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DropDownList().Name("FileAction").BindTo(new List<SelectListItem>() { new SelectListItem() {
+                        Text = "UPLOAD", Value = "1" }, new SelectListItem() { Text = "DOWNLOAD",Value = "0"}}).DataTextField("Text").DataValueField("Value").Value("0")
+                        .Events(e => { e.Change("onChangeFileAction").DataBound("onBoundFileAction");})
+                        )
+                    </div>
+                </div>
+                <!-- End DropDown File Action -->
+                <!-- Begin DropDown File Type -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">File Type</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DropDownList().Name("FileType").HtmlAttributes(new { @id = "FileType", @style = "width: 400px;" })
+                        .Events(e => { e.Change("onChangeFileType").DataBound("onBoundFileType"); })
+                        )
+                    </div>
+                </div>
+                <!-- End DropDown File Type -->
+                <!-- Begin Input File Name -->
+                <div class="form-group">
+                    <label id ="labelFileName" class="col-sm-3 control-label">File Name</label>
+                    <div id="inputfile" style="">
+                        <input id="filename" type="file" class="filestyle" data-iconname="fa fa-cloud-upload">
+                    </div>
+                    
+                    <div id="dateTrx" style="">
+                        @(Html.Kendo().DatePicker().Name("TransactionDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }))
+                    </div>
+                </div>
+                <!-- End Input File Name -->
+                <!-- Begin Button Generate -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <button id=btnGenerate type="button" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-cog"></i>
+                        </span>
+                        Generate
+                    </button>
+                    <button id=btnView onclick="ExportToTable()" type="button" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        View
+                    </button>
+                </div>
+                <!-- End Button Generate -->
+            </div>
+            <div class="col-md-12">
+                <table id="exceltable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var Type;
+    var Code;
+
+
+    $("#btnGenerate").click(function ()
+    {
+        var filepath = '';
+        document.getElementById('filename').click();
+        if (Type == "UPLOAD" && filepath != '') {
+            var TranDate = $("#TransactionDate").val().split("/");
+            var dtTran = TranDate[2] + TranDate[1] + TranDate[0];
+            $.ajax({
+                type: 'GET',
+                url: '/Report/NFSGenerateFileUpload',
+                data: { FileCode: Code, TranDate: dtTran },
+                success: function (data) {
+
+                }
+            });
+        }
+    });
+
+
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                alert(e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#filename").change(function () {
+        readURL(this);
+    });
+
+    function onChangeFileType(e)
+    {
+        var dropdownlist = $("#FileType").data("kendoDropDownList");
+        Code = dropdownlist.value();
+    }
+
+    function onBoundFileType(e)
+    {
+        var dropdownlist = $("#FileType").data("kendoDropDownList");
+        var len = dropdownlist.dataSource.data().length;
+
+        if (len > 0) {
+            dropdownlist.select(0);
+            onChangeFileType();
+        }
+        
+    }
+
+    function onChangeFileAction(e) {
+        var dropdownlist = $("#FileAction").data("kendoDropDownList");
+        Type = dropdownlist.text();
+        if (Type == "UPLOAD")
+        {
+            $("#btnGenerate").text("Generate"); 
+            $("#labelFileName").text("Transaction Date");
+            $('#inputfile').attr('style', 'display:none;');
+            $('#dateTrx').attr('style', '');
+        }
+        else
+        {
+            $("#btnGenerate").text("Save Data");
+            $("#labelFileName").text("File Name");
+            $('#inputfile').attr('style', '');
+            $('#dateTrx').attr('style', 'display:none;');
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Report/GetFileTypeList',
+            data: { FileType: Type },
+            success: function (data) {
+                $("#FileType").kendoDropDownList({
+                    dataTextField: "FileDesc",
+                    dataValueField: "FileCode",
+                    dataSource: data,
+                    change: onChangeFileType,
+                    dataBound: onBoundFileType, 
+                    height: 200
+                });
+            }
+        });
+    }    
+
+    function onBoundFileAction(e) {
+        var dropdownlist = $("#FileAction").data("kendoDropDownList");
+        var len = dropdownlist.dataSource.data().length;
+
+        if (len > 0) {
+            dropdownlist.select(0);
+            onChangeFileAction();
+        }
+    } 
+
+
+</script>

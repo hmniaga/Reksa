@@ -1,12 +1,13 @@
 ﻿@model Reksa.ViewModels.ParameterListViewModel
+@using Reksa.Models
+@using Kendo.Mvc.UI.Fluent
 
 @{
     ViewData["Title"] = "Parameter";
 }
 
 <div class="col-lg-12">
-
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="panel panel-default" style="padding-bottom:100%">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -16,37 +17,14 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        @(Html.Kendo().TreeView().Name("tvParameter").Items(treeview =>
-                    {
-                        treeview.Add().Text("Parameter")
-                            .Expanded(true)
-                            .Items(root =>
-                            {
-                                root.Add().Text("Agent")
-                                    .Expanded(true)
-                                    .SpriteCssClasses("ti-folder");
-
-                                root.Add().Text("Fund")
-                                    .Expanded(true)
-                                    .SpriteCssClasses("folder");
-
-                                root.Add().Text("Bank")
-                                    .SpriteCssClasses("html");
-
-                                root.Add().Text("NAV")
-                                    .SpriteCssClasses("html");
-
-                                root.Add().Text("Dividen")
-                                    .SpriteCssClasses("html");
-
-                                root.Add().Text("Kurs")
-                                    .SpriteCssClasses("html");
-                            });
-                    })
-                    .Events(events => events
-                .Select("onSelect")
-                
-            )
+                        @(Html.Kendo().TreeView().Name("TreeViewParam")
+                        .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                        {mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>
+                        {item.Id = node.InterfaceTypeId.ToString();
+                        item.Text = node.Caption;
+                        item.Expanded = node.Expanded;
+                        }).Children(node => node.Children));
+                        }).Events(events => events.Select("onSelect"))
                         )
                     </div>
                 </div>
@@ -54,7 +32,7 @@
         </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-10">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -65,71 +43,80 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6" style="padding-bottom: 30px">
-                            <form class="form-horizontal" role="form">
                                 <div class="form-group">
-                                    <label id ="label0" class="col-sm-3 control-label">@ViewData["label0"]</label>
+                                    <label id="label1" class="col-sm-3 control-label">@ViewData["label1"]</label>
                                     <div class="input-group">
                                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" })
-
                                         <span class="input-group-btn">
                                             <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                         </span>
-
                                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" })
-
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden"})
-
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden" })
                                     </div>
-
                                 </div>
-                            </form>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-default waves-effect waves-light" id=myButton>
+                            <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
                                 <span class="btn-label">
                                     <i class="fa fa-refresh"></i>
                                 </span>
                                 Refresh
-                            </button>                            
+                            </button>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <form class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label id ="label1" class="col-sm-4 control-label">@ViewData["label1"]</label>
-                                    <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("input1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
-                                    </div>
+                            <div class="form-group">
+                                <label id="lblSP1" class="col-sm-3 control-label">@ViewData["lblSP1"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
                                 </div>
-                            </form>
-                            <form class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label id ="label2" class="col-sm-4 control-label">@ViewData["label2"]</label>
-                                    <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("input2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP2" class="col-sm-3 control-label">@ViewData["lblSP2"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 400px;"}).Enable(false)
                                 </div>
-                            </form>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP4" class="col-sm-3 control-label">@ViewData["lblSP4"]</label>
+                                <div id ="vdtpSP">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
+                                </div>
+                            </div>
+                            <!-- Begin Search Kantor -->
+                            <div class="form-group">
+                                <label id="lblOffice" style="display:none;" class="col-sm-3 control-label">Kode Kantor</label>
+                                <div id ="Office"class="input-group" style="display:none;">
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "OfficeName" }).Enable(false)
+                                </div>
+                            </div>
+                            <!-- End Search Kantor -->
                         </div>
                         <div class="col-md-6">
-                            <form class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label id ="label3" class="col-sm-4 control-label">@ViewData["label3"]</label>
-                                    <div class="input-group">
-                                        @(Html.Kendo().DatePicker().Name("TanggalValuta").Enable(false))
-                                    </div>
+                            <div class="form-group">
+                                <label id="lblSP11" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP11"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP11").HtmlAttributes(new { @class = "form-control input-sm", style = "display:none; width: 100%;" }).Enable(false)
                                 </div>
-                            </form>
-                            <form class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label id ="label4" class="col-sm-4 control-label">@ViewData["label4"]</label>
-                                    <div class="input-group">
-                                        @Html.Kendo().TextBox().Name("input4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP12" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP12"]</label>
+                                <div id="vdtpSP12" style="display:none;">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP12").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
                                 </div>
-                            </form>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP13" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP13"]</label>
+                                <div id ="vdtpSP13" style="display:none;">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP13").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -171,23 +158,34 @@
                             </button>
                         </div>
                     </div>
-
-
                     <div class="col-md-12">
                         @(Html.Kendo().Grid(Model.Parameter)
-                                    .Name("GridParam")
-                                    .Columns(columns =>
-                                    {
-                                        columns.Bound(p => p.Kode);
-                                        columns.Bound(p => p.Deskripsi);
-                                        columns.Bound(p => p.OfficeId);
-                                        columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}");
-                                    }).Pageable()
-                                    .Scrollable(s => s.Height(250))
-                                    .Selectable(selectable => selectable
-                                        .Mode(GridSelectionMode.Single))
-                            .Events(events => events.Change("onRowParamSelect"))
-)
+                                            .Name("GridParam")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(p => p.Id).Hidden();
+                                                columns.Bound(p => p.Kode).Width(100).Title("Kode");
+                                                columns.Bound(p => p.Deskripsi);
+                                                columns.Bound(p => p.ProdId).Hidden();
+                                                columns.Bound(p => p.Desc2).Hidden();
+                                                columns.Bound(p => p.Desc5).Hidden();
+                                                columns.Bound(p => p.TglEfektif).Hidden();
+                                                columns.Bound(p => p.TglExpire).Hidden();
+                                                columns.Bound(p => p.Keterangan).Hidden();
+                                                columns.Bound(p => p.MinSwitchRedempt).Hidden();
+                                                columns.Bound(p => p.JenisSwitchRedempt).Hidden();
+                                                columns.Bound(p => p.SwitchingFeeNonKaryawan).Hidden();
+                                                columns.Bound(p => p.SwitchingFeeKaryawan).Hidden();
+                                                columns.Bound(p => p.OfficeId).Hidden();
+                                                columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}");
+                                                columns.Bound(p => p.LastUpdate);
+                                                columns.Bound(p => p.LastUser);
+                                            }).Pageable()
+                                            .Scrollable(s => s.Height(250))
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                    .Events(events => events.Change("onRowParamSelect"))
+                        )
                     </div>
                 </div>
                 <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
@@ -202,8 +200,31 @@
 </div>
 
 <script>
+    var _intType;
+    $(document).ready(function () {   
+        document.getElementById('lblSP1').innerHTML = 'Kode';
+        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                
+        //lblOffice.Visible = false;
+        //txtbSP1.Enabled = false;
+        //txtbSP2.Enabled = false;
+        //dtpSP.Enabled = false;
+        //cmpsrOffice.Enabled = false;
+        //cmpsrOffice.Visible = false;
 
-    $(document).ready(function () {
+        document.getElementById('lblSP11').innerHTML = '';
+        document.getElementById('lblSP12').innerHTML = '';
+        document.getElementById('lblSP13').innerHTML = '';
+
+  
+        //txtbSP11.Enabled = false;
+        document.getElementById("txtbSP11").style.display = 'none';
+        $("#dtpSP12").data("kendoDatePicker").enable(false);
+        $('#vdtpSP13').attr('style', 'display:none;');
+        $("#dtpSP13").data("kendoDatePicker").enable(false);
+        _intType = 0;
+
 
         $("#btnAdd").click(function () {
             $("#btnAdd").hide();
@@ -219,11 +240,11 @@
             $("#btnEdit").hide();
             $("#btnDelete").hide();
             $("#btnSave").show();
-            $("#btnCancel").show();  
+            $("#btnCancel").show();
             disableAll(1);
         });
         $("#btnDelete").click(function () {
-           
+
         });
         $("#btnSave").click(function () {
 
@@ -237,61 +258,280 @@
             $("#btnCancel").hide();
             disableAll(0);
         });
-    }); 
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+    });
 
-    function onSelect(e)
-    {
-        alert(this.text(e.node));
-        switch (this.text(e.node))
-        {
-            case "Agent":
-                $("#label1").val("Kode");
-                $("#label2").val("Keterangan");
-                $("#label3").val("Tanggal Libur");
-                $("#label4").val("Kode");
+    var IdInterface;
+    function onSelect(e) {
+        var dataItem = this.dataItem(e.node);
+        IdInterface = dataItem.id;
+        document.getElementById('lblSP11').innerHTML = '';
+        document.getElementById('lblSP12').innerHTML = '';
+        document.getElementById("txtbSP11").style.display = 'none';
+        $('#vdtpSP12').attr('style', 'display:none;');
+        $('#vdtpSP13').attr('style', 'display:none;');
+
+        switch (IdInterface) {
+            case "PAR":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "SFC":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Fund';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "SAC":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Agen';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', '');
+                $('#Office').attr('style', '');
+                clearAll();
+                break;
+            case "SBC":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Bank';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "SNV":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'NAV';
+                $("#txtbSP1").val("NAV");
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "SDV":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Deviden';
+                $("#txtbSP1").val("Deviden");
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "SKR":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Kurs';
+                $("#txtbSP1").val("Kurs");
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "RDD":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                $("#txtbSP1").val("Schedule");
+                $("#txtbSP2").val("Schedule Deviden");
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
+                break;
+            case "GFP":
+                LoadDefaultSettings();
+
+                document.getElementById('lblSP1').innerHTML = 'Kode Gift';
+                document.getElementById('lblSP2').innerHTML = 'Nominal';
+                document.getElementById('lblSP11').innerHTML = 'Jk Wkt(bln)';
+                document.getElementById('lblSP12').innerHTML = 'Tgl Efektif';
+                document.getElementById('lblSP13').innerHTML = 'Tgl Expire';
+
+                document.getElementById("txtbSP11").style.display = 'block';
+
+                $('#vdtpSP12').attr('style', '');
+                $('#vdtpSP13').attr('style', '');
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                clearAll();
                 break;
         }
-        
+        subRefresh();
     }
 
-    function clearAll() {
-        $("#input1").val("");
-        $("#input2").val("");
-        $("#TanggalValuta").val("");
-        $("#input4").val("");        
+    function LoadDefaultSettings()
+    {
+        document.getElementById('lblSP1').innerHTML = 'Kode';
+        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+        document.getElementById("txtbSP1").style.display = 'block';
+        document.getElementById("txtbSP2").style.display = 'block';
+        $('#lblOffice').attr('style', 'display:none;');
+        $("#Office").attr('style', 'display:none;');
+        clearAll();
     }
+
+    function clearAll()
+    {
+        $("#txtbSP1").val("");
+        $("#txtbSP2").val("");
+        $("#txtbSP11").val("");
+    }
+
+    function subResetToolBar()
+    {
+
+    }
+
     function disableAll(intType) {
         if (intType == 1) {
-            $("#input1").prop('disabled', false);
-            $("#input2").prop('disabled', false);
-            $("#input4").prop('disabled', false);
-            var datepicker = $("#TanggalValuta").data("kendoDatePicker");
+            $("#txtbSP1").prop('disabled', false);
+            $("#txtbSP2").prop('disabled', false);
+            var datepicker = $("#dtpSP").data("kendoDatePicker");
             datepicker.enable(true);
-            //$("#TanggalValuta").datepicker("option", "disabled", true);
         }
-        else
-        {
-            $("#input1").prop('disabled', true);
-            $("#input2").prop('disabled', true);
-            $("#input4").prop('disabled', true);
-            var datepicker = $("#TanggalValuta").data("kendoDatePicker");
-            datepicker.enable(false);           
+        else {
+            $("#txtbSP1").prop('disabled', true);
+            $("#txtbSP2").prop('disabled', true);
+            var datepicker = $("#dtpSP").data("kendoDatePicker");
+            datepicker.enable(false);
         }
     }
-
-
-var url = '@Html.Raw(Url.Action("Index", "Parameter"))';
-$("#myButton").click(function(){
-location.href = url + '?ProdukId=' + $("#ProdId").val()
-});
-
-function onRowParamSelect(e) {
-    var data = this.dataItem(this.select());
-    $("#input1").val(data.Kode);
-    $("#input2").val(data.Deskripsi);
-    var TanggalValuta = new Date(data.TanggalValuta);
-    $("#TanggalValuta").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());       
-    $("#input4").val(data.OfficeId);
-};
     
+    function subRefresh()
+    {
+        var ProdId = $("#ProdId").val();
+        if (ProdId == '')
+        {
+            alert("Produk Harus Diisi")
+            return;
+        }
+        
+        $.ajax({
+            type: 'GET',
+            url: '/Parameter/RefreshParam',
+            data: { ProdukId: ProdId, InterfaceId: IdInterface },
+            success: function (data) {
+                if (data.Parameter.length != 0) {
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: data.Parameter
+                        });
+                    var Paramgrid = $('#GridParam').data('kendoGrid');
+                    Paramgrid.setDataSource(dataSource);
+                    Paramgrid.dataSource.page(1);
+                    Paramgrid.select("tr:eq(0)");
+                    
+                    Paramgrid.hideColumn('Id');
+                    Paramgrid.hideColumn('ProdId');
+                    Paramgrid.hideColumn('OfficeId');
+                    Paramgrid.hideColumn('Desc2');
+                    Paramgrid.hideColumn('TglEfektif');
+                    Paramgrid.hideColumn('TglExpire');
+                    Paramgrid.hideColumn('Desc5');
+                    Paramgrid.hideColumn('Keterangan');
+                    Paramgrid.hideColumn('MinSwitchRedempt');
+                    Paramgrid.hideColumn('JenisSwitchRedempt');
+                    Paramgrid.hideColumn('SwitchingFeeNonKaryawan');
+                    Paramgrid.hideColumn('SwitchingFeeKaryawan');
+
+                    switch (IdInterface) {
+                        case "PAR":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                        case "SAC":
+                            Paramgrid.showColumn('OfficeId');
+                            $('#lblOffice').attr('style', '');
+                            $('#Office').attr('style', '');                            
+                            break;
+                        case "SFC":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                        case "SBC":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                        case "SNV":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                        case "SDV":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;'); 
+                            break;
+                        case "SKR":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;'); 
+                            break;
+                        case "RDD":
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                        case "GFP":
+                            Paramgrid.showColumn('Desc2');
+                            Paramgrid.showColumn('TglEfektif');
+                            Paramgrid.showColumn('TglExpire');
+                            break;
+                        default:
+                            $('#lblOffice').attr('style', 'display:none;');
+                            $('#Office').attr('style', 'display:none;');
+                            break;
+                    }
+
+                } else {
+                    $("#GridParam").data('kendoGrid').dataSource.data([]);
+                }
+            }
+        });
+    }
+
+    
+
+    function onRowParamSelect(e) {
+        var data = this.dataItem(this.select());
+        $("#txtbSP1").val(data.Kode);
+        $("#txtbSP2").val(data.Deskripsi);
+        $("#OfficeId").val(data.OfficeId);
+        ValidateOffice($("#OfficeId").val(), function (output) {
+            $("#OfficeName").val(output);
+        });
+
+        var TanggalValuta = new Date(data.TanggalValuta);
+        $("#dtpSP").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());
+       
+        };
+
+        function ValidateOffice(OfficeId, result) {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateOffice',
+                data: { Col1: OfficeId, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].OfficeName);
+                    } else {
+                        result("");
+                    }
+                },
+                error: function (error) {
+                    result("");
+                }
+            });
+        }
+
 </script>

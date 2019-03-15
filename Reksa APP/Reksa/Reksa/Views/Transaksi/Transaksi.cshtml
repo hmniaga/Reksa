@@ -164,7 +164,7 @@
             <!-- End Accordion -->
         </div>
     </div>
-</div>
+
 
 <script>
     $(document).ready(function () {
@@ -337,6 +337,7 @@
         var Subsgrid = $('#GridViewSubs').data('kendoGrid');
         Subsgrid.setDataSource(dataSource);
         Subsgrid.dataSource.page(1);
+        Subsgrid.select("tr:eq(0)");
         
     }
 
@@ -361,6 +362,7 @@
         var Redempgrid = $('#GridViewRedemp').data('kendoGrid');
         Redempgrid.setDataSource(dataSource);
         Redempgrid.dataSource.page(1);
+        Redempgrid.select("tr:eq(0)");
 
         $("#InputterRedemp").val(data.TransactionSubsDetail.Inputter);
         $("#SellerIdRedemp").val(data.TransactionSubsDetail.Seller);
@@ -397,6 +399,7 @@
         var RDBgrid = $('#GridViewRDB').data('kendoGrid');
         RDBgrid.setDataSource(dataSource);
         RDBgrid.dataSource.page(1);
+        RDBgrid.select("tr:eq(0)");
 
         $("#InputterRDB").val(data.TransactionSubsDetail.Inputter);
         $("#SellerIdRDB").val(data.TransactionSubsDetail.Seller);
@@ -572,18 +575,18 @@
 
     function clearRedemption()
     {
-        $("#CIFNoRedemp").val("");
-        $("#CIFNameRedemp").val("");
-        $("#RefIDRedemp").val("");
-        $("#RefNameRedemp").val("");
+        //$("#CIFNoRedemp").val("");
+        //$("#CIFNameRedemp").val("");
+        //$("#RefIDRedemp").val("");
+        //$("#RefNameRedemp").val("");
         
     }
 
     function clearSubscription() {
-        $("#CIFNoSubs").val("");
-        $("#CIFNameSubs").val("");
-        $("#RefIDSubs").val("");
-        $("#RefNameSubs").val("");
+        //$("#CIFNoSubs").val("");
+        //$("#CIFNameSubs").val("");
+        //$("#RefIDSubs").val("");
+        //$("#RefNameSubs").val("");
     }
 
     function ValidateReferentor(ReferentorID, result) {

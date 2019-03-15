@@ -10,6 +10,7 @@ namespace Reksa.ViewModels
     {
         public List<ParameterModel> Parameter { get; set; }
         public ProductModel ProductModel { get; set; }
+        public OfficeModel OfficeModel { get; set; }
         public List<ActivityModel> CustomerActivity { get; set; }
     }
 
@@ -27,7 +28,7 @@ namespace Reksa.ViewModels
         public ParamMFeeModel ParamMFee { get; set; }
         public List<ProductMFeeModel> ProductMFee { get; set; }
         public List<ListGLMFeeModel> ListGLMFee { get; set; }
-        
+
     }
     //Nico end
 
@@ -38,4 +39,6 @@ namespace Reksa.ViewModels
         public List<ParamUpFrontSellGLModel> ListGL { get; set; }
         public ParamUpFrontSellingModel ParamUpFrontSelling { get; set; }
     }
+    
+        
 }

@@ -1,0 +1,1057 @@
+﻿@model Reksa.ViewModels.ParameterListViewModel
+@using Reksa.Models
+@using Kendo.Mvc.UI.Fluent
+
+@{
+    ViewData["Title"] = "Parameter Global";
+}
+
+
+
+<div class="col-lg-12">
+    <div class="col-md-3">
+        <div class="panel panel-default" style="padding-bottom:100%">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Submenu</a>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @(Html.Kendo().TreeView().Name("TreeViewParamGlobal")
+                                    .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                                    {
+                                        mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>
+                                               {
+                                        item.Id = node.InterfaceTypeId.ToString(); item.Text = node.Caption; item.Expanded = node.Expanded;
+                                    }).Children(node => node.Children));
+                                    }).Events(events => events.Select("onSelect")
+                                    )
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Parameter Global</a>
+                </h4>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+                <div class="panel-body">
+                    <div class="row" style="padding-bottom: 50px">
+                        <div class="col-md-6">
+                            <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
+                                <span class="btn-label">
+                                    <i class="fa fa-refresh"></i>
+                                </span>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblSP1" class="col-sm-3 control-label">@ViewData["lblSP1"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP2" class="col-sm-3 control-label">@ViewData["lblSP2"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                                    <div id="divcomboBox3" style="display:none;" `>
+                                        @(Html.Kendo().DropDownList().Name("comboBox3").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Conservative", Value = "0" }, new SelectListItem() { Text = "Balance", Value = "1" }, new SelectListItem() { Text = "Growth", Value = "2" }, new SelectListItem() { Text = "Aggressive", Value = "3" }, new SelectListItem() { Text = "Highly Aggressive", Value = "4" } }).DataTextField("Text").DataValueField("Value").Value("0"))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP4" class="col-sm-3 control-label">@ViewData["lblSP4"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP5").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; display:none;" }).Enable(false)
+                                    <div id="divcheckBox1" style="display:none;" class="checkbox checkbox-custom checkbox-circle">
+                                        @Html.Kendo().CheckBox().Name("checkBox1").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Is Employee")
+                                    </div>
+                                    <div id="divdtpSP" style="">
+                                        @(Html.Kendo().DatePicker().Name("dtpSP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;font-size: 100%" }))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblSP3" class="col-sm-3 control-label">@ViewData["lblSP3"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                                    <div id="divcomboBox1" style="">
+                                        @(Html.Kendo().DropDownList().Name("comboBox1").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Nominal", Value = "0" }, new SelectListItem() { Text = "Unit", Value = "1" } }).DataTextField("Text").DataValueField("Value").Value("0").HtmlAttributes(new { style = "width: 150px;" }))
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP5" class="col-sm-3 control-label">@ViewData["label4"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbSP4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;display:none;" }).Enable(false)
+                                    <div id="divcomboBox2" style="">
+                                        @(Html.Kendo().DropDownList().Name("comboBox2").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "Nominal", Value = "0" }, new SelectListItem() { Text = "Unit", Value = "1" } }).DataTextField("Text").DataValueField("Value").Value("0").HtmlAttributes(new { style = "width: 150px;" }))
+                                    </div>
+                                    <div id="divdtpSP4" style="">
+                                        @(Html.Kendo().DatePicker().Name("dtpSP4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;font-size: 100%" }))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="lblSP6" class="col-sm-3 control-label">@ViewData["label4"]</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("textPctSwc").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;display:none;" }).Enable(false)
+                                    <div id="divdtpSP5" style="">
+                                        @(Html.Kendo().DatePicker().Name("dtpSP5").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;font-size: 100%" }))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="padding-top:4%">
+                        <div class="input-group">
+                            <button id="btnAdd" class="btn btn-primary waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                Add
+                            </button>
+
+                            <button id="btnEdit" class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Edit
+                            </button>
+
+                            <button id="btnDelete" class="btn btn-danger waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                Delete
+                            </button>
+
+                            <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="display:none;">
+                                <span class="btn-label">
+                                    <i class="fa fa-save"></i>
+                                </span>
+                                Save
+                            </button>
+
+                            <button id="btnCancel" class="btn btn-pink waves-effect waves-light" style="display:none;">
+                                <span class="btn-label">
+                                    <i class="fa fa-remove"></i>
+                                </span>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        @(Html.Kendo().Grid(Model.Parameter)
+                                                    .Name("GridParam")
+                                                    .Columns(columns =>
+                                                    {
+                                                        columns.Bound(p => p.Id).Hidden().Width(200);
+                                                        columns.Bound(p => p.Kode).Width(100).Title("Kode");
+                                                        columns.Bound(p => p.Deskripsi).Width(200);
+                                                        columns.Bound(p => p.ProdId).Hidden().Width(200);
+                                                        columns.Bound(p => p.Desc2).Hidden().Width(200);
+                                                        columns.Bound(p => p.Desc5).Hidden().Width(200);
+                                                        columns.Bound(p => p.TglEfektif).Hidden().Width(200);
+                                                        columns.Bound(p => p.TglExpire).Hidden().Width(200);
+                                                        columns.Bound(p => p.Keterangan).Hidden().Width(200);
+                                                        columns.Bound(p => p.MinSwitchRedempt).Hidden().Width(200);
+                                                        columns.Bound(p => p.JenisSwitchRedempt).Hidden().Width(200);
+                                                        columns.Bound(p => p.SwitchingFeeNonKaryawan).Hidden().Width(200);
+                                                        columns.Bound(p => p.SwitchingFeeKaryawan).Hidden().Width(200);
+                                                        columns.Bound(p => p.OfficeId).Hidden().Width(200);
+                                                        columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}").Width(200);
+                                                        columns.Bound(p => p.LastUpdate).Width(200);
+                                                        columns.Bound(p => p.LastUser).Width(200);
+                                                    }).Pageable()
+                                                    .Scrollable(s => s.Height(400))
+                                                    .Selectable(selectable => selectable
+                                                        .Mode(GridSelectionMode.Single))
+                                            .Events(events => events.Change("onRowParamSelect"))
+                        )
+                    </div>
+                </div>
+                <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var _intType;
+    var IdInterface;
+
+    $(document).ready(function () {
+
+        document.getElementById('lblSP1').innerHTML = 'Kode';
+        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+        document.getElementById('lblSP3').innerHTML = '';
+        document.getElementById('lblSP5').innerHTML = '';
+        document.getElementById('lblSP6').innerHTML = '';
+
+        document.getElementById("txtbSP3").style.display = 'none';
+        $("#txtbSP3").prop('disabled', true);
+        document.getElementById("txtbSP4").style.display = 'none';
+        $("#txtbSP4").prop('disabled', true);
+        document.getElementById("divdtpSP4").style.display = 'none';
+        $("#dtpSP4").data("kendoDatePicker").enable(false);
+        document.getElementById("divdtpSP5").style.display = 'none';
+        $("#dtpSP5").data("kendoDatePicker").enable(false);
+        document.getElementById("textPctSwc").style.display = 'none';
+        $("#textPctSwc").prop('disabled', true);
+        //cmpsrSearch1.Enabled = false;
+        $("#txtbSP1").prop('disabled', true);
+        $("#txtbSP2").prop('disabled', true);
+        $("#dtpSP").data("kendoDatePicker").enable(false);
+        //cmpsrSearch2.Enabled = false;
+        $("#txtbSP2").prop('disabled', true);
+        $("#txtbSP5").prop('disabled', true);
+        $("#comboBox1").data("kendoDropDownList").enable(false);
+        $("#comboBox2").data("kendoDropDownList").enable(false);
+        $("#comboBox3").data("kendoDropDownList").enable(false);
+        _intType = 0;
+
+        $("#btnAdd").click(function () {
+            $("#btnAdd").hide();
+            $("#btnEdit").hide();
+            $("#btnDelete").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();
+            subNew();
+        });
+        $("#btnEdit").click(function () {
+            $("#btnAdd").hide();
+            $("#btnEdit").hide();
+            $("#btnDelete").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();
+            subUpdate();
+        });
+        $("#btnDelete").click(function () {
+            subDelete();
+        });
+        $("#btnSave").click(function () {
+            subSave();
+        });
+        $("#btnCancel").click(function () {
+            $("#btnAdd").show();
+            $("#btnEdit").show();
+            $("#btnDelete").show();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+            disableAll(0);
+        });
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+
+        $("#txtbSP1").change(function () {
+            if ((IdInterface == "WPR") && (_intType == 1)) {
+                var NIK = $("#txtbSP1").val();
+                subRefreshWARPED(NIK);
+            }
+        });
+    });
+
+    function onSelect(e) {
+        var dataItem = this.dataItem(e.node);
+        IdInterface = dataItem.id;
+        switch (IdInterface) {
+            case "PAR":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                break;
+            case "MNI":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Man Inv';
+                document.getElementById('lblSP2').innerHTML = 'Nama Man INV';
+                document.getElementById('lblSP3').innerHTML = 'Kode Man Inv (KSEI)';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                document.getElementById("txtbSP3").style.display = 'block';
+                break;
+            case "CTD":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Custody';
+                document.getElementById('lblSP2').innerHTML = 'Custody';
+                document.getElementById('lblSP3').innerHTML = 'Custody (KSEI)';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                document.getElementById("txtbSP3").style.display = 'block';
+                break;
+            case "RTY":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Tipe';
+                document.getElementById('lblSP2').innerHTML = 'Tipe Reksa IND';
+                document.getElementById('lblSP3').innerHTML = 'Tipe Reksa ENG';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+                document.getElementById("txtbSP3").style.display = 'block';
+                break;
+            case "RHT":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode';
+                document.getElementById('lblSP2').innerHTML = 'Keterangan';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal Libur';
+                break;
+            case "RSC":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Kode Sales';
+                document.getElementById('lblSP2').innerHTML = 'Nama Sales';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
+                break;
+            case "GFM":
+                LoadDefaultSettings();
+                document.getElementById('lblSP3').innerHTML = 'Biaya';
+                document.getElementById('lblSP5').innerHTML = '';
+                document.getElementById('lblSP6').innerHTML = '';
+                document.getElementById("txtbSP3").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+                document.getElementById("textPctSwc").style.display = 'none';
+                break;
+            case "RSB":
+                LoadDefaultSettings();
+                document.getElementById("txtbSP1").style.display = 'none';
+                document.getElementById("txtbSP2").style.display = 'block';
+                document.getElementById("txtbSP3").style.display = 'block';
+                document.getElementById("txtbSP5").style.display = 'block';
+                document.getElementById("textPctSwc").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+                document.getElementById('lblSP1').innerHTML = 'Kode Produk';
+                document.getElementById('lblSP2').innerHTML = 'Subs Fee(%)';
+                document.getElementById('lblSP3').innerHTML = 'Redemption Fee(%)';
+                document.getElementById('lblSP4').innerHTML = 'Swc.Fee Non Asuransi (%)';
+                document.getElementById('lblSP6').innerHTML = 'Swc.Fee Asuransi (%)';
+                //cmpsrSearch1.Top = lblSP1.Top;
+                //cmpsrSearch1.Left = lblSP1.Left;
+                //cmpsrSearch1.SearchDesc = "REKSA_PRODUCT";
+                //textBox1.Visible = true;
+                //textBox1.Enabled = false;
+                document.getElementById('lblSP5').innerHTML = 'Red.Fee Non Asuransi (%)';
+                document.getElementById('lblSP3').innerHTML = 'Red.Fee Asuransi (%)';
+                break;
+            case "WPR":
+                LoadDefaultSettings();
+                document.getElementById('lblSP3').innerHTML = 'Nama';
+                document.getElementById('lblSP5').innerHTML = 'Job Title';
+                document.getElementById('lblSP6').innerHTML = 'Tgl Expired';
+                document.getElementById("txtbSP3").style.display = 'block';
+                document.getElementById("txtbSP4").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'block';
+                document.getElementById("textPctSwc").style.display = 'none';
+                break;
+            case "PFP":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = 'Frek Pendebetan';
+                document.getElementById('lblSP2').innerHTML = 'Min Jangka Wkt';
+                document.getElementById('lblSP3').innerHTML = 'Kelipatan';
+
+                document.getElementById("txtbSP3").style.display = 'block';
+                document.getElementById("divdtpSP").style.display = 'none';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+                document.getElementById("textPctSwc").style.display = 'none';
+                //cmpsrSearch1.Visible = false;
+                break;
+            case "MSC":
+                LoadDefaultSettings();
+                //cmpsrSearch1.Visible = true;
+                document.getElementById("txtbSP1").style.display = 'block';
+                document.getElementById("txtbSP2").style.display = 'block';
+                document.getElementById("txtbSP3").style.display = 'none';
+                document.getElementById("divdtpSP").style.display = 'none';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+                document.getElementById("textPctSwc").style.display = 'none';
+
+                document.getElementById("divcheckBox1").style.display = 'block';
+                $("#checkBox1").prop('disabled', true);
+
+                document.getElementById('lblSP1').innerHTML = 'Kode Produk';
+                document.getElementById('lblSP2').innerHTML = 'Min Subsc';
+                document.getElementById('lblSP3').innerHTML = '';
+                document.getElementById('lblSP4').innerHTML = '';
+                document.getElementById('lblSP5').innerHTML = '';
+                document.getElementById('lblSP6').innerHTML = '';
+                //cmpsrSearch1.Top = lblSP1.Top;
+                //cmpsrSearch1.Left = lblSP1.Left;
+
+                //cmpsrSearch1.SearchDesc = "REKSA_PRODUCT";
+                break;
+            case "SWC":
+                LoadDefaultSettings();
+                //cmpsrSearch1.Visible = true;
+                //cmpsrSearch2.Visible = true;
+                document.getElementById("txtbSP1").style.display = 'none';
+                document.getElementById("txtbSP2").style.display = 'none';
+                document.getElementById("txtbSP3").style.display = 'block';
+                document.getElementById("txtbSP4").style.display = 'none';
+                document.getElementById("txtbSP5").style.display = 'block';
+                document.getElementById("divcomboBox1").style.display = 'block';
+                document.getElementById("divcomboBox2").style.display = 'none';
+
+                document.getElementById("divdtpSP").style.display = 'none';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+
+                document.getElementById("textPctSwc").style.display = 'block';
+                document.getElementById("divcheckBox1").style.display = 'none';
+                document.getElementById('lblSP1').innerHTML = 'Product Switch Out';
+                document.getElementById('lblSP2').innerHTML = 'Product Switch In';
+                document.getElementById('lblSP3').innerHTML = 'Min Redempt';
+                document.getElementById('lblSP4').innerHTML = '%Swc Non Employee';
+                document.getElementById('lblSP5').innerHTML = 'Min Subsc';
+                document.getElementById("lblSP5").style.display = 'none';
+                document.getElementById('lblSP6').innerHTML = '%Swc Employee';
+
+                //cmpsrSearch1.Top = txtbSP1.Top;
+                //cmpsrSearch1.Left = txtbSP1.Left;
+                //cmpsrSearch2.Top = txtbSP2.Top;
+                //cmpsrSearch2.Left = txtbSP2.Left;
+
+                //cmpsrSearch1.SearchDesc = "REKSA_PRODSWCOUT";
+                //cmpsrSearch2.SearchDesc = "REKSA_PRODSWCIN";
+
+                //cmpsrSearch2.Criteria = cmpsrSearch1.Text1.Trim();
+                break;
+            case "RPP":
+                LoadDefaultSettings();
+                //cmpsrSearch1.Visible = true;
+                document.getElementById("txtbSP1").style.display = 'none';
+                document.getElementById("txtbSP2").style.display = 'none';
+                document.getElementById("txtbSP3").style.display = 'none';
+                document.getElementById("txtbSP4").style.display = 'none';
+                document.getElementById("txtbSP5").style.display = 'none';
+
+                document.getElementById("divcomboBox1").style.display = 'none';
+                document.getElementById("divcomboBox2").style.display = 'none';
+                document.getElementById("divcomboBox3").style.display = 'block';
+
+                document.getElementById("divdtpSP").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+
+                document.getElementById("textPctSwc").style.display = 'none';
+                document.getElementById("divcheckBox1").style.display = 'none';
+
+                document.getElementById('lblSP1').innerHTML = 'Product';
+                document.getElementById('lblSP2').innerHTML = 'Risk Profile Produk';
+                document.getElementById('lblSP3').innerHTML = '';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
+                document.getElementById('lblSP5').innerHTML = '';
+                document.getElementById('lblSP6').innerHTML = '';
+
+                //cmpsrSearch1.SearchDesc = "REKSA_PRODUCT";
+                //cmpsrSearch1.Top = txtbSP1.Top;
+                //cmpsrSearch1.Left = txtbSP1.Left;
+                break;
+            case "PRE":
+                LoadDefaultSettings();
+                document.getElementById('lblSP1').innerHTML = '';
+                document.getElementById('lblSP2').innerHTML = 'Percentage (%)';
+                document.getElementById("txtbSP1").style.display = 'none';
+                break;
+            case "CTR":
+                LoadDefaultSettings();
+                //cmpsrSearch1.Visible = true;
+                document.getElementById("txtbSP1").style.display = 'none';
+                document.getElementById("txtbSP2").style.display = 'none';
+                document.getElementById("txtbSP3").style.display = 'none';
+                document.getElementById("txtbSP4").style.display = 'none';
+                document.getElementById("txtbSP5").style.display = 'none';
+
+                document.getElementById("divcomboBox1").style.display = 'none';
+                document.getElementById("divcomboBox2").style.display = 'none';
+                document.getElementById("divcomboBox3").style.display = 'none';
+
+                document.getElementById("divdtpSP").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+
+                document.getElementById("textPctSwc").style.display = 'none';
+                document.getElementById("divcheckBox1").style.display = 'none';
+
+                document.getElementById('lblSP1').innerHTML = 'Country';
+                document.getElementById('lblSP2').innerHTML = '';
+                document.getElementById('lblSP3').innerHTML = '';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
+                document.getElementById('lblSP5').innerHTML = '';
+                document.getElementById('lblSP6').innerHTML = '';
+
+                //cmpsrSearch1.SearchDesc = "SIBS_COUNTRY";
+                //cmpsrSearch1.Top = txtbSP1.Top;
+                //cmpsrSearch1.Left = txtbSP1.Left;
+                break;
+            case "OFF":
+                LoadDefaultSettings();
+                //cmpsrSearch1.Visible = true;
+                document.getElementById("txtbSP1").style.display = 'none';
+                document.getElementById("txtbSP2").style.display = 'none';
+                document.getElementById("txtbSP3").style.display = 'none';
+                document.getElementById("txtbSP4").style.display = 'none';
+                document.getElementById("txtbSP5").style.display = 'none';
+
+                document.getElementById("divcomboBox1").style.display = 'none';
+                document.getElementById("divcomboBox2").style.display = 'none';
+                document.getElementById("divcomboBox3").style.display = 'none';
+
+                document.getElementById("divdtpSP").style.display = 'block';
+                document.getElementById("divdtpSP4").style.display = 'none';
+                document.getElementById("divdtpSP5").style.display = 'none';
+
+                document.getElementById("textPctSwc").style.display = 'none';
+                document.getElementById("divcheckBox1").style.display = 'none';
+
+                document.getElementById('lblSP1').innerHTML = 'Office';
+                document.getElementById('lblSP2').innerHTML = 'Risk Profile Produk';
+                document.getElementById('lblSP3').innerHTML = '';
+                document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
+                document.getElementById('lblSP5').innerHTML = '';
+                document.getElementById('lblSP6').innerHTML = '';
+
+                //cmpsrSearch1.SearchDesc = "SIBS_OFFICE";
+                //cmpsrSearch1.Top = txtbSP1.Top;
+                //cmpsrSearch1.Left = txtbSP1.Left;
+                break;
+            default:
+                LoadDefaultSettings();
+                break;
+
+        }
+
+        subRefresh();
+    }
+
+    function LoadDefaultSettings() {
+        document.getElementById('lblSP1').innerHTML = 'Kode';
+        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
+        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
+        document.getElementById('lblSP3').innerHTML = '';
+        document.getElementById('lblSP5').innerHTML = '';
+        document.getElementById('lblSP6').innerHTML = '';
+        document.getElementById("txtbSP1").style.display = 'block';
+        document.getElementById("txtbSP2").style.display = 'block';
+        document.getElementById("txtbSP3").style.display = 'none';
+
+        document.getElementById("divdtpSP").style.display = 'block';
+        document.getElementById("divdtpSP4").style.display = 'none';
+        document.getElementById("divdtpSP5").style.display = 'none';
+        document.getElementById("textPctSwc").style.display = 'none';
+        document.getElementById("txtbSP4").style.display = 'none';
+        $("#txtbSP4").prop('disabled', true);
+
+        document.getElementById("divcheckBox1").style.display = 'none';
+        $("#checkBox1").prop('disabled', true);
+
+
+        document.getElementById("txtbSP5").style.display = 'none';
+        document.getElementById("divcomboBox1").style.display = 'none';
+        document.getElementById("divcomboBox2").style.display = 'none';
+        document.getElementById("divcomboBox3").style.display = 'none';
+    }
+
+    function subResetToolBar() {
+        if ((_intType == 0) | (_intType == 3)) {
+            $("#btnAdd").show();
+            $("#btnEdit").show();
+            $("#btnDelete").show();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+        }
+        else if ((_intType == 1) | (_intType == 2)) {
+            $("#btnAdd").hide();
+            $("#btnEdit").hide();
+            $("#btnDelete").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();
+        }
+    }
+
+    function subNew() {
+        _intType = 1;
+        if ((IdInterface != "RHT") && (IdInterface != "RDD")) {
+            $("#txtbSP1").val('');
+        }
+        $("#txtbSP2").val('');
+        $("#txtbSP3").val('');
+        $("#txtbSP4").val('');
+        $("#txtbSP5").val('');
+        switch (IdInterface) {
+            case "PAR":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+            case "MNI":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "CTD":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "RHT":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(true);
+                break;
+            case "GFM":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+            case "RTY":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+            case "RSB":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                //textBox1.Enabled = true;
+                //textBox1.Text = "";
+                $("#txtbSP5").prop('disabled', false);
+                $("#txtbSP5").val('');
+                $("#textPctSwc").prop('disabled', false);
+                $("#textPctSwc").val('');
+                break;
+            case "WPR":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP5").data("kendoDatePicker").enable(true);
+                $("#textPctSwc").prop('disabled', true);
+                break;
+            case "PFP":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "MSC":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+                $("#txtbSP2").prop('disabled', false);
+                $("#checkBox1").prop('disabled', false);
+                break;
+            case "SWC":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+
+                //cmpsrSearch2.Text1 = "";
+                //cmpsrSearch2.Text2 = "";
+                //cmpsrSearch2.Enabled = true;
+
+                $("#txtbSP3").prop('disabled', false);
+                $("#txtbSP4").prop('disabled', false);
+                $("#txtbSP5").prop('disabled', false);
+                $("#textPctSwc").prop('disabled', false);
+                $("#comboBox1").data("kendoDropDownList").enable(true);
+                $("#comboBox2").data("kendoDropDownList").enable(true);
+                break;
+            case "RPP":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+                $("#comboBox3").data("kendoDropDownList").enable(true);
+                break;
+            case "CTR":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+                break;
+            case "OFF":
+                //cmpsrSearch1.Text1 = "";
+                //cmpsrSearch1.Text2 = "";
+                //cmpsrSearch1.Enabled = true;
+                break;
+            default:
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+        }
+        subResetToolBar();
+    }
+
+    function subRefresh() {
+        $("#txtbSP1").val('');
+        $("#txtbSP2").val('');
+        $("#dtpSP").val('');
+        var ProdId = '';
+        $.ajax({
+            type: 'GET',
+            url: '/Parameter/RefreshParamGlobal',
+            data: { ProdukId: ProdId, InterfaceId: IdInterface },
+            success: function (data) {
+                if (data.Parameter.length != 0) {
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: data.Parameter
+                        });
+                    var Paramgrid = $('#GridParam').data('kendoGrid');
+                    Paramgrid.setDataSource(dataSource);
+                    Paramgrid.dataSource.pageSize(10);
+                    Paramgrid.dataSource.page(1);
+                    Paramgrid.select("tr:eq(0)");
+
+                    Paramgrid.hideColumn('Id');
+                    Paramgrid.hideColumn('MinSwitchRedempt');
+                    Paramgrid.hideColumn('JenisSwitchRedempt');
+                    Paramgrid.hideColumn('SwitchingFeeNonKaryawan');
+                    Paramgrid.hideColumn('SwitchingFeeKaryawan');
+                    Paramgrid.hideColumn('Desc5');
+
+                    $("#GridParam th[data-field=Deskripsi]").html("Deskripsi")
+                    $("#GridParam th[data-field=Kode]").html("Kode")
+                    $("#GridParam th[data-field=ProdId]").html("ProdId")
+
+                    if (IdInterface == 'PFP')
+                        Paramgrid.showColumn('Id');
+
+                    Paramgrid.showColumn('TanggalValuta');
+                    Paramgrid.hideColumn('ProdId');
+                    Paramgrid.hideColumn('Desc2');
+                    Paramgrid.hideColumn('TglEfektif');
+                    Paramgrid.hideColumn('TglExpire');
+                    Paramgrid.hideColumn('Keterangan');
+                    $("#GridParam th[data-field=Desc2]").html("Desc2")
+                    $("#GridParam th[data-field=Desc5]").html("Desc5")
+
+                    if ((IdInterface == 'MNI') || (IdInterface == 'CTD')) {
+                        Paramgrid.hideColumn('OfficeId');
+                        Paramgrid.showColumn('Desc2');
+                        $("#GridParam th[data-field=Desc2]").html("KSEI CODE")
+                    }
+                    else if (IdInterface == "RTY") {
+                        Paramgrid.showColumn('Desc2');
+                        $("#GridParam th[data-field=Desc2]").html("TipeReksadanaEnglish")
+                        $("#GridParam th[data-field=Deskripsi]").html("TipeReksadana")
+                    }
+                    else if (IdInterface == "GFM") {
+                        Paramgrid.showColumn('Desc2');
+                        $("#GridParam th[data-field=Desc2]").html("Biaya")
+                    }
+                    else if (IdInterface == "WPR") {
+                        Paramgrid.showColumn('Desc2');
+                        Paramgrid.showColumn('Desc5');
+                        Paramgrid.showColumn('TglExpire');
+                        Paramgrid.showColumn('Keterangan');
+
+                        $("#GridParam th[data-field=Desc2]").html("Nama")
+                        $("#GridParam th[data-field=Desc5]").html("Job Title")
+                    }
+                    else if (IdInterface == "RSB") {
+                        Paramgrid.showColumn('Desc2');
+                        Paramgrid.showColumn('Desc5');
+                        $("#GridParam th[data-field=Desc2]").html("Red.FeeAsuransi")
+                        $("#GridParam th[data-field=Desc5]").html("Red.FeeNonAsuransi")
+                        $("#GridParam th[data-field=Deskripsi]").html("SubsPercentFee")
+                        Paramgrid.showColumn('Keterangan');
+                        Paramgrid.showColumn('JenisSwitchRedempt');
+                        $("#GridParam th[data-field=Keterangan]").html("SwcFeeAsuransi")
+                        $("#GridParam th[data-field=JenisSwitchRedempt]").html("SwcFeeNonAsuransi")
+                    }
+                    else if (IdInterface == "PFP") {
+                        Paramgrid.showColumn('Deskripsi');
+                        Paramgrid.hideColumn('TanggalValuta');
+
+                        $("#GridParam th[data-field=Kode]").html("MinJangkaWaktu")
+                        $("#GridParam th[data-field=Id]").html("FrekPendebetan")
+                        $("#GridParam th[data-field=Deskripsi]").html("Kelipatan")
+                    }
+                    else if (IdInterface == "MSC") {
+                        Paramgrid.showColumn('Deskripsi');
+                        Paramgrid.hideColumn('TanggalValuta');
+                        Paramgrid.showColumn('ProdId');
+
+                        $("#GridParam th[data-field=Deskripsi]").html("Min Subsc")
+                        $("#GridParam th[data-field=Kode]").html("Product")
+                        $("#GridParam th[data-field=ProdId]").html("IsEmployee")
+                    }
+                    else if (IdInterface == "SWC") {
+                        $("#GridParam th[data-field=Deskripsi]").html("ProdSwitchIn")
+                        $("#GridParam th[data-field=Kode]").html("ProdSwitchOut")
+                        Paramgrid.showColumn('MinSwitchRedempt');
+                        Paramgrid.showColumn('JenisSwitchRedempt');
+                        Paramgrid.showColumn('SwitchingFeeNonKaryawan');
+                        Paramgrid.showColumn('SwitchingFeeKaryawan');
+                        Paramgrid.hideColumn('TanggalValuta');
+                    }
+                    else if (IdInterface == "RPP") {
+                        Paramgrid.showColumn('Desc2');
+                        Paramgrid.hideColumn('LastUpdate');
+
+                        $("#GridParam th[data-field=Kode]").html("KodeProduct")
+                        $("#GridParam th[data-field=Deskripsi]").html("NamaProduk")
+                        $("#GridParam th[data-field=Desc2]").html("RiskProfileProduct")
+                    }
+                    else {
+                        Paramgrid.hideColumn('OfficeId');
+                    }
+
+                } else {
+                    $("#GridParam").data('kendoGrid').dataSource.data([]);
+                }
+            }
+        });
+    }
+
+    function subSave() {
+        var dtpSP = $("#dtpSP").val().split("/");
+        var fdtpSP = new Date(dtpSP[2], dtpSP[1] - 1, dtpSP[0]);
+        var message = 'save';
+        var selectedId = 0;
+
+        if (_intType == 3 || _intType == 2)
+        {
+            if (_intType == 3)
+                message = 'delete';
+            else
+                message = 'edit';
+            var grid = $("#GridParam").data("kendoGrid");
+            grid.refresh();
+            grid.tbody.find("tr[role='row']").each(function () {
+                var dataItem = grid.dataItem(this);
+                selectedId = dataItem.Id;
+            })
+            if (selectedId == 0) {
+                alert("No data selected!");
+                return;
+            }
+        }
+        if (confirm('Are you sure to ' + message +' this data?')) {
+            var model = JSON.stringify({
+                '_intType': _intType,
+                '_strTreeInterface': IdInterface,
+                'txtbSP1': $("#txtbSP1").val(),
+                'txtbSP2': $("#txtbSP2").val(),
+                'txtbSP3': $("#txtbSP3").val(),
+                'txtbSP4': $("#txtbSP4").val(),
+                'txtbSP5': $("#txtbSP5").val(),
+                'textBox1': '',
+                'checkBox1': $("#checkBox1").val(),
+                'dtpSP': fdtpSP,
+                'dtpSP5': fdtpSP,
+                'cmpsrSearch1': '',
+                'cmpsrSearch2': '',
+                'comboBox1': $("#comboBox1").val(),
+                'comboBox3': $("#comboBox3").val(),
+                'textPctSwc': $("#textPctSwc").val(),
+                'TanggalValuta': fdtpSP,
+                'Id': selectedId
+            });
+
+            $.ajax({
+                type: "POST",
+                data: model,
+                url: '/Parameter/MaintainParamGlobal',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var message;
+                    message = data.strErrMsg;
+                    if (data.blnResult == true) {
+                        document.getElementById("sa-success").click();
+                        _intType = 0;
+                        subResetToolBar();
+                        subRefresh();
+                    }
+                    else
+                        $("#sa-failed").trigger("click", [message]);
+                }
+            });
+        }
+        else {
+            e.preventDefault();
+        }
+    }
+
+    function subDelete()
+    {
+        _intType = 3;
+        subSave();
+        _intType = 0;   
+    }
+
+    function subUpdate()
+    {
+        _intType = 2;
+        switch (IdInterface) {
+            case "MNI":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+
+                break;
+            default:
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+
+                break;
+        }
+        subResetToolBar();
+    }
+
+    function subCancel()
+    {
+        _intType = 0;
+        subResetToolBar();
+        subRefresh();
+    }
+
+    function onRowParamSelect(e) {
+        var data = this.dataItem(this.select());
+
+
+        if (IdInterface == "RSB") {
+            //cmpsrSearch1.Text1 = dgvParam.CurrentRow.Cells["Kode"].Value.ToString();
+            //cmpsrSearch1.ValidateField();
+            $("#txtbSP3").val(data.Desc2);
+            //$("#textBox1").val(data.Desc5);
+            $("#txtbSP5").val(data.JenisSwitchRedempt);
+            $("#textPctSwc").val(data.Keterangan);
+        }
+        else if (IdInterface == "WPR") {
+            $("#txtbSP3").val(data.Desc2);
+            $("#txtbSP4").val(data.Desc5);
+            var TglExpire = new Date(data.TglExpire);
+            $("#dtpSP5").val(TglExpire.getDate() + '/' + (TglExpire.getMonth() + 1) + '/' + TglExpire.getFullYear());
+        }
+        else if (IdInterface == "RPP") {
+            //cmpsrSearch1.Text1 = dgvParam.CurrentRow.Cells["Kode"].Value.ToString();
+            //cmpsrSearch1.ValidateField();
+            $("#comboBox3").val(data.Desc2);
+            var TglExpire = new Date(data.TglExpire);
+            $("#dtpSP").val(TglExpire.getDate() + '/' + (TglExpire.getMonth() + 1) + '/' + TglExpire.getFullYear());
+        }
+        else if (IdInterface == "RTY") {
+            $("#txtbSP1").val(data.Kode);
+            $("#txtbSP2").val(data.Deskripsi);
+            var TanggalValuta = new Date(data.TanggalValuta);
+            $("#dtpSP").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());
+            $("#txtbSP3").val(data.Desc2);
+        }
+
+        if (IdInterface == "PFP") {
+            $("#txtbSP1").val(data.Id);
+            $("#txtbSP2").val(data.Kode);
+            $("#txtbSP3").val(data.Deskripsi);
+        }
+        else if (IdInterface == "SWC") {
+            var minRedempt = 0;
+            var switchFee;
+            var switchFeeKary;
+
+            //cmpsrSearch1.Text1 = dgvParam.CurrentRow.Cells["Kode"].Value.ToString();
+            //cmpsrSearch1.ValidateField();
+            //cmpsrSearch2.Criteria = cmpsrSearch1.Text1.Trim();
+            //cmpsrSearch2.Text1 = dgvParam.CurrentRow.Cells["Deskripsi"].Value.ToString();
+            //cmpsrSearch2.ValidateField();
+
+            try {
+                minRedempt = data.MinSwitchRedempt;
+                switchFee = data.SwitchingFeeNonKaryawan;
+                minRedempt = Math.round(minRedempt * 100) / 100;
+                switchFee = Math.round(switchFee * 100) / 100;
+                switchFeeKary = data.SwitchingFeeKaryawan;
+                switchFeeKary = Math.round(switchFeeKary * 100) / 100;
+
+                $("#txtbSP3").val(minRedempt);
+                //txtbSP3.Text = Puntos(txtbSP3.Text, 2);
+                //txtbSP3.Select(txtbSP3.TextLength, 0);
+                $("#txtbSP5").val(switchFee);
+                $("#textPctSwc").val(switchFeeKary);
+            }
+            catch
+            {
+                return;
+            }
+            $("#comboBox1").val(JenisSwitchRedempt);
+        }
+        else if (IdInterface == "MSC") {
+            try {
+                //cmpsrSearch1.Text1 = dgvParam.CurrentRow.Cells["Kode"].Value.ToString();
+                //cmpsrSearch1.ValidateField();
+            }
+            catch
+            {
+                return;
+            }
+            if (data.ProdId == '1') {
+                $('#checkBox1').prop('checked', true);
+            }
+            else {
+                $('#checkBox1').prop('checked', false);
+            }
+            $("#txtbSP2").val(data.Deskripsi);
+        }
+        else {
+            $("#txtbSP1").val(data.Kode);
+            $("#txtbSP2").val(data.Deskripsi);
+            var TanggalValuta = new Date(data.TanggalValuta);
+            $("#dtpSP").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());
+        }
+
+        if (IdInterface == "GFM") {
+            $("#txtbSP3").val(data.Desc2);
+            $("#txtbSP4").val(data.Desc5);
+        }
+
+        if (IdInterface == "MNI" || IdInterface == "CTD") {
+            $("#txtbSP3").val(data.Desc2);
+        }
+    };
+
+    function subRefreshWARPED(NIK)
+    {
+        $.ajax({
+            type: "GET",
+            data: { NIK: NIK },
+            url: '/Parameter/RefreshWARPED',
+            dataType: "json",
+            success: function (data) {
+                $("#txtbSP3").val(data.Name);
+                $("#txtbSP4").val(data.JobTittle);
+            }
+        });
+    }
+    
+</script>

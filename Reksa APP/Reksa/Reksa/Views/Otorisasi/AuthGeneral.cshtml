@@ -1,4 +1,6 @@
 ﻿@model Reksa.ViewModels.OtorisasiListViewModel
+@using Reksa.Models
+@using Kendo.Mvc.UI.Fluent
 
 @{
     ViewData["Title"] = "Otorisasi";
@@ -14,25 +16,16 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12">
-                    @(Html.Kendo().TreeView().Name("tvOtorisasi").Items(treeview =>
+                    @(Html.Kendo().TreeView().Name("TreeViewAuthGeneral")
+                            .BindTo((IEnumerable<CommonTreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                            {
+                                mappings.For<CommonTreeViewModel>(binding => binding.ItemDataBound((item, node) =>
                                 {
-                                    treeview.Add().Text("Authorization")
-                                        .Expanded(true)
-                                        .Items(root =>
-                                        {
-                                            root.Add().Text("Transaksi")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("ti-folder");
+                                    item.Id = node.tree_id.ToString(); item.Text = node.tree_name; item.Expanded = node.Expanded;
+                                    item.SpriteCssClasses = node.populate_query.ToString();
+                                }).Children(node => node.Children));
+                            }).Events(events => events.Select("onSelect"))
 
-                                            root.Add().Text("Product")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("folder");
-                                        });
-                                })
-                                .Events(events => events
-                            .Select("onSelect")
-
-                        )
                     )
                 </div>
             </div>
@@ -43,7 +36,7 @@
 <!-- Begin Button -->
 <div class="col-md-9">
     <div class="input-group">
-        <button id=btnProcess class="btn btn-info waves-effect waves-light">
+        <button id=btnApprove class="btn btn-info waves-effect waves-light">
             <span class="btn-label">
                 <i class="fa fa-cogs"></i>
             </span>
@@ -67,23 +60,7 @@
         <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
             <div class="panel-body">
                 <div class="row">
-                    @(Html.Kendo().Grid(Model.Detail)
-                                         .Name("GridOtorisasi")
-                                         .Columns(columns =>
-                                         {
-                                             columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                             columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                             columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                             columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                             columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                             columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                             columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                         }).Pageable()
-                                     .Scrollable(s => s.Height(250))
-                                     .Selectable(selectable => selectable
-                                     .Mode(GridSelectionMode.Single))
-                            //.Events(events => events.Change("onRowBlokirSelect"))
-                    )
+                    <div id="GridOtorisasi"></div>
                 </div>
             </div>
         </div>
@@ -101,40 +78,246 @@
         <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
             <div class="panel-body">
                 <div class="row">
-                    @(Html.Kendo().Grid(Model.Detail)
-                                .Name("GridOtorisasiDetail")
-                                .Columns(columns =>
-                                {
-                                    columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                    columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                    columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                    columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                    columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                    columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                    columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                }).Pageable()
-                            .Scrollable(s => s.Height(250))
-                            .Selectable(selectable => selectable
-                            .Mode(GridSelectionMode.Single))
-                            //.Events(events => events.Change("onRowBlokirSelect"))
-                    )
+                    <div id="GridOtorisasiDetail"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
+    var treeid;
+    var treename;
     function onSelect(e) {
-        alert(this.text(e.node));
-        switch (this.text(e.node)) {
-            case "Agent":
-                $("#label1").val("Kode");
-                $("#label2").val("Keterangan");
-                $("#label3").val("Tanggal Libur");
-                $("#label4").val("Kode");
-                break;
+        var dataItem = this.dataItem(e.node);
+        treeid = dataItem.id;
+        treename = dataItem.text;
+        var strPopulate = dataItem.spriteCssClass;
+       
+        var SelectedId = '';
+        if (treename != 'Authorization') {
+            $.ajax({
+                type: 'GET',
+                url: '/Otorisasi/PopulateGridMain',
+                data: { treename: treename, strPopulate: strPopulate, SelectedId: SelectedId },
+                success: function (response) {
+                    if (treename == 'Transaksi') {
+                        $("#GridOtorisasiDetail").empty(); 
+                        populateGrid(response.MainTranksasi);
+                    }
+                    else if (treename == 'Product') {
+                        $("#GridOtorisasiDetail").empty(); 
+                        populateGrid(response.MainProduct);
+                    }
+                }
+            });
         }
-
     }
 
+    // add the grid options here 
+    function populateGrid(response) {
+        var columns = generateColumns(response);
+        var gridOptions = {
+            dataSource: {
+                transport: {
+                    read: function (options) {
+                        options.success(response);
+                    }
+                },
+                pageSize: 6,
+                page: 1
+            },
+            change: onRowOtorisasiSelect,
+            columns: columns,
+            pageable: true,
+            selectable: true,
+            height: 300
+        };
+        // reuse the same grid, swapping its options as needed
+        var grid = $("#GridOtorisasi").data("kendoGrid");
+        if (grid) {
+            grid.setOptions(gridOptions);
+        } else {
+            $("#GridOtorisasi").kendoGrid(gridOptions);
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
+            var value;
+            if (treename == 'Transaksi') {
+                value = 'TranId';
+            } else if (treename == 'Product')
+            {
+                value = 'ProdId';
+            }
+            return {
+                headerTemplate: isIdColumn ? "<input type='checkbox'  id='chkSelectAll' onclick='checkAll(this)' />" : name, 
+                template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= " + value +" #'" +
+                    "# if (CheckB) { #" +
+                    "checked='checked'" +
+                    "# } #" +
+                    "/>" : columnNames, 
+                field: name,
+                width: isIdColumn ? 50 : 180,
+                title: isIdColumn ? "CheckBox" : name
+            };
+        })
+    }
+
+    function checkAll(e) {
+        var state = $(e).is(':checked');
+        var grid = $('#GridOtorisasi').data('kendoGrid');
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] != state)
+                this.dirty = true;
+
+            this['CheckB'] = state;
+        });
+        grid.refresh();
+    }
+
+    function onCheckBoxClick(e) {
+        var state = $(e).is(':checked');
+        var value = e.value;
+        
+        var grid = $('#GridOtorisasi').data('kendoGrid');
+        grid.refresh();
+
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+
+            if (treename == 'Transaksi') {
+                if (dataItem.TranId == value) {
+                    dataItem.CheckB = state;
+                }
+            } else if(treename == 'Product') {
+                if (dataItem.ProdId == value) {
+                    dataItem.CheckB = state;
+                }
+            }
+        })
+
+        var chkAll = $('#chkSelectAll').is(':checked');
+        var isCheckedAll = true;
+        var countTrue = 0;
+        var countFalse = 0;
+        var countAll = 0;
+
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] == true) {
+                countTrue = countTrue + 1;
+            }
+            else {
+                countFalse = countFalse + 1;
+                isCheckedAll = false;
+            }
+            countAll = countAll + 1;
+        });
+        if (countFalse == 0 || (countFalse == 1 && !state)) {
+            $('#chkSelectAll').prop("checked", state);
+        }
+
+        grid.refresh();
+    }
+
+    function onRowOtorisasiSelect(e) {
+        var data = this.dataItem(this.select());
+        populateGridDetail(data);
+    };
+
+    function populateGridDetail(rawData)
+    {
+        var rawData,
+            data = [],
+            dataLength,
+            propertiesLength;
+       dataLength = 2;
+       propertiesLength = Object.keys(rawData).length;        
+        for (var i = 0; i < propertiesLength; i += 1) {
+          
+                data[i] = {};
+                for (var j = 0; j < dataLength; j += 1) {
+                    var currentItem = rawData;
+                    var Items = Object.keys(currentItem)[i];
+
+                    if (j === 0) {
+                        data[i]["Items"] = Items;
+                    }
+                    data[i]["Values"] = currentItem[Items]
+                }
+            
+        }
+                
+        var Datagrid = {
+            dataSource: {
+                data: data
+            },
+            columns: [
+                { field: "Items", title: "Items" },
+                { field: "Values", title: "Values"}
+            ],
+            pageable: true,
+            selectable: true,
+            height: 300
+        };
+         
+        $("#GridOtorisasiDetail").kendoGrid(Datagrid); 
+        var grid = $("#GridOtorisasiDetail").data("kendoGrid");
+        var items = grid.dataSource.view();
+        for (var i = 0; i < items.length; i++) {
+            var $row = $('#GridOtorisasiDetail').find("[data-uid='" + items[i].uid + "']");
+            if (items[i].Items == "_events" || items[i].Items == "_handlers" || items[i].Items == "CheckB"
+                || items[i].Items == "uid" || items[i].Items == "parent")
+            { // hide this row ...
+                $row.hide();
+            } 
+        }
+    }
+
+    $('#btnApprove').click(function (e) {
+        subApprove(true);
+    });
+
+
+    $('#btnReject').click(function (e) {
+        subApprove(false);
+    });
+
+    function subApprove(isApprove)
+    {
+        var grid = $("#GridOtorisasi").data("kendoGrid");
+        grid.refresh();
+        var dataItems = "";
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+
+            if (dataItem.CheckB == true) {
+                if (treename == 'Transaksi') {
+                    dataItems += dataItem.TranId + "|";
+                } else if (treename == 'Product') {
+                    dataItems += dataItem.ProdId + "|";
+                }
+            }
+        })
+        if (dataItems == "")
+            alert("No data selected!");
+        else {
+            if (confirm('Are you sure to reject this changes')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Otorisasi/ApproveReject",
+                    data: { listId: dataItems, treeid: treeid, isApprove: isApprove },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            }
+            else {
+                e.preventDefault();
+            }
+        }
+    }
+    
 </script>

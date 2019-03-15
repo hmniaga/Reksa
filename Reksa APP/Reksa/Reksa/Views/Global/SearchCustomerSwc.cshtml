@@ -1,16 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Search Product";
+    ViewBag.Title = "Search CIF";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
 
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchProduct() {
-        var value = $("#ProductSearchComponentSearchTxt").val();
-        var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
+    function onSearchCustomerSwc() {
+        var value = $("#CustomerSwcSearchComponentSearchTxt").val();
+        var grid = $("#CustomerSwcSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -31,33 +29,33 @@
         }
     }
 
-    function onRowProductSelect(e) {
+    function onRowCustomerSwcSelect(e) {
         var data = this.dataItem(this.select());
-        var ProdCode = $.trim(data.ProdCode);
-        var ProdName = $.trim(data.ProdName);
-        var ProdId = $.trim(data.ProdId);
-
-        $("#ProductSelectedCode").val(ProdCode);
-        $("#ProductSelectedName").val(ProdName);
-        $("#ProductSelectedId").val(ProdId);
+        var CIFNo = $.trim(data.CIFNo);
+        var CIFName = $.trim(data.CIFName);
+        var NasabahId = $.trim(data.NasabahId);
+        
+        $("#CustomerSwcSelectedCode").val(CIFNo);
+        $("#CustomerSwcSelectedName").val(CIFName);
+        $("#CustomerSwcSelectedId").val(NasabahId);
     };
 
-    $("#ProductSelectButton").on("click", function () {
-        var selectedCode = $("#ProductSelectedCode").val();
-        var selectedName = $("#ProductSelectedName").val();
-        var selectedId = $("#ProductSelectedId").val();
+    $("#CustomerSwcSelectButton").on("click", function () {
+        var selectedCode = $("#CustomerSwcSelectedCode").val();
+        var selectedName = $("#CustomerSwcSelectedName").val();
+        var selectedId = $("#CustomerSwcSelectedId").val();
 
-        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
-        $("input[name='ProductModel.ProdName']").val(selectedName);
-        $("input[name='ProductModel.ProdId']").val(selectedId);
+        $("input[id='CIFNoSwc']").val(selectedCode).change();
+        $("input[id='CIFNameSwc']").val(selectedName);
+        $("input[name='CustomerModel.NasabahId']").val(selectedId);
 
     });
 
-    $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#CustomerSwcSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ProductSearchComponentSearchBtn").click();
+            $("#CustomerSwcSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -68,19 +66,19 @@
         <h4>@ViewBag.Title</h4>
     </div>
     <div class="modal-body">
-        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
-                    .Name("ProductSearchComponentGrid")
+        @(Html.Kendo().Grid<Reksa.Models.CustomerModel>()
+                    .Name("CustomerSwcSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.ProdCode);
-                        columns.Bound(m => m.ProdName);
-                        columns.Bound(m => m.ProdId);
+                        columns.Bound(m => m.CIFNo);
+                        columns.Bound(m => m.CIFName);
+                        columns.Bound(m => m.NasabahId);
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowProductSelect"))
+                    .Events(events => events.Change("onRowCustomerSwcSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -90,30 +88,30 @@
                         .PageSize(20)
                         .Model(model =>
                         {
-                            model.Id(m => m.ProdCode);
+                            model.Id(m => m.CIFNo);
                         })
-                        .Read(read => read.Action("SearchProductData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchCustomerData", "Global", new { search = search, criteria = criteria }))
                     )
         )
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ProductSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("CustomerSwcSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ProductSearchComponentSearchBtn")
+                            .Name("CustomerSwcSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchProduct")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchCustomerSwc")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="ProductSelectedCode" name="ProductSelectedCode" value="" />
-        <input type="hidden" id="ProductSelectedName" name="ProductSelectedName" value="" />
-        <input type="hidden" id="ProductSelectedId" name="ProductSelectedCId" value="" />
+        <input type="hidden" id="CustomerSwcSelectedCode" name="CustomerSwcSelectedCode" value="" />
+        <input type="hidden" id="CustomerSwcSelectedName" name="CustomerSwcSelectedName" value="" />
+        <input type="hidden" id="CustomerSwcSelectedId" name="CustomerSwcSelectedId" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ProductSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="CustomerSwcSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

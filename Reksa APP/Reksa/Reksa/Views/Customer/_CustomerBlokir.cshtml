@@ -1,6 +1,6 @@
 ﻿@model Reksa.ViewModels.CustomerListViewModel
 
-
+@(Html.ValidationSummary(true))
 <div class="col-md-12">
     <div class="card-box">
         <div class="row">
@@ -10,14 +10,22 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Client Code</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientCode" }).Enable(true)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @required = "required", @id = "BlokirClientCode" }).Enable(true)
                             <span class="input-group-btn">
-                                <a id="searchClient" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="searchClient" onclick="onsearchClient();" href="" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientName" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
                             @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
                         </div>
+                        <script>
+                            function onsearchClient() {
+                                //$('#ClientModal').removeData();
+                                var CIFNo = $('#CIFNo').val();
+                                var url = '@Html.Raw(Url.Action("SearchClientbyCIF", "Global"))';
+                                $('#searchClient').attr('href', url + '?CIFNo=' + CIFNo);                        
+                    }
+                        </script>
                     </div>
                 </div>
                 <!-- End Search Client -->
@@ -28,7 +36,8 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Unit Blokir</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBox().Name("UnitBlokir").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBox().Name("UnitBlokir").HtmlAttributes(new { @class = "form-control input-sm", @required = "required" }).Enable(false)
+                            
                         </div>
                     </div>
                 </div>
@@ -83,21 +92,21 @@
 </div>
 <div class="col-md-12">
     @(Html.Kendo().Grid(Model.CustomerBlokir)
-                    .Name("GridBlokir")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(p => p.BlockId).Width(100).Title("Block Id");
-                        columns.Bound(p => p.Status).Width(100).Title("Status");
-                        columns.Bound(p => p.TanggalBlokir).Format("{0:dd MMMM yyyy}").Width(150).Title("Tanggal Blokir");
-                        columns.Bound(p => p.TanggalExpiryBlokir).Format("{0:dd MMMM yyyy}").Width(200).Title("Tanggal Expiry Blokir");
-                        columns.Bound(p => p.UnitBlokir).Format("{0:###,###.##}").Width(150).Title("Unit Blokir");
-                        columns.Bound(p => p.Inputter).Width(100).Title("Inputter");
-                        columns.Bound(p => p.Supervisor).Width(100).Title("Supervisor"); 
-                    }).Pageable()
-                .Scrollable(s => s.Height(250))
-                .Selectable(selectable => selectable
-                .Mode(GridSelectionMode.Single))
-                .Events(events => events.Change("onRowBlokirSelect"))
+                            .Name("GridBlokir")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.BlockId).Width(100).Title("Block Id");
+                                columns.Bound(p => p.Status).Width(100).Title("Status");
+                                columns.Bound(p => p.TanggalBlokir).Format("{0:dd MMMM yyyy}").Width(150).Title("Tanggal Blokir");
+                                columns.Bound(p => p.TanggalExpiryBlokir).Format("{0:dd MMMM yyyy}").Width(200).Title("Tanggal Expiry Blokir");
+                                columns.Bound(p => p.UnitBlokir).Format("{0:###,###.##}").Width(150).Title("Unit Blokir");
+                                columns.Bound(p => p.Inputter).Width(100).Title("Inputter");
+                                columns.Bound(p => p.Supervisor).Width(100).Title("Supervisor");
+                            }).Pageable()
+                        .Scrollable(s => s.Height(250))
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Events(events => events.Change("onRowBlokirSelect"))
 
     )
 </div>
@@ -114,9 +123,9 @@
         $("#BlokirId").val(data.BlockId);
         $("#UnitBlokir").val(data.UnitBlokir);
         var TanggalBlokir = new Date(data.TanggalBlokir);
-        $("#TanggalBlokir").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());        
+        $("#TanggalBlokir").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());
         var TanggalExpiryBlokir = new Date(data.TanggalExpiryBlokir);
-        $("#TanggalExpiryBlokir").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());              
+        $("#TanggalExpiryBlokir").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());
     };
 
 </script>

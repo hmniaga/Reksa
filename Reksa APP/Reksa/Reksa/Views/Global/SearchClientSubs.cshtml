@@ -8,9 +8,9 @@
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchClient() {
-        var value = $("#ClientSearchComponentSearchTxt").val();
-        var grid = $("#ClientSearchComponentGrid").data("kendoGrid");
+    function onSearchClientSubs() {
+        var value = $("#ClientSubsSearchComponentSearchTxt").val();
+        var grid = $("#ClientSubsSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -31,39 +31,34 @@
         }
     }
 
-    function onRowClientSelect(e) {
+    function onRowClientSubsSelect(e) {
         var data = this.dataItem(this.select());
         var dataId = $.trim(data.id);
         var dataValue = $.trim(data.ClientName);
         var dataClientId = $.trim(data.ClientId);
 
-        $("#ClientSelectedId").val(dataId);
-        $("#ClientSelectedText").val(dataValue);
-        $("#ClientSelectedClientId").val(dataClientId);
+        $("#ClientSubsSelectedId").val(dataId);
+        $("#ClientSubsSelectedText").val(dataValue);
+        $("#ClientSubsSelectedClientId").val(dataClientId);
     };
 
-    $("#ClientSelectButton").on("click", function () {
-        var selectedId = $("#ClientSelectedId").val();
-        var selectedText = $("#ClientSelectedText").val();
-        var selectedClientId = $("#ClientSelectedClientId").val();
-        var parameterSeq = $("#ClientParameterSeq").val();
-        var parameterType = $("#ClientParameterType").val();
+    $("#ClientSubsSelectButton").on("click", function () {
+        var selectedId = $("#ClientSubsSelectedId").val();
+        var selectedText = $("#ClientSubsSelectedText").val();
+        var selectedClientId = $("#ClientSubsSelectedClientId").val();
 
-        if (parameterSeq && parameterSeq > 0) {
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdCode").val(selectedId).change();
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdName").val(selectedText);
-        } else {
-            $("input[name='ClientModel.ClientCode']").val(selectedId).change();
-            $("input[name='ClientModel.ClientName']").val(selectedText);
-            $("input[name='ClientModel.ClientId']").val(selectedClientId);
-        }
+       
+        $("input[id='ClientCodeSubs']").val(selectedId).change();
+        $("input[id='ClientNameSubs']").val(selectedText);
+        $("input[name='ClientModel.ClientId']").val(selectedClientId);
+        
     });
 
-    $("#ClientSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ClientSubsSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ClientSearchComponentSearchBtn").click();
+            $("#ClientSubsSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -75,7 +70,7 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.ClientModel>()
-            .Name("ClientSearchComponentGrid")
+            .Name("ClientSubsSearchComponentGrid")
             .Columns(columns =>
             {
                 columns.Bound(m => m.ClientCode);
@@ -87,17 +82,17 @@
             {
                 toolbar.Template(@<text>
                 <div class="toolbar">
-                    @Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search)
+                    @Html.Kendo().TextBox().Name("ClientSubsSearchComponentSearchTxt").Value(search)
                     @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ClientSearchComponentSearchBtn")
+                            .Name("ClientSubsSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchClient"))
+                            .Events(ev => ev.Click("onSearchClientSubs"))
                     )
                 </div>
                 </text>);
             })*@
-            .Events(events => events.Change("onRowClientSelect"))
+            .Events(events => events.Change("onRowClientSubsSelect"))
             .Pageable()
             .Scrollable()
             .Selectable(selectable => selectable
@@ -113,12 +108,12 @@
             )
         )
 
-        <input type="hidden" id="ClientSelectedId" name="ClientSelectedId" value="" />
-        <input type="hidden" id="ClientSelectedText" name="ClientSelectedText" value="" />
-        <input type="hidden" id="ClientSelectedClientId" name="ClientSelectedClientId" value="" />
+        <input type="hidden" id="ClientSubsSelectedId" name="ClientSubsSelectedId" value="" />
+        <input type="hidden" id="ClientSubsSelectedText" name="ClientSubsSelectedText" value="" />
+        <input type="hidden" id="ClientSubsSelectedClientId" name="ClientSubsSelectedClientId" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ClientSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ClientSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

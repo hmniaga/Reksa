@@ -24,7 +24,7 @@
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoSwc" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerSwcModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchCustomerSwc", "Global")" data-toggle="modal" data-target="#CustomerSwcModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameSwc" })
                     </div>
@@ -37,18 +37,17 @@
                         @Html.Kendo().TextBoxFor(model => model.SwitchingModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefIDSwc" })
 
                         <span class="input-group-btn">
-                            <a onclick="onsearch();" data-toggle="modal" data-target="#ReferensiSwcModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id ="srcRefSwc" onclick="onsearchRefSwc();" href="" data-toggle="modal" data-target="#ReferensiSwcModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.SwitchingModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefNameSwc" }).Format("{0:dd MMMM yyyy}")
                     </div>
                 </div>
 
                 <script>                    
-                    function onsearch() {
-                        var CIFNo = $('#CIFNoSwc').val();                        
-                        $.post("@Url.Action("SearchSwitching", "Global")" + "?criteria=" + CIFNo, function (response) {
-                            $("#ReferensiSwcModal").html(response);                              
-                            });
+                    function onsearchRefSwc() {
+                        var CIFNo = $('#CIFNoSwc').val();  
+                        var url = '@Html.Raw(Url.Action("SearchSwitching", "Global"))';
+                        $('#srcRefSwc').attr('href', url + '?criteria=' + CIFNo); 
                     }
                 </script>
                 <!-- End Search RefID -->

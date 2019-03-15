@@ -24,7 +24,7 @@
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNoRedemp" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchCustomerRedemp", "Global")" data-toggle="modal" data-target="#CustomerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNameRedemp" })
                     </div>
@@ -37,7 +37,7 @@
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefIDRedemp" })
 
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchReferensi", "Global", new { criteria = "REDEMP" })" data-toggle="modal" data-target="#ReferensiRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchReferensiRedemp", "Global", new { criteria = "REDEMP" })" data-toggle="modal" data-target="#ReferensiRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "RefNameRedemp" }).Format("{0:dd MMMM yyyy}")
                     </div>

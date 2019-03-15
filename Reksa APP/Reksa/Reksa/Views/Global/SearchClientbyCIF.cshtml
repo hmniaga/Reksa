@@ -2,8 +2,7 @@
     ViewBag.Title = "Search Client";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
+    string CIFNo = (string)ViewBag.CIFNo;
 
     Layout = null;
 }
@@ -46,17 +45,10 @@
         var selectedId = $("#ClientSelectedId").val();
         var selectedText = $("#ClientSelectedText").val();
         var selectedClientId = $("#ClientSelectedClientId").val();
-        var parameterSeq = $("#ClientParameterSeq").val();
-        var parameterType = $("#ClientParameterType").val();
 
-        if (parameterSeq && parameterSeq > 0) {
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdCode").val(selectedId).change();
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdName").val(selectedText);
-        } else {
-            $("input[name='ClientModel.ClientCode']").val(selectedId).change();
-            $("input[name='ClientModel.ClientName']").val(selectedText);
-            $("input[name='ClientModel.ClientId']").val(selectedClientId);
-        }
+        $("input[name='ClientModel.ClientCode']").val(selectedId).change();
+        $("input[name='ClientModel.ClientName']").val(selectedText);
+        $("input[name='ClientModel.ClientId']").val(selectedClientId);
     });
 
     $("#ClientSearchComponentSearchTxt").on("keypress", function (e) {
@@ -78,25 +70,15 @@
             .Name("ClientSearchComponentGrid")
             .Columns(columns =>
             {
-                columns.Bound(m => m.ClientCode);
-                columns.Bound(m => m.ClientName);
-                columns.Bound(m => m.ClientId);
-                columns.Bound(m => m.CIFNo);
+                columns.Bound(m => m.ClientCode).Width(150).Title("Client Code");
+                columns.Bound(m => m.ClientName).Width(300).Title("Client Description");
+                columns.Bound(m => m.ClientId).Width(80).Title("Client Id");
+                columns.Bound(m => m.CIFNo).Width(150).Title("CIF Number");
             })
-            @*.ToolBar(toolbar =>
-            {
-                toolbar.Template(@<text>
-                <div class="toolbar">
-                    @Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search)
-                    @(Html.Kendo().Button()
-                            .HtmlAttributes(new { type = "button" })
-                            .Name("ClientSearchComponentSearchBtn")
-                            .Content("Search")
-                            .Events(ev => ev.Click("onSearchClient"))
-                    )
-                </div>
-                </text>);
-            })*@
+            .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
             .Events(events => events.Change("onRowClientSelect"))
             .Pageable()
             .Scrollable()
@@ -109,9 +91,21 @@
                 {
                     model.Id(m => m.ClientCode);
                 })
-                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria }))
+                .Read(read => read.Action("SearchClientbyCIFData", "Global", new { search = search, criteria = criteria, CIFNo = CIFNo }))
             )
         )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("ClientSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchClient")).ToClientTemplate()
+            )
+        </div>
+        </script>
 
         <input type="hidden" id="ClientSelectedId" name="ClientSelectedId" value="" />
         <input type="hidden" id="ClientSelectedText" name="ClientSelectedText" value="" />

@@ -1,18 +1,54 @@
 
-/**
-* Theme: Ubold Admin Template
-* Author: Coderthemes
-* SweetAlert
-*/
-
 !function ($) {
     "use strict";
 
     var SweetAlert = function () {
     };
 
-    //examples
     SweetAlert.prototype.init = function () {
+        //Success Message
+        $('#sa-success').click(function () {
+            swal({
+                title: "Need Approval!",
+                text: "",
+                type: "success",
+                timer: 5000
+            });
+        });
+
+        //Failed Message
+        $("#sa-failed").on("click", function (event, ErrMsg) {
+            swal({
+                title: ErrMsg,
+                text: '',
+                type: "error"
+            });
+        });
+
+        //Approved Message
+        $('#sa-approved').click(function () {
+            swal({
+                title: "Approved!",
+                text: "",
+                type: "success"
+            });
+        });
+
+        //Rejected Message
+        $('#sa-rejected').click(function () {
+            swal({
+                title: "Rejected!",
+                text: "",
+                type: "success",
+                timer: 5000
+            });
+        });
+
+        
+
+
+
+
 
         //Basic
         $('#sa-basic').click(function () {
@@ -24,10 +60,7 @@
             swal("Here's a message!", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat, tincidunt vitae ipsum et, pellentesque maximus enim. Mauris eleifend ex semper, lobortis purus sed, pharetra felis")
         });
 
-        //Success Message
-        $('#sa-success').click(function () {
-            swal("Good job!", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed lorem erat, tincidunt vitae ipsum et, pellentesque maximus enim. Mauris eleifend ex semper, lobortis purus sed, pharetra felis", "success")
-        });
+        
 
         //Warning Message
         $('#sa-warning').click(function () {
