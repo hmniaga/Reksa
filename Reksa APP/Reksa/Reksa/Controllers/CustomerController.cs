@@ -211,11 +211,15 @@ namespace Reksa.Controllers
         }
 
         [HttpPost]
-        public ActionResult MaintainBlokir([FromBody] BlokirModel blokirModel)
+        public ActionResult MaintainBlokir(BlokirModel blokirModel)
         {
-
-            MaintainBlokirData(blokirModel);
-            return View("Customer");
+            string strError = "";
+            if (!ModelState.IsValid)
+            {
+                return View();              
+            }
+            MaintainBlokirData(blokirModel, out strError);
+            return View();
         }
         private JsonResult Json(object p, object allowGet)
         {
@@ -468,18 +472,19 @@ namespace Reksa.Controllers
 
             }
         }
-        private void MaintainBlokirData(BlokirModel blokir)
+        private void MaintainBlokirData(BlokirModel blokir, out string strError)
         {
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_strAPIUrl);
                 var Content = new StringContent(JsonConvert.SerializeObject(blokir));
                 Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-
                 var request = client.PostAsync("/api/Customer/MaintainBlokir", Content);
-
                 var response = request.Result.Content.ReadAsStringAsync().Result;
-
+                JObject strObject = JObject.Parse(response);
+                JToken strTokenClient = strObject["strErrMsg"];
+                string strJsonClient = JsonConvert.SerializeObject(strTokenClient);
+                strError = JsonConvert.DeserializeObject<string>(strJsonClient);
             }
         }
     }
