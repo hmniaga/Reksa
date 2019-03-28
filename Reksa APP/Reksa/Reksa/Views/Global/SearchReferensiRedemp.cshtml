@@ -41,9 +41,9 @@
     $("#ReferensiRedempSelectButton").on("click", function () {
         var selectedRefID = $("#ReferensiRedempSelectedRefID").val();
         var selectedtanggalTransaksi = $("#ReferensiRedempSelectedtanggalTransaksi").val();
-
-        $("input[id='RefIDRedemp']").val(selectedRefID).change();
-        $("input[id='RefNameRedemp']").val(selectedtanggalTransaksi);
+        var tgltransaksi = new Date(selectedtanggalTransaksi);
+        $("input[id='srcNoRefRedemp_text1']").val(selectedRefID).change();
+        $("input[id='srcNoRefRedemp_text2']").val(tgltransaksi.getDate() + '/' + (tgltransaksi.getMonth() + 1) + '/' + tgltransaksi.getFullYear());
 
     });
 

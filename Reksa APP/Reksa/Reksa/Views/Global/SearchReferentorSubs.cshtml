@@ -1,16 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Search Product";
+    ViewBag.Title = "Search Referentor";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
 
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchProductSubs() {
-        var value = $("#ProductSubsSearchComponentSearchTxt").val();
-        var grid = $("#ProductSubsSearchComponentGrid").data("kendoGrid");
+    function onSearchReferentor() {
+        var value = $("#ReferentorSearchComponentSearchTxt").val();
+        var grid = $("#ReferentorSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -31,33 +29,28 @@
         }
     }
 
-    function onRowProductSubsSelect(e) {
+    function onRowReferentorSelect(e) {
         var data = this.dataItem(this.select());
-        var ProdCode = $.trim(data.ProdCode);
-        var ProdName = $.trim(data.ProdName);
-        var ProdId = $.trim(data.ProdId);
+        var dataId = $.trim(data.EMPLID);
+        var dataName = $.trim(data.NAME);
 
-        $("#ProductSubsSelectedCode").val(ProdCode);
-        $("#ProductSubsSelectedName").val(ProdName);
-        $("#ProductSubsSelectedId").val(ProdId);
+        $("#ReferentorSelectedId").val(dataId);
+        $("#ReferentorSelectedText").val(dataName);
     };
 
-    $("#ProductSubsSelectButton").on("click", function () {
-        var selectedCode = $("#ProductSubsSelectedCode").val();
-        var selectedName = $("#ProductSubsSelectedName").val();
-        var selectedId = $("#ProductSubsSelectedId").val();
+    $("#ReferentorSelectButton").on("click", function () {
+        var selectedId = $("#ReferentorSelectedId").val();
+        var selectedText = $("#ReferentorSelectedText").val();
 
-        $("input[id='srcProductSubs_text1']").val(selectedCode).change();
-        $("input[id='srcProductSubs_text2']").val(selectedName);
-        $("input[name='ProdIdSubs']").val(selectedId);
-
+        $("input[id='srcReferentorSubs_text1']").val(selectedId).change();
+        $("input[id='srcReferentorSubs_text2']").val(selectedText);
     });
 
-    $("#ProductSubsSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ReferentorSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ProductSubsSearchComponentSearchBtn").click();
+            $("#ReferentorSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -68,19 +61,18 @@
         <h4>@ViewBag.Title</h4>
     </div>
     <div class="modal-body">
-        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
-                    .Name("ProductSubsSearchComponentGrid")
+        @(Html.Kendo().Grid<Reksa.Models.ReferentorModel>()
+                    .Name("ReferentorSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.ProdCode);
-                        columns.Bound(m => m.ProdName);
-                        columns.Bound(m => m.ProdId);
+                        columns.Bound(m => m.EMPLID).Width(100).Title("Referentor Id");
+                        columns.Bound(m => m.NAME).Width(100).Title("Referentor Name");
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowProductSubsSelect"))
+                    .Events(events => events.Change("onRowReferentorSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -90,30 +82,27 @@
                         .PageSize(20)
                         .Model(model =>
                         {
-                            model.Id(m => m.ProdCode);
+                            model.Id(m => m.EMPLID);
                         })
-                        .Read(read => read.Action("SearchProductData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchReferentorData", "Global", new { search = search, criteria = criteria }))
                     )
         )
-
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ProductSubsSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("ReferentorSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ProductSubsSearchComponentSearchBtn")
+                            .Name("ReferentorSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchProductSubs")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchReferentor")).ToClientTemplate()
             )
         </div>
         </script>
-
-        <input type="hidden" id="ProductSubsSelectedCode" name="ProductSubsSelectedCode" value="" />
-        <input type="hidden" id="ProductSubsSelectedName" name="ProductSubsSelectedName" value="" />
-        <input type="hidden" id="ProductSubsSelectedId" name="ProductSubsSelectedCId" value="" />
+        <input type="hidden" id="ReferentorSelectedId" name="ReferentorSelectedId" value="" />
+        <input type="hidden" id="ReferentorSelectedText" name="ReferentorSelectedText" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ProductSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ReferentorSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

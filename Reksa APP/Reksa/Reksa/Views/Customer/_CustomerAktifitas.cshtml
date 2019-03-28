@@ -7,7 +7,7 @@
             <!-- Begin Grid Client -->
             <div class="col-md-12">
                 @(Html.Kendo().Grid(Model.CustomerListClient)
-                        .Name("GridClient")
+                        .Name("dgvClientCode")
                         .Columns(columns =>
                         {
                             columns.Bound(p => p.Pilih)
@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Jangka Waktu</label>
                     <div class="input-group m-t-5">
-                        @Html.Kendo().TextBox().Name("JangkaWaktu").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("txtRDBJangkaWaktu").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
                         <span class="input-group-addon">Bulan</span>
 
                     </div>
@@ -55,7 +55,7 @@
                     <div class="input-group m-t-5">
                         <label class="col-sm-12 control-label">Frek Pendebetan</label>
                         <span class="input-group-btn"></span>
-                        @Html.Kendo().TextBox().Name("FrekDebet").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("textFrekPendebetan").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%" }).Enable(false)
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Tanggal Jatuh Tempo</label>
                     <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("DateJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;font-size: 100%" }).Enable(false))
+                        @(Html.Kendo().DatePicker().Name("dtRDBJatuhTempo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;font-size: 100%" }).Enable(false))
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     <div class="input-group">
                         @(Html.Kendo().CheckBox().Name("chkAutoRedemp").Label("Auto Redemp").Enable(false))
                         <span class="input-group-btn"></span>
-                        @(Html.Kendo().CheckBox().Name("chkAsuransi").Label("Asuransi").Enable(false))
+                        @(Html.Kendo().CheckBox().Name("chkRDBAsuransi").Label("Asuransi").Enable(false))
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"></label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("StarDateAct").
+                            @(Html.Kendo().DatePicker().Name("dtpStartDate").
                                                                                                                 HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%; font-size: 100%" })
                                                                                                                 .Format("{0:dd/MM/yyyy}")
                             )
@@ -109,7 +109,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("EndDateAct")
+                            @(Html.Kendo().DatePicker().Name("dtpEndDate")
                                                                                                 .HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
                                                                                                 .Format("{0:dd/MM/yyyy}")
                             )
@@ -121,7 +121,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <div class="input-group">
-                            <button id="buttonviewActivity" class="btn btn-info waves-effect waves-light">
+                            <button id="btnPopulate" class="btn btn-info waves-effect waves-light">
                                 <span class="btn-label">
                                     <i class="fa fa-search"></i>
                                 </span>
@@ -136,7 +136,7 @@
             <!-- Begin Grid Activity-->
             <div class="col-md-12">
                 @(Html.Kendo().Grid(Model.CustomerActivity)
-                        .Name("GridActivity")
+                        .Name("dgvAktifitas")
                         .Columns(columns =>
                         {
                             columns.Bound(p => p.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Width(150).Title("Tanggal Transaksi");
@@ -165,7 +165,7 @@
 <script>
 function checkAllClient(e) {
     var state = $(e).is(':checked');
-    var grid = $('#GridClient').data('GridClient');
+    var grid = $('#dgvClientCode').data('GridClient');
     $.each(grid.dataSource.view(), function () {
         if (this['Pilih'] != state)
             this.dirty = true;
@@ -178,7 +178,7 @@ function onCheckBoxClickClient(e) {
     var state = $(e).is(':checked');
     var guid = e.value;
 
-    var grid = $('#GridClient').data('GridClient');
+    var grid = $('#dgvClientCode').data('GridClient');
     grid.refresh();
 
     grid.tbody.find("tr[role='row']").each(function () {
@@ -224,22 +224,25 @@ var clientId;
             url: '/Customer/GetDataRDB',
             data: { strClientCode: clientCode},
             success: function (data) {
-                if (listRDB != null)
-                {
-                    $("#JangkaWaktu").val(data.listRDB[0].JangkaWaktu);
-                    var dateJT = new Date(data.listRDB[0].JatuhTempo);                  
-                    $("#DateJatuhTempo").val(dateJT.getDate() + '/' + (dateJT.getMonth() + 1) + '/' + dateJT.getFullYear()); 
+                if (data.blnResult == true) {
+                    $("#txtRDBJangkaWaktu").val(data.listRDB[0].JangkaWaktu);
+                    var dateJT = new Date(data.listRDB[0].JatuhTempo);
+                    $("#dtRDBJatuhTempo").val(dateJT.getDate() + '/' + (dateJT.getMonth() + 1) + '/' + dateJT.getFullYear());
                     $("#chkAutoRedemp").val(data.listRDB[0].AutoRedemption);
-                    $("#chkAsuransi").val(data.listRDB[0].Asuransi);
-                    $("#FrekDebet").val(data.listRDB[0].FrekPendebetan);
+                    $("#chkRDBAsuransi").val(data.listRDB[0].Asuransi);
+                    $("#textFrekPendebetan").val(data.listRDB[0].FrekPendebetan);
+                }
+                else
+                {
+                    swal("Warning", data.ErrMsg, "warning");
                 }
             }
         });
     };
     
-    $("#buttonviewActivity").click(function () {
-        var dtStart = $("#StarDateAct").val();
-        var dtEnd = $("#EndDateAct").val(); 
+    $("#btnPopulate").click(function () {
+        var dtStart = $("#dtpStartDate").val();
+        var dtEnd = $("#dtpEndDate").val(); 
         $.ajax({
             type: "GET",
             url: "/Customer/ViewActivityData",
@@ -252,13 +255,13 @@ var clientId;
                         {
                             data: data.CustomerActivity
                         });
-                    var Actgrid = $('#GridActivity').data('kendoGrid');
+                    var Actgrid = $('#dgvAktifitas').data('kendoGrid');
                     Actgrid.setDataSource(dataSource);
                     Actgrid.dataSource.page(1);
                     Actgrid.select("tr:eq(0)");
                 } else
                 {
-                    $("#GridActivity").data('kendoGrid').dataSource.data([]);
+                    $("#dgvAktifitas").data('kendoGrid').dataSource.data([]);
                 }
             }
         });

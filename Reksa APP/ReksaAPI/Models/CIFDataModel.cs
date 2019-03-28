@@ -18,11 +18,11 @@ namespace ReksaAPI.Models
         public string Telepon { get; set; }
         public string HP { get; set; }
         public string TempatLhr { get; set; }
-        public string TglLhr { get; set; }
+        public System.DateTime TglLhr { get; set; }
         public string KTP { get; set; }
         public string NPWP { get; set; }
         public string NamaNPWP { get; set; }
-        public string TglNPWP { get; set; }
+        public System.DateTime TglNPWP { get; set; }
         public string JnsNas { get; set; }
         public string DocTermCondition { get; set; }
         public string ShareholderID { get; set; }
@@ -30,7 +30,7 @@ namespace ReksaAPI.Models
         public string Segment { get; set; }
         public string SubSegment { get; set; }
         public string RiskProfile { get; set; }
-        public string LastUpdate { get; set; }
+        public System.DateTime LastUpdate { get; set; }
         public string WarnMsg { get; set; }
         public string IDExpireDate { get; set; }
         public string Kewarganegaraan { get; set; }

@@ -201,6 +201,7 @@
 
 <script>
     var _intType;
+    var IdInterface;
     $(document).ready(function () {   
         document.getElementById('lblSP1').innerHTML = 'Kode';
         document.getElementById('lblSP2').innerHTML = 'Deskripsi';
@@ -225,15 +226,13 @@
         $("#dtpSP13").data("kendoDatePicker").enable(false);
         _intType = 0;
 
-
         $("#btnAdd").click(function () {
             $("#btnAdd").hide();
             $("#btnEdit").hide();
             $("#btnDelete").hide();
             $("#btnSave").show();
             $("#btnCancel").show();
-            clearAll();
-            disableAll(1);
+            subNew();
         });
         $("#btnEdit").click(function () {
             $("#btnAdd").hide();
@@ -262,8 +261,7 @@
             subRefresh();
         });
     });
-
-    var IdInterface;
+    
     function onSelect(e) {
         var dataItem = this.dataItem(e.node);
         IdInterface = dataItem.id;
@@ -416,7 +414,7 @@
         var ProdId = $("#ProdId").val();
         if (ProdId == '')
         {
-            alert("Produk Harus Diisi")
+            swal("Warning", "Produk Harus Diisi", "warning");
             return;
         }
         
@@ -500,7 +498,101 @@
         });
     }
 
-    
+    function subNew()
+    {
+        _intType = 1; 
+        if ($("#ProductModel_ProdName").val() == "")
+            return;
+        var DateNow = new Date();
+        $("#dtpSP12").val(DateNow.getDate() + '/' + (DateNow.getMonth() + 1) + '/' + DateNow.getFullYear());
+        $("#dtpSP13").val(DateNow.getDate() + '/' + (DateNow.getMonth() + 1) + '/' + DateNow.getFullYear());
+
+        if (IdInterface != "RDD") {
+            $("#txtbSP1").val('');
+            $("#txtbSP2").val('');
+        }
+
+        $("#OfficeId").val('');
+        
+
+        switch (IdInterface)
+        {
+            case "PAR":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "SAC":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', '');
+                $('#Office').attr('style', '');
+               //cmpsrOffice.Enabled = true;
+                break;
+            case "SFC":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "SBC":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "SNV":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "SDV":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "SKR":
+                $("#txtbSP1").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "RDD":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(true);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            case "GFP":
+                $("#txtbSP1").prop('disabled', false);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP11").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#dtpSP12").data("kendoDatePicker").enable(true);
+                $("#dtpSP13").data("kendoDatePicker").enable(true);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+            default:
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $('#lblOffice').attr('style', 'display:none;');
+                $('#Office').attr('style', 'display:none;');
+                break;
+        }        
+        subResetToolBar();
+    }
 
     function onRowParamSelect(e) {
         var data = this.dataItem(this.select());
@@ -516,7 +608,7 @@
        
         };
 
-        function ValidateOffice(OfficeId, result) {
+    function ValidateOffice(OfficeId, result) {
             $.ajax({
                 type: 'GET',
                 url: '/Global/ValidateOffice',

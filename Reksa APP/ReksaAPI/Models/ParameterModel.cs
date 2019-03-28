@@ -46,7 +46,7 @@ namespace ReksaAPI.Models
         public string textPctSwc { get; set; }
         public System.DateTime TanggalValuta { get; set; }
         public int Id { get; set; }
-}
+    }
 
     public class ReksaParamFeeSubs
     {
@@ -76,6 +76,33 @@ namespace ReksaAPI.Models
         public int GLNumber { get; set; }
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
+    }
+
+    public class MaintainFeeSubs
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public decimal minPctFeeEmployee { get; set; }
+        public decimal maxPctFeeEmployee { get; set; }
+        public decimal minPctFeeNonEmployee { get; set; }
+        public decimal maxPctFeeNonEmployee { get; set; }
+        public List<ListSettingGL> dtSettingGL { get; set; }
+        public List<listTieringSubsFee> dtTieringSubsFee { get; set; }
+    }
+    public class ListSettingGL
+    {
+        public int Seq { get; set; }
+        public string NamaGL { get; set; }
+        public int NomorGL { get; set; }
+        public decimal Persentase { get; set; }
+        public string OfficeId { get; set; }
+    }
+
+    public class listTieringSubsFee
+    {
+        public decimal PercentFrom { get; set; }
+        public decimal PercentTo { get; set; }
+        public string Persetujuan { get; set; }
     }
 
     //Harja

@@ -45,8 +45,8 @@
         var selectedName = $("#CustomerRedempSelectedName").val();
         var selectedId = $("#CustomerRedempSelectedId").val();
 
-        $("input[id='CIFNoRedemp']").val(selectedCode).change();
-        $("input[id='CIFNameRedemp']").val(selectedName);
+        $("input[id='srcCIFRedemp_text1']").val(selectedCode).change();
+        $("input[id='srcCIFRedemp_text2']").val(selectedName);
         $("input[name='CustomerModel.NasabahId']").val(selectedId);
 
     });

@@ -1,14 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Search Referentor";
+    ViewBag.Title = "Search Seller";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
 
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchReferentor() {
-        var value = $("#ReferentorSearchComponentSearchTxt").val();
-        var grid = $("#ReferentorSearchComponentGrid").data("kendoGrid");
+    function onSearchSeller() {
+        var value = $("#SellerSearchComponentSearchTxt").val();
+        var grid = $("#SellerSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -29,33 +29,28 @@
         }
     }
 
-    function onRowReferentorSelect(e) {
+    function onRowSellerSelect(e) {
         var data = this.dataItem(this.select());
         var dataId = $.trim(data.EMPLID);
         var dataName = $.trim(data.NAME);
 
-        $("#ReferentorSelectedId").val(dataId);
-        $("#ReferentorSelectedText").val(dataName);
+        $("#SellerSelectedId").val(dataId);
+        $("#SellerSelectedText").val(dataName);
     };
 
-    $("#ReferentorSelectButton").on("click", function () {
-        var selectedId = $("#ReferentorSelectedId").val();
-        var selectedText = $("#ReferentorSelectedText").val();
+    $("#SellerSelectButton").on("click", function () {
+        var selectedId = $("#SellerSelectedId").val();
+        var selectedText = $("#SellerSelectedText").val();
 
-        if (parameterSeq && parameterSeq > 0) {
-            $("#Referentor-" + parameterType + "-" + parameterSeq + " .Referentor_EMPLID").val(selectedId).change();
-            $("#Referentor-" + parameterType + "-" + parameterSeq + " .Referentor_NAME").val(selectedText);
-        } else {
-            $("input[name='ReferentorModel.EMPLID']").val(selectedId).change();
-            $("input[name='ReferentorModel.NAME']").val(selectedText);
-        }
+        $("input[id='srcSellerSubs_text1']").val(selectedId).change();
+        $("input[id='srcSellerSubs_text2']").val(selectedText);
     });
 
-    $("#ReferentorSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#SellerSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ReferentorSearchComponentSearchBtn").click();
+            $("#SellerSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -67,27 +62,17 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.ReferentorModel>()
-            .Name("ReferentorSearchComponentGrid")
+            .Name("SellerSearchComponentGrid")
             .Columns(columns =>
             {
-                columns.Bound(m => m.EMPLID);
-                columns.Bound(m => m.NAME);
+                columns.Bound(m => m.EMPLID).Width(100).Title("Seller Id");
+                columns.Bound(m => m.NAME).Width(100).Title("Seller Name");
             })
-            @*.ToolBar(toolbar =>
+            .ToolBar(toolbar =>
             {
-                toolbar.Template(@<text>
-                <div class="toolbar">
-                    @Html.Kendo().TextBox().Name("ReferentorSearchComponentSearchTxt").Value(search)
-                    @(Html.Kendo().Button()
-                            .HtmlAttributes(new { type = "button" })
-                            .Name("ReferentorSearchComponentSearchBtn")
-                            .Content("Search")
-                            .Events(ev => ev.Click("onSearchReferentor"))
-                    )
-                </div>
-                </text>);
-            })*@
-            .Events(events => events.Change("onRowReferentorSelect"))
+                toolbar.ClientTemplateId("GridToolbarTemplate");
+            })
+            .Events(events => events.Change("onRowSellerSelect"))
             .Pageable()
             .Scrollable()
             .Selectable(selectable => selectable
@@ -102,11 +87,22 @@
                 .Read(read => read.Action("SearchReferentorData", "Global", new { search = search, criteria = criteria }))
             )
         )
-        <input type="hidden" id="ReferentorSelectedId" name="ReferentorSelectedId" value="" />
-        <input type="hidden" id="ReferentorSelectedText" name="ReferentorSelectedText" value="" />
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("SellerSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("SellerSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchSeller")).ToClientTemplate()
+            )
+        </div>
+        </script>
+        <input type="hidden" id="SellerSelectedId" name="SellerSelectedId" value="" />
+        <input type="hidden" id="SellerSelectedText" name="SellerSelectedText" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ReferentorSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="SellerSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

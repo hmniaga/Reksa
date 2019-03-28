@@ -12,6 +12,7 @@ namespace Reksa.ViewModels
         public List<TransactionModel.SubscriptionList> ListSubscription { get; set; }
         public List<TransactionModel.RedemptionList> ListRedemption { get; set; }
         public List<TransactionModel.SubscriptionRDBList> ListSubsRDB { get; set; }
+        public List<TransactionModel.ErrorListSubs> ListErrorSubs { get; set; }
         public TransactionModel.SwitchingNonRDBModel TransactionSwitching { get; set; }
         public TransactionModel.SwitchingRDBModel TransactionSwitchingRDB { get; set; }
         public TransactionModel.BookingModel TransactionBooking { get; set; }
@@ -19,6 +20,7 @@ namespace Reksa.ViewModels
         public CustomerIdentitasModel CustomerIdentitas { get; set; }
         public RiskProfileModel RiskProfileModel { get; set; }
         public ProductModel ProductModel { get; set; }
+        public TransaksiProduct TransaksiProduct { get; set; }
         public OfficeModel OfficeModel { get; set; }
         public ClientModel ClientModel { get; set; }        
         public CustomerModel CustomerModel { get; set; }

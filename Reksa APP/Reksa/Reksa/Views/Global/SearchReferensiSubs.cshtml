@@ -40,10 +40,10 @@
 
     $("#ReferensiSubsSelectButton").on("click", function () {
         var selectedRefID = $("#ReferensiSubsSelectedRefID").val();
-        var selectedtanggalTransaksi = $("#ReferensiSubsSelectedtanggalTransaksi").val();
-
-        $("input[id='RefIDSubs']").val(selectedRefID).change();
-        $("input[id='RefNameSubs']").val(selectedtanggalTransaksi);
+        var selectedtanggalTransaksi = $("#ReferensiSubsSelectedtanggalTransaksi").val();        
+        var tgltransaksi = new Date(selectedtanggalTransaksi);
+        $("input[id='srcNoRefSubs_text1']").val(selectedRefID).change();
+        $("input[id='srcNoRefSubs_text2']").val(tgltransaksi.getDate() + '/' + (tgltransaksi.getMonth() + 1) + '/' + tgltransaksi.getFullYear());
 
     });
 

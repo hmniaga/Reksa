@@ -946,10 +946,11 @@ namespace ReksaQuery
 
         public bool ExecProc(string strProc,
                 ref List<SqlParameter> dbParam,
-                out System.Data.DataSet dsResult, out SqlCommand cmdOut)
+                out System.Data.DataSet dsResult, out SqlCommand cmdOut, out string ErrMsg)
         {
             dsResult = null;
             cmdOut = new SqlCommand();
+            ErrMsg = "";
             if (!CheckTanggal(StartDate))
                 return false;
 
@@ -957,17 +958,18 @@ namespace ReksaQuery
                 m_strUserName, m_strPassword, m_UseSSL);
             return fnExecProc(_strGuid, strProc, _strCon, m_intTimeout,
                 _ErrorExtHandled, ref dbParam, out dsResult, _ReplaceUser
-                , m_strUserName, strShownUser, _ShowDebug, out cmdOut);
+                , m_strUserName, strShownUser, _ShowDebug, out cmdOut, out ErrMsg);
         }
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
             bool ExtError, ref List<SqlParameter> dbParam,
             out System.Data.DataSet dsResult,
             bool ReplaceError, string strUser, string strUserReplace, bool UseDebug, 
-            out SqlCommand cmdOut)
+            out SqlCommand cmdOut, out string ErrMsg)
         {
             bool iRet = true;
             cmdOut = new SqlCommand();
+            ErrMsg = "";
 
             int DebugNo = 0;
 
@@ -1006,6 +1008,8 @@ namespace ReksaQuery
             catch (SqlException oleEx)
             {
                 SettingError(oleEx, ExtError, ReplaceError, strUser, strUserReplace);
+                ErrMsg = oleEx.Errors[0].Message.ToString();
+                cmdOut = cmd;
                 dsResult = null;
                 iRet = false;
             }
@@ -1018,6 +1022,8 @@ namespace ReksaQuery
                     string[] str = new string[2];
                     str[0] = ex.Source;
                     str[1] = ex.Message;
+                    cmdOut = cmd;
+                    ErrMsg = ex.Message;
                     queError.Enqueue(str);
                 }
                 dsResult = null;

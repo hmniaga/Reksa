@@ -10,22 +10,14 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Client Code</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @required = "required", @id = "BlokirClientCode" }).Enable(true)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
                             <span class="input-group-btn">
-                                <a id="searchClient" onclick="onsearchClient();" href="" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcClient"  href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientName" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
                             @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
                         </div>
-                        <script>
-                            function onsearchClient() {
-                                //$('#ClientModal').removeData();
-                                var CIFNo = $('#CIFNo').val();
-                                var url = '@Html.Raw(Url.Action("SearchClientbyCIF", "Global"))';
-                                $('#searchClient').attr('href', url + '?CIFNo=' + CIFNo);                        
-                    }
-                        </script>
                     </div>
                 </div>
                 <!-- End Search Client -->
@@ -36,7 +28,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Unit Blokir</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBox().Name("UnitBlokir").HtmlAttributes(new { @class = "form-control input-sm", @required = "required" }).Enable(false)
+                            @Html.Kendo().TextBox().Name("MoneyBlokir").HtmlAttributes(new { @class = "form-control input-sm", @required = "required" }).Enable(false)
                             
                         </div>
                     </div>
@@ -47,7 +39,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Tgl Blokir</label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("TanggalBlokir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            @(Html.Kendo().DatePicker().Name("dtpTglTran").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
                     </div>
                 </div>
@@ -59,7 +51,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Outstanding Unit</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decOutStanding).HtmlAttributes(new { @id = "decOutStanding", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decOutStanding).HtmlAttributes(new { @id = "OutsUnit", @class = "form-control input-sm" }).Enable(false)
                         </div>
                     </div>
                 </div>
@@ -69,7 +61,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Tgl Expiry Blokir</label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("TanggalExpiryBlokir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            @(Html.Kendo().DatePicker().Name("dtpExpiry").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
                     </div>
                 </div>
@@ -81,7 +73,7 @@
                     <div class="form-group">
                         <label class="col-sm-5 control-label">Jml Unit Blokir</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decTotal).HtmlAttributes(new { @id = "decTotal", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decTotal).HtmlAttributes(new { @id = "MoneyTotal", @class = "form-control input-sm" }).Enable(false)
                         </div>
                     </div>
                 </div>
@@ -92,7 +84,7 @@
 </div>
 <div class="col-md-12">
     @(Html.Kendo().Grid(Model.CustomerBlokir)
-                            .Name("GridBlokir")
+                            .Name("dgvBlokir")
                             .Columns(columns =>
                             {
                                 columns.Bound(p => p.BlockId).Width(100).Title("Block Id");
@@ -110,7 +102,6 @@
 
     )
 </div>
-
 <div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>
@@ -118,14 +109,24 @@
 </div>
 
 <script>
+    $("#srcClient").click(function (ev) {
+        ev.preventDefault();
+        var CIFNo = $('#srcCIF_text1').val();
+        var url = '@Html.Raw(Url.Action("SearchClientbyCIF", "Global"))';
+        var target = $(this).attr('href', url + '?CIFNo=' + CIFNo);
+        $("#ClientModal .modal-content").load(target, function () {
+            $("#ClientModal .modal-content").empty().append(this);
+        });
+    });
+
     function onRowBlokirSelect(e) {
         var data = this.dataItem(this.select());
         $("#BlokirId").val(data.BlockId);
-        $("#UnitBlokir").val(data.UnitBlokir);
+        $("#MoneyBlokir").val(data.UnitBlokir);
         var TanggalBlokir = new Date(data.TanggalBlokir);
-        $("#TanggalBlokir").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());
+        $("#dtpTglTran").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());
         var TanggalExpiryBlokir = new Date(data.TanggalExpiryBlokir);
-        $("#TanggalExpiryBlokir").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());
+        $("#dtpExpiry").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());
     };
 
 </script>

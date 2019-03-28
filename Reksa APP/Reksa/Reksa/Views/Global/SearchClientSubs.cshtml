@@ -2,8 +2,7 @@
     ViewBag.Title = "Search Client";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
+    int ProdId = (int)ViewBag.ProdId;
 
     Layout = null;
 }
@@ -48,8 +47,8 @@
         var selectedClientId = $("#ClientSubsSelectedClientId").val();
 
        
-        $("input[id='ClientCodeSubs']").val(selectedId).change();
-        $("input[id='ClientNameSubs']").val(selectedText);
+        $("input[id='srcClientSubs_text1']").val(selectedId).change();
+        $("input[id='srcClientSubs_text2']").val(selectedText);
         $("input[name='ClientModel.ClientId']").val(selectedClientId);
         
     });
@@ -104,7 +103,7 @@
                 {
                     model.Id(m => m.ClientCode);
                 })
-                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria }))
+                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria, ProdId= ProdId }))
             )
         )
 

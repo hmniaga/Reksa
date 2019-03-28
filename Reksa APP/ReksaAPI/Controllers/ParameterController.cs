@@ -45,16 +45,94 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult PopulateParamFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
         {
+            bool blnResult;
+            string ErrMsg;
             List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
             List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
             List<ReksaListGLFeeSubs> listReksaListGLFeeSubs = new List<ReksaListGLFeeSubs>();
 
-            DataSet dsOut = new DataSet();
-            cls.ReksaPopulateParamFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFeeSubs, ref listReksaTieringNotificationSubs, ref listReksaListGLFeeSubs);
-            //return Json(dsOut);
-            return Json(new { listReksaParamFeeSubs, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
+            blnResult = cls.ReksaPopulateParamFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFeeSubs, ref listReksaTieringNotificationSubs, ref listReksaListGLFeeSubs, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listReksaParamFeeSubs, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
         }
 
+        [Route("api/Parameter/MaintainSubsFee")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainSubsFee([FromQuery]int NIK, [FromQuery]string Module, [FromBody]MaintainFeeSubs model)
+        {
+            bool blnResult = false ;
+            string ErrMsg = "";
+            DataTable dtTieringSubsFee = new DataTable();
+            dtTieringSubsFee.Columns.Add("PercentFrom");
+            dtTieringSubsFee.Columns.Add("PercentTo");
+            dtTieringSubsFee.Columns.Add("Persetujuan");
+            dtTieringSubsFee.Columns["PercentFrom"].DataType = System.Type.GetType("System.Decimal");
+            dtTieringSubsFee.Columns["PercentTo"].DataType = System.Type.GetType("System.Decimal");
+
+            DataTable dtSettingGL = new DataTable();
+            dtSettingGL.Columns.Add("Seq");
+            dtSettingGL.Columns.Add("NamaGL");
+            dtSettingGL.Columns.Add("NomorGL");
+            dtSettingGL.Columns.Add("OfficeId");
+            dtSettingGL.Columns.Add("Persentase");
+            dtSettingGL.Columns["Persentase"].DataType = System.Type.GetType("System.Decimal");
+            if (model.dtSettingGL != null)
+            {
+                for (int i = 0; i < model.dtSettingGL.Count; i++)
+                {
+                    DataRow dtrGL = dtSettingGL.NewRow();
+                    dtrGL["Seq"] = model.dtSettingGL[i].Seq;
+                    dtrGL["NamaGL"] = model.dtSettingGL[i].NamaGL;
+                    dtrGL["NomorGL"] = model.dtSettingGL[i].NomorGL;
+                    dtrGL["OfficeId"] = model.dtSettingGL[i].OfficeId;
+                    dtrGL["Persentase"] = model.dtSettingGL[i].Persentase;
+                    dtSettingGL.Rows.Add(dtrGL);
+                }
+            }
+            if (model.dtTieringSubsFee != null)
+            {
+                for (int i = 0; i < model.dtTieringSubsFee.Count; i++)
+                {
+                    DataRow dtrGL = dtTieringSubsFee.NewRow();
+                    dtrGL["PercentFrom"] = model.dtTieringSubsFee[i].PercentFrom;
+                    dtrGL["PercentTo"] = model.dtTieringSubsFee[i].PercentTo;
+                    dtrGL["Persetujuan"] = model.dtTieringSubsFee[i].Persetujuan;
+                    dtTieringSubsFee.Rows.Add(dtrGL);
+                }
+            }
+
+            System.IO.StringWriter strXMLSettingGL = new System.IO.StringWriter();
+            dtSettingGL.TableName = "SettingGL";
+            dtSettingGL.WriteXml(strXMLSettingGL, System.Data.XmlWriteMode.IgnoreSchema, false);
+
+            System.IO.StringWriter strXMLTieringNotif = new System.IO.StringWriter();
+            dtTieringSubsFee.TableName = "TieringNotif";
+            dtTieringSubsFee.WriteXml(strXMLTieringNotif, System.Data.XmlWriteMode.IgnoreSchema, false);
+
+            blnResult = cls.ReksaMaintainSubsFee(NIK, Module, 
+                model.ProdId, 
+                model.minPctFeeEmployee, 
+                model.maxPctFeeEmployee, 
+                model.minPctFeeNonEmployee, 
+                model.maxPctFeeNonEmployee, strXMLTieringNotif, strXMLSettingGL, model.TrxType, out ErrMsg);
+
+            ErrMsg = ErrMsg.Replace("ReksaMaintainSubsFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+
+        [Route("api/Parameter/ValidateGL")]
+        [HttpGet("{id}")]
+        public JsonResult ValidateGL([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string NomorGL)
+        {
+            bool blnResult;
+            string ErrMsg;
+            string strNamaGL;
+
+            blnResult = cls.ReksaValidateGL(NIK, Module, NomorGL, out strNamaGL, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaValidateGL - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, strNamaGL });
+        }
+        
         [Route("api/Parameter/PopulateVerifyGlobalParam")]
         [HttpGet("{id}")]
         public JsonResult PopulateVerifyGlobalParam([FromQuery]string ProdId, [FromQuery]string InterfaceId, [FromQuery]int NIK)

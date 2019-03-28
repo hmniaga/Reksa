@@ -74,20 +74,34 @@ namespace ReksaAPI.Controllers
             return Json(intUmur);
         }
         [Route("api/Global/GetNoNPWPCounter")]
-        [HttpGet("{id}")]
-        public JsonResult GetNoNPWPCounter([FromQuery]string CIFNo)
+        [HttpGet]
+        public JsonResult GetNoNPWPCounter()
         {
-            string strNoDocNPWP = "";
-            strNoDocNPWP = cls.ReksaGetNoNPWPCounter();
-            return Json(strNoDocNPWP);
+            bool blnResult;
+            string strNoDocNPWP, ErrMsg;
+            blnResult = cls.ReksaGetNoNPWPCounter(out strNoDocNPWP, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetNoNPWPCounter - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, strNoDocNPWP });
+        }
+        [Route("api/Global/ValidateOfficeId")]
+        [HttpGet("{id}")]
+        public JsonResult ValidateOfficeId([FromQuery]string OfficeId)
+        {
+            int isAllowed;
+            bool blnResult;
+            string ErrMsg;
+            blnResult = cls.ReksaValidateOfficeId(OfficeId, out isAllowed, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaValidateOfficeId - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, isAllowed });
         }
         [Route("api/Global/ValidateCBOOfficeId")]
         [HttpGet("{id}")]
         public JsonResult ValidateCBOOfficeId([FromQuery]string OfficeID)
         {
-            string IsEnable = ""; string strErrorMessage = ""; string strErrorCode = "";
-            cls.ReksaValidateCBOOfficeId(OfficeID, out IsEnable, out strErrorMessage, out strErrorCode);
-            return Json(new {IsEnable, strErrorMessage, strErrorCode});
+            bool blnResult;
+            string IsEnable = ""; string strErrorMessage = "";
+            blnResult = cls.ReksaValidateCBOOfficeId(OfficeID, out IsEnable, out strErrorMessage);
+            return Json(new { blnResult, strErrorMessage, IsEnable});
         }       
         [Route("api/Global/GetSrcAgen")]
         [HttpGet("{id}")]
@@ -115,6 +129,19 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcBooking(Col1, Col2, Validate, Criteria);
             return Json(list);
         }
+        [Route("api/Global/GetSrcCIF")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcCIF([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.Customer> list = new List<SearchModel.Customer>();
+            //if (cls.setCFMAST(""))
+            //{
+            list = cls.ReksaSrcCIF(Col1, Col2, Validate);
+            //cls.clearDATA("CFMAST_v");
+            //}
+            return Json(list);
+        }
+
         [Route("api/Global/GetSrcCustomer")]
         [HttpGet("{id}")]
         public JsonResult GetSrcCustomer([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)

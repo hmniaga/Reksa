@@ -24,7 +24,6 @@ namespace Reksa.Controllers
         private IConfiguration _config;
         private string _strAPIUrl;
         #endregion
-
         public ParameterController(IConfiguration iconfig)
         {
             _config = iconfig;
@@ -126,7 +125,6 @@ namespace Reksa.Controllers
             vModel.Parameter = list;
             return Json(vModel);
         }
-
         public ActionResult RefreshWARPED(int NIK)
         {
             bool blnResult = false;
@@ -162,6 +160,33 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, strErrMsg, Name, JobTittle });
         }
+        public JsonResult ValidateGL(string NomorGL)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strNamaGL = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/ValidateGL?NIK=" + _intNIK + "&Module=" + strModule + "&NomorGL=" + NomorGL).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    strNamaGL = strObject.SelectToken("strNamaGL").Value<string>(); 
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg, strNamaGL });
+        }
 
         [HttpPost]
         public ActionResult MaintainParamGlobal([FromBody] MaintainParamGlobal MaintParamGlobal)
@@ -192,69 +217,105 @@ namespace Reksa.Controllers
                 return Json(new { blnResult, strErrMsg });
             }
             return Json(new { blnResult, strErrMsg });
-        }
-        
+        }        
         //Alvin, begin
         public IActionResult SubscriptionFee()
         {
             ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
             return View(vModel1);
         }
-
-        public IActionResult RefreshSubscriptionFee(int ProdukId)
+        public JsonResult RefreshSubscriptionFee(int ProdukId)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             List<ReksaParamFeeSubs> listReksaParamFeeSubs = new List<ReksaParamFeeSubs>();
             List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs = new List<ReksaTieringNotificationSubs>();
             List<ReksaListGLFeeSubs> listReksaListGLFeeSubs = new List<ReksaListGLFeeSubs>();
             ReksaParamFeeSubs listFee = new ReksaParamFeeSubs();
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateParamFee?NIK=10001&strModule=Pro Reksa 2&ProdId=" + ProdukId + "&TrxType=SUBS").Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateParamFee?NIK="+ _intNIK +"&strModule="+ strModule +"&ProdId=" + ProdukId + "&TrxType=SUBS").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(stringData);
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken strTokenParamFeeSubs = strObject["listReksaParamFeeSubs"];
+                    JToken strTokenTiering = strObject["listReksaTieringNotificationSubs"];
+                    JToken strTokenGL = strObject["listReksaListGLFeeSubs"];
+                    string strJsonParamFeeSubs = JsonConvert.SerializeObject(strTokenParamFeeSubs);
+                    string strJsonTiering = JsonConvert.SerializeObject(strTokenTiering);
+                    string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
 
-                JToken strTokenParamFeeSubs = strObject["listReksaParamFeeSubs"];
-                JToken strTokenTiering = strObject["listReksaTieringNotificationSubs"];
-                JToken strTokenGL = strObject["listReksaListGLFeeSubs"];
-                string strJsonParamFeeSubs = JsonConvert.SerializeObject(strTokenParamFeeSubs);
-                string strJsonTiering = JsonConvert.SerializeObject(strTokenTiering);
-                string strJsonGL = JsonConvert.SerializeObject(strTokenGL);
+                    listReksaParamFeeSubs = JsonConvert.DeserializeObject<List<ReksaParamFeeSubs>>(strJsonParamFeeSubs);
+                    listReksaTieringNotificationSubs = JsonConvert.DeserializeObject<List<ReksaTieringNotificationSubs>>(strJsonTiering);
+                    listReksaListGLFeeSubs = JsonConvert.DeserializeObject<List<ReksaListGLFeeSubs>>(strJsonGL);
 
-                listReksaParamFeeSubs = JsonConvert.DeserializeObject<List<ReksaParamFeeSubs>>(strJsonParamFeeSubs);
-                listReksaTieringNotificationSubs = JsonConvert.DeserializeObject<List<ReksaTieringNotificationSubs>>(strJsonTiering);
-                listReksaListGLFeeSubs = JsonConvert.DeserializeObject<List<ReksaListGLFeeSubs>>(strJsonGL);
+                }
 
-            }
+                ParameterSubscriptionFeeListViewModel vModel = new ParameterSubscriptionFeeListViewModel();
+                if (listReksaParamFeeSubs.Count > 0)
+                {
+                    listFee = listReksaParamFeeSubs[0];
+                    vModel.ReksaParamFeeSubs = listFee;
+                    vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
+                    vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
+                }
+                else
+                {
+                    listFee.maxPctFeeEmployee = 0;
+                    listFee.maxPctFeeNonEmployee = 0;
+                    listFee.minPctFeeEmployee = 0;
+                    listFee.minPctFeeNonEmployee = 0;
+                }
 
-            ParameterSubscriptionFeeListViewModel vModel = new ParameterSubscriptionFeeListViewModel();
-            if (listReksaParamFeeSubs.Count > 0)
-            {
-                listFee = listReksaParamFeeSubs[0];
                 vModel.ReksaParamFeeSubs = listFee;
                 vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
                 vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
             }
-            else
+            catch (Exception ex)
             {
-                listFee.maxPctFeeEmployee = 0;
-                listFee.maxPctFeeNonEmployee = 0;
-                listFee.minPctFeeEmployee = 0;
-                listFee.minPctFeeNonEmployee = 0;
+                ErrMsg = ex.Message;
+                return Json(new { blnResult, ErrMsg, listFee, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
             }
-
-            vModel.ReksaParamFeeSubs = listFee;
-            vModel.ReksaTieringNotificationSubs = listReksaTieringNotificationSubs;
-            vModel.ReksaListGLFeeSubs = listReksaListGLFeeSubs;
-
-            return View("SubscriptionFee", vModel);
+            return Json( new { blnResult,  ErrMsg , listFee, listReksaTieringNotificationSubs , listReksaListGLFeeSubs });
+        }
+        [HttpPost]
+        public ActionResult SaveFeeSubs([FromBody] MaintainFeeSubs MaintainFeeSubs)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(MaintainFeeSubs));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Parameter/MaintainSubsFee?NIK=" + _intNIK + "&Module=" + strModule, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    JToken TokenResult = strObject["blnResult"];
+                    JToken TokenErrMsg = strObject["errMsg"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
         }
         //Alvin, end
-
         //Nico
         public IActionResult MaintenanceFee()
         {
@@ -291,7 +352,6 @@ namespace Reksa.Controllers
                 listReksaListGLMFee = JsonConvert.DeserializeObject<List<ListGLMFeeModel>>(strJsonGL);
 
             }
-
             ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
             if (listReksaParamMFee.Count > 0)
             {

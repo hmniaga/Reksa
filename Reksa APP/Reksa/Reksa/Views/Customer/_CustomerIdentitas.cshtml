@@ -5,7 +5,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">SID</label>
         <div class="input-group">
-            @Html.Kendo().TextBox().Name("SID").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            @Html.Kendo().TextBox().Name("textSID").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
         </div>
     </div>
     <!-- End Input SID -->
@@ -13,8 +13,8 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">Shareholder ID</label>
         <div class="input-group">
-            @Html.Kendo().TextBox().Name("ShareholderID").HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 45%;" }).Enable(false)
-            <button id="buttoncreateSID" class="btn btn-info waves-effect waves-light" onclick="createSID()" disabled>
+            @Html.Kendo().TextBox().Name("textShareHolderId").HtmlAttributes(new { @class = "form-control input-sm", @style = "width: 45%;" }).Enable(false)
+            <button id="btnShareHolder" class="btn btn-info waves-effect waves-light" onclick="GenerateSHDID()">
                 <span class="btn-label">
                     <i class="fa fa-plus"></i>
                 </span>
@@ -27,7 +27,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Nama Pemilik</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("NamaPemilik").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("tbNama").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     <!-- End Input Nama Pemilik -->
@@ -35,16 +35,16 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Tempat/Tanggal Lahir</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("CIFBirthPlace").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
-                @(Html.Kendo().DatePicker().Name("CIFBirthDay").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100px;" }).Enable(false))
+                @Html.Kendo().TextBox().Name("tbTmptLahir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                @(Html.Kendo().DatePicker().Name("dtpTglLahir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100px;" }).Enable(false))
             </div>
         </div>  
     <!-- End Input Tempat/Tanggal Lahir -->
     <!-- Begin Input KTP -->
         <div class="form-group">
-            <label class="col-sm-3 control-label">KTP</label>
+            <label class="col-sm-3 control-label">KTP / PasPort</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("CIFIDNo").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("tbKTP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     <!-- End Input KTP -->
@@ -52,7 +52,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">No. HP</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("HP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("tbHP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     <!-- End Input No. HP -->
@@ -60,7 +60,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Email</label>
             <div class="input-group">
-                @Html.Kendo().TextBox().Name("Email").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("txtEmail").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     <!-- End Input Email -->
@@ -68,7 +68,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Tanggal Bergabung</label>
             <div class="input-group">
-                @(Html.Kendo().DatePicker().Name("CreateDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
+                @(Html.Kendo().DatePicker().Name("dtpJoinDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
             </div>
         </div>
     <!-- End Input Tanggal Bergabung -->
@@ -78,7 +78,7 @@
     <div class="form-group">
         <label class="col-sm-6 control-label">Jenis Risk Profile</label>
         <div class="input-group">
-            @Html.Kendo().TextBox().Name("RiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
+            @Html.Kendo().TextBox().Name("txtbRiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
         </div>
     </div>
     <!-- End Input Jenis Risk Profile -->
@@ -86,7 +86,11 @@
     <div class="form-group">
         <label class="col-sm-6 control-label">Last Update Risk Profile</label>
         <div class="input-group">
-            @(Html.Kendo().DatePicker().Name("LastUpdate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%;" }).Enable(false))
+            @(Html.Kendo().DatePicker().Name("dtpRiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%;" }).Enable(false)
+                .Events(e =>
+    {
+        e.Change("onChangedtpRiskProfile");
+    }))
         </div>
     </div>
     <!-- End Date Last Update Risk Profile -->
@@ -94,7 +98,7 @@
     <div class="form-group">
         <label class="col-sm-6 control-label">Expired Date Risk Profile</label>
         <div class="input-group">
-            @(Html.Kendo().DatePicker().Name("DateExpRiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%;" }).Enable(false))
+            @(Html.Kendo().DatePicker().Name("dtExpiredRiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%;" }).Enable(false))
         </div>
     </div>
     <!-- End Date Expired Date Risk Profile -->
@@ -103,7 +107,7 @@
         <label class="col-sm-3 control-label"></label>
         <div class="input-group">
             <div class="checkbox checkbox-custom checkbox-circle">
-                @Html.Kendo().CheckBox().Name("PhoneOrder").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Transaksi melalui Telepon")
+                @Html.Kendo().CheckBox().Name("checkPhoneOrder").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Transaksi melalui Telepon")
             </div>
         </div>
     </div>
@@ -116,7 +120,7 @@
             <div><label class="col-sm-12 control-label">No Rekening IDR</label></div>
             <span class="input-group-btn"></span>
             <div>
-                @Html.Kendo().TextBox().Name("AccountId").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("maskedRekening").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
             <span class="input-group-btn"></span>
             <div>
@@ -124,7 +128,7 @@
             </div>
             <span class="input-group-btn"></span>
             <div>
-                @Html.Kendo().TextBox().Name("AccountName").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("tbNamaRekening").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     </div>
@@ -136,13 +140,13 @@
             <label class="col-sm-12 control-label">No Rekening USD</label>
             <span class="input-group-btn"></span>
             <div></div>
-            @Html.Kendo().TextBox().Name("AccountIdUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            @Html.Kendo().TextBox().Name("maskedRekeningUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             <span class="input-group-btn"></span>
             <div></div>
             <label class="col-sm-12 control-label">Nama Rekening USD</label>
             <span class="input-group-btn"></span>
             <div></div>
-            @Html.Kendo().TextBox().Name("AccountNameUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+            @Html.Kendo().TextBox().Name("tbNamaRekeningUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
         </div>
     </div>
     <!-- End Input No Rekening USD -->
@@ -154,7 +158,7 @@
             </div>
                 <span class="input-group-btn"></span>
             <div>
-                @Html.Kendo().TextBox().Name("AccountIdMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("maskedRekeningMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
                 <span class="input-group-btn"></span>
             <div>
@@ -162,7 +166,7 @@
             </div>
             <span class="input-group-btn"></span>
             <div>
-                @Html.Kendo().TextBox().Name("AccountNameMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                @Html.Kendo().TextBox().Name("tbNamaRekeningMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
             </div>
         </div>
     </div>
@@ -173,15 +177,15 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">Karyawan</label>
         <div class="input-group">
-            @(Html.Kendo().DropDownList().Name("StatusEmployee")
+            @(Html.Kendo().DropDownList().Name("cbStatus")
                             .BindTo(new List<SelectListItem>() {
                             new SelectListItem() {
                             Text = "Karyawan",
-                            Value = "1"
+                            Value = "0"
                             },
                             new SelectListItem() {
                             Text = "Non Karyawan",
-                            Value = "0"
+                            Value = "1"
                             }
                             })
                             .DataTextField("Text")
@@ -193,13 +197,13 @@
     <!-- End DropDown Status Karyawan -->
     <!-- Begin Search NIK -->
     <div class="form-group">
-        <label class="col-sm-3 control-label">NIK</label>
+        <label class="col-sm-3 control-label">NIK Karyawan</label>
         <div class="input-group" style="width: 50%">
-            @Html.Kendo().TextBoxFor(model => model.Referentor.EMPLID).HtmlAttributes(new { @class = "form-control input-sm", @id = "EmployeeId" }).Enable(false)
+            @Html.Kendo().TextBoxFor(model => model.Referentor.EMPLID).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcEmployee_text1" }).Enable(false)
             <span class="input-group-btn">
-                <a id ="searchNIK"href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                <a id ="srcEmployee" href="@Url.Action("SearchEmployee", "Global")" data-toggle="modal" data-target="#NIKModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
             </span>
-            @Html.Kendo().TextBoxFor(model => model.Referentor.NAME).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "EmployeeName" }).Enable(false)
+            @Html.Kendo().TextBoxFor(model => model.Referentor.NAME).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcEmployee_text2" }).Enable(false)
         </div>
     </div>
     <!-- End Search NIK -->
@@ -213,15 +217,13 @@
                 <div class="input-group">
                     <label class="col-sm-12 control-label">Daftar Kelengkapan Dokumen</label>
                     <span class="input-group-btn"></span>
-                    @(Html.Kendo().CheckBox().Name("isDocRiskProfile")
-                    .Label("Kuesioner Profil Resiko")
-                    .HtmlAttributes(new { @class = "col-sm-6 control-label" })
-                    .Enable(false))
-                    <span class="input-group-btn"></span>
-                    @(Html.Kendo().CheckBox().Name("isDocTermCond")
-                    .HtmlAttributes(new { @class = "col-sm-6 control-label" })
-                    .Label("Ketentuan Umum")
-                    .Enable(false))
+                    <div class="checkbox checkbox-custom checkbox-circle">
+                        @(Html.Kendo().CheckBox().Name("cbProfilResiko").Label("Kuesioner Profil Resiko").HtmlAttributes(new { @class = "col-sm-6 control-label" }).Enable(false))
+                        <span class="input-group-btn"></span>
+                    </div>
+                    <div class="checkbox checkbox-custom checkbox-circle">
+                        @(Html.Kendo().CheckBox().Name("cbKetum").HtmlAttributes(new { @class = "col-sm-6 control-label" }).Label("Ketentuan Umum").Enable(false))
+                    </div>
                 </div>
             </div>
             <!-- End Kelengkapan Dokumen -->
@@ -234,12 +236,11 @@
         <!-- Begin Alamat Nasabah -->
         <div class="row">
             <div class="col-md-6">
-                <form class="form-horizontal" role="form" style="padding-top:2%; padding-bottom:2%">
                     <div class="form-group">                        
                         <div class="input-group">
                             <label class="col-sm-12 control-label">Surat Konfirmasi dikirim ke</label>
                             <span class="input-group-btn"></span>
-                            @(Html.Kendo().DropDownList().Name("KonfirmasiAlamat")
+                            @(Html.Kendo().DropDownList().Name("cbDikirimKe")
                                 .BindTo(new List<SelectListItem>() {
                                 new SelectListItem() {
                                 Text = "Alamat Nasabah",
@@ -255,49 +256,41 @@
                                 .Value("0")
                                 .Events(e =>
                                 {
-                                e.Change("onChangeAddressType").DataBound("onBoundAddressType");
+                                    e.Change("onChangeAddressType").DataBound("onBoundAddressType");
                                 })
+                                .HtmlAttributes(new { style = "width: 200px;" })
                             )
                         </div>
                     </div>
-                </form>
             </div>
             <!-- Begin Grid KonfirmasiAddress -->
             <div class="col-md-12" id="divAlamatNasabah" style="display:none">
-                @(Html.Kendo().Grid(Model.CustomerKonfirmasiAddress)
-                .Name("GridKonfAddress")
-                .Columns(columns =>
-                {
-                    columns.Bound(p => p.Pilih)
-                    .ClientTemplate("<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= Sequence #' " +
-                    "# if (Pilih) { #" +
-                    "checked='checked'" +
-                    "# } #" +
-                    "/>")
-                    .ClientHeaderTemplate("<input type='checkbox' id='chkSelectAll' onclick='checkAll(this)'/>")
-                    .Width(30).Title("Pilih")
-                    .Sortable(false);
-                    columns.Bound(p => p.Sequence).Hidden();
-                    columns.Bound(p => p.KodePos).Width(85).Title("Kode Pos");
-                    columns.Bound(p => p.AddressLine1).Width(200).Title("AddressLine 1");
-                    columns.Bound(p => p.AddressLine2).Width(200).Title("AddressLine 2");
-                    columns.Bound(p => p.AddressLine3).Width(200).Title("AddressLine 3");
-                    columns.Bound(p => p.AddressLine4).Width(200).Title("AddressLine 4");
-                    columns.Bound(p => p.AlamatUtama).Width(120).Title("Alamat Utama");
-                    columns.Bound(p => p.KodeAlamat).Width(120).Title("Kode Alamat");
-                    columns.Bound(p => p.AlamatSID).Width(120).Title("Alamat SID");
-                    columns.Bound(p => p.PeriodThere).Width(120).Title("Period There");
-                    columns.Bound(p => p.PeriodThereCode).Width(150).Title("Period There Code");
-                    columns.Bound(p => p.JenisAlamat).Width(120).Title("Jenis Alamat");
-                    columns.Bound(p => p.StaySince).Width(120).Title("Stay Since");
-                    columns.Bound(p => p.Kelurahan).Width(200).Title("Kelurahan");
-                    columns.Bound(p => p.Kecamatan).Width(150).Title("Kecamatan");
-                    columns.Bound(p => p.Kota).Width(150).Title("Kota");
-                    columns.Bound(p => p.Provinsi).Width(150).Title("Provinsi");
-                }).Scrollable(s => s.Height(500))
-                .Selectable()
-                .Pageable()
-                )
+                <div class="row">
+                    @(Html.Kendo().Grid(Model.CustomerKonfirmasiAddress).Name("dgvKonfAddr")
+                        .Columns(columns => {
+                            columns.Bound(p => p.Pilih).ClientTemplate("<input type='checkbox' onclick='onCheckBoxKonfAddressClick(this)' value= '#= Sequence #' " + "# if (Pilih) { #" + "checked='checked'" + "# } #" + "/>").ClientHeaderTemplate("<input type='checkbox' id='chkKonfAddressSelectAll' onclick='checkKonfAddressAll(this)'/>").Width(30).Title("Pilih").Sortable(false);
+                            columns.Bound(p => p.Sequence).Hidden();
+                            columns.Bound(p => p.KodePos).Width(85).Title("Kode Pos");
+                            columns.Bound(p => p.AddressLine1).Width(200).Title("AddressLine 1");
+                            columns.Bound(p => p.AddressLine2).Width(200).Title("AddressLine 2");
+                            columns.Bound(p => p.AddressLine3).Width(200).Title("AddressLine 3");
+                            columns.Bound(p => p.AddressLine4).Width(200).Title("AddressLine 4");
+                            columns.Bound(p => p.AlamatUtama).Width(120).Title("Alamat Utama");
+                            columns.Bound(p => p.KodeAlamat).Width(120).Title("Kode Alamat");
+                            columns.Bound(p => p.AlamatSID).Width(120).Title("Alamat SID");
+                            columns.Bound(p => p.PeriodThere).Width(120).Title("Period There");
+                            columns.Bound(p => p.PeriodThereCode).Width(150).Title("Period There Code");
+                            columns.Bound(p => p.JenisAlamat).Width(120).Title("Jenis Alamat");
+                            columns.Bound(p => p.StaySince).Width(120).Title("Stay Since");
+                            columns.Bound(p => p.Kelurahan).Width(200).Title("Kelurahan");
+                            columns.Bound(p => p.Kecamatan).Width(150).Title("Kecamatan");
+                            columns.Bound(p => p.Kota).Width(150).Title("Kota");
+                            columns.Bound(p => p.Provinsi).Width(150).Title("Provinsi");
+                        }).Pageable()
+                        .Scrollable(s => s.Height(300))
+                        .Selectable(selectable => selectable.Mode(GridSelectionMode.Single)) 
+                        )
+                </div>
             </div>
             <!-- End Grid KonfirmasiAddress -->
         </div>
@@ -309,13 +302,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Cabang</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeIdCabang" }).Enable(true)
-
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcCabang_text1" }).Enable(true)
                         <span class="input-group-btn">
-                            <a id="searchOfficeCabang" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcCabang" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#CabangModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                         </span>
-
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "OfficeNameCabang" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcCabang_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Cabang -->
@@ -323,7 +314,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Alamat</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("AddressLine1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("tbAlamatSaatIni1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Alamat Cabang 1 -->
@@ -331,7 +322,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"></label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.AddressLine2).HtmlAttributes(new { @id = "AddressLine2", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.AddressLine2).HtmlAttributes(new { @id = "tbAlamatSaatIni2", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Alamat Cabang 2 -->
@@ -339,7 +330,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Pos</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.PostalCode).HtmlAttributes(new { @id = "PostalCode", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.PostalCode).HtmlAttributes(new { @id = "tbKodePos", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Pos -->
@@ -347,7 +338,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kota</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.Kota).HtmlAttributes(new { @id = "Kota", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.Kota).HtmlAttributes(new { @id = "tbKotaNasabahAlmt", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kota -->
@@ -355,7 +346,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Provinsi</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.Province).HtmlAttributes(new { @id = "Province", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.Province).HtmlAttributes(new { @id = "tbProvNasabahAlmt", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Provinsi -->
@@ -363,7 +354,8 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Last Updated</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.LastUpdatedDate).HtmlAttributes(new { @id = "LastUpdatedDate", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerBranchAddress.LastUpdatedDate).HtmlAttributes(new { @id = "txtLastUpdated", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+
                     </div>
                 </div>
                 <!-- End Last Updated -->
@@ -373,7 +365,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="KotaModal" tabindex="-1" role="dialog" aria-labelledby="KotaModalLabel">
+<div class="modal fade" id="NIKModal" tabindex="-1" role="dialog" aria-labelledby="NIKModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" id="CabangModal" tabindex="-1" role="dialog" aria-labelledby="CabangModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>
     </div>
@@ -381,22 +378,41 @@
 
 
 <script type="text/javascript">
-    $.ajaxSetup({ cache: false });
-    function createSID(e)
+    $("#srcEmployee").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#NIKModal .modal-content").load(target, function () {
+            $("#NIKModal .modal-content").empty().append(this);
+        });
+    });
+
+    $("#srcCabang").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#CabangModal .modal-content").load(target, function () {
+            $("#CabangModal .modal-content").empty().append(this);
+        });
+    });
+
+    function GenerateSHDID()
     {
         $.ajax({
             type: "GET",
-            url: "/Customer/GetShareHolderID",  
-            data: {},
+            url: "/Customer/GetShareHolderID", 
             dataType: "json",
-            success: function (result) {
-                $("#ShareholderID").val(result.strShareHolderID);
+            success: function (data) {
+                if (data.blnResult == true) {
+                    $("#textShareHolderId").val(data.ShareHolderID);
+                } else
+                {
+                    swal("Error", data.ErrMsg, "error");
+                }                
             }
         });
     }
 
     function onChangeAddressType(e) {
-        var dropdownlist = $("#KonfirmasiAlamat").data("kendoDropDownList");
+        var dropdownlist = $("#cbDikirimKe").data("kendoDropDownList");
         var ValueType = dropdownlist.value();
         if (ValueType == '0') {
             $('#divAlamatNasabah').show();
@@ -408,7 +424,7 @@
     }
 
     function onBoundAddressType(e) {
-        var dropdownlist = $("#KonfirmasiAlamat").data("kendoDropDownList");
+        var dropdownlist = $("#cbDikirimKe").data("kendoDropDownList");
         var len = dropdownlist.dataSource.data().length;
 
         if (len > 0) {
@@ -417,9 +433,9 @@
         }
     }      
 
-    function checkAll(e) {
+    function checkKonfAddressAll(e) {
         var state = $(e).is(':checked');
-        var grid = $('#GridKonfAddress').data('kendoDropDownList');
+        var grid = $('#dgvKonfAddr').data('kendoGrid');
         $.each(grid.dataSource.view(), function () {
             if (this['Pilih'] != state)
                 this.dirty = true;
@@ -429,29 +445,28 @@
         grid.refresh();
     }
 
-    function onCheckBoxClick(e) {
+    function onCheckBoxKonfAddressClick(e) {
         var state = $(e).is(':checked');
-        var guid = e.value;
-
-        var grid = $('#GridKonfAddress').data('GridKonfAddress');
+        var value = e.value;
+        var grid = $('#dgvKonfAddr').data('kendoGrid');
         grid.refresh();
 
         grid.tbody.find("tr[role='row']").each(function () {
             var dataItem = grid.dataItem(this);
 
-            if (dataItem.Guid == guid) {
-                dataItem.Select = state;
+            if (dataItem.Sequence == value) {
+                dataItem.Pilih = state;
             }
         })
 
-        var chkAll = $('#chkSelectAll').is(':checked');
-        var isCheckedAll = true;
+        var chkAll = $('#chkKonfAddressSelectAll').is(':checked');
+        var isCheckedAll = false;
         var countTrue = 0;
         var countFalse = 0;
-        var countAll = 0;
+        var countAll = 0;   
 
         $.each(grid.dataSource.view(), function () {
-            if (this['Select'] == true) {
+            if (this['Pilih'] == true) {
                 countTrue = countTrue + 1;
             }
             else {
@@ -461,41 +476,21 @@
             countAll = countAll + 1;
         });
         if (countFalse == 0 || (countFalse == 1 && !state)) {
-            $('#chkSelectAll').prop("checked", state);
+            $('#chkKonfAddressSelectAll').prop("checked", state);
         }
-
         grid.refresh();
-    }
-
-    $("#AccountId").change(function () {
-        GetAccountRelationDetail();
-    });
-
-    function GetAccountRelationDetail()
-    {
-        var OfficeId = $("#OfficeId").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateClient',
-            data: { Col1: OfficeId, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#AccountName").val(data[0].ClientName);
-            }
-        });
-    }
-
-    $("#OfficeIdCabang").change(function () {
-        ValidateOffice($("#OfficeIdCabang").val(), function (output) {
-            $("#OfficeNameCabang").val(output);
+    } 
+    
+    $("#srcCabang_text1").change(function () {
+        ValidateOffice($("#srcCabang_text1").val(), function (output) {
+            $("#srcCabang_text2").val(output);
             GetAlamatCabang();
         });
-    }); 
+    });   
 
-  
-
-    $("#EmployeeId").change(function () {
-        ValidateReferentor($("#EmployeeId").val(), function (output) {
-            $("#EmployeeName").val(output);
+    $("#srcEmployee_text1").change(function () {
+        ValidateReferentor($("#srcEmployee_text1").val(), function (output) {
+            $("#srcEmployee_text2").val(output);
         });
     });  
     
@@ -510,10 +505,9 @@
         });
     }
 
-
     function GetAlamatCabang() {
-        var Cifno = $("#CIFNo").val();
-        var BranchId = $("#OfficeIdCabang").val();
+        var Cifno = $("#srcCIF_text1").val();
+        var BranchId = $("#srcCabang_text1").val();
         var intId = $("#idNasabah").val();
 
         $.ajax({
@@ -521,13 +515,36 @@
             url: '/Customer/GetAlamatCabang',
             data: { CIFNO: Cifno, Branch: BranchId, intId: intId },
             success: function (data) {
-                $("#AddressLine1").val(data.CustomerBranchAddress.AddressLine1);
-                $("#AddressLine2").val(data.CustomerBranchAddress.AddressLine2);
-                $("#PostalCode").val(data.CustomerBranchAddress.PostalCode);
-                $("#Kota").val(data.CustomerBranchAddress.Kota);
-                $("#Province").val(data.CustomerBranchAddress.Province);
+                $("#tbAlamatSaatIni1").val(data.CustomerBranchAddress.AddressLine1);
+                $("#tbAlamatSaatIni2").val(data.CustomerBranchAddress.AddressLine2);
+                $("#tbKodePos").val(data.CustomerBranchAddress.PostalCode);
+                $("#tbKotaNasabahAlmt").val(data.CustomerBranchAddress.Kota);
+                $("#tbProvNasabahAlmt").val(data.CustomerBranchAddress.Province);
                 var LastUpdatedDate = new Date(data.CustomerBranchAddress.LastUpdated);
-                $("#LastUpdatedDate").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
+                $("#txtLastUpdated").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
+            }
+        });
+    }    
+
+    function onChangedtpRiskProfile() {
+        var CIFNo;
+        if ($("#srcCIF_text1").val() == '')
+            CIFNo = 0
+        else
+            CIFNo = $("#srcCIF_text1").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GekExpRiskProfile',
+            data: { CIFNo: CIFNo, RiskProfile: $("#dtpRiskProfile").val() },
+            success: function (data) {
+                if (data.blnResult) {
+                    var DateExpRiskProfile = new Date(data.dtExp);
+                    $("#dtExpiredRiskProfile").val(DateExpRiskProfile.getDate() + '/' + (DateExpRiskProfile.getMonth() + 1) + '/' + DateExpRiskProfile.getFullYear());
+                    $("#txtEmail").val(data.strEmail);
+                }
+                else {
+                    swal("Error", data.ErrMsg, "error");
+                }
             }
         });
     }

@@ -41,8 +41,6 @@
     $("#CurrencySelectButton").on("click", function () {
         var selectedCurrencyCode = $("#CurrencySelectedCurrencyCode").val();
         var selectedCurrencyName = $("#CurrencySelectedCurrencyName").val();
-        alert(selectedCurrencyCode);
-
         $("input[name='CurrencyModel.CurrencyCode']").val(selectedCurrencyCode).change();
         $("input[name='CurrencyModel.CurrencyName']").val(selectedCurrencyName);
 

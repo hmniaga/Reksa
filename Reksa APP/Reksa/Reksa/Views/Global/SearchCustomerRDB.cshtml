@@ -45,8 +45,8 @@
         var selectedName = $("#CustomerRDBSelectedName").val();
         var selectedId = $("#CustomerRDBSelectedId").val();
 
-        $("input[id='CIFNoRDB']").val(selectedCode).change();
-        $("input[id='CIFNameRDB']").val(selectedName);
+        $("input[id='srcCIFRDB_text1']").val(selectedCode).change();
+        $("input[id='srcCIFRDB_text2']").val(selectedName);
         $("input[name='CustomerModel.NasabahId']").val(selectedId);
 
     });

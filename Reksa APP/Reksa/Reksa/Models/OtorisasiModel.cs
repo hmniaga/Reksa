@@ -9,7 +9,7 @@ namespace Reksa.Models
     {
         public class Detail
         {
-            public string CheckB { get; set; }
+            public bool CheckB { get; set; }
             public string TranId { get; set; }
             public string TranCode { get; set; }
             public string ValueDate { get; set; }
@@ -22,7 +22,7 @@ namespace Reksa.Models
 
         public class MainTranksasi
         {
-            public string CheckB { get; set; }
+            public bool CheckB { get; set; }
             public string TranId { get; set; }
             public string TranCode { get; set; }
             public string ValueDate { get; set; }
@@ -40,7 +40,7 @@ namespace Reksa.Models
         }
         public class MainProduct
         {
-            public string CheckB { get; set; }
+            public bool CheckB { get; set; }
             public string ProdId { get; set; }
             public string ProdCode { get; set; }
             public string ProdName { get; set; }

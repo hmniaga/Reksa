@@ -45,21 +45,112 @@ namespace Reksa.Controllers
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("OutgoingTT", vModel);
         }
-
         public IActionResult Transaksi()
         {
+            ViewBag.strBranch = _strBranch;
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             List<TransactionModel.FrekuensiDebet> frek = new List<TransactionModel.FrekuensiDebet>();
             frek = PopulateComboFrekDebet();
             vModel.FrekuensiDebet = frek;
             return View("Transaksi", vModel);
         }
+        public JsonResult GetDataCIF(string CIFNo)
+        {
+            bool blnResult;
+            string ErrMsg;
+            int intUmur = 0;
+            TransaksiListViewModel vModel = new TransaksiListViewModel();
+            blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
+            if(blnResult)
+            {
+                vModel.CustomerIdentitas = listCust[0];
+                vModel.RiskProfileModel = listRisk[0];
+                intUmur = HitungUmur(CIFNo);
+            }
+            return Json(new { blnResult, ErrMsg, vModel.CustomerIdentitas, vModel.RiskProfileModel, intUmur });
+        }
+        public JsonResult CheckSubsType(string CIFNo, int ProductId, bool IsRDB)
+        {
+            bool blnResult = false;
+            bool IsSubsNew = false;
+            string ErrMsg = "";
+            string strClientCode = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/CheckSubsType?CIFNO=" + CIFNo + "&ProductId=" + _intNIK + "&IsTrxTA=false&IsRDB=" + IsRDB).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    IsSubsNew = strObject.SelectToken("isSubsNew").Value<bool>();
+                    strClientCode = strObject.SelectToken("strClientCode").Value<string>();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, IsSubsNew, strClientCode });
+        }
+        public JsonResult CalculateFee(int ProdId, int ClientId, int TranType, decimal TranAmt, decimal TranUnit,
+                bool FullAmount, bool IsFeeEdit, decimal PercentageFeeInput,
+                int Jenis, string strCIFNo, bool ByPercent)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            TransactionModel.CalculateFeeRequest model = new TransactionModel.CalculateFeeRequest();
+            model.ProdId = ProdId;
+            model.ClientId = ClientId; model.TranType = TranType; model.TranAmt = TranAmt; model.Unit = TranUnit;
+            model.FullAmount = FullAmount; model.IsFeeEdit = IsFeeEdit; model.PercentageFeeInput = PercentageFeeInput;
+            model.CIFNo = strCIFNo;
+            model.NIK = _intNIK; model.Guid = _strGuid;
+            model.NAV = 0; model.IsByPercent = ByPercent; model.Process = false; model.ByUnit = false;
+            model.Debug = false; model.ProcessTranId = 0;
+            model.OutType = 0;
+            model.ValueDate = DateTime.Now;
+            TransactionModel.CalculateFeeResponse resultFee = new TransactionModel.CalculateFeeResponse();
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/CalculateFee", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    JToken TokenResult = strObject["blnResult"];
+                    JToken TokenErrMsg = strObject["errMsg"];
+                    JToken TokenData = strObject["resultFee"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    resultFee = JsonConvert.DeserializeObject<TransactionModel.CalculateFeeResponse>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, resultFee });
+            }
+            return Json(new { blnResult, ErrMsg, resultFee });
+        }
         public JsonResult RefreshSwitching(string RefID, string CIFNo)
         {
+            bool blnResult;
+            string ErrMsg;
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             RefreshSwitchingData(RefID, out List<TransactionModel.SwitchingNonRDBModel> listSwitching);
-            RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP);
+            blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
             if (listSwitching.Count > 0)
             {
                 vModel.TransactionSwitching = listSwitching[0];
@@ -69,49 +160,54 @@ namespace Reksa.Controllers
 
             int intUmur = HitungUmur(CIFNo);
             vModel.CustomerIdentitas.Umur = intUmur;
-            return Json(vModel);
+            return Json(new { blnResult, ErrMsg, vModel.TransactionSwitching, vModel.CustomerIdentitas, vModel.RiskProfileModel });
         }
         public JsonResult RefreshSwitchingRDB(string RefID, string CIFNo)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             TransaksiListViewModel vModel = new TransaksiListViewModel();
-            RefreshSwitchingRDBData(RefID, out List<TransactionModel.SwitchingRDBModel> listSwitchingRDB);
-            RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP);
+            blnResult = RefreshSwitchingRDBData(RefID, out List<TransactionModel.SwitchingRDBModel> listSwitchingRDB, out ErrMsg);
+            blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
             vModel.TransactionSwitchingRDB = listSwitchingRDB[0];
             vModel.CustomerIdentitas = listCust[0];
             vModel.RiskProfileModel = listRisk[0];
 
             int intUmur = HitungUmur(CIFNo);
             vModel.CustomerIdentitas.Umur = intUmur;
-            return Json(vModel);
+            return Json( new { blnResult, ErrMsg, vModel.TransactionSwitchingRDB, vModel.CustomerIdentitas, vModel.RiskProfileModel });
         }
-
         public JsonResult RefreshBooking(string RefID, string CIFNo)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             RefreshBookingData(RefID, out List<TransactionModel.BookingModel> listBooking);
-            RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP);
+            blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
             vModel.TransactionBooking = listBooking[0];
             vModel.CustomerIdentitas = listCust[0];
             vModel.RiskProfileModel = listRisk[0];
 
             int intUmur = HitungUmur(CIFNo);
             vModel.CustomerIdentitas.Umur = intUmur;
-            return Json(vModel);
+            return Json(new { blnResult, ErrMsg, vModel.TransactionBooking, vModel.CustomerIdentitas, vModel.RiskProfileModel });
         }
-
-        public JsonResult RefreshTransaction(string RefID, string CIFNo, string idAccordions)
+        public JsonResult RefreshTransaction(string RefID, string CIFNo, string _strTabName)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             vModel.TransactionSubsDetail = new TransactionModel.SubscriptionDetail();
-            if (idAccordions != null && !idAccordions.Equals(""))
+            if (_strTabName != null && !_strTabName.Equals(""))
             {
-                RefreshTransaction(idAccordions, RefID, CIFNo,
+                blnResult = RefreshTransaction(_strTabName, RefID, CIFNo,
                     out List<TransactionModel.SubscriptionDetail> listSubsDetail,
                     out List<TransactionModel.SubscriptionList> listSubsrption,
                     out List<TransactionModel.RedemptionList> listRedemption,
-                    out List<TransactionModel.SubscriptionRDBList> listSubsRDB);
-                RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP);
-                
+                    out List<TransactionModel.SubscriptionRDBList> listSubsRDB,
+                    out ErrMsg);
+                blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
+
                 vModel.TransactionSubsDetail = listSubsDetail[0];
                 vModel.ListSubscription = listSubsrption;
                 vModel.ListRedemption = listRedemption;
@@ -122,41 +218,128 @@ namespace Reksa.Controllers
                 int intUmur = HitungUmur(CIFNo);
                 vModel.TransactionSubsDetail.Umur = intUmur;
             }
-            return Json(vModel);
+            return Json(new { blnResult, ErrMsg, vModel.TransactionSubsDetail, vModel.ListSubscription, vModel.ListRedemption, vModel.ListSubsRDB, vModel.CustomerIdentitas, vModel.RiskProfileModel } );
+        }
+        public ActionResult GenerateTranCodeClientCode([FromBody] TransactionModel.GenerateClientCode model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string[] strData = new string[4];
+            string strTrancode = "", strClientCode = "", strWarnMsg = "", strWarnMsg2 = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/GenerateTranCodeClientCode", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    JToken TokenResult = strObject["blnResult"];
+                    JToken TokenErrMsg = strObject["errMsg"];
+                    JToken TokenData = strObject["strData"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    strData = JsonConvert.DeserializeObject<string[]>(JsonData);
+                    strTrancode = strData[0];
+                    strClientCode = strData[1];
+                    strWarnMsg = strData[2];
+                    strWarnMsg2 = strData[3];
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, strTrancode, strClientCode, strWarnMsg, strWarnMsg2 });
+            }
+            return Json(new { blnResult, ErrMsg, strTrancode, strClientCode, strWarnMsg, strWarnMsg2 });
+        }
+        public ActionResult MaintainAllTransaksi([FromBody] TransactionModel.MaintainTransaksi model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
+            DataTable dtError = new DataTable();
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/MaintainAllTransaksiNew?NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenError = strObject["dtError"];
+                    JToken TokenRefID = strObject["strRefID"];
+                    string JsonError = JsonConvert.SerializeObject(TokenError);
+                    string JsonRefID = JsonConvert.SerializeObject(TokenRefID);
+                    dtError = JsonConvert.DeserializeObject<DataTable>(JsonError);
+                    strRefID = JsonConvert.DeserializeObject<string>(JsonRefID);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, strRefID, dtError });
+            }
+            return Json(new { blnResult, ErrMsg, strRefID, dtError });
         }
 
-        private void RefreshTransaction(string strTranType, string strRefID, string strCIFNo, 
+        private bool RefreshTransaction(string strTranType, string strRefID, string strCIFNo, 
             out List<TransactionModel.SubscriptionDetail> listSubsDetail,
             out List<TransactionModel.SubscriptionList> listSubscription,
             out List<TransactionModel.RedemptionList> listRedemption,
-            out List<TransactionModel.SubscriptionRDBList> listSubsRDB)
+            out List<TransactionModel.SubscriptionRDBList> listSubsRDB,
+            out string ErrMsg)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            ErrMsg = "";
+            listSubsDetail = new List<TransactionModel.SubscriptionDetail>();
+            listSubscription = new List<TransactionModel.SubscriptionList>();
+            listRedemption = new List<TransactionModel.RedemptionList>();
+            listSubsRDB = new List<TransactionModel.SubscriptionRDBList>();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                HttpResponseMessage response = client.GetAsync("/api/Transaction/RefreshTransactionNew?RefID="+ strRefID + "&CIFNO=" + strCIFNo + "&NIK="+ _intNIK +"&Guid="+ _strGuid +"&TranType=" + strTranType).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/RefreshTransactionNew?RefID=" + strRefID + "&CIFNO=" + strCIFNo + "&NIK=" + _intNIK + "&Guid=" + _strGuid + "&TranType=" + strTranType).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenDetail = strObject["listSubsDetail"];
-                JToken strTokenListSubs = strObject["listSubs"];
-                JToken strTokenListRedemp = strObject["listRedemp"];
-                JToken strTokenListSubsRDB = strObject["listSubsRDB"];
-                string strJsonDetail = JsonConvert.SerializeObject(strTokenDetail);
-                string strJsonListSubs = JsonConvert.SerializeObject(strTokenListSubs);
-                string strJsonListRedemp = JsonConvert.SerializeObject(strTokenListRedemp);
-                string strJsonListSubsRDB = JsonConvert.SerializeObject(strTokenListSubsRDB);
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken strTokenDetail = strObject["listSubsDetail"];
+                    JToken strTokenListSubs = strObject["listSubs"];
+                    JToken strTokenListRedemp = strObject["listRedemp"];
+                    JToken strTokenListSubsRDB = strObject["listSubsRDB"];
+                    string strJsonDetail = JsonConvert.SerializeObject(strTokenDetail);
+                    string strJsonListSubs = JsonConvert.SerializeObject(strTokenListSubs);
+                    string strJsonListRedemp = JsonConvert.SerializeObject(strTokenListRedemp);
+                    string strJsonListSubsRDB = JsonConvert.SerializeObject(strTokenListSubsRDB);
 
-                listSubsDetail = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionDetail>>(strJsonDetail);
-                listSubscription = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionList>>(strJsonListSubs);
-                listRedemption = JsonConvert.DeserializeObject<List<TransactionModel.RedemptionList>>(strJsonListRedemp);
-                listSubsRDB = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionRDBList>>(strJsonListSubsRDB);
+                    listSubsDetail = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionDetail>>(strJsonDetail);
+                    listSubscription = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionList>>(strJsonListSubs);
+                    listRedemption = JsonConvert.DeserializeObject<List<TransactionModel.RedemptionList>>(strJsonListRedemp);
+                    listSubsRDB = JsonConvert.DeserializeObject<List<TransactionModel.SubscriptionRDBList>>(strJsonListSubsRDB);
+                }
             }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
         }
-
         private void RefreshSwitchingData(string strRefID, out List<TransactionModel.SwitchingNonRDBModel> listSwitching)
         {
             using (HttpClient client = new HttpClient())
@@ -175,26 +358,37 @@ namespace Reksa.Controllers
                 listSwitching = JsonConvert.DeserializeObject<List<TransactionModel.SwitchingNonRDBModel>>(strJsonSwcNonRDB);
             }
         }
-
-        private void RefreshSwitchingRDBData(string strRefID, out List<TransactionModel.SwitchingRDBModel> listSwitchingRDB)
+        private bool RefreshSwitchingRDBData(string strRefID, out List<TransactionModel.SwitchingRDBModel> listSwitchingRDB, out string ErrMsg)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            ErrMsg = "";
+            listSwitchingRDB = new List<TransactionModel.SwitchingRDBModel>();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                HttpResponseMessage response = client.GetAsync("/api/Transaction/RefreshSwitchingRDB?RefID=" + strRefID + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/RefreshSwitchingRDB?RefID=" + strRefID + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenSwcRDB = strObject["listDetailSwcRDB"];
-                string strJsonSwcRDB = JsonConvert.SerializeObject(strTokenSwcRDB);
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken strTokenSwcRDB = strObject["listDetailSwcRDB"];
+                    string strJsonSwcRDB = JsonConvert.SerializeObject(strTokenSwcRDB);
 
-                listSwitchingRDB = JsonConvert.DeserializeObject<List<TransactionModel.SwitchingRDBModel>>(strJsonSwcRDB);
+                    listSwitchingRDB = JsonConvert.DeserializeObject<List<TransactionModel.SwitchingRDBModel>>(strJsonSwcRDB);
+                }
             }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
         }
-
         private void RefreshBookingData(string strRefID, out List<TransactionModel.BookingModel> listBooking)
         {
             using (HttpClient client = new HttpClient())
@@ -213,35 +407,49 @@ namespace Reksa.Controllers
                 listBooking = JsonConvert.DeserializeObject<List<TransactionModel.BookingModel>>(strJsonBooking);
             }
         }
-
-        private void RefreshNasabah(string strCIFNo, 
+        private bool RefreshNasabah(string strCIFNo, 
             out List<CustomerIdentitasModel> listCust, 
             out List<RiskProfileModel> listRisk, 
-            out List<CustomerNPWPModel> listCustNPWP)
+            out List<CustomerNPWPModel> listCustNPWP,
+            out string ErrMsg)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            ErrMsg = "";
+            listCust = new List<CustomerIdentitasModel>();
+            listRisk = new List<RiskProfileModel>();
+            listCustNPWP = new List<CustomerNPWPModel>();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                HttpResponseMessage response = client.GetAsync("/api/Customer/Refresh?CIFNO=" + strCIFNo + "&NIK="+ _intNIK +"&Guid=" + _strGuid).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Customer/Refresh?CIFNO=" + strCIFNo + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenCust = strObject["listCust"];
-                JToken strTokenRisk = strObject["listRisk"];
-                JToken strTokenCustNPWP = strObject["listCustNPWP"];
-                string strJsonCust = JsonConvert.SerializeObject(strTokenCust);
-                string strJsonRisk = JsonConvert.SerializeObject(strTokenRisk);
-                string strJsonCustNPWP = JsonConvert.SerializeObject(strTokenCustNPWP);
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken strTokenCust = strObject["listCust"];
+                    JToken strTokenRisk = strObject["listRisk"];
+                    JToken strTokenCustNPWP = strObject["listCustNPWP"];
+                    string strJsonCust = JsonConvert.SerializeObject(strTokenCust);
+                    string strJsonRisk = JsonConvert.SerializeObject(strTokenRisk);
+                    string strJsonCustNPWP = JsonConvert.SerializeObject(strTokenCustNPWP);
 
-                listCust = JsonConvert.DeserializeObject<List<CustomerIdentitasModel>>(strJsonCust);
-                listRisk = JsonConvert.DeserializeObject<List<RiskProfileModel>>(strJsonRisk);
-                listCustNPWP = JsonConvert.DeserializeObject<List<CustomerNPWPModel>>(strJsonCustNPWP);
+                    listCust = JsonConvert.DeserializeObject<List<CustomerIdentitasModel>>(strJsonCust);
+                    listRisk = JsonConvert.DeserializeObject<List<RiskProfileModel>>(strJsonRisk);
+                    listCustNPWP = JsonConvert.DeserializeObject<List<CustomerNPWPModel>>(strJsonCustNPWP);
+                }
             }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
         }
-
         private int HitungUmur(string strCIFNo)
         {
             int intUmur = 0;
@@ -258,7 +466,6 @@ namespace Reksa.Controllers
             }
             return intUmur;
         }
-
         private List<TransactionModel.FrekuensiDebet> PopulateComboFrekDebet()
         {
             List<TransactionModel.FrekuensiDebet> list = new List<TransactionModel.FrekuensiDebet>();
@@ -288,14 +495,13 @@ namespace Reksa.Controllers
             
             return list;
         }
-
-
         private void HitungSwitchingFee()
         {
         }
-
         private void HitungSwitchingRDBFee()
-        { }
+        {            
+           
+        }
         private void HitungBookingFee(string CIFNo, decimal BookingAmount, string ProductCode, bool ByPercent,
             bool IsFeeEdit, decimal PercentageFeeInput, out decimal PctFee,
             out string FeeCurr, out decimal NominalFee)

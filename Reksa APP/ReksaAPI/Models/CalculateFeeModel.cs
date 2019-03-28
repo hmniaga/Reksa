@@ -7,7 +7,7 @@ namespace ReksaAPI.Models
 {
     public class CalculateFeeModel
     {
-        public class GlobalFeeRequest
+        public class CalculateFeeRequest
         {
             public int ProdId { get; set; }
             public int ClientId { get; set; }
@@ -29,7 +29,7 @@ namespace ReksaAPI.Models
             public DateTime ValueDate { get; set; }
             public string CIFNo { get; set; }
         }
-        public class GlobalFeeResponse
+        public class CalculateFeeResponse
         {
             public string FeeCCY { get; set; }
             public decimal Fee { get; set; }

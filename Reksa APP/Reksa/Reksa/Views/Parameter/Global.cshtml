@@ -851,55 +851,62 @@
                 selectedId = dataItem.Id;
             })
             if (selectedId == 0) {
-                alert("No data selected!");
+                swal("Warning", "No data selected!", "warning");
                 return;
             }
         }
-        if (confirm('Are you sure to ' + message +' this data?')) {
-            var model = JSON.stringify({
-                '_intType': _intType,
-                '_strTreeInterface': IdInterface,
-                'txtbSP1': $("#txtbSP1").val(),
-                'txtbSP2': $("#txtbSP2").val(),
-                'txtbSP3': $("#txtbSP3").val(),
-                'txtbSP4': $("#txtbSP4").val(),
-                'txtbSP5': $("#txtbSP5").val(),
-                'textBox1': '',
-                'checkBox1': $("#checkBox1").val(),
-                'dtpSP': fdtpSP,
-                'dtpSP5': fdtpSP,
-                'cmpsrSearch1': '',
-                'cmpsrSearch2': '',
-                'comboBox1': $("#comboBox1").val(),
-                'comboBox3': $("#comboBox3").val(),
-                'textPctSwc': $("#textPctSwc").val(),
-                'TanggalValuta': fdtpSP,
-                'Id': selectedId
-            });
 
-            $.ajax({
-                type: "POST",
-                data: model,
-                url: '/Parameter/MaintainParamGlobal',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    var message;
-                    message = data.strErrMsg;
-                    if (data.blnResult == true) {
-                        document.getElementById("sa-success").click();
-                        _intType = 0;
-                        subResetToolBar();
-                        subRefresh();
+        swal({
+            title: "Are you sure to " + message + " this data?",
+            text: "You need to approval from suppervisor!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-warning',
+            confirmButtonText: "Yes, " + message + " it!",
+            closeOnConfirm: false
+        },
+            function () {
+                var model = JSON.stringify({
+                    '_intType': _intType,
+                    '_strTreeInterface': IdInterface,
+                    'txtbSP1': $("#txtbSP1").val(),
+                    'txtbSP2': $("#txtbSP2").val(),
+                    'txtbSP3': $("#txtbSP3").val(),
+                    'txtbSP4': $("#txtbSP4").val(),
+                    'txtbSP5': $("#txtbSP5").val(),
+                    'textBox1': '',
+                    'checkBox1': $("#checkBox1").val(),
+                    'dtpSP': fdtpSP,
+                    'dtpSP5': fdtpSP,
+                    'cmpsrSearch1': '',
+                    'cmpsrSearch2': '',
+                    'comboBox1': $("#comboBox1").val(),
+                    'comboBox3': $("#comboBox3").val(),
+                    'textPctSwc': $("#textPctSwc").val(),
+                    'TanggalValuta': fdtpSP,
+                    'Id': selectedId
+                });
+
+                $.ajax({
+                    type: "POST",
+                    data: model,
+                    url: '/Parameter/MaintainParamGlobal',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data)
+                    {
+                        if (data.blnResult == true) {
+                            swal("Success!", "Your data need to approve by supervisor", "success");
+                            _intType = 0;
+                            subResetToolBar();
+                            subRefresh();
+                        }
+                        else {
+                            swal("Error", data.strErrMsg, "error");
+                        }
                     }
-                    else
-                        $("#sa-failed").trigger("click", [message]);
-                }
+                });
             });
-        }
-        else {
-            e.preventDefault();
-        }
     }
 
     function subDelete()

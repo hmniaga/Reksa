@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace Reksa.Controllers
 {
@@ -63,6 +64,52 @@ namespace Reksa.Controllers
 
             return Json(result);
         }
+
+        public ActionResult SearchTrxProductSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+
+        public ActionResult SearchTrxProductData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<TransaksiProduct> list = new List<TransaksiProduct>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTrxProduct?Col1=" + search + "&Col2=&Validate=0&JenisTrx=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TransaksiProduct>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+
+
         public ActionResult ValidateBooking(string Col1, string Col2, int Validate, string criteria)
         {
             List<SwitchingModel> list = new List<SwitchingModel>();
@@ -77,6 +124,58 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+
+        public ActionResult SearchCIF(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
+        public ActionResult SearchCIFData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<CustomerModel> list = new List<CustomerModel>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCIF?Col1=&Col2=" + search + "&Validate=0").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<CustomerModel>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
+
+        }
+
         public ActionResult SearchClient(string search, string criteria, int ProdId)
         {
             ViewBag.Search = search;
@@ -87,6 +186,7 @@ namespace Reksa.Controllers
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
+            ViewBag.ProdId = ProdId;
             return View();
         }
         public ActionResult SearchClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria, int ProdId)
@@ -130,6 +230,8 @@ namespace Reksa.Controllers
         }
         public ActionResult ValidateClient(string Col1, string Col2, int Validate, int ProdId)
         {
+            if (Col1 == null)
+                Col1 = "";
             List<ClientModel> list = new List<ClientModel>();
             using (HttpClient client = new HttpClient())
             {
@@ -359,6 +461,13 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+        public ActionResult SearchEmployee(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }        
         public ActionResult SearchKota(string search, string criteria, string type, int seq = 0)
         {
             ViewBag.Search = search;
@@ -555,13 +664,22 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-        public ActionResult SearchReferentor(string search, string criteria)
+        public ActionResult SearchReferentorSubs(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
 
             return View();
         }
+
+        public ActionResult SearchSellerSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
         public ActionResult SearchReferentorData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             if (request.Filters.Count > 0)
@@ -793,6 +911,13 @@ namespace Reksa.Controllers
 
             return View();
         }
+        public ActionResult SearchWaperdSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }        
         public ActionResult SearchWaperdData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             if (request.Filters.Count > 0)
@@ -841,6 +966,112 @@ namespace Reksa.Controllers
                 list = JsonConvert.DeserializeObject<List<WaperdModel>>(stringData);
             }
             return Json(list);
+        }
+
+        public JsonResult ValidateOfficeId(string OfficeId)
+        {
+            string strErrMsg = "";
+            bool blnResult = false;
+            bool isAllowed = false;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Global/ValidateOfficeId?OfficeId=" + OfficeId).Result;
+                    string strResponse = response.Content.ReadAsStringAsync().Result;
+
+                    JObject Object = JObject.Parse(strResponse);
+                    JToken TokenResult = Object["blnResult"];
+                    JToken TokenErrMsg = Object["ErrMsg"];
+                    JToken TokenData = Object["isAllowed"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    isAllowed = JsonConvert.DeserializeObject<bool>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                strErrMsg = e.Message;
+                return Json(new { blnResult, strErrMsg, isAllowed });
+            }
+            return Json(new { blnResult, strErrMsg, isAllowed });
+        }
+
+        public JsonResult ValidasiCBOKodeKantor(string OfficeId)
+        {
+            string strErrMsg = "";
+            bool blnResult = false;
+            string strIsEnable = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Global/ValidateOfficeId?OfficeId=" + OfficeId).Result;
+                    string strResponse = response.Content.ReadAsStringAsync().Result;
+
+                    JObject Object = JObject.Parse(strResponse);
+                    JToken TokenResult = Object["blnResult"];
+                    JToken TokenErrMsg = Object["ErrMsg"];
+                    JToken TokenData = Object["IsEnable"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    strIsEnable = JsonConvert.DeserializeObject<string>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                strErrMsg = e.Message;
+                return Json(new { blnResult, strErrMsg, strIsEnable });
+            }
+            return Json(new { blnResult, strErrMsg, strIsEnable });
+        }
+
+        public JsonResult GetNoNPWPCounter()
+        {
+            string ErrMsg = "";
+            string strNoDocNPWP = "";
+            bool blnResult = false;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetNoNPWPCounter").Result;
+                    string strResponse = response.Content.ReadAsStringAsync().Result;
+
+                    JObject Object = JObject.Parse(strResponse);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = Object["strNoDocNPWP"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    strNoDocNPWP = JsonConvert.DeserializeObject<string>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, strNoDocNPWP });
+            }
+            return Json(new { blnResult, ErrMsg, strNoDocNPWP });
         }
     }
 }

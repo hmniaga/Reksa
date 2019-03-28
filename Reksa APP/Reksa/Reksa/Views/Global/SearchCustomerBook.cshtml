@@ -45,8 +45,8 @@
         var selectedName = $("#CustomerBookSelectedName").val();
         var selectedId = $("#CustomerBookSelectedId").val();
 
-        $("input[id='CIFNoBook']").val(selectedCode).change();
-        $("input[id='CIFNameBook']").val(selectedName);
+        $("input[id='srcCIFBooking_text1']").val(selectedCode).change();
+        $("input[id='srcCIFBooking_text2']").val(selectedName);
         $("input[name='CustomerModel.NasabahId']").val(selectedId);
 
     });

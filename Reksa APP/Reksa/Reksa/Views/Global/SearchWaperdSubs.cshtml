@@ -45,10 +45,10 @@
         var selectedWaperdNo = $("#WaperdSelectedWaperdNo").val();
         var selectedDateExpire = $("#WaperdSelectedDateExpire").val();
 
-        $("input[name='WaperdModel.employee_id']").val(selectedEmployeeId).change();
-        $("input[name='WaperdModel.WaperdNo']").val(selectedWaperdNo)
+        $("input[id='srcWaperdSubs_text1']").val(selectedEmployeeId).change();
+        $("input[id='srcWaperdSubs_text2']").val(selectedWaperdNo)
         var dtExpire = new Date(selectedDateExpire);
-        $("input[name='WaperdModel.DateExpire']").val(dtExpire.getDate() + '/' + (dtExpire.getMonth() + 1) + '/' + dtExpire.getFullYear());
+        $("input[id='textExpireWaperdSubs']").val(dtExpire.getDate() + '/' + (dtExpire.getMonth() + 1) + '/' + dtExpire.getFullYear());
     });
 
     $("#WaperdSearchComponentSearchTxt").on("keypress", function (e) {

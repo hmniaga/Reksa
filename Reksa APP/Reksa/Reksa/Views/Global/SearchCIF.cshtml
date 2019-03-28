@@ -6,9 +6,9 @@
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchCustomerSwc() {
-        var value = $("#CustomerSwcSearchComponentSearchTxt").val();
-        var grid = $("#CustomerSwcSearchComponentGrid").data("kendoGrid");
+    function onSearchCustomer() {
+        var value = $("#CustomerSearchComponentSearchTxt").val();
+        var grid = $("#CustomerSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -29,33 +29,29 @@
         }
     }
 
-    function onRowCustomerSwcSelect(e) {
+    function onRowCustomerSelect(e) {
         var data = this.dataItem(this.select());
         var CIFNo = $.trim(data.CIFNo);
         var CIFName = $.trim(data.CIFName);
-        var NasabahId = $.trim(data.NasabahId);
         
-        $("#CustomerSwcSelectedCode").val(CIFNo);
-        $("#CustomerSwcSelectedName").val(CIFName);
-        $("#CustomerSwcSelectedId").val(NasabahId);
+        $("#CustomerSelectedCode").val(CIFNo);
+        $("#CustomerSelectedName").val(CIFName);
     };
 
-    $("#CustomerSwcSelectButton").on("click", function () {
-        var selectedCode = $("#CustomerSwcSelectedCode").val();
-        var selectedName = $("#CustomerSwcSelectedName").val();
-        var selectedId = $("#CustomerSwcSelectedId").val();
+    $("#CustomerSelectButton").on("click", function () {
+        var selectedCode = $("#CustomerSelectedCode").val();
+        var selectedName = $("#CustomerSelectedName").val();
 
-        $("input[id='srcCIFSwc_text1']").val(selectedCode).change();
-        $("input[id='srcCIFSwc_text2']").val(selectedName);
-        $("input[name='CustomerModel.NasabahId']").val(selectedId);
+        $("input[name='CustomerModel.CIFNo']").val(selectedCode).change();
+        $("input[name='CustomerModel.CIFName']").val(selectedName);
 
     });
 
-    $("#CustomerSwcSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#CustomerSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#CustomerSwcSearchComponentSearchBtn").click();
+            $("#CustomerSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -67,51 +63,49 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.CustomerModel>()
-                    .Name("CustomerSwcSearchComponentGrid")
+                    .Name("CustomerSearchComponentGrid")
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.CIFNo);
                         columns.Bound(m => m.CIFName);
-                        columns.Bound(m => m.NasabahId);
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowCustomerSwcSelect"))
+                    .Events(events => events.Change("onRowCustomerSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
                         .Mode(GridSelectionMode.Single))
                     .DataSource(dataSource => dataSource
                         .Ajax()
-                        .PageSize(20)
+                        .PageSize(10)
                         .Model(model =>
                         {
                             model.Id(m => m.CIFNo);
                         })
-                        .Read(read => read.Action("SearchCustomerData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchCIFData", "Global", new { search = search, criteria = criteria }))
                     )
         )
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("CustomerSwcSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("CustomerSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("CustomerSwcSearchComponentSearchBtn")
+                            .Name("CustomerSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchCustomerSwc")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchCustomer")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="CustomerSwcSelectedCode" name="CustomerSwcSelectedCode" value="" />
-        <input type="hidden" id="CustomerSwcSelectedName" name="CustomerSwcSelectedName" value="" />
-        <input type="hidden" id="CustomerSwcSelectedId" name="CustomerSwcSelectedId" value="" />
+        <input type="hidden" id="CustomerSelectedCode" name="CustomerSelectedCode" value="" />
+        <input type="hidden" id="CustomerSelectedName" name="CustomerSelectedName" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="CustomerSwcSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="CustomerSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

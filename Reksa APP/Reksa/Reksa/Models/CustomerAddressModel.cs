@@ -7,8 +7,8 @@ namespace Reksa.Models
 {
     public class KonfirmasiAddressModel
     {
-        public string Pilih { get; set; }
-        public string Sequence { get; set; }
+        public bool Pilih { get; set; }
+        public int Sequence { get; set; }
         public string AddressLine1 { get; set; }
         public string Address { get; set; }
         public string AddressLine2 { get; set; }

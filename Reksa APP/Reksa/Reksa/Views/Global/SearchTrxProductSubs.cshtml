@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Search Product";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchTrxProductSubs() {
+        var value = $("#TrxProductSubsSearchComponentSearchTxt").val();
+        var grid = $("#TrxProductSubsSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowTrxProductSubsSelect(e) {
+        var data = this.dataItem(this.select());
+        var ProdCode = $.trim(data.ProdCode);
+        var ProdName = $.trim(data.ProdName);
+        var ProdId = $.trim(data.ProdId);
+        var ProdCurr = $.trim(data.ProdCCY);
+
+        $("#TrxProductSubsSelectedCode").val(ProdCode);
+        $("#TrxProductSubsSelectedName").val(ProdName);
+        $("#TrxProductSubsSelectedId").val(ProdId);
+        $("#TrxProductSubsSelectedCurr").val(ProdCurr);
+    };
+
+    $("#TrxProductSubsSelectButton").on("click", function () {
+        var selectedCode = $("#TrxProductSubsSelectedCode").val();
+        var selectedName = $("#TrxProductSubsSelectedName").val();
+        var selectedId = $("#TrxProductSubsSelectedId").val();
+        var selectedCurr = $("#TrxProductSubsSelectedCurr").val();
+
+        $("input[id='srcProductSubs_text1']").val(selectedCode).change();
+        $("input[id='srcProductSubs_text2']").val(selectedName);
+        $("input[id='ProdIdSubs']").val(selectedId);
+        $("input[id='ProdCCYSubs']").val(selectedCurr);
+        $("input[id='srcCurrencySubs_text1']").val(selectedCurr);
+    });
+
+    $("#TrxProductSubsSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#TrxProductSubsSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.TransaksiProduct>()
+                                            .Name("TrxProductSubsSearchComponentGrid")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(m => m.ProdCode).Width(100).Title("Product Code");
+                                                columns.Bound(m => m.ProdName).Width(100).Title("Product Name");
+                                                columns.Bound(m => m.ProdId).Hidden();
+                                                columns.Bound(m => m.ProdCCY).Hidden();
+                                            })
+                                            .ToolBar(toolbar =>
+                                            {
+                                                toolbar.ClientTemplateId("GridToolbarTemplate");
+                                            })
+                                            .Events(events => events.Change("onRowTrxProductSubsSelect"))
+                                            .Pageable()
+                                            .Scrollable()
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(m => m.ProdCode);
+                                                })
+                                                .Read(read =>
+                                                read.Action("SearchTrxProductData", "Global").Data("getData"))
+                                            )
+        )
+
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("TrxProductSubsSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("TrxProductSubsSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchTrxProductSubs")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="TrxProductSubsSelectedCode" name="TrxProductSubsSelectedCode" value="" />
+        <input type="hidden" id="TrxProductSubsSelectedName" name="TrxProductSubsSelectedName" value="" />
+        <input type="hidden" id="TrxProductSubsSelectedId" name="TrxProductSubsSelectedCId" value="" />
+        <input type="hidden" id="TrxProductSubsSelectedCurr" name="TrxProductSubsSelectedCurr" value="" />
+        
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="TrxProductSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

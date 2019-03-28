@@ -9,7 +9,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Nomor NPWP</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPProCIF).HtmlAttributes(new { @id = "NoNPWPProCIF", @class = "form-control input-sm", style = "width: 120%" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPProCIF).HtmlAttributes(new { @id = "tbNoNPWPSendiri", @class = "form-control input-sm", style = "width: 120%" }).Enable(false)
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Nama NPWP</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPProCIF).HtmlAttributes(new { @id = "NamaNPWPProCIF", @class = "form-control input-sm", style = "width: 200%" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPProCIF).HtmlAttributes(new { @id = "tbNamaNPWPSendiri", @class = "form-control input-sm", style = "width: 200%" }).Enable(false)
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
                     <div class="input-group">
-                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWP).HtmlAttributes(new { @id = "TglNPWP", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWP).HtmlAttributes(new { @id = "dtpTglNPWPSendiri", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Nomor NPWP</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPKK).HtmlAttributes(new { @id = "NoNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPKK).HtmlAttributes(new { @id = "tbNoNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Nomor NPWP -->
@@ -56,7 +56,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Nama NPWP</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPKK).HtmlAttributes(new { @id = "NamaNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPKK).HtmlAttributes(new { @id = "tbNamaNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Nama NPWP -->
@@ -70,11 +70,11 @@
                                                         .BindTo(Model.KepemilikanNPWPKK)
                                                         .DataTextField("Deskripsi")
                                                         .Value("Kode")
-                                                        .HtmlAttributes(new { @id = "KepemilikanNPWPKK", @style = "width: 150px;" })
+                                                        .HtmlAttributes(new { @id = "cbKepemilikanNPWPKK", @style = "width: 150px;" })
                                                         .Filter("contains")
                                 )
                             <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.KepemilikanNPWPKKLainnya).HtmlAttributes(new { @id = "KepemilikanNPWPKKLainnya", @class = "form-control input-sm", @style = "width: 300%" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.KepemilikanNPWPKKLainnya).HtmlAttributes(new { @id = "tbKepemilikanLainnya", @class = "form-control input-sm", @style = "width: 300%" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Kepemilikan -->
@@ -84,7 +84,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWPKK).HtmlAttributes(new { @id= "TglNPWPKK", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWPKK).HtmlAttributes(new { @id= "dtpTglNPWPKK", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
                     </div>
                     <!-- End Tanggal Dikeluarkan -->
@@ -105,7 +105,7 @@
                                                 .BindTo(Model.AlasanTanpaNPWP)
                                                 .DataTextField("Deskripsi")
                                                 .Value("Kode")
-                                                .HtmlAttributes(new { @id = "AlasanTanpaNPWP", @style = "width: 200px" })
+                                                .HtmlAttributes(new { @id = "cbAlasanTanpaNPWP", @style = "width: 200px" })
                                                 .Filter("contains")
                         )
                     </div>
@@ -117,9 +117,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Nomor Dokumen</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoDokTanpaNPWP).HtmlAttributes(new { @id = "NoDokTanpaNPWP", @class = "form-control input-sm", @style = "width: 200px" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoDokTanpaNPWP).HtmlAttributes(new { @id = "tbNoDokTanpaNPWP", @class = "form-control input-sm", @style = "width: 200px" }).Enable(false)
                         <span class="input-group-btn"></span>
-                        <button id="buttonGenNoDok" class="btn btn-info waves-effect waves-light" disabled="disabled">
+                        <button id="btnGenerateNoDokTanpaNPWP" class="btn btn-info waves-effect waves-light" disabled="disabled">
                             <span class="btn-label">
                                 <i class="fa fa-plus"></i>
                             </span>
@@ -134,7 +134,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Tanggal Dokumen</label>
                     <div class="input-group">
-                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglDokTanpaNPWP).HtmlAttributes(new { @id = "TglDokTanpaNPWP", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglDokTanpaNPWP).HtmlAttributes(new { @id = "dtpTglDokTanpaNPWP", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                     </div>
                 </div>
                 <!-- End Tanggal Dokumen -->
@@ -144,7 +144,7 @@
                 <div class="form-group">
                     <div class="col-sm-3 control-label"></div>
                     <div class="input-group">
-                        <button id="buttonGantiOpsi" class="btn btn-info waves-effect waves-light" disabled="disabled">
+                        <button id="btnGantiOpsiNPWP" class="btn btn-info waves-effect waves-light">
                             <span class="btn-label">
                                 <i class="fa fa-edit"></i>
                             </span>

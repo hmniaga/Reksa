@@ -4,8 +4,7 @@
 @{
     ViewData["Title"] = "Nasabah";
 }
-<form id="customerForm">
-    @Html.ValidationSummary(true)
+
     <!-- Begin Contents -->
     <div class="panel panel-default" id="contentCustomer">
         <div class="panel-heading">
@@ -21,13 +20,13 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Kode Kantor</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcOffice_text1" }).Enable(false)
 
                             <span class="input-group-btn">
-                                <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
+                                <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
                             </span>
 
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "OfficeName" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcOffice_text2" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Search Kantor -->
@@ -35,20 +34,22 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">No CIF</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @id = "CIFNo", @class = "form-control input-sm", @required = "required" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @id = "srcCIF_text1", @class = "form-control input-sm", @required = "required" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.NasabahId).HtmlAttributes(new { @id = "idNasabah", @class = "form-control input-sm", @type = "hidden" })
 
                             <span class="input-group-btn">
                                 <a id="srcCIF" href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @id = "CIFName", @class = "form-control input-sm col-md-3", @required = "required", style = "width: 200%;" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @id = "srcCIF_text2", @class = "form-control input-sm col-md-3", @required = "required", style = "width: 200%;" }).Enable(false)
                         </div>
                     </div>
-                    <!-- End Search Kantor -->
+
+
+                    <!-- End Search CIF -->
                 </div>
                 <!-- Begin Button Refresh -->
                 <div class="col-md-2">
-                    <button id=ButtonRefresh type="button" class="btn btn-default waves-effect waves-light">
+                    <button id=btnRefresh type="button" class="btn btn-default waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-refresh"></i>
                         </span>
@@ -62,7 +63,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label"></label>
                         <div class="input-group">
-                            <h1 id="labelStatus">@ViewData["Status"]</h1>
+                            <h1 id="lblStatus">@ViewData["Status"]</h1>
                         </div>
                     </div>
                 </div>
@@ -77,27 +78,27 @@
                             <span class="input-group-btn"></span>
                             <label class="col-sm-12 control-label">Sub Segment</label>
                             <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.SubSegment).HtmlAttributes(new { @id = "SubSegment", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.SubSegment).HtmlAttributes(new { @id = "textSubSegment", @class = "form-control input-sm" }).Enable(false)
                             <span class="input-group-btn"></span>
                             <label class="col-sm-3 control-label">Segment</label>
                             <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.Segment).HtmlAttributes(new { @id = "Segment", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.Segment).HtmlAttributes(new { @id = "textSegment", @class = "form-control input-sm" }).Enable(false)
                         </div>
                     </div>
                 </div>
                 <!-- End Jenis Nasabah -->
                 <!-- End Header -->
                 <!-- Begin Buttons -->
-                <div class="col-md-12" style="padding-top:2%">
+                <div class="col-md-12" style="padding-top:20px;">
                     <div class="input-group">
-                        <button id="buttonadd" type="button" class="btn btn-default waves-effect waves-light">
+                        <button id="buttonadd" type="button" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                             <span class="btn-label">
                                 <i class="fa fa-plus"></i>
                             </span>
                             New
                         </button>
 
-                        <button id="buttonedit" type="button" class="btn btn-info waves-effect waves-light">
+                        <button id="buttonedit" type="button" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                             <span class="btn-label">
                                 <i class="fa fa-edit"></i>
                             </span>
@@ -126,80 +127,63 @@
                     </div>
                 </div>
                 <!-- End Buttons -->
-                <!-- Begin Accordions -->
-                <div class="col-md-12">
-                    <div class="panel-group" id="accordion-nasabah">
-                        <div class="panel panel-default">
-                            <!-- Begin Identitas -->
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-identitas" aria-expanded="false" class="collapsed">
-                                        Identitas
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse-identitas" class="panel-collapse collapse">
-                                <div class="panel-body">
+
+                <div class="col-md-12" style="margin-top:20px">
+                    <ul class="nav nav-tabs" style="background-color:#efefef">
+                        <li class="active"><a data-toggle="tab" href="#tab-identitas" id="MCI">Identitas</a></li>
+                        <li><a data-toggle="tab" href="#tab-aktifitas" id="MCA">Aktifitas</a></li>
+                        <li><a data-toggle="tab" href="#tab-blokir" id="MCB">Blokir</a></li>
+                        <li><a data-toggle="tab" href="#tab-npwp" id="MCN">NPWP</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="tab-identitas" class="tab-pane fade in active">
+                            <h3>Identitas</h3>
+                            <div class="row">
+                                <div class="col-md-12">
                                     @{
                                         Html.RenderPartial("_CustomerIdentitas.cshtml", Model);
                                     }
                                 </div>
                             </div>
-                            <!-- End Identitas -->
-                            <!-- Begin Aktifitas -->
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-aktifitas" aria-expanded="false" class="collapsed">
-                                        Aktifitas
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse-aktifitas" class="panel-collapse collapse">
-                                <div class="panel-body">
+                        </div>
+                        <div id="tab-aktifitas" class="tab-pane fade">
+                            <h3>Aktifitas</h3>
+                            <div class="row">
+                                <div class="col-md-12">
                                     @{
                                         Html.RenderPartial("_CustomerAktifitas.cshtml", Model);
                                     }
                                 </div>
                             </div>
-                            <!-- End Aktifitas -->
-                            <!-- Begin Blokir -->
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-blokir" aria-expanded="false" class="collapsed">
-                                        Blokir
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse-blokir" class="panel-collapse collapse">
-                                <div class="panel-body">
+                        </div>
+                        <div id="tab-blokir" class="tab-pane fade">
+                            <h3>Blokir</h3>
+                            <div class="row">
+                                <div class="col-md-12">
                                     @{
                                         Html.RenderPartial("_CustomerBlokir.cshtml", Model);
                                     }
                                 </div>
                             </div>
-                            <!-- End Blokir -->
-                            <!-- Begin NPWP -->
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion-nasabah" href="#collapse-npwp" aria-expanded="false" class="collapsed">
-                                        NPWP
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse-npwp" class="panel-collapse collapse">
-                                <div class="panel-body">
+                        </div>
+                        <div id="tab-npwp" class="tab-pane fade">
+                            <h3>NPwP</h3>
+                            <div class="row">
+                                <div class="col-md-12">
                                     @{
-                                        Html.RenderPartial("_CustomerNPWP.cshtml");
+                                        Html.RenderPartial("_CustomerNPWP.cshtml", Model);
                                     }
                                 </div>
                             </div>
-                            <!-- End NPWP -->
                         </div>
                     </div>
                 </div>
-                <!-- End Accordions -->
+                <!-- End tabs -->
+
+
             </div>
-            <div class="modal fade" id="OffcieModal" tabindex="-1" role="dialog" aria-labelledby="OffcieModalLabel">
+            <div class="modal fade" id="OfficeModal" tabindex="-1" role="dialog" aria-labelledby="OfficeModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content"></div>
                 </div>
@@ -209,345 +193,1183 @@
                     <div class="modal-content"></div>
                 </div>
             </div>
+
+            <div class="modal fade" id="ErrorSubsModal" tabindex="-1" role="dialog" aria-labelledby="ErrorSubsModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4>Daftar Error</h4>
+                        </div>
+                        <div class="modal-body">
+                            @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorListSubs>()
+                                                                            .Name("GridError")
+                                                                            .Columns(columns =>
+                                                                            {
+                                                                                columns.Bound(m => m.fieldName).Width(200).Title("FieldName");
+                                                                                columns.Bound(m => m.description).Width(500).Title("Description");
+                                                                            })
+                                                                            .Pageable()
+                                                                            .Scrollable(s => s.Height(300))
+                                                                            .Selectable(selectable => selectable
+                                                                                .Mode(GridSelectionMode.Single))
+                            )
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnOKErrorSubs" class="btn btn-info pull-left" data-dismiss="modal">
+                                <span class="glyphicon glyphicon-ok"></span> OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <!-- End Contents -->
-</form>
 
 <script>
     var _intType = 0;
-    var _idAccordions;
-    $(document).ready(function () {
+    var _intOpsiNPWP = 0;
+    var _intValidationNPWP = 0;
+    var _strTabName;
+    var intClassificationId;
+    var _intId;
+    var intMaxDay = 0;
+    var intMaxYear = 0;
+    var _dtCurrentDate = new Date();
+    var _intJnsNas;
 
-        $("#buttonadd").click(function () {
-            $("#buttonadd").hide();
-            $("#buttonedit").hide();
-            $("#buttondelete").hide();
-            $("#buttonsave").show();
-            $("#buttonCancel").show();
-            _intType = 1;
-            clearAll();
-            disableAll(1);
-            $("#labelStatus").text("NEW");
-            $("#UnitBlokir").prop('disabled', false);
-            $("#decTotal").prop('disabled', false);
-            $("#decOutStanding").prop('disabled', false);
-            $("#TanggalExpiryBlokir").data("kendoDatePicker").enable(true);
-            $("#TanggalBlokir").data("kendoDatePicker").enable(true);
+    //load
+    $(document).ready(function () { 
+        _strTabName = "MCI";
+        $('#tabs a[href="#tab-identitas"]').trigger('click');
+
+        GetComponentSearch();
+        _intType = 0;
+        _intId = 0;
+
+        $("#dtpTglTran").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpExpiry").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpRiskProfile").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtExpiredRiskProfile").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtRDBJatuhTempo").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpStartDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpEndDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglNPWPSendiri").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglNPWPKK").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglDokTanpaNPWP").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglLahir").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpJoinDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+
+        $("#lblStatus").text(""); 
+        subDisableAll(_intType);
+
+        document.getElementById("btnShareHolder").disabled = true;
+        document.getElementById("btnGantiOpsiNPWP").disabled = true;
+        ValidasiKodeKantor($("#srcOffice_text1").val(), function (output) {
+            if (output) {
+                ValidateOffice($("#srcOffice_text1").val(), function (res) {
+                    $("#srcOffice_text2").val(res);
+                });
+            }
+        });
+        $("#buttonadd").click(function () {            
+            subNew();
         });
         $("#buttonedit").click(function () {
-            $("#labelStatus").text("UPDATING");
-            $("#buttonadd").hide();
-            $("#buttonedit").hide();
-            $("#buttondelete").hide();
-            $("#buttonsave").show();
-            $("#buttonCancel").show();
-
-            var datepicker = $("#TanggalExpiryBlokir").data("kendoDatePicker");
-            datepicker.enable(true);
-            $("#UnitBlokir").prop('disabled', false);
-            _intType = 2;
-
+            subUpdate();
         });
         $("#buttondelete").click(function () {
-            $("#labelStatus").text("DELETE");
+            subDelete();
         });
         $("#buttonsave").click(function () {
-            if (_idAccordions == "MCB") {
-                MaintainBlokir();
-            }
-
+            subSave();
         });
         $("#buttonCancel").click(function () {
-            $("#labelStatus").text("");
-            $("#buttonadd").show();
-            $("#buttonedit").show();
-            $("#buttondelete").show();
-            $("#buttonsave").hide();
-            $("#buttonCancel").hide();
             subCancel();
         });
-        $("#ButtonRefresh").click(function () {
+        $("#btnRefresh").click(function () {
             subRefresh();
         });
+        $("#btnGantiOpsiNPWP").click(function () {
+            $("#tbNoNPWPKK").val('');
+            $("#tbNamaNPWPKK").val('');
+            //cbKepemilikanNPWPKK.SelectedIndex = -1;
+            $("#tbKepemilikanLainnya").val('');
+            var today = new Date();
+            $("#dtpTglNPWPKK").val(today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear());
+            $("#dtpTglDokTanpaNPWP").val(today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear());
+            
+            //cbAlasanTanpaNPWP.SelectedIndex = -1;
+            $("#tbNoDokTanpaNPWP").val('');           
+
+            switch (_intOpsiNPWP) {
+                case 2:
+                    _intOpsiNPWP = 3;
+                    EnableFieldNPWP(3);
+                    break;
+                case 1:
+                case 3:
+                    _intOpsiNPWP = 2;
+                    EnableFieldNPWP(2);
+                    break;
+            }
+        }); 
+        $("#btnGenerateNoDokTanpaNPWP").click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/GetNoNPWPCounter',
+                success: function (data) {
+                    if (data.blnResult) {
+                        $("#tbNoDokTanpaNPWP").val(data.strNoDocNPWP);
+                        document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
+                    }
+                    else {
+                        swal("Error", data.ErrMsg, "error");
+                    }
+                }
+            });
+        });  
+
+        //change
+        $("#srcCIF_text1").change(function () {
+            if (_intType == 1) {
+                if ($("#srcCIF_text1").val() != "") {
+                    GetDataCIF($("#srcCIF_text1").val(), _intType);
+                }
+            } else {
+                if ($("#srcCIF_text1").val() == "") {
+                    subClearAll();
+                }
+            }
+        });
+        $("#maskedRekening").change(function () {
+            if ($("#maskedRekening").val() != "") {
+                GetAccountRelationDetail($("#maskedRekening").val(), 1, function (output) {
+                    if (!output) {
+                        return;
+                    }
+                });
+                if ($("#maskedRekening").val() == "") {
+                    swal("Warning", "Nomor rekening salah!", "warning");
+                }
+            }
+        });
+        $("#maskedRekeningMC").change(function () {
+            if ($("#maskedRekeningMC").val() != "") {
+                GetAccountRelationDetail($("#maskedRekeningMC").val(), 4, function (output) {
+                    if (!output) {
+                        return;
+                    }
+                });
+                if ($("#maskedRekeningMC").val() == "") {
+                    swal("Warning", "Nomor rekening salah!", "warning");
+                }
+            }
+        });
+        $("#maskedRekeningUSD").change(function () {
+            if ($("#maskedRekeningUSD").val() != "") {
+                GetAccountRelationDetail($("#maskedRekeningUSD").val(), 3, function (output) {
+                    if (!output) {
+                        return;
+                    }
+                });
+                if ($("#maskedRekeningUSD").val() == "") {
+                    swal("Warning", "Nomor rekening salah!", "warning");
+                }
+            }
+        });
+        //modal
+        $("#srcCIF").click(function (ev) {
+            ev.preventDefault();
+            var target = $(this).attr("href");
+            $("#CustomerModal .modal-content").load(target, function () {
+                $("#CustomerModal .modal-content").empty().append(this);
+            });
+        });
+        $("#srcOffice").click(function (ev) {
+            ev.preventDefault();
+            var target = $(this).attr("href");
+            $("#OfficeModal .modal-content").load(target, function () {
+                $("#OfficeModal .modal-content").empty().append(this);
+            });
+        });        
     });   
 
+    function GetComponentSearch()
+    {
+        var url = '@Html.Raw(Url.Action("SearchCustomer", "Global"))';
+        $('#srcCIF').attr('href', url); 
+    }
+
+    function subNew() {
+        _intType = 1;
+        subClearAll();
+        subDisableAll(_intType);
+        subResetToolbar();
+        $("#lblStatus").text("NEW");        
+        $("#dtpTglTran").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpExpiry").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpRiskProfile").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtExpiredRiskProfile").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtRDBJatuhTempo").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpStartDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpEndDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglNPWPSendiri").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglNPWPKK").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglDokTanpaNPWP").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpTglLahir").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+        $("#dtpJoinDate").val(_dtCurrentDate.getDate() + '/' + (_dtCurrentDate.getMonth() + 1) + '/' + _dtCurrentDate.getFullYear());
+
+        
+        var url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+        $('#srcCIF').attr('href', url);
+
+        ValidasiKodeKantor($("#srcOffice_text1").val(), function (output) {
+            if (output) {
+                ValidateOffice($("#srcOffice_text1").val(), function (res) {
+                    $("#srcOffice_text2").val(res);
+                    SetEnableOfficeId($("#srcOffice_text1").val());
+                });
+            }
+        });
+    }
+
+    function GetDataCIF(CIFNo, _intType)
+    {
+        var NPWP = '';
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetCIFData',
+            data: { CIFNo: CIFNo, NPWP:NPWP },
+            success: function (data) {
+                if (data.blnResult)
+                {
+                    _intJnsNas = data.CIFData[0].intJnsNas;
+                    $("#CIFTypeName").val(data.CIFData[0].JnsNas);                    
+                    $("#textShareHolderId").val(data.CIFData[0].ShareholderID);
+                    if ((_intType == 1) && ($("#textShareHolderId").val() == "")) {
+                        document.getElementById("btnShareHolder").disabled = false;
+                    }
+                    else
+                    {
+                        document.getElementById("btnShareHolder").disabled = true;
+                    }
+                    $("#tbTmptLahir").val(data.CIFData[0].TempatLhr);
+                    var dateBirthDay = new Date(data.CIFData[0].TglLhr);
+                    $("#dtpTglLahir").val(dateBirthDay.getDate() + '/' + (dateBirthDay.getMonth() + 1) + '/' + dateBirthDay.getFullYear());
+                    $("#tbKTP").val(data.CIFData[0].KTP);
+                    $("#tbHP").val(data.CIFData[0].HP); 
+                    $("#textSID").val(data.CIFData[0].CIFSID);
+                    $("#textSubSegment").val(data.CIFData[0].SubSegment);
+                    $("#textSegment").val(data.CIFData[0].Segment);
+                    var dateCreate = new Date();
+                    $("#dtpJoinDate").val(dateCreate.getDate() + '/' + (dateCreate.getMonth() + 1) + '/' + dateCreate.getFullYear());
+                    //PhoneOrder
+                    //checkPhoneOrder.Checked = GlobalFunctionCIF.CekCIFProductFacility(CIFNo);
+                    SetDocStatus(CIFNo, _intType);
+                    GetRiskProfile(CIFNo);
+                    if (_intType == 1) {
+                        $("#tbNama").prop('disabled', true);
+                        $("#tbNama").val(data.CIFData[0].CIFName);
+                        if (data.CIFData[0].WarnMsg != "") {
+                            swal("Warning", data.CIFData.WarnMsg, "warning");
+                        }
+                        GetKonfAddress(CIFNo, function (output) {
+                            if (output == false) {
+                                swal("Warning", "Gagal Ambil Data Alamat Konfirmasi!", "warning");
+                            }
+                        });
+                    }
+                    document.getElementById("btnGantiOpsiNPWP").disabled = false;
+                    _intValidationNPWP = 1;
+                    _intOpsiNPWP = 1;
+
+                    $("#tbNoNPWPSendiri").val(data.CIFData[0].NPWP); 
+                    $("#tbNamaNPWPSendiri").val(data.CIFData[0].NamaNPWP); 
+                    $("#dtpTglNPWPSendiri").val(data.CIFData[0].TglNPWP); 
+                    $("#tbNoNPWPKK").val(''); 
+                    $("#tbNamaNPWPKK").val('');
+                    $("#tbKepemilikanLainnya").val('');
+                    var today = new Date();
+                    $("#dtpTglNPWPKK").val(today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear());
+                    $("#dtpTglDokTanpaNPWP").val(today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear());
+                    //cbAlasanTanpaNPWP.SelectedIndex = -1;
+                    $("#tbNoDokTanpaNPWP").val('');
+                    EnableFieldNPWP(1);                    
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                    subClearAll();
+                }
+            }
+        });
+        
+    }
+
     function subRefresh() {
-        var CIFNo = $("#CIFNo").val();
+        var CIFNo = $("#srcCIF_text1").val();
+        if (CIFNo == "") {
+            swal("Warning", "Nomor CIF Harus Diisi!", "warning");
+            return;
+        }
+
+        if ((_strTabName == "MCI") || (_strTabName == "MCA"))
+        {
+            if (CIFNo == "") {
+                swal("Warning", "Client Code Harus Diisi!", "warning");
+                return;
+            }
+        }
+        
         var BlokirClientId = $("#BlokirClientId").val();
         $.ajax({
             type: 'GET',
             url: '/Customer/RefreshCustomer',
-            data: { strCIFNo: CIFNo, intClientId: BlokirClientId, idAccordions: _idAccordions },
+            data: { strCIFNo: CIFNo, intClientId: BlokirClientId, idAccordions: _strTabName },
             success: function (data) {
-                if (_idAccordions == "MCI") {
+                if ((_strTabName == "MCI") || (_strTabName == "MCN")) {
                     RefreshIdentitas(data);
+                    RefreshNPWP(data);
                 }
-                else if (_idAccordions == "MCA") {
+                else if ((_strTabName == "MCI") || (_strTabName == "MCA")) {
+                    //RefreshIdentitas(data);
                     RefreshAktifitas(data);
                 }
-                else if (_idAccordions == "MCB") {
+                else if (_strTabName == "MCB") {
                     RefreshBlokir(data);
-                }
-                else if (_idAccordions == "MCN") {
-                    RefreshNPWP(data);
                 }
             }
         });
+    }    
+
+    function subUpdate()
+    {
+        if ($("#srcCIF_text1").val() == '') {
+            swal("Warning", "Pilih Nasabah Terlebih Dahulu", "warning");
+        }
+        else
+        {
+            subRefresh();
+            _intType = 2;
+            $("#lblStatus").text("UPDATING");
+
+            if ((_strTabName == "MCI") || (_strTabName == "MCA") || (_strTabName == "MCN")) {
+                $("#srcCIF_text1").prop('disabled', true);
+                $("#srcCIF").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#tbNama").prop('disabled', true);
+                $("#cbStatus").data('kendoDropDownList').enable(true);
+                $("#srcEmployee_text1").prop('disabled', true);
+                $("#srcEmployee").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#cbProfilResiko").prop('disabled', true);
+                $("#cbKetum").prop('disabled', true);
+                $("#txtbRiskProfile").prop('disabled', true);
+                $("#maskedRekening").prop('disabled', false);
+                $("#tbNamaRekening").prop('disabled', true);
+                $("#maskedRekeningUSD").prop('disabled', false);
+                $("#tbNamaRekeningUSD").prop('disabled', true);
+                $("#maskedRekeningMC").prop('disabled', false);
+                $("#tbNamaRekeningMC").prop('disabled', true);
+                $("#cbDikirimKe").data('kendoDropDownList').enable(true);
+                $("#srcCabang_text1").prop('disabled', false);
+                $("#searchOfficeCabang").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+                $("#tbNoNPWPKK").prop('disabled', true);
+                $("#tbNamaNPWPKK").prop('disabled', true);
+                $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(false);
+                $("#tbKepemilikanLainnya").prop('disabled', true);
+                $("#dtpTglNPWPKK").data("kendoDatePicker").enable(false);
+                $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(false);
+                $('#btnGenerateNoDokTanpaNPWP').attr('disabled', 'disabled');
+                $('#btnGantiOpsiNPWP').attr('disabled', '');
+                cekCheckbox();
+            }
+            else if (_strTabName == "MCB") {
+                ReksaRefreshBlokir();                
+                $("#MoneyBlokir").prop('disabled', false);
+                $("#dtpExpiry").data("kendoDatePicker").enable(true);
+            }
+            else {
+                _intType = 0;
+            }
+            subResetToolbar();
+        }     
+    }       
+
+    function subDelete()
+    {
+        _intType = 3;
+        swal({
+            title: "Are you sure to delete this data?",
+            text: "You need to approval from suppervisor!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-danger',
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        },
+            function () {
+                subSave();
+            });   
+
+        _intType = 0;
+        subResetToolBar();
     }
 
-    function subResetToolbar()
-    {
-    }
+    function subSave()
+    {            
+        var selectedId = 0;
+
+        //string strErrorMessage = "", strIsAllowed = "";
+        //if (clsValidator.ValidasiUserCBO(ClQ, cmpsrKodeKantor.Text1, strBranch, out strIsAllowed, out strErrorMessage)) {
+        //    if (strIsAllowed == "0") {
+        //        MessageBox.Show("Error [ReksaValidateUserCBOOffice], " + strErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return;
+        //    }
+        //}
+        //else {
+        //    MessageBox.Show("Error [ReksaValidateUserCBOOffice]!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    return;
+        //}
+
+        if ($('#srcCIF_text1').val() == "") {
+            swal("Warning", "No CIF harus diisi!", "warning");
+            return;
+        }
+        if ($('#srcCIF_text2').val() == "") {
+            swal("Warning", "Nama CIF harus diisi!", "warning");
+            return;
+        }
+        //Identitas atau nasabah
+        if ((_strTabName == "MCI") || (_strTabName == "MCN")) {
+            if (_intType != 3) {
+                if ($('#srcOffice_text1').val() == "") {
+                    swal("Warning", "Kode Kantor harus terisi!", "warning");
+                    return;
+                }
+                if ($('#textShareHolderId').val() == "") {
+                    swal("Warning", "Shareholder ID harus terisi!", "warning");
+                    return;
+                }
+                if (($('#maskedRekening').val() != "") && ($('#maskedRekeningMC').val() != "")) {
+                    swal("Warning", "Harap hanya mengisi salah satu, Rekening IDR atau Rekening Multicurrency saja!", "warning");
+                    return;
+                }
+                if (($('#maskedRekeningUSD').val() != "") && ($('#maskedRekeningMC').val() != "")) {
+                    swal("Warning", "Harap hanya mengisi salah satu, Rekening USD atau Rekening Multicurrency saja!", "warning");
+                    return;
+                }
+                if ($("#maskedRekening").val() != "") {
+                    GetAccountRelationDetail($("#maskedRekening").val(), 1, function (output) {
+                        if (!output) {
+                            return;
+                        }
+                    });
+                    if ($("#maskedRekening").val() == "") {
+                        swal("Warning", "Nomor rekening salah!", "warning");
+                        return;
+                    }
+                }
+                if ($("#maskedRekeningUSD").val() != "") {
+                    GetAccountRelationDetail($("#maskedRekeningUSD").val(), 3, function (output) {
+                        if (!output) {
+                            return;
+                        }
+                    });
+                    if ($("#maskedRekeningUSD").val() == "") {
+                        swal("Warning", "Nomor rekening salah!", "warning");
+                        return;
+                    }
+                }
+                if ($("#maskedRekeningMC").val() != "") {
+                    GetAccountRelationDetail($("#maskedRekeningMC").val(), 4, function (output) {
+                        if (!output) {
+                            return;
+                        }
+                    });
+                    if ($("#maskedRekeningMC").val() == "") {
+                        swal("Warning", "Nomor rekening salah!", "warning");
+                        return;
+                    }
+                }
+                if (($('#maskedRekening').val() != "") && ($('#maskedRekening').val().length < 12)) {
+                    swal("Warning", "Nomor rekening harus 12 digit!", "warning");
+                    return;
+                }
+                if (($('#maskedRekeningUSD').val() != "") && ($('#maskedRekeningUSD').val().length < 12)) {
+                    swal("Warning", "Nomor rekening harus 12 digit!", "warning");
+                    return;
+                }
+                if (($('#maskedRekeningMC').val() != "") && ($('#maskedRekeningMC').val().length < 12)) {
+                    swal("Warning", "Nomor rekening harus 12 digit!", "warning");
+                    return;
+                }
+                if (($('#tbNamaRekening').val() == "") && ($('#maskedRekening').val() != "")) {
+                    swal("Warning", "Nomor rekening IDR tidak terdaftar!", "warning");
+                    return;
+                }
+                if (($('#tbNamaRekeningUSD').val() == "") && ($('#maskedRekeningUSD').val() != "")) {
+                    swal("Warning", "Nomor rekening USD tidak terdaftar!", "warning");
+                    return;
+                }
+                if (($('#tbNamaRekeningMC').val() == "") && ($('#maskedRekeningMC').val() != "")) {
+                    swal("Warning", "Nomor rekening Multicurrency tidak terdaftar!", "warning");
+                    return;
+                }
+                if (($('#maskedRekening').val() != "") && ($('#tbNamaRekening').val() != $('#srcCIF_text2').val())) {
+                    swal({
+                        title: "Apakah rekening IDR tersebut milik pemegang reksadana?",
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-warning',
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal("Error", "Gagal Simpan Data", "error");
+                                return;
+                            }
+                            else {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                            }
+                        });
+                }
+                if (($('#maskedRekeningUSD').val() != "") && ($('#tbNamaRekeningUSD').val() != $('#srcCIF_text2').val())) {
+                    swal({
+                        title: "Apakah rekening USD tersebut milik pemegang reksadana?",
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-warning',
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        closeOnConfirm: false
+                    },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal("Error", "Gagal Simpan Data", "error");
+                                return;
+                            }
+                            else {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                            }
+                        });
+                }
+                if (($('#maskedRekeningMC').val() != "") && ($('#tbNamaRekeningMC').val() != $('#srcCIF_text2').val())) {
+                    swal({
+                        title: "Apakah rekening Multicurrency tersebut milik pemegang reksadana?",
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-warning',
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal("Error", "Gagal Simpan Data", "error");
+                                return;
+                            }
+                            else
+                            {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                            }
+                        });
+                }
+                if (($('#cbStatus').val() == 0) && ($("#srcEmployee_text1").val() == "")) {
+                    swal("Warning", "NIK karyawan tidak ditemukan!", "warning");
+                    return;
+                }
+                else if (($('#cbStatus').val() == 1) && ($("#srcEmployee_text1").val() != "")) {
+                    $("#srcEmployee_text1").val("");
+                    $("#srcEmployee_text2").val("")
+                }
+                if ($('#cbDikirimKe').val() == '') {
+                    swal("Warning", "Surat konfirmasi Dikirim Ke' harus dipilih!", "Warning");
+                    return;
+                }
+                if (($('#cbDikirimKe').val() == 1) && ($('#srcCabang_text1').val() == "")) {
+                    swal("Warning", "Kode kantor alamat surat harus diisi", "Warning");
+                    return;
+                }
+
+                var grid = $("#dgvKonfAddr").data("kendoGrid");
+                grid.refresh();
+                grid.tbody.find("tr[role='row']").each(function () {
+                    var dataItem = grid.dataItem(this);
+                    if (dataItem.Pilih == true) {
+                        selectedId = selectedId + 1;
+                    }
+                })
+                if (selectedId == 0) {
+                    swal("Warning", "Wajib Memilih Alamat Konfirmasi terlebih dahulu!", "warning");
+                    return;
+                }
+                if (selectedId > 1) {
+                    swal("Warning", "Hanya diperbolehkan memilih 1 alamat konfirmasi!", "warning");
+                    return;
+                }
+                if ($('#cbProfilResiko').prop('checked') == false) {
+                    swal("Warning", "Kelengkapan Dokumen Kuesioner Risk Profile belum diisi", "warning");
+                    return;
+                }
+                if ($('#cbKetum').prop('checked') == false) {
+                    swal("Warning", "Kelengkapan Dokumen Ketentuan Umum Reksadana belum diisi", "warning");
+                    return;
+                }
+                if ($("#txtbRiskProfile").val() == "") {
+                    swal("Warning", "Data risk profile wajib ada. Mohon lengkapi dulu data Nasabah", "warning");
+                    return;
+                }
+                GetRiskProfileParam();
+                console.log(intMaxDay);
+
+                //System.TimeSpan diff = _dtCurrentDate.Subtract(dtpRiskProfile.Value);
+                //if (diff.Days >= intMaxDay || dtExpiredRiskProfile.Value <= _dtCurrentDate) {
+                //    if (MessageBox.Show("No CIF : " + cmpsrCIF.Text1 + "\n\nTanggal Last Update Risk Profile : " + dtpRiskProfile.Value + "\n\nTanggal Last Update Risk Profile sudah lewat " + intMaxYear + " tahun \n\n Last Update Risk Profile telah lebih dari " + intMaxYear + " tahun, \n Apakah Risk Profile Nasabah Berubah ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                //    {
+                //        MessageBox.Show("No CIF : " + cmpsrCIF.Text1 + "\n\nTanggal Last Update Risk Profile : " + dtpRiskProfile.Value + "\n\nTanggal Last Update Risk Profile sudah lewat " + intMaxYear + " tahun \n\n Last Update Risk Profile telah lebih dari " + intMaxYear + " tahun, \n Apakah Risk Profile Nasabah Berubah ?", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //        MessageBox.Show("Gagal Simpan Data", "Error");
+                //        return;
+                //    }
+                //    else {
+                //        dtpRiskProfile.Value = System.Convert.ToDateTime(ProReksa2.Global.strCurrentDate.ToString());
+                //    }
+                //}                
+            }
+            var intStatus;
+            if ($('#cbStatus').val() == 0)
+            {
+                intStatus = 1;
+            }
+            else
+            {
+                intStatus = 0;
+            }
+
+            var NIKEmployee;
+            if ($('#srcEmployee_text1').val().trim() == "") {
+                NIKEmployee = 0;
+            }
+            else {
+                NIKEmployee = $('#srcEmployee_text1').val();
+            }
+            var NasabahId;
+            if ((_intType == 2) || (_intType == 3)) {
+                NasabahId = $('#idNasabah').val();
+            }
+            else {
+                NasabahId = 0;
+            }
+
+            var arrHeader = [];
+            var obj = {};
+            obj['Type'] = '1';
+            obj['CIFNo'] = $("#srcCIF_text1").val();
+            obj['DataType'] = $("#cbDikirimKe").val();
+            obj['Branch'] = $("#srcOffice_text1").val();
+            arrHeader.push(obj);
+
+            var grid = $("#dgvKonfAddr").data("kendoGrid");
+            grid.refresh();
+            var SelectedId = "";
+            grid.tbody.find("tr[role='row']").each(function () {
+                var dataItem = grid.dataItem(this);
+
+                if (dataItem.Pilih == true) {
+                    SelectedId += dataItem.Sequence + "|";
+                }
+            })
+            var dtpTglLahir = toDate($("#dtpTglLahir").val());
+            var dtpJoinDate = toDate($("#dtpJoinDate").val());
+            
+            var dtpTglNPWPKK = toDate($("#dtpTglNPWPKK").val());
+            var dtpTglDokTanpaNPWP = toDate($("#dtpTglDokTanpaNPWP").val());
+            var dtpRiskProfile = toDate($("#dtpRiskProfile").val());
+
+            //SubSaveRiskProfile();
+            var model = JSON.stringify({
+                'Type': _intType,
+                'CIFNo': $("#srcCIF_text1").val(),
+                'CIFName': $("#srcCIF_text2").val(),
+                'OfficeId': $("#srcOffice_text1").val(),
+                'CIFType': _intJnsNas,
+                'ShareholderID': $("#textShareHolderId").val(),
+                'CIFBirthPlace': $("#tbTmptLahir").val(),
+                'CIFBirthDay': dtpTglLahir,
+                'JoinDate': dtpJoinDate,
+                'IsEmployee': intStatus,
+                'CIFNIK': NIKEmployee,
+                'AccountId': $("#maskedRekening").val(),
+                'AccountName': $("#tbNamaRekening").val(),
+                'isRiskProfile': $("#cbProfilResiko").prop('checked'),
+                'isTermCondition': $("#cbKetum").prop('checked'),
+                'RiskProfileLastUpdate': dtpRiskProfile,
+                'NoNPWPKK': $("#tbNoNPWPKK").val(),
+                'NamaNPWPKK': $("#tbNamaNPWPKK").val(),
+                'KepemilikanNPWPKK': $("#cbKepemilikanNPWPKK").val(),
+                'KepemilikanNPWPKKLainnya': $("#tbKepemilikanLainnya").val(),
+                'TglNPWPKK': dtpTglNPWPKK,
+                'AlasanTanpaNPWP': $("#cbAlasanTanpaNPWP").val(),
+                'NoDokTanpaNPWP': $("#tbNoDokTanpaNPWP").val(),
+                'TglDokTanpaNPWP': dtpTglDokTanpaNPWP,
+                'NoNPWPProCIF': $("#tbNoNPWPSendiri").val(),
+                'NamaNPWPProCIF': $("#tbNamaNPWPSendiri").val(),
+                'NasabahId': NasabahId,
+                'AccountIdUSD': $("#maskedRekeningUSD").val(),
+                'tbNamaRekeningUSD': $("#tbNamaRekeningUSD").val(),
+                'AccountIdMC': $("#maskedRekeningMC").val(),
+                'AccountNameMC': $("#tbNamaRekeningMC").val(),
+                'SelectedId': SelectedId, 
+                'HeaderAddress': arrHeader
+            });
+
+            console.log(model);
+
+            $.ajax({
+                type: "POST",
+                data: model,
+                url: '/Customer/MaintainNasabah',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.blnResult == true) {
+                        swal("Success!", "Your data need to approve by supervisor", "success");
+                        _intType = 0;
+                        subDisableAll(_intType);
+                        GetComponentSearch();
+                        subRefresh();
+                    }
+                    else
+                    {
+                        if (data.dtError.length > 0) {
+                            swal({
+                                title: "Failed",
+                                text: "Data Transaksi Gagal Disimpan",
+                                type: "error",
+                                confirmButtonClass: 'btn-danger',
+                                confirmButtonText: "OK",
+                                closeOnConfirm: true
+                            },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        console.log(data.dtError);
+                                        var dataSource = new kendo.data.DataSource(
+                                            {
+                                                data: data.dtError
+                                            });
+                                        var Errorgrid = $('#GridError').data('kendoGrid');
+                                        Errorgrid.setDataSource(dataSource);
+                                        Errorgrid.dataSource.pageSize(10);
+                                        Errorgrid.select("tr:eq(0)");
+                                        $('#ErrorSubsModal').modal('toggle');
+                                    }
+                                });
+                        }
+                        else {
+                            swal("Warning", data.ErrMsg, "warning");
+                        }
+                    }
+                }
+            });
+        }
+        //blokir
+        else if (_strTabName == "MCB") {
+            if ($("#srcClient_text1").val() == "") {
+                swal("Warning", "Client Code Harus Diisi!", "warning");
+                return;
+            }
+            if ($("#MoneyBlokir").val() == "") {
+                swal("Warning", "Besar Blokir Harus Diisi", "warning");
+                return;
+            }
+            if (($("#dtpExpiry").val() <= $("#dtpTglTran").val()) && (_intType != 3)) {
+                swal("Warning", "Tanggal Expiry harus > Tanggal Hari ini", "warning");
+                return;
+            }
+            var BlockId;
+            if (_intType == 3) {
+                BlockId = $("#BlokirId").val();
+            } else {
+                BlockId = 0;
+            }
+            var TanggalExpiryBlokir = $("#dtpExpiry").val().split("/");
+            var fTanggalExpiryBlokir = new Date(TanggalExpiryBlokir[2], TanggalExpiryBlokir[1] - 1, TanggalExpiryBlokir[0] - 1);
+            var TanggalBlokir = $("#dtpTglTran").val().split("/");
+            var fTanggalBlokir = new Date(TanggalBlokir[2], TanggalBlokir[1] - 1, TanggalBlokir[0]);
+            var model = JSON.stringify({
+                'ClientId': $("#BlokirClientId").val(),
+                'BlockId': BlockId,
+                'UnitBlokir': $("#MoneyBlokir").val(),
+                'TanggalExpiryBlokir': fTanggalExpiryBlokir,
+                'TanggalBlokir': fTanggalBlokir,
+                'intType': _intType
+            });
+            $.ajax({
+                type: "POST",
+                data: model,
+                url: '/Customer/MaintainBlokir',
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.blnResult == true) {
+                        swal("Maintain Blokir Berhasil!", "Your data need to approve by supervisor", "success");
+                        _intType = 0;
+                        subDisableAll(_intType);
+                        subRefresh();
+                        subResetToolBar();
+                    }
+                    else {
+                        swal("Error", data.strErrMsg, "error");
+                    }
+                }
+            });
+        }
+        //aktifitas
+        else if (_strTabName == "MCA")
+        {
+        }
+    }    
 
     function subCancel()
     {
-        clearAll();
-        disableAll(0);
+        _intType = 0;
+        subClearAll();
+        subDisableAll(_intType);
+        subResetToolbar();
+        GetComponentSearch();
     }
 
-    function clearAll() {
+    function subClearAll() {
         //IDENTITAS
-        $("#labelStatus").text("");
-        $("#CIFNo").val("");
-        $("#CIFName").val("");
-        $("#NamaPemilik").val("");
+        $("#lblStatus").text("");
+        $("#srcCIF_text1").val("");
+        $("#srcCIF_text2").val("");
+        $("#tbNama").val("");
         $("#CIFTypeName").val("");
-        $("#Segment").val("");
-        $("#SubSegment").val("");
-        $("#SID").val("");
-        $("#ShareholderID").val("");
-        $("#CIFBirthPlace").val("");
-        $("#CIFBirthDay").val("");
-        $("#CIFIDNo").val("");
-        $("#HP").val("");
-        $("#Email").val("");
-        $("#CreateDate").val("");
-        $("#AccountId").val("");
-        $("#AccountName").val("");
-        $("#AccountIdUSD").val("");
-        $("#AccountNameUSD").val("");
-        $("#AccountIdMC").val("");
-        $("#AccountNameMC").val("");
-        $("#StatusEmployee").data('kendoDropDownList').value("0");
-        $("#EmployeeId").val("");
-        $("#EmployeeName").val("");
-        $("#RiskProfile").val("");
-        $("#LastUpdate").val("");
-        $("#DateExpRiskProfile").val("");
-        $('#isDocRiskProfile').prop('checked', false);
-        $('#isDocTermCond').prop('checked', false);
-        $("#KonfirmasiAlamat").data('kendoDropDownList').value("0");
+        $("#textSegment").val("");
+        $("#textSubSegment").val("");
+        $("#textSID").val("");
+        $("#textShareHolderId").val("");
+        $("#tbTmptLahir").val("");
+        $("#dtpTglLahir").val("");
+        $("#tbKTP").val("");
+        $("#tbHP").val("");
+        $("#txtEmail").val("");
+        $("#dtpJoinDate").val("");
+        $("#maskedRekening").val("");
+        $("#tbNamaRekening").val("");
+        $("#maskedRekeningUSD").val("");
+        $("#tbNamaRekeningUSD").val("");
+        $("#maskedRekeningMC").val("");
+        $("#tbNamaRekeningMC").val("");
+        $("#cbStatus").data('kendoDropDownList').value("0");
+        $("#srcEmployee_text1").val("");
+        $("#srcEmployee_text2").val("");
+        $("#txtbRiskProfile").val("");
+        $("#dtpRiskProfile").val("");
+        $("#dtExpiredRiskProfile").val("");
+        $('#cbProfilResiko').prop('checked', false);
+        $('#cbKetum').prop('checked', false);
+        $("#cbDikirimKe").data('kendoDropDownList').value("0");
         onBoundAddressType();
         onChangeAddressType();
-        $("#GridKonfAddress").data('kendoGrid').dataSource.data([]);
-        $("#OfficeIdCabang").val("");
-        $("#OfficeNameCabang").val("");
-        $("#AddressLine1").val("");
-        $("#AddressLine2").val("");
-        $("#PostalCode").val("");
-        $("#Kota").val("");
-        $("#Province").val("");
-        $("#LastUpdatedDate").val("");
+        $("#dgvKonfAddr").data('kendoGrid').dataSource.data([]);
+        $("#srcCabang_text1").val("");
+        $("#srcCabang_text2").val("");
+        $("#tbAlamatSaatIni1").val("");
+        $("#tbAlamatSaatIni2").val("");
+        $("#tbKodePos").val("");
+        $("#tbKotaNasabahAlmt").val("");
+        $("#tbProvNasabahAlmt").val("");
+        $("#txtLastUpdated").val("");
 
         //AKTIFITAS
-        $("#GridClient").data('kendoGrid').dataSource.data([]);
-        $("#JangkaWaktu").val("");
-        $("#DateJatuhTempo").val("");
-        $("#FrekDebet").val("");
-        $("#StarDateAct").val("");
-        $("#EndDateAct").val("");
+        $("#dgvClientCode").data('kendoGrid').dataSource.data([]);
+        $("#txtRDBJangkaWaktu").val("");
+        $("#dtRDBJatuhTempo").val("");
+        $("#textFrekPendebetan").val("");
+        $("#dtpStartDate").val("");
+        $("#dtpEndDate").val("");
         $('#chkAutoRedemp').prop('checked', false);
-        $('#chkAsuransi').prop('checked', false);
-        $("#GridActivity").data('kendoGrid').dataSource.data([]);
+        $('#chkRDBAsuransi').prop('checked', false);
+        $("#dgvAktifitas").data('kendoGrid').dataSource.data([]);
 
         //BLOKIR
-        $("#BlokirClientCode").val("");
-        $("#BlokirClientName").val("");
-        $("#UnitBlokir").val("");
-        $("#decOutStanding").val("");
-        $("#decTotal").val("");
-        $("#TanggalBlokir").val("");
-        $("#TanggalExpiryBlokir").val("");
-        $("#GridBlokir").data('kendoGrid').dataSource.data([]);
+        $("#srcClient_text1").val("");
+        $("#srcClient_text2").val("");
+        $("#MoneyBlokir").val("");
+        $("#OutsUnit").val("");
+        $("#MoneyTotal").val("");
+        $("#dtpTglTran").val("");
+        $("#dtpExpiry").val("");
+        $("#dgvBlokir").data('kendoGrid').dataSource.data([]);
 
         //NPWP
-        $("#NoNPWPProCIF").val("");
-        $("#NamaNPWPProCIF").val("");
-        $("#TglNPWP").val("");
-        $("#NoNPWPKK").val("");
-        $("#NamaNPWPKK").val("");
-        $("#KepemilikanNPWPKK").data('kendoDropDownList').value(0);
-        $("#KepemilikanNPWPKKLainnya").val("");
-        $("#TglNPWPKK").val("");
-        $("#AlasanTanpaNPWP").data('kendoDropDownList').value(0);
-        $("#NoDokTanpaNPWP").val("");
-        $("#TglDokTanpaNPWP").val("");
+        $("#tbNoNPWPSendiri").val("");
+        $("#tbNamaNPWPSendiri").val("");
+        $("#dtpTglNPWPSendiri").val("");
+        $("#tbNoNPWPKK").val("");
+        $("#tbNamaNPWPKK").val("");
+        $("#cbKepemilikanNPWPKK").data('kendoDropDownList').value(0);
+        $("#tbKepemilikanLainnya").val("");
+        $("#dtpTglNPWPKK").val("");
+        $("#cbAlasanTanpaNPWP").data('kendoDropDownList').value(0);
+        $("#tbNoDokTanpaNPWP").val("");
+        $("#dtpTglDokTanpaNPWP").val("");
     }
 
-    function disableAll(intType) {
-        var CIFBirthDay = $("#CIFBirthDay").data("kendoDatePicker");
-        var CreateDate = $("#CreateDate").data("kendoDatePicker");
+    function subDisableAll(intType) {
+        var CIFBirthDay = $("#dtpTglLahir").data("kendoDatePicker");
+        var CreateDate = $("#dtpJoinDate").data("kendoDatePicker");
         if (intType == 0) {
-            $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#OfficeId").prop('disabled', true);
+            $("#srcCIF_text1").prop('disabled', false);
+            $("#srcCIF").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#srcOffice_text1").prop('disabled', true);
             $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
             $("#CIFTypeName").prop('disabled', true);
-            $("#SubSegment").prop('disabled', true);
-            $("#Segment").prop('disabled', true);
-            $("#SID").prop('disabled', true);
-            $("#ShareholderID").prop('disabled', true);
-            $('#buttoncreateSID').attr('disabled', 'disabled');
-            $("#NamaPemilik").prop('disabled', true);
-            $("#CIFBirthPlace").prop('disabled', true);
+            $("#textSubSegment").prop('disabled', true);
+            $("#textSegment").prop('disabled', true);
+            $("#textSID").prop('disabled', true);
+            $("#textShareHolderId").prop('disabled', true);
+            document.getElementById("btnShareHolder").disabled = true;
+            $("#tbNama").prop('disabled', true);
+            $("#tbTmptLahir").prop('disabled', true);
             CIFBirthDay.enable(false);
             CreateDate.enable(false);
-            $("#CIFIDNo").prop('disabled', true);
-            $("#AccountId").prop('disabled', true);
-            $("#AccountName").prop('disabled', true);
-            $("#isDocTermCond").prop('disabled', true);
-            $("#AccountIdUSD").prop('disabled', true);
-            $("#AccountNameUSD").prop('disabled', true);
-            $("#AccountIdMC").prop('disabled', true);
-            $("#AccountNameMC").prop('disabled', true);
-            $("#StatusEmployee").prop('disabled', true);
-            $("#EmployeeId").prop('disabled', true);
-            $("#searchNIK").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            $("#isDocRiskProfile").prop('disabled', true);
-            $("#LastUpdate").prop('disabled', true);
-            $("#PhoneOrder").prop('disabled', true);
+            $("#tbKTP").prop('disabled', true);
+            $("#maskedRekening").prop('disabled', true);
+            $("#tbNamaRekening").prop('disabled', true);
+            $("#cbKetum").prop('disabled', true);
+            $("#maskedRekeningUSD").prop('disabled', true);
+            $("#tbNamaRekeningUSD").prop('disabled', true);
+            $("#maskedRekeningMC").prop('disabled', true);
+            $("#tbNamaRekeningMC").prop('disabled', true);
+            $("#cbStatus").data('kendoDropDownList').enable(false);
+            $("#srcEmployee_text1").prop('disabled', true);
+            $("#srcEmployee").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cbProfilResiko").prop('disabled', true);
+            $("#dtpRiskProfile").prop('disabled', true);
+            $("#checkPhoneOrder").prop('disabled', true);
             $("#chkAutoRedemp").prop('disabled', true);
-            $("#chkAsuransi").prop('disabled', true);
-            $("#KonfirmasiAlamat").prop('disabled', true);
-            $("#OfficeIdCabang").prop('disabled', true);
+            $("#chkRDBAsuransi").prop('disabled', true);
+            $("#cbDikirimKe").data('kendoDropDownList').enable(false);
+            $("#srcCabang_text1").prop('disabled', true);
             $("#searchOfficeCabang").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            $("#BlokirClientCode").prop('disabled', false);
-            $("#searchClient").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#UnitBlokir").prop('disabled', true);
-            $("#decTotal").prop('disabled', true);
-            $("#decOutStanding").prop('disabled', true);
-            $("#TanggalExpiryBlokir").prop('disabled', true);
-            $("#TanggalBlokir").prop('disabled', true);
-            $("#NoNPWPProCIF").prop('disabled', true);
-            $("#NamaNPWPProCIF").prop('disabled', true);
-            $("#TglNPWP").prop('disabled', true);
-            $("#NoNPWPKK").prop('disabled', true);
-            $("#NamaNPWPKK").prop('disabled', true);
-            $("#KepemilikanNPWPKK").prop('disabled', true);
-            $("#KepemilikanNPWPKKLainnya").prop('disabled', true);
-            $("#TglNPWPKK").prop('disabled', true);
-            $("#AlasanTanpaNPWP").prop('disabled', true);
-            $("#NoDokTanpaNPWP").prop('disabled', true);
-            $("#TglDokTanpaNPWP").prop('disabled', true);
-            $('#buttonGenNoDok').attr('disabled', 'disabled');
-            $('#buttonGantiOpsi').attr('disabled', 'disabled');
+            $("#srcClient_text1").prop('disabled', false);
+            $("#srcClient").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#MoneyBlokir").prop('disabled', true);
+            $("#MoneyTotal").prop('disabled', true);
+            $("#OutsUnit").prop('disabled', true);
+            $("#dtpExpiry").prop('disabled', true);
+            $("#dtpTglTran").prop('disabled', true);
+            $("#tbNoNPWPSendiri").prop('disabled', true);
+            $("#tbNamaNPWPSendiri").prop('disabled', true);
+            $("#dtpTglNPWPSendiri").prop('disabled', true);
+            $("#tbNoNPWPKK").prop('disabled', true);
+            $("#tbNamaNPWPKK").prop('disabled', true);
+            $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(false);
+            $("#tbKepemilikanLainnya").prop('disabled', true);
+            $("#dtpTglNPWPKK").prop('disabled', true);
+            $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(false);
+            $("#tbNoDokTanpaNPWP").prop('disabled', true);
+            $("#dtpTglDokTanpaNPWP").prop('disabled', true);
+            document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
+            document.getElementById("btnGantiOpsiNPWP").disabled = true;
         }
         else if (intType == 1) {
 
-            $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#OfficeId").prop('disabled', true);
+            $("#srcOffice_text1").prop('disabled', true);
             $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
             $("#CIFTypeName").prop('disabled', true);
-            $("#SubSegment").prop('disabled', true);
-            $("#Segment").prop('disabled', true);
-            $("#SID").prop('disabled', true);
-            $("#ShareholderID").prop('disabled', true);
-            $('#buttoncreateSID').attr('disabled', 'disabled');
-            $("#NamaPemilik").prop('disabled', true);
-            $("#CIFBirthPlace").prop('disabled', true);
-            $("#CIFBirthDay").prop('disabled', true);
-            $("#CIFIDNo").prop('disabled', true);
-            $("#CreateDate").prop('disabled', true);
-            $("#AccountId").prop('disabled', false);
-            $("#AccountName").prop('disabled', false);
-            $("#isDocTermCond").prop('disabled', true);
-            $("#AccountIdUSD").prop('disabled', false);
-            $("#AccountNameUSD").prop('disabled', true);
-            $("#AccountIdMC").prop('disabled', false);
-            $("#AccountNameMC").prop('disabled', true);
-            $("#StatusEmployee").prop('disabled', false);
-            $("#EmployeeId").prop('disabled', true);
-            $("#searchNIK").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            $("#isDocRiskProfile").prop('disabled', false);
-            $("#LastUpdate").prop('disabled', true);
-            $("#PhoneOrder").prop('disabled', true);
+            $("#textSubSegment").prop('disabled', true);
+            $("#textSegment").prop('disabled', true);
+            $("#textSID").prop('disabled', true);
+            $("#textShareHolderId").prop('disabled', true);
+            document.getElementById("btnShareHolder").disabled = true;
+            $("#tbNama").prop('disabled', true);
+            $("#tbTmptLahir").prop('disabled', true);
+            $("#dtpTglLahir").prop('disabled', true);
+            $("#tbKTP").prop('disabled', true);
+            $("#dtpJoinDate").prop('disabled', true);
+            $("#maskedRekening").prop('disabled', false);
+            $("#tbNamaRekening").prop('disabled', false);
+            $("#cbKetum").prop('disabled', true);
+            $("#maskedRekeningUSD").prop('disabled', false);
+            $("#tbNamaRekeningUSD").prop('disabled', true);
+            $("#maskedRekeningMC").prop('disabled', false);
+            $("#tbNamaRekeningMC").prop('disabled', true);
+            $("#cbStatus").data('kendoDropDownList').enable(true);
+            $("#srcEmployee_text1").prop('disabled', true);
+            $("#srcEmployee").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cbProfilResiko").prop('disabled', false);
+            $("#dtpRiskProfile").prop('disabled', true);
+            $("#checkPhoneOrder").prop('disabled', true);
             $("#chkAutoRedemp").prop('disabled', true);
-            $("#chkAsuransi").prop('disabled', true);
-            $("#KonfirmasiAlamat").prop('disabled', false);
-            $("#OfficeIdCabang").prop('disabled', false);
+            $("#chkRDBAsuransi").prop('disabled', true);
+            $("#cbDikirimKe").data('kendoDropDownList').enable(true);
+            $("#srcCabang_text1").prop('disabled', false);
             $("#searchOfficeCabang").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#BlokirClientCode").prop('disabled', false);
-            $("#searchClient").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#UnitBlokir").prop('disabled', true);
-            $("#decTotal").prop('disabled', true);
-            $("#decOutStanding").prop('disabled', true);
-            $("#TanggalExpiryBlokir").prop('disabled', true);
-            $("#TanggalBlokir").prop('disabled', true);
-            $("#NoNPWPProCIF").prop('disabled', true);
-            $("#NamaNPWPProCIF").prop('disabled', true);
-            $("#TglNPWP").prop('disabled', true);
-            $("#NoNPWPKK").prop('disabled', true);
-            $("#NamaNPWPKK").prop('disabled', true);
-            $("#KepemilikanNPWPKK").prop('disabled', true);
-            $("#KepemilikanNPWPKKLainnya").prop('disabled', true);
-            $("#TglNPWPKK").prop('disabled', true);
-            $("#AlasanTanpaNPWP").prop('disabled', true);
-            $("#NoDokTanpaNPWP").prop('disabled', true);
-            $("#TglDokTanpaNPWP").prop('disabled', true);
-            $('#buttonGenNoDok').attr('disabled', 'disabled');
-            $('#buttonGantiOpsi').attr('disabled', 'disabled');
+            $("#srcClient_text1").prop('disabled', false);
+            $("#srcClient").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#MoneyBlokir").prop('disabled', true);
+            $("#MoneyTotal").prop('disabled', true);
+            $("#OutsUnit").prop('disabled', true);
+            $("#dtpExpiry").prop('disabled', true);
+            $("#dtpTglTran").prop('disabled', true);
+            $("#tbNoNPWPSendiri").prop('disabled', true);
+            $("#tbNamaNPWPSendiri").prop('disabled', true);
+            $("#dtpTglNPWPSendiri").prop('disabled', true);
+            $("#tbNoNPWPKK").prop('disabled', true);
+            $("#tbNamaNPWPKK").prop('disabled', true);
+            $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(false);
+            $("#tbKepemilikanLainnya").prop('disabled', true);
+            $("#dtpTglNPWPKK").prop('disabled', true);
+            $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(false);
+            $("#tbNoDokTanpaNPWP").prop('disabled', true);
+            $("#dtpTglDokTanpaNPWP").prop('disabled', true);
+            document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
+            document.getElementById("btnGantiOpsiNPWP").disabled = true;
+        }
+        $('#divAlamatNasabah').hide();
+        $('#divAlamatCabang').hide();
+    }
 
+    function subResetToolbar() {
+        if (intClassificationId == 118) {
+            //this.NISPToolbarButtonSetVisible(true, _strDefToolBar);
+
+            if ((_intType == 0) || (_intType == 3)) {
+                if ((_strTabName == "MCB") || (_strTabName == "MCA")) {
+                    $("#btnRefresh").show();
+                    $("#buttonadd").hide();
+                    $("#buttonedit").show();
+                    $("#buttondelete").hide();
+                    $("#buttonsave").hide();
+                    $("#buttonCancel").hide();
+                }
+                else {
+                    $("#btnRefresh").show();
+                    $("#buttonadd").hide();
+                    $("#buttonedit").hide();
+                    $("#buttondelete").hide();
+                    $("#buttonsave").hide();
+                    $("#buttonCancel").hide();
+                }
+            }
+
+            if ((_intType == 1) || (_intType == 2)) {
+                $("#btnRefresh").hide();
+                $("#buttonadd").hide();
+                $("#buttonedit").hide();
+                $("#buttondelete").hide();
+                $("#buttonsave").show();
+                $("#buttonCancel").show();
+            }
+        }
+        else {
+            //if (_dvAkses != null) {
+            //if (_dvAkses.Count > 0) {
+            //    string[] strVisibleToolbars = new string[_dvAkses.Count];
+            //    for (int i = 0; i < _dvAkses.Count; i++)
+            //    {
+            //        strVisibleToolbars[i] = _dvAkses[i]["IconId"].ToString();
+            //    }
+            //    this.NISPToolbarButtonSetVisible(true, strVisibleToolbars);
+            //}
+            //else {
+            //    this.NISPToolbarButtonSetVisible(true, _strDefToolBar);
+            //}
+
+            if ((_intType == 0) || (_intType == 3)) {
+                if ((_strTabName == "MCB") || (_strTabName == "MCA")) {
+                    $("#btnRefresh").show();
+                    $("#buttonadd").hide();
+                    $("#buttonedit").hide();
+                    $("#buttondelete").hide();
+                    $("#buttonsave").hide();
+                    $("#buttonCancel").hide();
+                }
+                else {
+                    $("#btnRefresh").show();
+                    $("#buttonadd").show();
+                    $("#buttonedit").show();
+                    $("#buttondelete").hide();
+                    $("#buttonsave").hide();
+                    $("#buttonCancel").hide();
+                }
+            }
+
+            if ((_intType == 1) || (_intType == 2)) {
+                $("#btnRefresh").hide();
+                $("#buttonadd").hide();
+                $("#buttonedit").hide();
+                $("#buttondelete").hide();
+                $("#buttonsave").show();
+                $("#buttonCancel").show();
+            }
+            //}
         }
     }
 
-    $(function () {
-        $('.collapse').on('shown.bs.collapse', function (e) {
-            var currAccordion = e.currentTarget.id;
-            if (currAccordion == "collapse-identitas") {
-                _idAccordions = "MCI";
-            } else if (currAccordion == "collapse-aktifitas") {
-                _idAccordions = "MCA";
-            } else if (currAccordion == "collapse-blokir") {
-                _idAccordions = "MCB";
-            } else if (currAccordion == "collapse-npwp") {
-                _idAccordions = "MCN";
-            }
-        })
-    })
+    $('a[data-toggle=tab]').click(function () {
+        _strTabName = this.id;
+    });
+
+    //$(function () {
+    //    $('.collapse').on('shown.bs.collapse', function (e) {
+    //        var currAccordion = e.currentTarget.id;
+    //        if (currAccordion == "collapse-identitas") {
+    //            _strTabName = "MCI";
+    //        } else if (currAccordion == "collapse-aktifitas") {
+    //            _strTabName = "MCA";
+    //        } else if (currAccordion == "collapse-blokir") {
+    //            _strTabName = "MCB";
+    //        } else if (currAccordion == "collapse-npwp") {
+    //            _strTabName = "MCN";
+    //        }
+    //    })
+    //})
 
     function RefreshIdentitas(data) {
-        $("#SID").val(data.CustomerIdentitas.CIFSID);
-        $("#ShareholderID").val(data.CustomerIdentitas.ShareholderID);
-        $("#NamaPemilik").val(data.CustomerIdentitas.CIFName);
-        $("#CIFBirthPlace").val(data.CustomerIdentitas.CIFBirthPlace);
+        $("#textSID").val(data.CustomerIdentitas.CIFSID);
+        $("#textShareHolderId").val(data.CustomerIdentitas.ShareholderID);
+        $("#tbNama").val(data.CustomerIdentitas.CIFName);
+        $("#tbTmptLahir").val(data.CustomerIdentitas.CIFBirthPlace);
         var dateBirthDay = new Date(data.CustomerIdentitas.CIFBirthDay);
-        $("#CIFBirthDay").val(dateBirthDay.getDate() + '/' + (dateBirthDay.getMonth() + 1) + '/' + dateBirthDay.getFullYear());
-        $("#CIFIDNo").val(data.CustomerIdentitas.CIFIDNo);
-        $("#HP").val(data.CustomerIdentitas.HP);
-        $("#Email").val(data.CustomerIdentitas.Email);
+        $("#dtpTglLahir").val(dateBirthDay.getDate() + '/' + (dateBirthDay.getMonth() + 1) + '/' + dateBirthDay.getFullYear());
+        $("#tbKTP").val(data.CustomerIdentitas.CIFIDNo);
+        $("#tbHP").val(data.CustomerIdentitas.HP);
+        $("#txtEmail").val(data.CustomerIdentitas.Email);
         var dateCreate = new Date(data.CustomerIdentitas.CreateDate);
-        $("#CreateDate").val(dateCreate.getDate() + '/' + (dateCreate.getMonth() + 1) + '/' + dateCreate.getFullYear());
-        $("#Email").val(data.CustomerIdentitas.Email);
-        $("#AccountId").val(data.CustomerIdentitas.AccountId);
-        $("#AccountName").val(data.CustomerIdentitas.AccountName);
-        $("#AccountIdUSD").val(data.CustomerIdentitas.AccountIdUSD);
-        $("#AccountNameUSD").val(data.CustomerIdentitas.AccountNameUSD);
-        $("#AccountIdMC").val(data.CustomerIdentitas.AccountIdMC);
-        $("#AccountNameMC").val(data.CustomerIdentitas.AccountNameMC);
-        $("#StatusEmployee").data('kendoDropDownList').value(data.CustomerIdentitas.IsEmployee);
-        $("#EmployeeId").val(data.CustomerIdentitas.CIFNik);
+        $("#dtpJoinDate").val(dateCreate.getDate() + '/' + (dateCreate.getMonth() + 1) + '/' + dateCreate.getFullYear());
+        $("#txtEmail").val(data.CustomerIdentitas.Email);
+        $("#maskedRekening").val(data.CustomerIdentitas.AccountId);
+        $("#tbNamaRekening").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#tbNamaRekeningUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#tbNamaRekeningMC").val(data.CustomerIdentitas.AccountNameMC);
+        $("#cbStatus").data('kendoDropDownList').value(data.CustomerIdentitas.IsEmployee);
+        $("#srcEmployee_text1").val(data.CustomerIdentitas.CIFNik);
 
-        ValidateReferentor($("#EmployeeId").val(), function (output) {
-            $("#EmployeeName").val(output);
+        ValidateReferentor($("#srcEmployee_text1").val(), function (output) {
+            $("#srcEmployee_text2").val(output);
         });
-        $("#RiskProfile").val(data.RiskProfileModel.RiskProfile);
-        var LastUpdate = new Date(data.RiskProfileModel.LastUpdate);
-        $("#LastUpdate").val(LastUpdate.getDate() + '/' + (LastUpdate.getMonth() + 1) + '/' + LastUpdate.getFullYear());
+        $("#txtbRiskProfile").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfile = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfile").val(dtpRiskProfile.getDate() + '/' + (dtpRiskProfile.getMonth() + 1) + '/' + dtpRiskProfile.getFullYear());
+        onChangedtpRiskProfile();
         var DateExpRiskProfile = new Date(data.CustomerIdentitas.DateExpRiskProfile);
-        $("#DateExpRiskProfile").val(DateExpRiskProfile.getDate() + '/' + (DateExpRiskProfile.getMonth() + 1) + '/' + DateExpRiskProfile.getFullYear());
-        $('#isDocRiskProfile').prop('checked', data.CustomerIdentitas.blnDocRiskProfile);
-        $('#isDocTermCond').prop('checked', data.CustomerIdentitas.blnDocTermCond);
-        $("#KonfirmasiAlamat").data('kendoDropDownList').value(data.CustomerIdentitas.strAddressType);
+        $("#dtExpiredRiskProfile").val(DateExpRiskProfile.getDate() + '/' + (DateExpRiskProfile.getMonth() + 1) + '/' + DateExpRiskProfile.getFullYear());
+        $('#cbProfilResiko').prop('checked', data.CustomerIdentitas.blnDocRiskProfile);
+        $('#cbKetum').prop('checked', data.CustomerIdentitas.blnDocTermCond);
+        $("#cbDikirimKe").data('kendoDropDownList').value(data.CustomerIdentitas.strAddressType);
         onBoundAddressType();
         onChangeAddressType();
         if (data.CustomerKonfirmasiAddress.length != 0) {
@@ -555,26 +1377,29 @@
                 {
                     data: data.CustomerKonfirmasiAddress
                 });
-            var Addressgrid = $('#GridKonfAddress').data('kendoGrid');
+            var Addressgrid = $('#dgvKonfAddr').data('kendoGrid');
             Addressgrid.setDataSource(dataSource);
+            Addressgrid.dataSource.pageSize(5);
             Addressgrid.dataSource.page(1);
             Addressgrid.select("tr:eq(0)");
+
+            Addressgrid.hideColumn('Pilih');
         } else {
-            $("#GridKonfAddress").data('kendoGrid').dataSource.data([]);
+            $("#dgvKonfAddr").data('kendoGrid').dataSource.data([]);
         }
 
         if (data.CustomerBranchAddress != null) {
-            $("#OfficeIdCabang").val(data.CustomerBranchAddress.Branch);
-            ValidateOffice($("#OfficeIdCabang").val(), function (output) {
-                $("#OfficeNameCabang").val(output);
+            $("#srcCabang_text1").val(data.CustomerBranchAddress.Branch);
+            ValidateOffice($("#srcCabang_text1").val(), function (output) {
+                $("#srcCabang_text2").val(output);
             });
-            $("#AddressLine1").val(data.CustomerBranchAddress.AddressLine1);
-            $("#AddressLine2").val(data.CustomerBranchAddress.AddressLine2);
-            $("#PostalCode").val(data.CustomerBranchAddress.PostalCode);
-            $("#Kota").val(data.CustomerBranchAddress.Kota);
-            $("#Province").val(data.CustomerBranchAddress.Province);
+            $("#tbAlamatSaatIni1").val(data.CustomerBranchAddress.AddressLine1);
+            $("#tbAlamatSaatIni2").val(data.CustomerBranchAddress.AddressLine2);
+            $("#tbKodePos").val(data.CustomerBranchAddress.PostalCode);
+            $("#tbKotaNasabahAlmt").val(data.CustomerBranchAddress.Kota);
+            $("#tbProvNasabahAlmt").val(data.CustomerBranchAddress.Province);
             var LastUpdatedDate = new Date(data.CustomerBranchAddress.LastUpdatedDate);
-            $("#LastUpdatedDate").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
+            $("#txtLastUpdated").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
         }
     }
 
@@ -584,12 +1409,12 @@
                 {
                     data: data.CustomerListClient
                 });
-            var Clientgrid = $('#GridClient').data('kendoGrid');
+            var Clientgrid = $('#dgvClientCode').data('kendoGrid');
             Clientgrid.setDataSource(dataSource);
             Clientgrid.dataSource.page(1);
             Clientgrid.select("tr:eq(0)");
         } else {
-            $("#GridClient").data('kendoGrid').dataSource.data([]);
+            $("#dgvClientCode").data('kendoGrid').dataSource.data([]);
         }
     }
 
@@ -599,75 +1424,38 @@
                 {
                     data: data.CustomerBlokir
                 });
-            var Blokirgrid = $('#GridBlokir').data('kendoGrid');
+            var Blokirgrid = $('#dgvBlokir').data('kendoGrid');
             Blokirgrid.setDataSource(dataSource);
             Blokirgrid.dataSource.pageSize(5);
             Blokirgrid.dataSource.page(1);
             Blokirgrid.select("tr:eq(0)");
         } else {
-            $("#GridBlokir").data('kendoGrid').dataSource.data([]);
+            $("#dgvBlokir").data('kendoGrid').dataSource.data([]);
         }
-        $("#decOutStanding").val(data.BlokirModel.decOutStanding);
-        $("#decTotal").val(data.BlokirModel.decTotal);
+        $("#OutsUnit").val(data.BlokirModel.decOutStanding);
+        $("#MoneyTotal").val(data.BlokirModel.decTotal);
+        subResetToolBar();
     }
 
     function RefreshNPWP(data) {
-        $("#NoNPWPProCIF").val(data.CustomerNPWPModel.NoNPWPProCIF);
-        $("#NamaNPWPProCIF").val(data.CustomerNPWPModel.NamaNPWPProCIF);
+        _intOpsiNPWP = 0;
+        _intOpsiNPWP = data.CustomerNPWPModel.Opsi;
+        _intValidationNPWP = _intOpsiNPWP;
+        $("#tbNoNPWPSendiri").val(data.CustomerNPWPModel.NoNPWPProCIF);
+        $("#tbNamaNPWPSendiri").val(data.CustomerNPWPModel.NamaNPWPProCIF);
         var TglNPWP = new Date(data.CustomerNPWPModel.TglNPWP);
-        $("#TglNPWP").val(TglNPWP.getDate() + '/' + (TglNPWP.getMonth() + 1) + '/' + TglNPWP.getFullYear());
-        $("#NoNPWPKK").val(data.CustomerNPWPModel.NoNPWPKK);
-        $("#NamaNPWPKK").val(data.CustomerNPWPModel.NamaNPWPKK);
-        $("#KepemilikanNPWPKK").data('kendoDropDownList').value(data.CustomerNPWPModel.KepemilikanNPWPKK);
-        $("#KepemilikanNPWPKKLainnya").val(data.CustomerNPWPModel.KepemilikanNPWPKKLainnya);
+        $("#dtpTglNPWPSendiri").val(TglNPWP.getDate() + '/' + (TglNPWP.getMonth() + 1) + '/' + TglNPWP.getFullYear());
+        $("#tbNoNPWPKK").val(data.CustomerNPWPModel.NoNPWPKK);
+        $("#tbNamaNPWPKK").val(data.CustomerNPWPModel.NamaNPWPKK);
+        $("#cbKepemilikanNPWPKK").data('kendoDropDownList').value(data.CustomerNPWPModel.KepemilikanNPWPKK);
+        $("#tbKepemilikanLainnya").val(data.CustomerNPWPModel.KepemilikanNPWPKKLainnya);
         var TglNPWPKK = new Date(data.CustomerNPWPModel.TglNPWPKK);
-        $("#TglNPWPKK").val(TglNPWPKK.getDate() + '/' + (TglNPWPKK.getMonth() + 1) + '/' + TglNPWPKK.getFullYear());
+        $("#dtpTglNPWPKK").val(TglNPWPKK.getDate() + '/' + (TglNPWPKK.getMonth() + 1) + '/' + TglNPWPKK.getFullYear());
 
-        $("#AlasanTanpaNPWP").data('kendoDropDownList').value(data.CustomerNPWPModel.AlasanTanpaNPWP);
-        $("#NoDokTanpaNPWP").val(data.CustomerNPWPModel.NoDokTanpaNPWP);
+        $("#cbAlasanTanpaNPWP").data('kendoDropDownList').value(data.CustomerNPWPModel.AlasanTanpaNPWP);
+        $("#tbNoDokTanpaNPWP").val(data.CustomerNPWPModel.NoDokTanpaNPWP);
         var TglDokTanpaNPWP = new Date(data.CustomerNPWPModel.TglDokTanpaNPWP);
-        $("#TglDokTanpaNPWP").val(TglDokTanpaNPWP.getDate() + '/' + (TglDokTanpaNPWP.getMonth() + 1) + '/' + TglDokTanpaNPWP.getFullYear());
-    }
-
-    function MaintainBlokir() {        
-        var BlockId;
-        if (_intType == 3) {
-            BlockId = $("#BlokirId").val();
-        } else {
-            BlockId = 0;
-        }
-        var TanggalExpiryBlokir = $("#TanggalExpiryBlokir").val().split("/");
-        var fTanggalExpiryBlokir = new Date(TanggalExpiryBlokir[2], TanggalExpiryBlokir[1] - 1, TanggalExpiryBlokir[0] - 1);
-        var TanggalBlokir = $("#TanggalBlokir").val().split("/");
-        var fTanggalBlokir = new Date(TanggalBlokir[2], TanggalBlokir[1] - 1, TanggalBlokir[0]);
-        var model = JSON.stringify({
-            'ClientId': $("#BlokirClientId").val(),
-            'BlockId': BlockId,
-            'UnitBlokir': $("#UnitBlokir").val(),
-            'TanggalExpiryBlokir': fTanggalExpiryBlokir,
-            'TanggalBlokir': fTanggalBlokir,
-            'intType': _intType
-        });
-
-        $("#labelStatus").text("SAVE");
-
-        //$('#customerForm').validate({
-        //    var Save;
-        //        Save = confirm("Are you sure to save this blokir?");
-        //        if (Save) {
-        //            $.ajax({
-        //                type: "POST",
-        //                data: model,
-        //                url: '/Customer/MaintainBlokir',
-        //                contentType: "application/json",
-        //                success: function (data) {
-        //                    console.log(data);
-        //                    _intType = 0;
-        //                    disableAll(_intType);
-        //                }
-        //            });
-        //        }
-        //});
+        $("#dtpTglDokTanpaNPWP").val(TglDokTanpaNPWP.getDate() + '/' + (TglDokTanpaNPWP.getMonth() + 1) + '/' + TglDokTanpaNPWP.getFullYear());
     }
 
     function ValidateOffice(OfficeId, result) {
@@ -699,5 +1487,294 @@
         });
     }
 
+    function ValidasiKodeKantor(strKodeKantor, result)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateOfficeId',
+            data: { OfficeId: strKodeKantor},
+            success: function (data)
+            {
+                if (data.blnResult) {
+                    if (data.isAllowed == true)
+                    {                        
+                        //tabControlClient.Enabled = true;
+                        $("#srcCIF_text1").prop('disabled', false);
+                        $("#srcCIF").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+                        subResetToolbar();
+                        result(true);
+                    } else
+                    {
+                        subCancel();
+                        //tabControlClient.Enabled = false;
+                        $("#srcCIF_text1").prop('disabled', true);
+                        $("#srcCIF").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                        swal("Warning", "Kode Kantor tidak terdaftar, pembuatan master nasabah tidak dapat dilakukan!", "warning");
+                        result(false);
+                    }
+                }
+                else
+                {
+                    swal("Error", data.strErrMsg, "error");
+                    result(false);
+                }
+            }
+        });
+    }
+
+    function SetEnableOfficeId(strKodeKantor)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidasiCBOKodeKantor',
+            data: { OfficeId: strKodeKantor },
+            success: function (data) {
+                if (data.blnResult) {
+                    if (data.strIsEnable == '1')
+                    {                        
+                        $("#srcOffice_text1").prop('disabled', false);
+                        $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+                    } else
+                    {
+                        $("#srcOffice_text1").prop('disabled', true);
+                        $("#srcOffice").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                    }
+                }
+                else {
+                    swal("Error", data.strErrMsg, "error");
+                    result(false);
+                }
+            }
+        });
+    }
+
+    function onRowKonfAddressSelect() {
+        if (_intType != 0)
+        {
+        }
+    }
+
+    function cekCheckbox() {
+
+        if ($('#cbKetum').prop('checked') == true) { 
+            $("#cbKetum").prop('disabled', true);
+        }
+        else {
+            $('#cbKetum').prop('disabled', false);
+        }
+
+        if ($('#cbProfilResiko').prop('checked') == true) {
+            $("#txtbRiskProfile").prop('disabled', true);
+        }
+        else {
+            $("#txtbRiskProfile").prop('disabled', false);
+        }
+    }    
+
+    function SetDocStatus(CIFNo, _intType)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/SetDocStatus',
+            data: { CIFNo: CIFNo },
+            success: function (data) {
+                if (data.blnResult) {                    
+                    $('#cbProfilResiko').prop('checked', data.blnDocRiskProfile);
+                    $('#cbKetum').prop('checked', data.blnDocTermCond);
+                    if (_intType != 0) {
+                        cekCheckbox();
+                    }
+                }
+                else {
+                    swal("Error", data.ErrMsg, "error");
+                }
+            }
+        });
+    }
+
+    function GetRiskProfile(CIFNo)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetRiskProfile',
+            data: { CIFNo: CIFNo },
+            success: function (data) {
+                if (data.blnResult) {
+                    $('#txtbRiskProfile').val(data.RiskProfile);
+                    var dtpRiskProfile = new Date(data.LastUpdate);
+                    $("#dtpRiskProfile").val(dtpRiskProfile.getDate() + '/' + (dtpRiskProfile.getMonth() + 1) + '/' + dtpRiskProfile.getFullYear());
+                    onChangedtpRiskProfile();
+                }
+                else {
+                    if ($('#txtbRiskProfile').val() == "") {
+                        swal("Warning", "Data risk profile belum ada", "warning");
+                    }                    
+                }
+            }
+        });
+    }
+
+    function GetKonfAddress(CIFNo, result)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetKonfAddress',
+            data: { CIFNo: CIFNo, KodeKantor: $('#srcOffice_text1').val()},
+            success: function (data) {
+                if (data.blnResult)
+                {
+                    $("#cbDikirimKe").data('kendoDropDownList').value(data.intAddressType);
+                    onBoundAddressType();
+                    onChangeAddressType();
+                    if (data.listKonfAddrees.length != 0) {
+                        var dataSource = new kendo.data.DataSource(
+                            {
+                                data: data.listKonfAddrees
+                            });
+                        var Addressgrid = $('#dgvKonfAddr').data('kendoGrid');
+                        Addressgrid.setDataSource(dataSource);
+                        Addressgrid.dataSource.pageSize(15);
+                        Addressgrid.dataSource.page(1);
+                        Addressgrid.select("tr:eq(0)");
+
+                        Addressgrid.showColumn('Pilih');
+                    } else {
+                        $("#dgvKonfAddr").data('kendoGrid').dataSource.data([]);
+                    }
+
+                    if (data.listBranchAddress != null) {
+                        $("#srcCabang_text1").val(data.listBranchAddress.Branch);
+                        ValidateOffice($("#srcCabang_text1").val(), function (output) {
+                            $("#srcCabang_text2").val(output);
+                        });
+                        $("#tbAlamatSaatIni1").val(data.listBranchAddress.AddressLine1);
+                        $("#tbAlamatSaatIni2").val(data.listBranchAddress.AddressLine2);
+                        $("#tbKodePos").val(data.listBranchAddress.PostalCode);
+                        $("#tbKotaNasabahAlmt").val(data.listBranchAddress.Kota);
+                        $("#tbProvNasabahAlmt").val(data.listBranchAddress.Province);
+                        var LastUpdatedDate = new Date(data.listBranchAddress.LastUpdatedDate);
+                        $("#txtLastUpdated").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
+                    }
+                    result(true);
+                }
+                else {
+                    swal("Error", data.ErrMsg, "error"); 
+                    result(false);
+                }
+            }
+        });
+    }
+
+    function EnableFieldNPWP(intOpsi)
+    {
+        switch (intOpsi) {
+            case 1:
+                $("#tbNoNPWPKK").prop('disabled', true);
+                $("#tbNamaNPWPKK").prop('disabled', true);
+                $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(false);
+                $("#tbKepemilikanLainnya").prop('disabled', true);
+                $("#dtpTglNPWPKK").prop('disabled', true);
+                $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(false);
+                document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
+                break;
+            case 2:
+                $("#tbNoNPWPKK").prop('disabled', false);
+                $("#tbNamaNPWPKK").prop('disabled', false);
+                $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(true);
+                $("#tbKepemilikanLainnya").prop('disabled', true);
+                $("#dtpTglNPWPKK").prop('disabled', false);
+                $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(false);
+                document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
+                break;
+            case 3:
+                $("#tbNoNPWPKK").prop('disabled', true);
+                $("#tbNamaNPWPKK").prop('disabled', true);
+                $("#cbKepemilikanNPWPKK").data('kendoDropDownList').enable(false);
+                $("#tbKepemilikanLainnya").prop('disabled', true);
+                $("#dtpTglNPWPKK").prop('disabled', true);
+                $("#cbAlasanTanpaNPWP").data('kendoDropDownList').enable(true);
+                document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = false;
+                var dateDokTanpaNPWP = new Date();
+                $("#dtpTglDokTanpaNPWP").val(dateDokTanpaNPWP.getDate() + '/' + (dateDokTanpaNPWP.getMonth() + 1) + '/' + dateDokTanpaNPWP.getFullYear());
+                break;
+        }
+    }
+
+    function GetRiskProfileParam() 
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetRiskProfileParam',
+            success: function (data) {
+                if (data.blnResult) {
+                    intMaxDay = data.intExpRiskProfileDay;
+                    intMaxYear = data.intExpRiskProfileYear;
+                }
+                else {
+                    swal("Error", data.ErrMsg, "error");
+                }
+            }
+        });
+    }
+
+    function GetAccountRelationDetail(AccountNum, Type, result)
+    {        
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetAccountRelationDetail',
+            data: { AccountNum: AccountNum, Type: Type },
+            success: function (data) {                
+                if (data.blnResult) {
+                    if (Type == 1)
+                    {
+                        $('#maskedRekening').val(data.NoRek); 
+                        $('#tbNamaRekening').val(data.Nama); 
+                        result(true);
+                    }
+                    else if (Type == 3) {
+                        $('#maskedRekeningUSD').val(data.NoRek);
+                        $('#tbNamaRekeningUSD').val(data.Nama);
+                        result(true);
+                    }
+                    else if (Type == 4) {
+                        $('#maskedRekeningMC').val(data.NoRek);
+                        $('#tbNamaRekeningMC').val(data.Nama);
+                        result(true);
+                    }
+                    else if (Type == 2) {
+                        $('#srcEmployee_text1').val(data.NIK);
+                        ValidateReferentor($("#srcEmployee_text1").val(), function (output) {
+                            $("#srcEmployee_text2").val(output);
+                        });
+                        result(true);
+                    }
+                }
+                else {
+                    swal("Error", data.ErrMsg, "error");
+                    result(false);
+                }
+            }
+        });
+    }
+
+    function SubSaveRiskProfile()
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/Customer/SaveExpRiskProfile',
+            data: { strRiskProfile: $("#dtpRiskProfile").val(), strExpRiskProfile: $("#dtExpiredRiskProfile").val(), CIFNo: $("#srcCIF_text1").val() },
+            success: function (data) {
+                if (data.blnResult == false) {
+                    swal("Error", data.ErrMsg, "error");
+                }
+            }
+        });
+    }
+
+    function toDate(dateStr) {
+        const [day, month, year] = dateStr.split("/")
+        return new Date(year, month - 1, day)
+    }
+    
 </script>
 

@@ -31,7 +31,7 @@ namespace ReksaAPI.Models
             public decimal NominalFee { get; set; }
             public bool FullAmount { get; set; }
             public bool PhoneOrder { get; set; }
-            public System.DateTime TglTrx { get; set; }
+            public DateTime TglTrx { get; set; }
             public string CCY { get; set; }
             public bool EditFee { get; set; }
             public string JenisFee { get; set; }
@@ -189,6 +189,60 @@ namespace ReksaAPI.Models
             public string ClientCode { get; set; }
             public string CIFName { get; set; }
             public bool TrxTaxAmnesty { get; set; }
+        }
+        public class MaintainTransaksi
+        {
+            public int intType { get; set; }
+            public string strTranType { get; set; }
+            public string RefID { get; set; }
+            public string CIFNo { get; set; }
+            public string OfficeId { get; set; }
+            public string NoRekening { get; set; }
+            public List<SubscriptionList> dtSubs { get; set; }
+            //public List<RedemptionList> dtRedemp { get; set; }
+            //public List<SubscriptionRDBList> dtRDB { get; set; }
+            //public string writerSubs { get; set; }
+            //public string writerRedemp { get; set; }
+            //public string writerRDB { get; set; }
+            public string Inputter { get; set; }
+            public int Seller { get; set; }
+            public int Waperd { get; set; }
+            public string NoRekeningUSD { get; set; }
+            public string NoRekeningMC { get; set; }
+            public int Referentor { get; set; }
+            public bool pbDocFCSubscriptionForm { get; set; }
+            public bool pbDocFCDevidentAuthLetter { get; set; }
+            public bool pbDocFCJoinAcctStatementLetter { get; set; }
+            public bool pbDocFCIDCopy { get; set; }
+            public bool pbDocFCOthers { get; set; }
+            public bool pbDocTCSubscriptionForm { get; set; }
+            public bool pbDocTCTermCondition { get; set; }
+            public bool pbDocTCProspectus { get; set; }
+            public bool pbDocTCFundFactSheet { get; set; }
+            public bool pbDocTCOthers { get; set; }
+            public string pcDocFCOthersList { get; set; }
+            public string pcDocTCOthersList { get; set; }
+        }
+        public class GenerateClientCode
+        {
+            public string JenisTrx { get; set; }
+            public bool IsSubsNew { get; set; }
+            public string ProductCode { get; set; }
+            public string ClientCode { get; set; }
+            public string CIFNo { get; set; }
+            public bool IsFeeEdit { get; set; }
+            public decimal PercentageFee { get; set; }
+            public int Period { get; set; }
+            public bool FullAmount { get; set; }
+            public double Fee { get; set; }
+            public double TranAmt { get; set; }
+            public double TranUnit { get; set; }
+            public bool IsRedempAll { get; set; }
+            public int FrekuensiPendebetan { get; set; }
+            public int JangkaWaktu { get; set; }
+            public int intTypeTrx { get; set; }
+            public string TranCode { get; set; }
+            public string NewClientCode { get; set; }
         }
     }
 }

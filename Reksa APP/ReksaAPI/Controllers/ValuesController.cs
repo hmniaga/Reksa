@@ -18,9 +18,9 @@ namespace ReksaAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return "WELCOME - REKSA WEB API";
         }
 
         // GET api/values/5
