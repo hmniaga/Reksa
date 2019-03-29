@@ -39,7 +39,6 @@ namespace Reksa.Controllers
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
             _httpContextAccessor = httpContextAccessor;
         }
-
         public ActionResult ParameterFee()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -152,7 +151,28 @@ namespace Reksa.Controllers
             }
             return blnResult;
         }
-
+        public ActionResult Transaksi()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<TreeViewModel> listTree = new List<TreeViewModel>();
+            listTree = GetTreeView("mnuAuthorizeTransaksiNew");
+            var items = new List<TreeViewModel>();
+            //var root = listTree[0];
+            //for (int i = 0; i < listTree.Count; i++)
+            //{
+            //    if (listTree[i].ParentId == "")
+            //    {
+            //        root = listTree[i];
+            //        items.Add(root);
+            //    }
+            //    else
+            //    {
+            //        root.Children.Add(listTree[i]);
+            //    }
+            //}
+            this.ViewBag.Tree = items;
+            return View("AuthGeneralNew", vModel);
+        }
         public ActionResult WM()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();

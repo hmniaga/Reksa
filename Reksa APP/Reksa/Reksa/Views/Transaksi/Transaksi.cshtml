@@ -132,8 +132,8 @@
             <!-- End Tab -->
         </div>
     </div>
-
 <script>
+    
 var _strTabName;
 var _intType;
 var IsSubsNew;
@@ -142,7 +142,8 @@ var strBranch;
     var Today = new Date();
     var strBranch = '@Html.Raw(ViewBag.strBranch)';
     var ByPercent = false;
-    
+    var intPeriod = 0;
+    var IsRedempAll;
 
     $(document).ready(function () {
         $('#tabs a[href="#tab-subscription"]').trigger('click');
@@ -191,14 +192,27 @@ var strBranch;
             subAddSubs();
         });
 
-          $("#srcProductSubs").click(function (ev) {
-              var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();            
-              var url = '@Html.Raw(Url.Action("SearchTrxProductSubs", "Global"))';
-              var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
-              $("#ProductSubsModal .modal-content").load(target, function () {
-                $("#ProductSubsModal .modal-content").empty().append(this);
-            });
+        $("#btnAddRedemp").click(function () {
+            subAddRedemp();
         });
+
+    $("#srcProductSubs").click(function (ev) {
+        var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();            
+        var url = '@Html.Raw(Url.Action("SearchTrxProductSubs", "Global"))';
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+        $("#ProductSubsModal .modal-content").load(target, function () {
+        $("#ProductSubsModal .modal-content").empty().append(this);
+    });
+        });
+
+    $("#srcProductRedemp").click(function (ev) {
+        var strCriteria = _strTabName + "#" + $('#srcCIFRedemp_text1').val();            
+        var url = '@Html.Raw(Url.Action("SearchTrxProductRedemp", "Global"))';
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+                $("#ProductRedempModal .modal-content").load(target, function () {
+                    $("#ProductRedempModal .modal-content").empty().append(this);
+    });
+    });
 
     $("#srcCIFSubs").click(function (ev) {
         ev.preventDefault();
@@ -297,6 +311,18 @@ var strBranch;
             );
         });
 
+        $("#checkAll").click(function () {
+            if ($("#checkAll").prop('checked') == true) {
+                $("#RedempUnit").val($("#OutstandingUnitRedemp").val());
+                $("#RedempUnit").prop('disabled', true);
+                IsRedempAll = true;
+            }
+            else {
+                $("#RedempUnit").val(0);
+                $("#RedempUnit").prop('disabled', false);
+                IsRedempAll = false;
+            }  });
+
 
     //change
     $("#srcCIFSubs_text1").change(function () {
@@ -307,14 +333,48 @@ var strBranch;
             //}
         }
         GetDataCIF($("#srcCIFSubs_text1").val(), 'SUBS');
-        });
-
+    });        
+            
+    $("#srcCIFRedemp_text1").change(function () {
+        if (_intType == 1) {
+            //if (!CheckCIF($("#srcCIFSubs_text1").val())) {
+            //    subCancel();
+            //    return;
+            //}
+        }
+        GetDataCIF($("#srcCIFRedemp_text1").val(), 'REDEMP');
+    });
+        
     $("#srcProductSubs_text1").change(function () {
         $("#srcCurrencySubs_text1").val($("#ProdCCYSubs").val());
         ValidateCurrency($("#ProdCCYSubs").val().trim(), function (output) {
             $("#srcCurrencySubs_text2").val(output);
         });
-    });
+        });
+
+    $("#srcProductRedemp_text1").change(function () {
+        var strCriteria = $('#srcCIFRedemp_text1').val() + "#" + $('#srcProductRedemp_text1').val() + "#" + _strTabName + "#0";
+        var url = '@Html.Raw(Url.Action("SearchTrxClientRedemp", "Global"))';
+        $('#srcClientRedemp').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
+        });  
+
+    $("#srcClientRedemp_text1").change(function () {
+            
+            //GetLatestBalance($("#ClientIdRedemp").val(), function (res) { $("#OutstandingUnitRedemp").val(res) });
+            //nanti ini dihapus
+            swal("Warning", "nanti syntax ini dihapus, ini cm buat debug karena oustanding nya masih 0", "warning");
+            $("#OutstandingUnitRedemp").val('10000')
+        });  
+
+    ValidateOffice(strBranch, function (res) {
+            $("#srcOfficeSubs_text2").val(res);
+            $("#srcOfficeRedemp_text2").val(res);
+            $("#srcOfficeRDB_text2").val(res);
+            $("#srcOfficeSwc_text2").val(res);
+            $("#srcOfficeSwcRDB_text2").val(res);
+            $("#srcOfficeBooking_text2").val(res);
+        });
+
     $("#srcSellerSubs_text1").change(function () {
         $("#srcWaperdSubs_text1").val($("#srcSellerSubs_text1").val());
         ValidateWaperd($("#srcSellerSubs_text1").val(),
@@ -325,8 +385,31 @@ var strBranch;
                 $("#textExpireWaperdSubs").val(DateExpire);
             }
         );        
+        });
+
+    $("#srcSellerRedemp_text1").change(function () {
+        $("#srcWaperdRedemp_text1").val($("#srcSellerRedemp_text1").val());
+        ValidateWaperd($("#srcSellerRedemp_text1").val(),
+            function (WaperdNo) {
+                $("#srcWaperdRedemp_text2").val(WaperdNo);
+            },
+            function (DateExpire) {
+                $("#textExpireWaperdRedemp").val(DateExpire);
+            }
+        );
+        });
+
+    $("#srcSellerSwc_text1").change(function () {
+        $("#srcWaperdSwc_text1").val($("#srcSellerSwc_text1").val());
+        ValidateWaperd($("#srcSellerSwc_text1").val(),
+            function (WaperdNo) {
+                $("#srcWaperdSwc_text2").val(WaperdNo);
+            },
+            function (DateExpire) {
+                $("#textExpireWaperdSwc").val(DateExpire);
+            }
+        );
     });
-   
 });
 
     $('a[data-toggle=tab]').click(function () {
@@ -486,7 +569,7 @@ var strBranch;
                     obj["PhoneOrder"] = $("#checkPhoneOrderSubs").prop('checked');
                     var dateTglTransaksiSubs = toDate($("#dateTglTransaksiSubs").val());
                     obj['TglTrx'] = dateTglTransaksiSubs;
-                    obj["CCY"] = $("#srcCurrencySubs_text2").val();
+                    obj["CCY"] = $("#srcCurrencySubs_text1").val();
                     obj["EditFee"] = $("#checkFeeEditSubs").prop('checked');
 
 
@@ -555,6 +638,151 @@ var strBranch;
         });
     }
 
+    function subAddRedemp()
+    {
+        var strWarnMsg = '';
+        var strWarnMsg2 = '';
+
+        var strTranCode = "";
+        var strNewClientCode = "";
+        var _PercentageFee;
+        var _NominalFee;
+        var intProductId = 0;
+
+        var grid = $("#dataGridViewRedemp").data("kendoGrid");
+        grid.refresh();
+        var dataItem = grid.dataSource.view();
+        if (dataItem.length >= 3) {
+            swal("Warning", "Maksimal hanya dapat menambah 3 transaksi !", "warning");
+            return;
+        }
+        if ($("#srcProductRedemp_text1").val() == "") {
+            swal("Warning", "Kode Produk harus diisi", "warning");
+            return;
+        }
+        if ($("#srcClientRedemp_text1").val().Text1 == "") {
+            swal("Warning", "Client Code harus diisi", "warning");
+            return;
+        }
+        if ($("#RedempUnit").val() == 0) {
+            swal("Warning", "Unit harus diisi", "warning");
+            return;
+        }
+        if (+$("#RedempUnit").val() > +$("#OutstandingUnitRedemp").val()) {
+            swal("Warning", "Redemption unit tidak boleh lebih besar dari Outstanding Unit!", "warning");
+            return;
+        }
+        //string strData = String.Format("ClientCode='{0}'",
+        //    cmpsrClientRedemp.Text1);
+
+        //if (cTransaksi.dttRedemption.Select(strData).Length != 0) {
+        //    MessageBox.Show("Redemption untuk Client Code " + cmpsrClientRedemp.Text1 + " sudah ada!", "Transaksi Redemption", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    return;
+        //}
+
+
+        var res = GenerateTranCodeAndClientCode(_strTabName, false, $("#srcProductRedemp_text1").val(),
+            $("#srcClientRedemp_text1").val(), $("#srcCIFRedemp_text1").val(),
+            //$("#checkFeeEditSubs").val(), _PercentageFee, 0
+            $("#checkFeeEditRedemp").val(), $("#MoneyFeeRedemp").val(), intPeriod
+            , false, $("#PercentageFeeRedemp").val(), 0, $("#RedempUnit").val(), IsRedempAll, 0, 0
+            , _intType);
+
+
+        res.success(function (data) {
+            if (data.blnResult) {
+                strTranCode = data.strTrancode;
+                strNewClientCode = data.strClientCode;
+                strWarnMsg = data.strWarnMsg;
+                strWarnMsg2 = data.strWarnMsg2;
+
+                if (strWarnMsg2 != '') {
+                    swal({
+                        title: "Information",
+                        text: strWarnMsg2,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-info',
+                        confirmButtonText: "Yes",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal("Canceled", "Proses transaksi dibatalkan.", "error");
+                                return;
+                            }
+                            else {
+                                swal("Confirmed", "", "success");
+                            }
+                        });
+                }
+
+                if (strTranCode != "") {
+                    var arrRedemption = [];
+                    var obj = {};
+                    obj['NoTrx'] = '';
+                    var dateTglTransaksiRedemp = toDate($("#dateTglTransaksiRedemp").val());
+                    obj['TglTrx'] = dateTglTransaksiRedemp;
+                    obj['KodeProduk'] = $("#srcProductRedemp_text1").val();
+                    obj['NamaProduk'] = $("#srcProductRedemp_text2").val();
+                    if ($('#checkFeeEditRedemp').prop('checked') == true) {
+                        obj["EditFeeBy"] = $("#_ComboJenisRedemp").val();
+                    }
+                    else {
+                        obj["EditFeeBy"] = "";
+                    }
+                    obj['ClientCode'] = strNewClientCode;
+                    obj["OutstandingUnit"] = $("#OutstandingUnitRedemp").val();
+                    obj["RedempUnit"] = $("#RedempUnit").val();
+                    obj["PhoneOrder"] = $("#checkPhoneOrderRedemp").prop('checked');
+                    obj["EditFee"] = $("#checkFeeEditRedemp").prop('checked');
+                    obj["JenisFee"] = $("#_ComboJenisRedemp").val();
+                    obj["PctFee"] = $("#MoneyFeeRedemp").val(); 
+                    obj["FeeKet"] = $("#labelFeeCurrencyRedemp").val();
+                    obj["NominalFee"] = $("#PercentageFeeRedemp").val();
+                    obj["FeeCurr"] = $("#_KeteranganFeeRedemp").val();
+                    obj["IsRedempAll"] = IsRedempAll;
+                    obj["Period"] = intPeriod;
+                    obj["ApaDiUpdate"] = false;
+                    obj["TrxTaxAmnesty"] = false;
+                    arrRedemption.push(obj);
+
+                    var dataSet = grid.dataSource.view();
+                    $.merge(arrRedemption, dataSet);
+
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: arrRedemption
+                        });
+                    grid.setDataSource(dataSource);
+                    grid.dataSource.pageSize(5);
+                    grid.dataSource.page(1);
+                    grid.select("tr:eq(0)");
+
+                    subSetVisibleGrid(_strTabName);
+                    ResetFormTrxRedemp();
+                    DisableFormTrxRedemp(true);
+                    document.getElementById("btnEditRedemp").disabled = true;
+                    document.getElementById("btnAddRedemp").disabled = false;
+                    //if (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFSubs.Text1)) {
+                    //    checkPhoneOrderSubs.Enabled = false;
+                    //    checkPhoneOrderSubs.Checked = false;
+                    //}
+                    //else {
+                    //    checkPhoneOrderSubs.Enabled = true;
+                    //}
+                }
+                else {
+                    swal("Warning", "Gagal generate kode transaksi!", "warning");
+                }
+            }
+            else {
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        });
+    }
+
     function GetDataCIF(CIFNo, TabName)
     {
         $.ajax({
@@ -565,6 +793,12 @@ var strBranch;
                 if (data.blnResult) {
                     if (TabName == "SUBS") {
                         RefreshNasabahSubs(data);
+                    } else if (TabName == "REDEMP") {
+                        RefreshNasabahRedemp(data);
+                    } else if (TabName == "RDB") {
+                    } else if (TabName == "SWC") {
+                    } else if (TabName == "SWCRDB")
+                    {
                     }
                 }
                 else {
@@ -632,10 +866,7 @@ var strBranch;
             //REKSA_CIF_ALL
             url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
             $('#srcCIFRedemp').attr('href', url);
-
-            $("#srcClientRedemp_text1").prop('disabled', true);
-            $("#srcClientRedemp").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-
+            
             strCriteria = _strTabName + "#" + $("#srcCIFRedemp_text1").val();
             //REKSA_TRXPRODUCT
             url = '@Html.Raw(Url.Action("SearchTrxProduct", "Global"))';
@@ -915,8 +1146,8 @@ var strBranch;
                 'OfficeId': $("#srcOfficeSubs_text1").val(),
                 'NoRekening': $("#maskedRekeningSubs").val(),
                 'dtSubs': arrSubs,
-                //'dtRedemp': arrRedemp,
-                //'dtRDB': arrRDB,
+                'dtRedemp': arrRedemp,
+                'dtRDB': arrRDB,
                 'Inputter': $("#txtbInputterSubs").val(),
                 'Seller': $("#srcSellerSubs_text1").val(),
                 'Waperd': $("#srcWaperdSubs_text1").val(),
@@ -936,83 +1167,200 @@ var strBranch;
                 'pcDocFCOthersList': '',
                 'pcDocTCOthersList': ''
             });
+            MaintainAllTransaksi(model);           
+        }
+        else if (_strTabName == "REDEMP") {
+            if ($("#srcOfficeRedemp_text1").val() == "") {
+                swal("Warning", "Kode Kantor harus diisi", "warning");
+                return;
+            }
 
-            console.log(model);
+            //string strIsAllowed = "";
+            //if (clsValidator.ValidasiInputKodeKantor(ClQ, cmpsrKodeKantorRedemp.Text1, out strIsAllowed)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateOfficeId], Kode kantor tidak terdaftar ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormRedemp();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateOfficeId]! ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
-            $.ajax({
-                type: 'POST',
-                url: '/Transaksi/MaintainAllTransaksi',
-                data: model,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    if (data.blnResult) {
-                        //ResetForm();
-                        //DisableAllForm(false);
-                        //DisableFormTrxSubs(false);
-                        //DisableFormTrxRedemp(false);
-                        //DisableFormTrxRDB(false);
-                        swal("Success", data.ErrMsg, "success");
-                        if (_strTabName == "SUBS") {
-                            //$("#srcNoRefSubs_text1").val(data.strRefID);
-                            //cmpsrNoRefSubs.ValidateField();
-                        }
-                        else if (_strTabName == "REDEMP") {
-                            //cmpsrNoRefRedemp.Text1 = dbParam[2].Value.ToString();
-                            //cmpsrNoRefRedemp.ValidateField();
-                        }
-                        else if (_strTabName == "SUBSRDB") {
-                            //cmpsrNoRefRDB.Text1 = dbParam[2].Value.ToString();
-                            //cmpsrNoRefRDB.ValidateField();
-                        }
-                        //subRefresh();
+            //string strErrorMessage;
+            //strIsAllowed = "";
+            //if (clsValidator.ValidasiUserCBO(ClQ, cmpsrKodeKantorRedemp.Text1, strBranch, out strIsAllowed, out strErrorMessage)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateUserCBOOffice], " + strErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormRedemp();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateUserCBOOffice]!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            if ($("#srcCIFRedemp_text1").val() == "") {
+                swal("Warning", "CIF harus diisi", "warning");
+                return;
+            }
+
+            //if (!GlobalFunctionCIF.RetrieveCIFData(intNIK, strBranch, strModule, strGuid, Int64.Parse(cmpsrCIFRedemp.Text1))) {
+            //    MessageBox.Show("Gagal validasi CIF ke modul ProCIF", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            //if ((checkPhoneOrderRedemp.Checked) && (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFRedemp.Text1))) {
+            //    MessageBox.Show("Nasabah tidak memiliki fasilitas phone order!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            if ($("#textShareHolderIdRedemp").val() == "") {
+                swal("Warning", "Shareholder ID harus terdaftar", "warning");
+                return;
+            }
+
+            if ($("#srcSellerRedemp_text1").val() == "") {
+                swal("Warning", "NIK Seller harus diisi", "warning");
+                return;
+            }
+
+            if ($("#srcWaperdRedemp_text1").val() == "") {
+                swal("Warning", "NIK Seller tidak terdaftar sbg WAPERD", "warning");
+                return;
+            }
+
+            var grid = $("#dataGridViewRedemp").data("kendoGrid");
+            grid.refresh();
+            var dataItem = grid.dataSource.view();
+
+            if (dataItem.length == 0) {
+                swal("Warning", "Data transaksi redemption tidak boleh kosong!", "warning");
+                return;
+            }
+
+            var grid = $("#dataGridViewRedemp").data("kendoGrid");
+            var arrSubs = [];
+            var arrRedemp;
+            var arrRDB = [];
+            arrRedemp = grid.dataSource.view();
+
+            var model = JSON.stringify({
+                'intType': _intType,
+                'strTranType': _strTabName,
+                'RefID': $("#srcNoRefRedemp_text1").val(),
+                'CIFNo': $("#srcCIFRedemp_text1").val(),
+                'OfficeId': $("#srcOfficeRedemp_text1").val(),
+                'NoRekening': $("#maskedRekeningRedemp").val(),
+                'dtSubs': arrSubs,
+                'dtRedemp': arrRedemp,
+                'dtRDB': arrRDB,
+                'Inputter': $("#txtbInputterRedemp").val(),
+                'Seller': $("#srcSellerRedemp_text1").val(),
+                'Waperd': $("#srcWaperdRedemp_text1").val(),
+                'NoRekeningUSD': $("#maskedRekeningRedempUSD").val(),
+                'NoRekeningMC': $("#maskedRekeningRedempMC").val(),
+                'Referentor': $("#srcReferentorRedemp_text1").val(),
+                'pbDocFCSubscriptionForm': false,
+                'pbDocFCDevidentAuthLetter': false,
+                'pbDocFCJoinAcctStatementLetter': false,
+                'pbDocFCIDCopy': false,
+                'pbDocFCOthers': false,
+                'pbDocTCSubscriptionForm': false,
+                'pbDocTCTermCondition': false,
+                'pbDocTCProspectus': false,
+                'pbDocTCFundFactSheet': false,
+                'pbDocTCOthers': false,
+                'pcDocFCOthersList': '',
+                'pcDocTCOthersList': ''
+            });
+            MaintainAllTransaksi(model);
+        }
+    }
+
+    function MaintainAllTransaksi(model)
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/Transaksi/MaintainAllTransaksi',
+            data: model,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.blnResult) {
+                    //ResetForm();
+                    //DisableAllForm(false);
+                    //DisableFormTrxSubs(false);
+                    //DisableFormTrxRedemp(false);
+                    //DisableFormTrxRDB(false);
+                    swal("Success", data.ErrMsg, "success");
+                    if (_strTabName == "SUBS") {
+                        //$("#srcNoRefSubs_text1").val(data.strRefID);
+                        //cmpsrNoRefSubs.ValidateField();
                     }
-                    else {
-                        if (data.dtError.length > 0)
-                        {
-                            swal({
-                                title: "Failed",
-                                text: "Data Transaksi Gagal Disimpan",
-                                type: "error",
-                                confirmButtonClass: 'btn-danger',
-                                confirmButtonText: "OK",
-                                closeOnConfirm: true
-                            },
-                                function (isConfirm) {
-                                    if (isConfirm) {
-                                        console.log(data.dtError);
-                                        var dataSource = new kendo.data.DataSource(
-                                            {
-                                                data: data.dtError
-                                            });
-                                        var Errorgrid = $('#GridError').data('kendoGrid');
+                    else if (_strTabName == "REDEMP") {
+                        //cmpsrNoRefRedemp.Text1 = dbParam[2].Value.ToString();
+                        //cmpsrNoRefRedemp.ValidateField();
+                    }
+                    else if (_strTabName == "SUBSRDB") {
+                        //cmpsrNoRefRDB.Text1 = dbParam[2].Value.ToString();
+                        //cmpsrNoRefRDB.ValidateField();
+                    }
+                    //subRefresh();
+                }
+                else {
+                    if (data.dtError.length > 0) {
+                        swal({
+                            title: "Failed",
+                            text: "Data Transaksi Gagal Disimpan",
+                            type: "error",
+                            confirmButtonClass: 'btn-danger',
+                            confirmButtonText: "OK",
+                            closeOnConfirm: true
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    var dataSource = new kendo.data.DataSource(
+                                        {
+                                            data: data.dtError
+                                        });
+                                    if (_strTabName == "SUBS") {
+                                        var Errorgrid = $('#GridErrorSubs').data('kendoGrid');
                                         Errorgrid.setDataSource(dataSource);
                                         Errorgrid.dataSource.pageSize(10);
                                         Errorgrid.select("tr:eq(0)");
                                         $('#ErrorSubsModal').modal('toggle');
                                     }
-                                });
-                        }
-                        else
-                        {
-                            swal("Warning", data.ErrMsg, "warning");
-                        }
+                                    else if (_strTabName == "REDEMP") {
+                                        var Errorgrid = $('#GridErrorRedemp').data('kendoGrid');
+                                        Errorgrid.setDataSource(dataSource);
+                                        Errorgrid.dataSource.pageSize(10);
+                                        Errorgrid.select("tr:eq(0)");
+                                        $('#ErrorRedempModal').modal('toggle');
+                                    }
+                                }
+                            });
+                    }
+                    else {
+                        swal("Warning", data.ErrMsg, "warning");
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
-function subCancel() {
-    _intType = 0;
-    ResetForm();
-    //cTransaksi.ClearData();
-    DisableAllForm(false);
-    DisableFormTrxSubs(false);
-    DisableFormTrxRedemp(false);
-    DisableFormTrxRDB(false);
-    subResetToolBar();
-    ResetAllKodeKantor();
+    function subCancel() {
+        _intType = 0;
+        ResetForm();
+        //cTransaksi.ClearData();
+        DisableAllForm(false);
+        DisableFormTrxSubs(false);
+        DisableFormTrxRedemp(false);
+        DisableFormTrxRDB(false);
+        subResetToolBar();
+        ResetAllKodeKantor();
     }
 
     function RefreshNasabahSubs(data) {
@@ -1030,167 +1378,183 @@ function subCancel() {
         $("#textNamaRekeningSubsMC").val(data.CustomerIdentitas.AccountNameMC);
     }
 
-function RefreshSubscription(data) {
-    $("#textSIDSubs").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurSubs").val(data.TransactionSubsDetail.Umur);
-    $("#textShareHolderIdSubs").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileSubs").val(data.RiskProfileModel.RiskProfile);
-    var dtpRiskProfileSubs = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileSubs").val(dtpRiskProfileSubs.getDate() + '/' + (dtpRiskProfileSubs.getMonth() + 1) + '/' + dtpRiskProfileSubs.getFullYear());
-    $("#maskedRekeningSubs").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningSubs").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningSubsUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningSubsUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningSubsMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningSubsMC").val(data.CustomerIdentitas.AccountNameMC);
-    $("#txtbInputterSubs").val(data.TransactionSubsDetail.Inputter);
-    $("#srcSellerSubs_text1").val(data.TransactionSubsDetail.Seller);
-    $("#srcWaperdSubs_text1").val(data.TransactionSubsDetail.Waperd);
-    $("#textExpireWaperdSubs").val(data.TransactionSubsDetail.Inputter);
-    $("#srcReferentorSubs_text1").val(data.TransactionSubsDetail.Referentor);
+    function RefreshSubscription(data) {
+        $("#textSIDSubs").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurSubs").val(data.TransactionSubsDetail.Umur);
+        $("#textShareHolderIdSubs").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileSubs").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfileSubs = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileSubs").val(dtpRiskProfileSubs.getDate() + '/' + (dtpRiskProfileSubs.getMonth() + 1) + '/' + dtpRiskProfileSubs.getFullYear());
+        $("#maskedRekeningSubs").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningSubs").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningSubsUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningSubsUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningSubsMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningSubsMC").val(data.CustomerIdentitas.AccountNameMC);
+        $("#txtbInputterSubs").val(data.TransactionSubsDetail.Inputter);
+        $("#srcSellerSubs_text1").val(data.TransactionSubsDetail.Seller);
+        $("#srcWaperdSubs_text1").val(data.TransactionSubsDetail.Waperd);
+        $("#textExpireWaperdSubs").val(data.TransactionSubsDetail.Inputter);
+        $("#srcReferentorSubs_text1").val(data.TransactionSubsDetail.Referentor);
 
-    ValidateReferentor($("#srcReferentorSubs_text1").val(), function (output) {
-        $("#srcReferentorSubs_text2").val(output);
-    });
-
-    ValidateReferentor($("#srcSellerSubs_text1").val(), function (output) {
-        $("#srcSellerSubs_text2").val(output);
-    });
-
-    var dataSource = new kendo.data.DataSource(
-        {
-            data: data.ListSubscription
+        ValidateReferentor($("#srcReferentorSubs_text1").val(), function (output) {
+            $("#srcReferentorSubs_text2").val(output);
         });
-    var Subsgrid = $('#dataGridViewSubs').data('kendoGrid');
-    Subsgrid.setDataSource(dataSource);
-    Subsgrid.dataSource.pageSize(15);
-    Subsgrid.dataSource.page(1);
-    Subsgrid.select("tr:eq(0)");
 
-}
-
-function RefreshRedemption(data) {
-    $("#textSIDRedemp").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurRedemp").val(data.TransactionSubsDetail.Umur);
-    $("#textShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
-    var dtpRiskProfileRedemp = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileRedemp").val(dtpRiskProfileRedemp.getDate() + '/' + (dtpRiskProfileRedemp.getMonth() + 1) + '/' + dtpRiskProfileRedemp.getFullYear());
-    $("#maskedRekeningRedemp").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningRedemp").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningRedempUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningRedempUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningRedempMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningRedempMC").val(data.CustomerIdentitas.AccountNameMC);
-
-    var dataSource = new kendo.data.DataSource(
-        {
-            data: data.ListRedemption
+        ValidateReferentor($("#srcSellerSubs_text1").val(), function (output) {
+            $("#srcSellerSubs_text2").val(output);
         });
-    var Redempgrid = $('#dataGridViewRedemp').data('kendoGrid');
-    Redempgrid.setDataSource(dataSource);
-    Redempgrid.dataSource.page(1);
-    Redempgrid.select("tr:eq(0)");
 
-    $("#txtbInputterRedemp").val(data.TransactionSubsDetail.Inputter);
-    $("#srcSellerRedemp_text1").val(data.TransactionSubsDetail.Seller);
-    $("#srcWaperdRedemp_text1").val(data.TransactionSubsDetail.Waperd);
-    $("#srcReferentorRedemp_text1").val(data.TransactionSubsDetail.Referentor);
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: data.ListSubscription
+            });
+        var Subsgrid = $('#dataGridViewSubs').data('kendoGrid');
+        Subsgrid.setDataSource(dataSource);
+        Subsgrid.dataSource.pageSize(15);
+        Subsgrid.dataSource.page(1);
+        Subsgrid.select("tr:eq(0)");
 
-    ValidateReferentor($("#srcSellerRedemp_text1").val(), function (output) {
-        $("#srcSellerRedemp_text2").val(output);
-    });
+    }
 
-    ValidateReferentor($("#srcReferentorRedemp_text1").val(), function (output) {
-        $("#srcReferentorRedemp_text2").val(output);
-    });
-}
+    function RefreshNasabahRedemp(data)
+    {
+        $("#textSIDRedemp").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurRedemp").val(data.intUmur);
+        $("#textShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfileRedemp = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileRedemp").val(dtpRiskProfileRedemp.getDate() + '/' + (dtpRiskProfileRedemp.getMonth() + 1) + '/' + dtpRiskProfileRedemp.getFullYear());
+        $("#maskedRekeningRedemp").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningRedemp").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningRedempUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningRedempUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningRedempMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningRedempMC").val(data.CustomerIdentitas.AccountNameMC);
+    } 
 
-function RefreshRDB(data) {
-    $("#textSIDRDB").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurRDB").val(data.TransactionSubsDetail.Umur);
-    $("#textShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
-    var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-    $("#maskedRekeningRDB").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningRDB").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningRDBMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+    function RefreshRedemption(data) {
+        $("#textSIDRedemp").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurRedemp").val(data.TransactionSubsDetail.Umur);
+        $("#textShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfileRedemp = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileRedemp").val(dtpRiskProfileRedemp.getDate() + '/' + (dtpRiskProfileRedemp.getMonth() + 1) + '/' + dtpRiskProfileRedemp.getFullYear());
+        $("#maskedRekeningRedemp").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningRedemp").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningRedempUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningRedempUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningRedempMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningRedempMC").val(data.CustomerIdentitas.AccountNameMC);
 
-    var dataSource = new kendo.data.DataSource(
-        {
-            data: data.ListSubsRDB
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: data.ListRedemption
+            });
+        var Redempgrid = $('#dataGridViewRedemp').data('kendoGrid');
+        Redempgrid.setDataSource(dataSource);
+        Redempgrid.dataSource.page(1);
+        Redempgrid.select("tr:eq(0)");
+
+        $("#txtbInputterRedemp").val(data.TransactionSubsDetail.Inputter);
+        $("#srcSellerRedemp_text1").val(data.TransactionSubsDetail.Seller);
+        $("#srcWaperdRedemp_text1").val(data.TransactionSubsDetail.Waperd);
+        $("#srcReferentorRedemp_text1").val(data.TransactionSubsDetail.Referentor);
+
+        ValidateReferentor($("#srcSellerRedemp_text1").val(), function (output) {
+            $("#srcSellerRedemp_text2").val(output);
         });
-    var RDBgrid = $('#dataGridViewRDB').data('kendoGrid');
-    RDBgrid.setDataSource(dataSource);
-    RDBgrid.dataSource.page(1);
-    RDBgrid.select("tr:eq(0)");
 
-    $("#txtbInputterRDB").val(data.TransactionSubsDetail.Inputter);
-    $("#srcSellerRDB_text1").val(data.TransactionSubsDetail.Seller);
-    $("#srcWaperdRDB_text1").val(data.TransactionSubsDetail.Waperd);
-    $("#ReferrantorIdRDB").val(data.TransactionSubsDetail.Referentor);
-
-    ValidateReferentor($("#srcSellerRDB_text1").val(), function (output) {
-        $("#srcSellerRDB_text2").val(output);
-    });
-
-    ValidateReferentor($("#ReferrantorIdRDB").val(), function (output) {
-        $("#ReferrantorNameRDB").val(output);
-    });
-
-}
-
-function RefreshSwc(data) {
-    $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurSwc").val(data.CustomerIdentitas.Umur);
-    $("#textShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
-    var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileSwc").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-    $("#maskedRekeningSwc").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningSwc").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningSwcUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningSwcUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningSwcMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
-    $("#textNoTransaksiSwc").val(data.TransactionSwitching.TranCode);
-    var dateTglTransaksiSwc = new Date(data.TransactionSwitching.TranDate);
-    $("#dateTglTransaksiSwc").val(dateTglTransaksiSwc.getDate() + '/' + (dateTglTransaksiSwc.getMonth() + 1) + '/' + dateTglTransaksiSwc.getFullYear());
-
-    $("#srcProductSwcOut_text1").val(data.TransactionSwitching.srcProductSwcOut_text1);
-    ValidateProduk($("#srcProductSwcOut_text1").val(), function (output) {
-        $("#srcProductSwcOut_text2").val(output[0].ProdName);
-        $("#srcClientSwcOut_text1").val(data.TransactionSwitching.srcClientSwcOut_text1);
-        ValidateClient($("#srcClientSwcOut_text1").val(), output[0].ProdId, function (result) {
-            $("#srcClientSwcOut_text2").val(result);
+        ValidateReferentor($("#srcReferentorRedemp_text1").val(), function (output) {
+            $("#srcReferentorRedemp_text2").val(output);
         });
-    });
-    $("#srcProductSwcIn_text1").val(data.TransactionSwitching.srcProductSwcIn_text1);
-    $("#srcClientSwcIn_text1").val(data.TransactionSwitching.srcClientSwcIn_text1);
-    $('#checkPhoneOrderSwc').prop('checked', data.PhoneOrder);
-    $('#checkFeeEditSwc').prop('checked', data.IsFeeEdit);
-    $("#RedempSwc").val(data.TransactionSwitching.TranUnit);
-    $("#MoneyFeeSwc").val(data.TransactionSwitching.SwitchingFee);
-    $("#PercentageFeeSwc").val(data.TransactionSwitching.Percentage);
-    $("#currFeeSwc").text(data.TransactionSwitching.TranCCY);
+    }
 
-    $("#txtbInputterSwc").val(data.TransactionSwitching.Inputter);
-    $("#srcSellerSwc_text1").val(data.TransactionSwitching.Seller);
-    $("#srcWaperdSwc_text1").val(data.TransactionSwitching.Waperd);
-    $("#srcReferentorSwc_text1").val(data.TransactionSwitching.Referentor);
+    function RefreshRDB(data) {
+        $("#textSIDRDB").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurRDB").val(data.TransactionSubsDetail.Umur);
+        $("#textShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#maskedRekeningRDB").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningRDB").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningRDBMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningRDBMC").val(data.CustomerIdentitas.AccountNameMC);
 
-    ValidateReferentor($("#srcSellerSwc_text1").val(), function (output) {
-        $("#srcSellerSwc_text2").val(output);
-    });
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: data.ListSubsRDB
+            });
+        var RDBgrid = $('#dataGridViewRDB').data('kendoGrid');
+        RDBgrid.setDataSource(dataSource);
+        RDBgrid.dataSource.page(1);
+        RDBgrid.select("tr:eq(0)");
 
-    ValidateReferentor($("#srcReferentorSwc_text1").val(), function (output) {
-        $("#srcReferentorSwc_text2").val(output);
-    });
-}
+        $("#txtbInputterRDB").val(data.TransactionSubsDetail.Inputter);
+        $("#srcSellerRDB_text1").val(data.TransactionSubsDetail.Seller);
+        $("#srcWaperdRDB_text1").val(data.TransactionSubsDetail.Waperd);
+        $("#ReferrantorIdRDB").val(data.TransactionSubsDetail.Referentor);
+
+        ValidateReferentor($("#srcSellerRDB_text1").val(), function (output) {
+            $("#srcSellerRDB_text2").val(output);
+        });
+
+        ValidateReferentor($("#ReferrantorIdRDB").val(), function (output) {
+            $("#ReferrantorNameRDB").val(output);
+        });
+
+    }
+
+    function RefreshSwc(data) {
+        $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurSwc").val(data.CustomerIdentitas.Umur);
+        $("#textShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
+        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileSwc").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+        $("#maskedRekeningSwc").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningSwc").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningSwcUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningSwcUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningSwcMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
+        $("#textNoTransaksiSwc").val(data.TransactionSwitching.TranCode);
+        var dateTglTransaksiSwc = new Date(data.TransactionSwitching.TranDate);
+        $("#dateTglTransaksiSwc").val(dateTglTransaksiSwc.getDate() + '/' + (dateTglTransaksiSwc.getMonth() + 1) + '/' + dateTglTransaksiSwc.getFullYear());
+
+        $("#srcProductSwcOut_text1").val(data.TransactionSwitching.srcProductSwcOut_text1);
+        ValidateProduk($("#srcProductSwcOut_text1").val(), function (output) {
+            $("#srcProductSwcOut_text2").val(output[0].ProdName);
+            $("#srcClientSwcOut_text1").val(data.TransactionSwitching.srcClientSwcOut_text1);
+            ValidateClient($("#srcClientSwcOut_text1").val(), output[0].ProdId, function (result) {
+                $("#srcClientSwcOut_text2").val(result);
+            });
+        });
+        $("#srcProductSwcIn_text1").val(data.TransactionSwitching.srcProductSwcIn_text1);
+        $("#srcClientSwcIn_text1").val(data.TransactionSwitching.srcClientSwcIn_text1);
+        $('#checkPhoneOrderSwc').prop('checked', data.PhoneOrder);
+        $('#checkFeeEditSwc').prop('checked', data.IsFeeEdit);
+        $("#RedempSwc").val(data.TransactionSwitching.TranUnit);
+        $("#MoneyFeeSwc").val(data.TransactionSwitching.SwitchingFee);
+        $("#PercentageFeeSwc").val(data.TransactionSwitching.Percentage);
+        $("#currFeeSwc").text(data.TransactionSwitching.TranCCY);
+
+        $("#txtbInputterSwc").val(data.TransactionSwitching.Inputter);
+        $("#srcSellerSwc_text1").val(data.TransactionSwitching.Seller);
+        $("#srcWaperdSwc_text1").val(data.TransactionSwitching.Waperd);
+        $("#srcReferentorSwc_text1").val(data.TransactionSwitching.Referentor);
+
+        ValidateReferentor($("#srcSellerSwc_text1").val(), function (output) {
+            $("#srcSellerSwc_text2").val(output);
+        });
+
+        ValidateReferentor($("#srcReferentorSwc_text1").val(), function (output) {
+            $("#srcReferentorSwc_text2").val(output);
+        });
+    }
 
 function RefreshSwcRDB(data) {
     $("#textSIDSwcRDB").val(data.CustomerIdentitas.CIFSID);
@@ -2486,7 +2850,7 @@ function SetEnableOfficeId(strKodeKantor) {
 
     function HitungFee(ProdId, ClientId, TranType, TranAmt, TranUnit,
         FullAmount, IsFeeEdit, PercentageFeeInput,
-        Jenis, strCIFNo, FeeCurr, NominalFee, PctFee)
+        Jenis, strCIFNo, FeeCurr, NominalFee, PctFee, intPeriod)
     {
         $.ajax({
             type: 'GET',
@@ -2497,7 +2861,8 @@ function SetEnableOfficeId(strKodeKantor) {
                 Jenis: Jenis, strCIFNo: strCIFNo, ByPercent: ByPercent},
             success: function (data) {
                 if (data.blnResult) {
-                    FeeCurr (data.resultFee.FeeCCY);
+                    FeeCurr(data.resultFee.FeeCCY);
+                    intPeriod(data.resultFee.Period);
                     if (Jenis == 1) //hitung fee tanpa edit fee
                     {
                         var Fee = data.resultFee.Fee;
@@ -2533,6 +2898,25 @@ function SetEnableOfficeId(strKodeKantor) {
                     FeeCurr ('');
                     NominalFee(0);
                     PctFee (0);
+                }
+            }
+        });
+    }
+
+    function GetLatestBalance(ClientId, Balance)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/GetLatestBalance',
+            data: {
+                ClientID: ClientId
+            },
+            success: function (data) {
+                if (data.blnResult) {
+                    Balance(data.unitBalance);
+                }
+                else {
+                    Balance(0);
                 }
             }
         });

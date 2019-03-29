@@ -78,17 +78,16 @@ namespace ReksaAPI.Controllers
             cls.ReksaRefreshBookingNew(RefID, NIK, GUID, ref listDetailBooking);
             return Json(new { listDetailBooking });
         }
-
         [Route("api/Transaction/GetLatestBalance")]
         [HttpGet("{id}")]
         public JsonResult GetLatestBalance([FromQuery]int ClientID, [FromQuery]int NIK, [FromQuery]string GUID)
         {
+            bool blnResult;
+            string ErrMsg;
             decimal unitBalance;
-            unitBalance = cls.ReksaGetLatestBalance(ClientID, NIK, GUID);
-            return Json(new { unitBalance });
+            blnResult = cls.ReksaGetLatestBalance(ClientID, NIK, GUID, out unitBalance, out ErrMsg);
+            return Json(new { blnResult, ErrMsg, unitBalance });
         }
-        
-
         [Route("api/Transaction/GetLatestNAV")]
         [HttpGet("{id}")]
         public JsonResult GetLatestNAV([FromQuery]int ProdId, [FromQuery]int NIK, [FromQuery]string GUID)

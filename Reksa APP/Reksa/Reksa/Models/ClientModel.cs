@@ -71,4 +71,15 @@ namespace Reksa.Models
         public string Asuransi { get; set; }
 
     }
+
+    public class TransaksiClientNew
+    {
+        public string ClientCode { get; set; }
+        public string ClientName { get; set; }
+        public string ClientId { get; set; }
+        public string CIFNo { get; set; }
+        public DateTime JoinDate { get; set; }
+        public bool IsEmployee { get; set; }
+        public string IsRDB { get; set; }
+    }
 }

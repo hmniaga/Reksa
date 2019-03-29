@@ -65,7 +65,63 @@ namespace Reksa.Controllers
             return Json(result);
         }
 
+        public ActionResult SearchTrxClientSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchTrxClientRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+
+        public ActionResult SearchTrxClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<TransaksiClientNew> list = new List<TransaksiClientNew>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTrxClientNew?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TransaksiClientNew>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+
         public ActionResult SearchTrxProductSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchTrxProductRedemp(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -671,8 +727,37 @@ namespace Reksa.Controllers
 
             return View();
         }
+        public ActionResult SearchReferentorSwc(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchReferentorRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
 
         public ActionResult SearchSellerSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchSellerSwc(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
+        public ActionResult SearchSellerRedemp(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -917,7 +1002,15 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
 
             return View();
-        }        
+        }
+
+        public ActionResult SearchWaperdRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
         public ActionResult SearchWaperdData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             if (request.Filters.Count > 0)

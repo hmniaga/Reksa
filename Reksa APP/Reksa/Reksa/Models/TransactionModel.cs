@@ -63,7 +63,7 @@ namespace Reksa.Models
             public decimal PctFee { get; set; }
             public string FeeCurr { get; set; }
             public string FeeKet { get; set; }
-            public bool Period { get; set; }
+            public int Period { get; set; }
             public bool ApaDiUpdate { get; set; }
             public bool TrxTaxAmnesty { get; set; }
         }
@@ -204,11 +204,8 @@ namespace Reksa.Models
             public string OfficeId { get; set; }
             public string NoRekening { get; set; }
             public List<SubscriptionList> dtSubs { get; set; }
-            //public List<RedemptionList> dtRedemp { get; set; }
-            //public List<SubscriptionRDBList> dtRDB { get; set; }
-            //public string writerSubs { get; set; }
-            //public string writerRedemp { get; set; }
-            //public string writerRDB { get; set; }
+            public List<RedemptionList> dtRedemp { get; set; }
+            public List<SubscriptionRDBList> dtRDB { get; set; }
             public string Inputter { get; set; }
             public int Seller { get; set; }
             public int Waperd { get; set; }
@@ -287,7 +284,7 @@ namespace Reksa.Models
             public int Period { get; set; }
             public int IsRDB { get; set; }
         }
-        public class ErrorListSubs
+        public class ErrorList
         {
             public string fieldName { get; set; }
             public string description { get; set; }

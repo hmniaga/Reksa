@@ -150,9 +150,11 @@
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductRedemp_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id ="srcProductRedemp" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcProductRedemp" href="@Url.Action("SearchTrxProductRedemp", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductRedemp_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdRedemp", @type = "hidden" })
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdCCY).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCCYRedemp", @type = "hidden" })
                         </div>
                     </div>
                     <!-- End Kode Product -->
@@ -162,9 +164,10 @@
                             <div class="input-group">
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientRedemp_text1" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id ="srcClientRedemp" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcClientRedemp" href="@Url.Action("SearchTrxClientRedemp", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientRedemp_text2" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdRedemp",  @type = "hidden" })
                             </div>
                         </div>
                     <!-- End Client Code -->
@@ -172,7 +175,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">OutStanding Unit</label>
                             <div class="input-group col-md-8">
-                                @Html.Kendo().TextBox().Name("OutstandingUnitRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)
+                                <input id="OutstandingUnitRedemp" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 30%;">
                             </div>
                         </div>
                     <!-- End OutStanding Unit -->
@@ -180,7 +183,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Jumlah Unit</label>
                         <div class="input-group col-md-8">
-                            @Html.Kendo().TextBox().Name("RedempUnit").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)
+                            <input id="RedempUnit" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style = "width: 30%;">
                         </div>
                     </div>
                     <!-- End Jumlah Unit -->
@@ -302,7 +305,7 @@
                             <div class="input-group">
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcSellerRedemp_text1", @class = "form-control input-sm" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcSellerRedemp" href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#SellerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcSellerRedemp" href="@Url.Action("SearchSellerRedemp", "Global")" data-toggle="modal" data-target="#SellerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcSellerRedemp_text2", @class = "form-control input-sm" }).Enable(false)
                             </div>
@@ -312,7 +315,7 @@
                             <div class="input-group">
                                 @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text1", @class = "form-control input-sm" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcWaperdRedemp" href="@Url.Action("SearchWaperd", "Global")" data-toggle="modal" data-target="#WaperdRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcWaperdRedemp" href="@Url.Action("SearchWaperdRedemp", "Global")" data-toggle="modal" data-target="#WaperdRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text2", @class = "form-control input-sm" }).Enable(false)
                             </div>
@@ -328,7 +331,7 @@
                             <div class="input-group">
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcReferentorRedemp_text1", @class = "form-control input-sm" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcReferentorRedemp" href="@Url.Action("SearchReferentor", "Global")" data-toggle="modal" data-target="#NIKRefRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcReferentorRedemp" href="@Url.Action("SearchReferentorRedemp", "Global")" data-toggle="modal" data-target="#NIKRefRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcReferentorRedemp_text2", @class = "form-control input-sm" }).Enable(false)
                             </div>
@@ -339,6 +342,36 @@
     </div>
 </div>
 <!-- Begin Modal -->
+<div class="modal fade" id="ErrorRedempModal" tabindex="-1" role="dialog" aria-labelledby="ErrorRedempModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Daftar Error</h4>
+            </div>
+            <div class="modal-body">
+                @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorList>()
+                                                                .Name("GridErrorRedemp")
+                                                                .Columns(columns =>
+                                                                {
+                                                                    columns.Bound(m => m.fieldName).Width(200).Title("FieldName");
+                                                                    columns.Bound(m => m.description).Width(500).Title("Description");
+                                                                })
+                                                                .Pageable()
+                                                                .Scrollable(s => s.Height(300))
+                                                                .Selectable(selectable => selectable
+                                                                    .Mode(GridSelectionMode.Single))
+                )
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="btnOKErrorRedemp" class="btn btn-info pull-left" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ok"></span> OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="OfficeRedempModal" tabindex="-1" role="dialog" aria-labelledby="OfficeRedempModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>

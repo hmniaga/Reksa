@@ -12,7 +12,7 @@ namespace Reksa.ViewModels
         public List<TransactionModel.SubscriptionList> ListSubscription { get; set; }
         public List<TransactionModel.RedemptionList> ListRedemption { get; set; }
         public List<TransactionModel.SubscriptionRDBList> ListSubsRDB { get; set; }
-        public List<TransactionModel.ErrorListSubs> ListErrorSubs { get; set; }
+        public List<TransactionModel.ErrorList> ListErrorSubs { get; set; }
         public TransactionModel.SwitchingNonRDBModel TransactionSwitching { get; set; }
         public TransactionModel.SwitchingRDBModel TransactionSwitchingRDB { get; set; }
         public TransactionModel.BookingModel TransactionBooking { get; set; }

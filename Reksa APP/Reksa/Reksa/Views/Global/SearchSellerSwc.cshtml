@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Search Seller";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchSeller() {
+        var value = $("#SellerSearchComponentSearchTxt").val();
+        var grid = $("#SellerSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowSellerSelect(e) {
+        var data = this.dataItem(this.select());
+        var dataId = $.trim(data.EMPLID);
+        var dataName = $.trim(data.NAME);
+
+        $("#SellerSelectedId").val(dataId);
+        $("#SellerSelectedText").val(dataName);
+    };
+
+    $("#SellerSelectButton").on("click", function () {
+        var selectedId = $("#SellerSelectedId").val();
+        var selectedText = $("#SellerSelectedText").val();
+
+        $("input[id='srcSellerSwc_text1']").val(selectedId).change();
+        $("input[id='srcSellerSwc_text2']").val(selectedText);
+    });
+
+    $("#SellerSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#SellerSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.ReferentorModel>()
+            .Name("SellerSearchComponentGrid")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.EMPLID).Width(100).Title("Seller Id");
+                columns.Bound(m => m.NAME).Width(100).Title("Seller Name");
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.ClientTemplateId("GridToolbarTemplate");
+            })
+            .Events(events => events.Change("onRowSellerSelect"))
+            .Pageable()
+            .Scrollable()
+            .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .Model(model =>
+                {
+                    model.Id(m => m.EMPLID);
+                })
+                .Read(read => read.Action("SearchReferentorData", "Global", new { search = search, criteria = criteria }))
+            )
+        )
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("SellerSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("SellerSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchSeller")).ToClientTemplate()
+            )
+        </div>
+        </script>
+        <input type="hidden" id="SellerSelectedId" name="SellerSelectedId" value="" />
+        <input type="hidden" id="SellerSelectedText" name="SellerSelectedText" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="SellerSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

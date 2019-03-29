@@ -18,5 +18,5 @@ namespace Reksa.Models
         public string ProdName { get; set; }
         public string ProdId { get; set; }
         public string ProdCCY { get; set; }
-    }
+    }    
 }

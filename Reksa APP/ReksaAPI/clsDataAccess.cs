@@ -2706,10 +2706,11 @@ namespace ReksaAPI
                 throw ex;
             }
         }
-        public decimal ReksaGetLatestBalance(int intClientID, int intNIK, string strGUID)
+        public bool ReksaGetLatestBalance(int intClientID, int intNIK, string strGUID, out decimal unitBalance, out string ErrMsg)
         {
-            string ErrMsg;
-            decimal unitBalance = 0;
+            bool blnResult = false;
+            ErrMsg = "";
+            unitBalance = 0;
             DataSet ds = new DataSet();
             try
             {
@@ -2725,13 +2726,14 @@ namespace ReksaAPI
                 if (this.ExecProc(QueryReksa(), "ReksaGetLatestBalance", ref dbParam, out ds, out cmdOut, out ErrMsg))
                 {
                    decimal.TryParse(cmdOut.Parameters["@pmUnitBalance"].Value.ToString(), out unitBalance);
+                    blnResult = true;
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return unitBalance;
+            return blnResult;
         }
 
         public decimal ReksaGetLatestNAV(int intProdId, int intNIK, string strGUID)
@@ -3185,189 +3187,208 @@ namespace ReksaAPI
             DataTable dttRedemption = new DataTable();
             DataTable dttSubsRDB = new DataTable();
 
-            if (model.dtSubs != null && model.strTranType == "SUBS")
-            {
-                dttSubscription.Columns.Add("NoTrx");
-                dttSubscription.Columns.Add("StatusTransaksi");
-                dttSubscription.Columns.Add("KodeProduk");
-                dttSubscription.Columns.Add("NamaProduk");
-                dttSubscription.Columns.Add("ClientCode");
-                dttSubscription.Columns.Add("Nominal", System.Type.GetType("System.Decimal"));
-                dttSubscription.Columns.Add("EditFeeBy");
-                dttSubscription.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
-                dttSubscription.Columns.Add("FullAmount", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns.Add("TglTrx");
-                dttSubscription.Columns.Add("CCY");
-                dttSubscription.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns.Add("JenisFee");
-                dttSubscription.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
-                dttSubscription.Columns.Add("FeeCurr");
-                dttSubscription.Columns.Add("FeeKet");
-                dttSubscription.Columns.Add("IsNew", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns.Add("OutstandingUnit", System.Type.GetType("System.Decimal"));
-                dttSubscription.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
-                dttSubscription.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
-                dttSubscription.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
-                for (int i = 0; i < model.dtSubs.Count; i++)
-                {
-                    DataRow dtrSubs = dttSubscription.NewRow();
-                    dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
-                    dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
-                    dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
-                    dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
-                    dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
-                    dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
-                    dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
-                    dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
-                    dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
-                    dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
-                    dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
-                    dtrSubs["CCY"] = model.dtSubs[i].CCY;
-                    dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
-                    dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
-                    dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
-                    dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
-                    dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
-                    dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
-                    dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
-                    dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
-                    dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
-                    dttSubscription.Rows.Add(dtrSubs);
-                }
+            dttSubscription = ListConverter.ToDataTable<TransactionModel.SubscriptionList>(model.dtSubs);
+            dttRedemption = ListConverter.ToDataTable<TransactionModel.RedemptionList>(model.dtRedemp);
+            dttSubsRDB = ListConverter.ToDataTable<TransactionModel.SubscriptionRDBList>(model.dtRDB);
 
-                System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttSubscription.TableName = "Subscription";
-                dttSubscription.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                strXMLSubs = writer.ToString();
-            }
-            else if (model.dtSubs != null && model.strTranType == "REDEMP")
-            {
-                dttRedemption.Columns.Add("NoTrx");
-                dttRedemption.Columns.Add("StatusTransaksi");
-                dttRedemption.Columns.Add("KodeProduk");
-                dttRedemption.Columns.Add("NamaProduk");
-                dttRedemption.Columns.Add("ClientCode");
-                dttRedemption.Columns.Add("OutstandingUnit", System.Type.GetType("System.Decimal"));
-                dttRedemption.Columns.Add("RedempUnit", System.Type.GetType("System.Decimal"));
-                dttRedemption.Columns.Add("IsRedempAll", System.Type.GetType("System.Boolean"));
-                dttRedemption.Columns.Add("EditFeeBy");
-                dttRedemption.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
-                dttRedemption.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
+            System.IO.StringWriter writer = new System.IO.StringWriter();
+            dttSubscription.TableName = "Subscription";
+            dttSubscription.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            strXMLSubs = writer.ToString();
 
-                dttRedemption.Columns.Add("TglTrx");
-                dttRedemption.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
-                dttRedemption.Columns.Add("JenisFee");
-                dttRedemption.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
-                dttRedemption.Columns.Add("FeeCurr");
-                dttRedemption.Columns.Add("FeeKet");
-                dttRedemption.Columns.Add("Period");
-                dttRedemption.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
-                dttRedemption.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
-                dttRedemption.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
-                dttRedemption.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
-                if (model.dtSubs != null)
-                {
-                    for (int i = 0; i < model.dtSubs.Count; i++)
-                    {
-                        DataRow dtrSubs = dttRedemption.NewRow();
-                        dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
-                        dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
-                        dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
-                        dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
-                        dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
-                        dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
-                        dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
-                        dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
-                        dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
-                        dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
-                        dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
-                        dtrSubs["CCY"] = model.dtSubs[i].CCY;
-                        dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
-                        dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
-                        dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
-                        dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
-                        dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
-                        dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
-                        dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
-                        dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
-                        dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
-                        dttRedemption.Rows.Add(dtrSubs);
-                    }
-                }
+            writer = new System.IO.StringWriter();
+            dttRedemption.TableName = "Redemption";
+            dttRedemption.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            strXMLRedemp = writer.ToString();
 
-                System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttRedemption.TableName = "Redemption";
-                dttRedemption.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                strXMLRedemp = writer.ToString();
-            }
-            else if (model.dtSubs != null && model.strTranType == "SUBSRDB")
-            {
-                dttSubsRDB.Columns.Add("NoTrx");
-                dttSubsRDB.Columns.Add("StatusTransaksi");
-                dttSubsRDB.Columns.Add("KodeProduk");
-                dttSubsRDB.Columns.Add("NamaProduk");
-                dttSubsRDB.Columns.Add("ClientCode");
-                dttSubsRDB.Columns.Add("Nominal", System.Type.GetType("System.Decimal"));
-                dttSubsRDB.Columns.Add("EditFeeBy");
-                dttSubsRDB.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
-                dttSubsRDB.Columns.Add("JangkaWaktu");
-                dttSubsRDB.Columns.Add("JatuhTempo");
-                dttSubsRDB.Columns.Add("FrekPendebetan");
-                dttSubsRDB.Columns.Add("AutoRedemption");
-                dttSubsRDB.Columns.Add("Asuransi");
-                dttSubsRDB.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
+            writer = new System.IO.StringWriter();
+            dttSubsRDB.TableName = "SubsRDB";
+            dttSubsRDB.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            strXMLRDB = writer.ToString();
 
-                dttSubsRDB.Columns.Add("TglTrx");
-                dttSubsRDB.Columns.Add("CCY");
-                dttSubsRDB.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
-                dttSubsRDB.Columns.Add("JenisFee");
-                dttSubsRDB.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
-                dttSubsRDB.Columns.Add("FeeCurr");
-                dttSubsRDB.Columns.Add("FeeKet");
-                dttSubsRDB.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
-                dttSubsRDB.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
-                dttSubsRDB.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
-                dttSubsRDB.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
+            //if (model.dtSubs != null && model.dtSubs.Count > 0 && model.strTranType == "SUBS")
+            //{
+            //    dttSubscription.Columns.Add("NoTrx");
+            //    dttSubscription.Columns.Add("StatusTransaksi");
+            //    dttSubscription.Columns.Add("KodeProduk");
+            //    dttSubscription.Columns.Add("NamaProduk");
+            //    dttSubscription.Columns.Add("ClientCode");
+            //    dttSubscription.Columns.Add("Nominal", System.Type.GetType("System.Decimal"));
+            //    dttSubscription.Columns.Add("EditFeeBy");
+            //    dttSubscription.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
+            //    dttSubscription.Columns.Add("FullAmount", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns.Add("TglTrx");
+            //    dttSubscription.Columns.Add("CCY");
+            //    dttSubscription.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns.Add("JenisFee");
+            //    dttSubscription.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
+            //    dttSubscription.Columns.Add("FeeCurr");
+            //    dttSubscription.Columns.Add("FeeKet");
+            //    dttSubscription.Columns.Add("IsNew", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns.Add("OutstandingUnit", System.Type.GetType("System.Decimal"));
+            //    dttSubscription.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
+            //    dttSubscription.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
+            //    dttSubscription.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
+            //    for (int i = 0; i < model.dtSubs.Count; i++)
+            //    {
+            //        DataRow dtrSubs = dttSubscription.NewRow();
+            //        dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
+            //        dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
+            //        dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
+            //        dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
+            //        dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
+            //        dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
+            //        dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
+            //        dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
+            //        dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
+            //        dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
+            //        dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
+            //        dtrSubs["CCY"] = model.dtSubs[i].CCY;
+            //        dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
+            //        dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
+            //        dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
+            //        dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
+            //        dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
+            //        dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
+            //        dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
+            //        dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
+            //        dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
+            //        dttSubscription.Rows.Add(dtrSubs);
+            //    }
 
-                dttSubsRDB.Columns["JatuhTempo"].DataType = System.Type.GetType("System.DateTime");
-                dttSubsRDB.Columns["JatuhTempo"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
-                if (model.dtSubs != null)
-                {
-                    for (int i = 0; i < model.dtSubs.Count; i++)
-                    {
-                        DataRow dtrSubs = dttRedemption.NewRow();
-                        dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
-                        dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
-                        dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
-                        dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
-                        dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
-                        dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
-                        dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
-                        dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
-                        dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
-                        dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
-                        dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
-                        dtrSubs["CCY"] = model.dtSubs[i].CCY;
-                        dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
-                        dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
-                        dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
-                        dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
-                        dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
-                        dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
-                        dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
-                        dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
-                        dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
-                        dttRedemption.Rows.Add(dtrSubs);
-                    }
-                }
+            //    System.IO.StringWriter writer = new System.IO.StringWriter();
+            //    dttSubscription.TableName = "Subscription";
+            //    dttSubscription.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            //    strXMLSubs = writer.ToString();
+            //}
+            //else if (model.dtSubs != null && model.strTranType == "REDEMP")
+            //{
+            //    dttRedemption.Columns.Add("NoTrx");
+            //    dttRedemption.Columns.Add("StatusTransaksi");
+            //    dttRedemption.Columns.Add("KodeProduk");
+            //    dttRedemption.Columns.Add("NamaProduk");
+            //    dttRedemption.Columns.Add("ClientCode");
+            //    dttRedemption.Columns.Add("OutstandingUnit", System.Type.GetType("System.Decimal"));
+            //    dttRedemption.Columns.Add("RedempUnit", System.Type.GetType("System.Decimal"));
+            //    dttRedemption.Columns.Add("IsRedempAll", System.Type.GetType("System.Boolean"));
+            //    dttRedemption.Columns.Add("EditFeeBy");
+            //    dttRedemption.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
+            //    dttRedemption.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
 
-                System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttSubsRDB.TableName = "SubsRDB";
-                dttSubsRDB.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                strXMLRDB = writer.ToString();
-            }
+            //    dttRedemption.Columns.Add("TglTrx");
+            //    dttRedemption.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
+            //    dttRedemption.Columns.Add("JenisFee");
+            //    dttRedemption.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
+            //    dttRedemption.Columns.Add("FeeCurr");
+            //    dttRedemption.Columns.Add("FeeKet");
+            //    dttRedemption.Columns.Add("Period");
+            //    dttRedemption.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
+            //    dttRedemption.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
+            //    dttRedemption.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
+            //    dttRedemption.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
+            //    if (model.dtSubs != null)
+            //    {
+            //        for (int i = 0; i < model.dtSubs.Count; i++)
+            //        {
+            //            DataRow dtrSubs = dttRedemption.NewRow();
+            //            dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
+            //            dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
+            //            dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
+            //            dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
+            //            dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
+            //            dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
+            //            dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
+            //            dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
+            //            dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
+            //            dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
+            //            dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
+            //            dtrSubs["CCY"] = model.dtSubs[i].CCY;
+            //            dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
+            //            dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
+            //            dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
+            //            dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
+            //            dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
+            //            dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
+            //            dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
+            //            dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
+            //            dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
+            //            dttRedemption.Rows.Add(dtrSubs);
+            //        }
+            //    }
+
+            //    System.IO.StringWriter writer = new System.IO.StringWriter();
+            //    dttRedemption.TableName = "Redemption";
+            //    dttRedemption.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            //    strXMLRedemp = writer.ToString();
+            //}
+            //else if (model.dtSubs != null && model.strTranType == "SUBSRDB")
+            //{
+            //    dttSubsRDB.Columns.Add("NoTrx");
+            //    dttSubsRDB.Columns.Add("StatusTransaksi");
+            //    dttSubsRDB.Columns.Add("KodeProduk");
+            //    dttSubsRDB.Columns.Add("NamaProduk");
+            //    dttSubsRDB.Columns.Add("ClientCode");
+            //    dttSubsRDB.Columns.Add("Nominal", System.Type.GetType("System.Decimal"));
+            //    dttSubsRDB.Columns.Add("EditFeeBy");
+            //    dttSubsRDB.Columns.Add("NominalFee", System.Type.GetType("System.Decimal"));
+            //    dttSubsRDB.Columns.Add("JangkaWaktu");
+            //    dttSubsRDB.Columns.Add("JatuhTempo");
+            //    dttSubsRDB.Columns.Add("FrekPendebetan");
+            //    dttSubsRDB.Columns.Add("AutoRedemption");
+            //    dttSubsRDB.Columns.Add("Asuransi");
+            //    dttSubsRDB.Columns.Add("PhoneOrder", System.Type.GetType("System.Boolean"));
+
+            //    dttSubsRDB.Columns.Add("TglTrx");
+            //    dttSubsRDB.Columns.Add("CCY");
+            //    dttSubsRDB.Columns.Add("EditFee", System.Type.GetType("System.Boolean"));
+            //    dttSubsRDB.Columns.Add("JenisFee");
+            //    dttSubsRDB.Columns.Add("PctFee", System.Type.GetType("System.Decimal"));
+            //    dttSubsRDB.Columns.Add("FeeCurr");
+            //    dttSubsRDB.Columns.Add("FeeKet");
+            //    dttSubsRDB.Columns.Add("ApaDiUpdate", System.Type.GetType("System.Boolean"));
+            //    dttSubsRDB.Columns.Add("TrxTaxAmnesty", System.Type.GetType("System.Boolean"));
+            //    dttSubsRDB.Columns["TglTrx"].DataType = System.Type.GetType("System.DateTime");
+            //    dttSubsRDB.Columns["TglTrx"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
+
+            //    dttSubsRDB.Columns["JatuhTempo"].DataType = System.Type.GetType("System.DateTime");
+            //    dttSubsRDB.Columns["JatuhTempo"].DateTimeMode = System.Data.DataSetDateTime.Unspecified;
+            //    if (model.dtSubs != null)
+            //    {
+            //        for (int i = 0; i < model.dtSubs.Count; i++)
+            //        {
+            //            DataRow dtrSubs = dttRedemption.NewRow();
+            //            dtrSubs["NoTrx"] = model.dtSubs[i].NoTrx;
+            //            dtrSubs["StatusTransaksi"] = model.dtSubs[i].StatusTransaksi;
+            //            dtrSubs["KodeProduk"] = model.dtSubs[i].KodeProduk;
+            //            dtrSubs["NamaProduk"] = model.dtSubs[i].NamaProduk;
+            //            dtrSubs["ClientCode"] = model.dtSubs[i].ClientCode;
+            //            dtrSubs["Nominal"] = model.dtSubs[i].Nominal;
+            //            dtrSubs["EditFeeBy"] = model.dtSubs[i].EditFeeBy;
+            //            dtrSubs["NominalFee"] = model.dtSubs[i].NominalFee;
+            //            dtrSubs["FullAmount"] = model.dtSubs[i].FullAmount;
+            //            dtrSubs["PhoneOrder"] = model.dtSubs[i].PhoneOrder;
+            //            dtrSubs["TglTrx"] = model.dtSubs[i].TglTrx;
+            //            dtrSubs["CCY"] = model.dtSubs[i].CCY;
+            //            dtrSubs["EditFee"] = model.dtSubs[i].EditFee;
+            //            dtrSubs["JenisFee"] = model.dtSubs[i].JenisFee;
+            //            dtrSubs["PctFee"] = model.dtSubs[i].PctFee;
+            //            dtrSubs["FeeCurr"] = model.dtSubs[i].FeeCurr;
+            //            dtrSubs["FeeKet"] = model.dtSubs[i].FeeKet;
+            //            dtrSubs["IsNew"] = model.dtSubs[i].IsNew;
+            //            dtrSubs["OutstandingUnit"] = model.dtSubs[i].OutstandingUnit;
+            //            dtrSubs["ApaDiUpdate"] = model.dtSubs[i].ApaDiUpdate;
+            //            dtrSubs["TrxTaxAmnesty"] = model.dtSubs[i].TrxTaxAmnesty;
+            //            dttRedemption.Rows.Add(dtrSubs);
+            //        }
+            //    }
+
+            //    System.IO.StringWriter writer = new System.IO.StringWriter();
+            //    dttSubsRDB.TableName = "SubsRDB";
+            //    dttSubsRDB.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            //    strXMLRDB = writer.ToString();
+            //}
         }
 
         #endregion
@@ -3524,6 +3545,33 @@ namespace ReksaAPI
         #endregion
 
         #region "OTORISASI"
+        public bool ReksaPopulateVerifyAuthBS(string strAuthorization, string strTypeTrx, string strAction, string strNoReferensi, int intNIK, out string ErrMsg)
+        {
+            DataSet dsOut = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cNik", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cAuthorization", SqlDbType = System.Data.SqlDbType.VarChar, Value = strAuthorization, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTypeTrx", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTypeTrx, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cAction", SqlDbType = System.Data.SqlDbType.VarChar, Value = strAction, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cNoReferensi", SqlDbType = System.Data.SqlDbType.VarChar, Value = strNoReferensi, Direction = System.Data.ParameterDirection.Input }
+               };
+
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateVerifyAuthBS", ref dbParam, out dsOut))
+                {
+                    blnResult = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         public bool ReksaAuthorizeGlobalParam(string strId, string strTreeInterface, int intNIK, bool isApprove, ref string strError)
         {
             DataSet dsOut = new DataSet();

@@ -176,11 +176,11 @@
                             <div class="input-group col-md-8">
                                 @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text1" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id ="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text2" }).Enable(false)
                                 <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBox().Name("MoneyNomSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                                <input id="MoneyNomSubs" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 100%;">
                             </div>
                         </div>
                     <!-- End Nominal -->
@@ -368,8 +368,8 @@
                 <h4>Daftar Error</h4>
             </div>
             <div class="modal-body">
-                @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorListSubs>()
-                                                        .Name("GridError")
+                @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorList>()
+                                                        .Name("GridErrorSubs")
                                                         .Columns(columns =>
                                                         {
                                                             columns.Bound(m => m.fieldName).Width(200).Title("FieldName");
@@ -390,8 +390,6 @@
     </div>
 </div>
     
-
-
 <div class="modal fade" id="OfficeSubsModal" tabindex="-1" role="dialog" aria-labelledby="OfficeSubsModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>

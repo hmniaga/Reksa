@@ -83,7 +83,7 @@ namespace Reksa.Controllers
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                    HttpResponseMessage response = client.GetAsync("/api/Transaction/CheckSubsType?CIFNO=" + CIFNo + "&ProductId=" + _intNIK + "&IsTrxTA=false&IsRDB=" + IsRDB).Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/CheckSubsType?CIFNO=" + CIFNo + "&ProductId=" + ProductId + "&IsTrxTA=false&IsRDB=" + IsRDB).Result;
                     string strJson = response.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(strJson);
@@ -98,6 +98,36 @@ namespace Reksa.Controllers
                 ErrMsg = ex.Message;
             }
             return Json(new { blnResult, ErrMsg, IsSubsNew, strClientCode });
+        }
+
+        public JsonResult GetLatestBalance(int ClientID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            decimal unitBalance = 0;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/GetLatestBalance?ClientID=" + ClientID + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    unitBalance = strObject.SelectToken("unitBalance").Value<decimal>();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+                return Json(new { blnResult, ErrMsg, unitBalance });
+            }
+            return Json(new { blnResult, ErrMsg, unitBalance });
         }
         public JsonResult CalculateFee(int ProdId, int ClientId, int TranType, decimal TranAmt, decimal TranUnit,
                 bool FullAmount, bool IsFeeEdit, decimal PercentageFeeInput,

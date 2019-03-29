@@ -61,5 +61,16 @@ namespace ReksaAPI.Controllers
             }
             return Json(new { SuccessMessage, ErrMessage });
         }
+        [Route("api/Otorisasi/PopulateVerifyAuthBS")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateVerifyAuthBS([FromQuery]string Authorization, [FromQuery]string TypeTrx, [FromQuery]string Action, [FromQuery]string NoReferensi, [FromQuery]int NIK)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+            blnResult = cls.ReksaPopulateVerifyAuthBS(Authorization, TypeTrx, Action, NoReferensi, NIK, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyAuthBS - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        
     }
 }
