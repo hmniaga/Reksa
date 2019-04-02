@@ -40,93 +40,95 @@
                     </div>
                 </div>
                 <!-- Begin Search RefID -->
-                <!-- Begin Input SID -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">SID</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBox().Name("textSIDSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
-                    </div>
-                </div>
-                <!-- End Input SID -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Umur</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBox().Name("txtUmurSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80px;" }).Enable(false)
-                        <label>&nbsp;&nbsp;&nbsp;Tahun</label>
-                    </div>
-                </div>
-                <!-- Begin Input Shareholder ID -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Shareholder ID</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBox().Name("textShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
-                    </div>
-                </div>
-                <!-- End Input Shareholder ID -->
+
             </div>
-            <div class="col-md-6" style="padding-left:100px">
+            <div class="col-md-6" >
                 <div class="card-box">
                     <div class="row">
                         <!-- Begin Jenis Risk Profile -->
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Jenis Risk Profile</label>
-                                <div class="input-group">
-                                    @Html.Kendo().TextBox().Name("txtbRiskProfileSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Jenis Risk Profile</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBox().Name("txtbRiskProfileSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false)
                             </div>
+                        </div>
                         <!-- End Jenis Risk Profile -->
                         <!-- Begin Last Update Risk Profile -->
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Last Update Risk Profile</label>
-                                <div class="input-group">
-                                    @(Html.Kendo().DatePicker().Name("dtpRiskProfileSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Last Update Risk Profile</label>
+                            <div class="input-group">
+                                @(Html.Kendo().DatePicker().Name("dtpRiskProfileSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
                             </div>
+                        </div>
                         <!-- End Last Update Risk Profile -->
                     </div>
                 </div>
             </div>
-            <div class="col-md-12" style="align-content:flex-start">                
-                    <!-- Begin Input Rekening IDR -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Rekening IDR</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("maskedRekeningSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
-                                <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBox().Name("textNamaRekeningSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
-                            </div>
+            <div class="col-md-6">
+                    <!-- Begin Input SID -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">SID</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("textSIDSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
                         </div>
-                    <!-- End Input Rekening IDR -->
-                    <!-- Begin Input Rekening USD -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Rekening USD</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("maskedRekeningSubsUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
-                                <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBox().Name("textNamaRekeningSubsUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
-                            </div>
+                    </div>
+                    <!-- End Input SID -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Umur</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("txtUmurSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80px;" }).Enable(false)
+                            <label>&nbsp;&nbsp;&nbsp;Tahun</label>
                         </div>
-                    <!-- End Input Rekening USD -->
-                    <!-- Begin Input Rekening -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Rekening</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("maskedRekeningSubsMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
-                                <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBox().Name("textNamaRekeningSubsMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
-                            </div>
+                    </div>
+                    <!-- Begin Input Shareholder ID -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Shareholder ID</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBox().Name("textShareHolderIdSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
                         </div>
-                    <!-- End Input Rekening -->
+                    </div>
+                    <!-- End Input Shareholder ID -->
+            </div>
+            <div class="col-md-6">
+                <!-- Begin Input Rekening IDR -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Rekening IDR</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("maskedRekeningSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        <span class="input-group-btn"></span>
+                        @Html.Kendo().TextBox().Name("textNamaRekeningSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 240px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Input Rekening IDR -->
+                <!-- Begin Input Rekening USD -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Rekening USD</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("maskedRekeningSubsUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        <span class="input-group-btn"></span>
+                        @Html.Kendo().TextBox().Name("textNamaRekeningSubsUSD").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 240px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Input Rekening USD -->
+                <!-- Begin Input Rekening -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Rekening MC</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("maskedRekeningSubsMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        <span class="input-group-btn"></span>
+                        @Html.Kendo().TextBox().Name("textNamaRekeningSubsMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 240px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Input Rekening -->
             </div>
         </div>
     </div>
-</div>
+</div>        
 <div class="col-md-12">
     <div class="card-box">
         <div class="row">
-            <h3 class="panel-title">Subscription</h3>
             <div class="col-md-12">
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <!-- Begin No Transaksi -->
                     <div class="form-group">
                         <label class="col-sm-3 control-label">No Transaksi</label>
@@ -144,158 +146,141 @@
                     </div>
                     <!-- End Tgl Transaksi -->
                     <!-- Begin Kode Product -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Kode Produk</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text1" }).Enable(false)
-                                <span class="input-group-btn">
-                                    <a id="srcProductSubs" href="@Url.Action("SearchTrxProductSubs", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                                </span>
-                                @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text2" }).Enable(false)
-                                @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdSubs", @type = "hidden" })
-                                @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdCCY).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCCYSubs", @type = "hidden" })
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Kode Produk</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text1" }).Enable(false)
+                            <span class="input-group-btn">
+                                <a id="srcProductSubs" href="@Url.Action("SearchTrxProductSubs", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdSubs", @type = "hidden" })
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdCCY).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCCYSubs", @type = "hidden" })
                         </div>
+                    </div>
                     <!-- End Kode Product -->
                     <!-- Begin Client Code -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Client Code</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text1" }).Enable(false)
-                                <span class="input-group-btn">
-                                    <a id="srcClientSubs" href="@Url.Action("SearchClientSubs", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
-                                </span>
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text2" }).Enable(false)
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdSubs", @type = "hidden" })
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Client Code</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text1" }).Enable(false)
+                            <span class="input-group-btn">
+                                <a id="srcClientSubs" href="@Url.Action("SearchClientSubs", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                            </span>
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdSubs", @type = "hidden" })
                         </div>
+                    </div>
                     <!-- End Client Code -->
                     <!-- Begin Nominal -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Nominal</label>
-                            <div class="input-group col-md-8">
-                                @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text1" }).Enable(false)
-                                <span class="input-group-btn">
-                                    <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                                </span>
-                                @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text2" }).Enable(false)
-                                <span class="input-group-btn"></span>
-                                <input id="MoneyNomSubs" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 100%;">
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Nominal</label>
+                        <div class="input-group col-md-9">
+                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text1" }).Enable(false)
+                            <span class="input-group-btn">
+                                <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            </span>
+                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text2" }).Enable(false)
+                            <span class="input-group-btn"></span>
+                            <input id="MoneyNomSubs" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 100%;">
                         </div>
+                    </div>
                     <!-- End Nominal -->
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label"></label>
-                        <div class="input-group">
-                            <div class="checkbox checkbox-custom checkbox-circle">
-                                @Html.Kendo().CheckBox().Name("checkPhoneOrderSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Transaksi melalui Telepon")
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label"></label>
-                        <div class="input-group">
-                            <div class="checkbox checkbox-custom checkbox-circle">
-                                @Html.Kendo().CheckBox().Name("checkFullAmtSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle", @readonly = "readonly" }).Label("Full Amount")
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Subscription Fee</label>
-                        <div class="input-group">
-                            <div class="checkbox checkbox-custom checkbox-circle">
-                                @Html.Kendo().CheckBox().Name("checkFeeEditSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit")
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"></label>
-                            <div class="input-group">
-                                @(Html.Kendo().DropDownList().Name("_ComboJenisSubs")
-                                                .BindTo(new List<SelectListItem>() {
-                                                new SelectListItem() {
-                                                Text = "By Nominal",
-                                                Value = "0"
-                                                },
-                                                new SelectListItem() {
-                                                Text = "By %",
-                                                Value = "1"
-                                                }
-                                                })
-                                                .DataTextField("Text")
-                                                .DataValueField("Value")
-                                                .Events(e =>
-                                                {
-                                                    e.Change("onChange_ComboJenisSubs").DataBound("onBound_ComboJenisSubs");
-                                                })
-                                )
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label"></label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBox().Name("MoneyFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)
-                            <span class="input-group-btn"></span>
-                            <label id="labelFeeCurrencySubs" class="col-sm-3 control-label">CURR</label>
-                            <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBox().Name("PercentageFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)
-                            <span class="input-group-btn"></span>
-                            <label id="_KeteranganFeeSubs" class="col-sm-3 control-label">%</label>
-                        </div>
-                    </div>
-                    <!-- Begin Button -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"></label>
-                            <div class="input-group">
-                                <button id="btnAddSubs" class="btn btn-default waves-effect waves-light">
-                                    <span class="btn-label">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    Add
-                                </button>
-                                <button id ="btnEditSubs"class="btn btn-info waves-effect waves-light">
-                                    <span class="btn-label">
-                                        <i class="fa fa-edit"></i>
-                                    </span>
-                                    Edit
-                                </button>
-                            </div>
-                        </div>
-                    <!-- End Button -->
+
                 </div>
-            </div>
+                <div class="col-md-6">
+                    <div class="col-md-6">
+                        <div class="checkbox checkbox-custom checkbox-circle">
+                            @Html.Kendo().CheckBox().Name("checkPhoneOrderSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Transaksi melalui Telepon")
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="checkbox checkbox-custom checkbox-circle">
+                            @Html.Kendo().CheckBox().Name("checkFullAmtSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle", @readonly = "readonly" }).Label("Full Amount")
+                        </div>
+                    </div>
+                    <label class="col-sm-4 control-label">Subscription Fee</label>
+                    <div class="col-md-12">
+                        <div class="card-box">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-5">
+                                        <div class="checkbox checkbox-custom checkbox-circle">
+                                            @Html.Kendo().CheckBox().Name("checkFeeEditSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit")
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-5">
+                                        @(Html.Kendo().DropDownList().Name("_ComboJenisSubs").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value").Events(e => { e.Change("onChange_ComboJenisSubs").DataBound("onBound_ComboJenisSubs"); }))
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-btn"></span>
+                                            @Html.Kendo().TextBox().Name("MoneyFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)
+                                            <span class="input-group-btn"></span>
+                                            <label id="labelFeeCurrencySubs" class="col-sm-3 control-label">CURR</label>
+                                            <span class="input-group-btn"></span>
+                                            @Html.Kendo().TextBox().Name("PercentageFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)
+                                            <span class="input-group-btn"></span>
+                                            <label id="_KeteranganFeeSubs" class="col-sm-3 control-label">%</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                </div>
+            </div>                
             <div class="col-md-12" style="padding-bottom:5%">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="input-group">
+                        <button id="btnAddSubs" class="btn btn-default waves-effect waves-light">
+                            <span class="btn-label">
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            Add
+                        </button>
+                        <button id="btnEditSubs" class="btn btn-info waves-effect waves-light">
+                            <span class="btn-label">
+                                <i class="fa fa-edit"></i>
+                            </span>
+                            Edit
+                        </button>
+                    </div>
+                </div>
                 @(Html.Kendo().Grid(Model.ListSubscription)
-                .Name("dataGridViewSubs")
-                .Columns(columns =>
-                {
-                    columns.Bound(p => p.NoTrx).Width(100).Title("No Transaksi");
-                    columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
-                    columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
-                    columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
-                    columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
-                    columns.Bound(p => p.Nominal).Width(150).Title("Nominal");
-                    columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
-                    columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
-                    columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount");
-                    columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
-                    columns.Bound(p => p.TglTrx).Width(150).Title("Tanggal Transaksi");
-                    columns.Bound(p => p.CCY).Title("Currency");
-                    columns.Bound(p => p.EditFee).Hidden(); 
-                    columns.Bound(p => p.JenisFee).Width(150).Title("JenisFee");
-                    columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
-                    columns.Bound(p => p.FeeCurr).Hidden(); 
-                    columns.Bound(p => p.FeeKet).Hidden(); 
-                    columns.Bound(p => p.IsNew).Hidden(); 
-                    columns.Bound(p => p.OutstandingUnit).Hidden(); 
-                    columns.Bound(p => p.ApaDiUpdate).Hidden(); 
-                    columns.Bound(p => p.TrxTaxAmnesty).Hidden(); 
-                })
-                .Pageable()
-                .Scrollable(s => s.Height(250))
-                .Selectable(selectable => selectable
-                .Mode(GridSelectionMode.Single))
-                .Events(events => events.Change("onRowViewSubsSelect"))
+                        .Name("dataGridViewSubs")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(p => p.NoTrx).Width(150).Title("No Transaksi");
+                            columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
+                            columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
+                            columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
+                            columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
+                            columns.Bound(p => p.Nominal).Width(150).Title("Nominal");
+                            columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
+                            columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
+                            columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount");
+                            columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
+                            columns.Bound(p => p.TglTrx).Width(150).Title("Tanggal Transaksi");
+                            columns.Bound(p => p.CCY).Title("Currency");
+                            columns.Bound(p => p.EditFee).Hidden();
+                            columns.Bound(p => p.JenisFee).Width(150).Title("JenisFee");
+                            columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
+                            columns.Bound(p => p.FeeCurr).Hidden();
+                            columns.Bound(p => p.FeeKet).Hidden();
+                            columns.Bound(p => p.IsNew).Hidden();
+                            columns.Bound(p => p.OutstandingUnit).Hidden();
+                            columns.Bound(p => p.ApaDiUpdate).Hidden();
+                            columns.Bound(p => p.TrxTaxAmnesty).Hidden();
+                        })
+                        .Pageable()
+                        .Scrollable(s => s.Height(250))
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Events(events => events.Change("onRowViewSubsSelect"))
                 )
 
             </div>

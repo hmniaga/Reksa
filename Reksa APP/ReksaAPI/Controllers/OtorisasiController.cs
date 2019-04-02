@@ -21,8 +21,7 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/Otorisasi/AuthorizeGlobalParam")]
         [HttpPost("{id}")]
-        public JsonResult AuthorizeGlobalParam([FromQuery] string InterfaceId, [FromQuery] bool isApprove, [FromQuery]int NIK, [FromQuery]string GUID, 
-            [FromBody]DataTable dtData)
+        public JsonResult AuthorizeGlobalParam([FromQuery] string InterfaceId, [FromQuery] bool isApprove, [FromQuery]int NIK, [FromQuery]string GUID, [FromBody]DataTable dtData)
         {
             string ErrMessage = "";
             bool blnResult = false;
@@ -67,10 +66,33 @@ namespace ReksaAPI.Controllers
         {
             string ErrMsg = "";
             bool blnResult = false;
-            blnResult = cls.ReksaPopulateVerifyAuthBS(Authorization, TypeTrx, Action, NoReferensi, NIK, out ErrMsg);
+            DataSet dsOut = new DataSet();
+            blnResult = cls.ReksaPopulateVerifyAuthBS(Authorization, TypeTrx, Action, NoReferensi, NIK, out dsOut, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyAuthBS - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsOut });
+        }
+        [Route("api/Otorisasi/AuthorizeTransaction_BS")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeTransaction_BS([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intTranId = 0; 
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            string[] selectedTranId;
+            listTranId = (listTranId + "***").Replace("|***", "");
+            selectedTranId = listTranId.Split('|');
+
+            foreach (string s in selectedTranId)
+            {
+                int.TryParse(s, out intTranId);
+                blnResult = cls.ReksaAuthorizeTransaction_BS(intTranId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeTransaction_BS - Core .Net SqlClient Data Provider\n", "");
+            }
+            
             return Json(new { blnResult, ErrMsg });
         }
         
+
     }
 }

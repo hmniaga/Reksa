@@ -7,7 +7,7 @@
 }
 
 <div class="col-lg-12">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="panel panel-default" style="padding-bottom:100%">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="col-md-10">
+    <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -42,20 +42,20 @@
             <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-6" style="padding-bottom: 30px">
+                        <div class="col-md-8" style="padding-bottom: 30px">
                                 <div class="form-group">
                                     <label id="label1" class="col-sm-3 control-label">@ViewData["label1"]</label>
-                                    <div class="input-group">
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" })
+                                    <div class="input-group col-md-9" >
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" }).Enable(false)
                                         <span class="input-group-btn">
                                             <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                         </span>
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" })
+                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" }).Enable(false)
                                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden" })
                                     </div>
                                 </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
                                 <span class="btn-label">
                                     <i class="fa fa-refresh"></i>
@@ -68,26 +68,26 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="lblSP1" class="col-sm-3 control-label">@ViewData["lblSP1"]</label>
+                                <label id="lblSP1" class="col-sm-4 control-label">@ViewData["lblSP1"]</label>
                                 <div class="input-group">
                                     @Html.Kendo().TextBox().Name("txtbSP1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label id="lblSP2" class="col-sm-3 control-label">@ViewData["lblSP2"]</label>
+                                <label id="lblSP2" class="col-sm-4 control-label">@ViewData["lblSP2"]</label>
                                 <div class="input-group">
-                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 400px;"}).Enable(false)
+                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px;"}).Enable(false)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label id="lblSP4" class="col-sm-3 control-label">@ViewData["lblSP4"]</label>
+                                <label id="lblSP4" class="col-sm-4 control-label">@ViewData["lblSP4"]</label>
                                 <div id ="vdtpSP">
                                     @(Html.Kendo().DatePicker().Name("dtpSP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
                                 </div>
                             </div>
                             <!-- Begin Search Kantor -->
                             <div class="form-group">
-                                <label id="lblOffice" style="display:none;" class="col-sm-3 control-label">Kode Kantor</label>
+                                <label id="lblOffice" style="display:none;" class="col-sm-4 control-label">Kode Kantor</label>
                                 <div id ="Office"class="input-group" style="display:none;">
                                     @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
                                     <span class="input-group-btn">

@@ -186,7 +186,6 @@
             url: '/Otorisasi/PopulateVerifyGlobalParam',
             data: { InterfaceId: IdInterface},
             success: function (data) {
-                console.log(data.AuthParamGlobal);
                 if (data.AuthParamGlobal.length != 0)
                 {
                     var dataSource = new kendo.data.DataSource(

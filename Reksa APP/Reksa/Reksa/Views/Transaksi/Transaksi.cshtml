@@ -5,133 +5,120 @@
     ViewData["Title"] = "Transaksi";
 }
 
-<!-- Begin Contents -->
-<div class="panel panel-default" id="contentTransaksi">
-    <div class="panel-heading">
-        <h4 class="m-t-0 header-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Transaksi</a>
-        </h4>
-    </div>
-        <div class="panel-body">
-            
-            <div class="card-box">
-                <!-- Begin Button -->
-                <div>
-                    <div class="input-group">
-                        <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-refresh"></i>
-                            </span>
-                            Refresh
-                        </button>
-                        <button id="btnNew" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                            New
-                        </button>
+<div class="card-box">
+    <!-- Begin Button -->
+    <div>
+        <div class="input-group">
+            <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                <span class="btn-label">
+                    <i class="fa fa-refresh"></i>
+                </span>
+                Refresh
+            </button>
+            <button id="btnNew" class="btn btn-primary waves-effect waves-light" style="margin-right:10px">
+                <span class="btn-label">
+                    <i class="fa fa-plus"></i>
+                </span>
+                New
+            </button>
 
-                        <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            Edit
-                        </button>
-                        <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-save"></i>
-                            </span>
-                            Save
-                        </button>
-                        <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-pink waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-remove"></i>
-                            </span>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            <!-- End Button -->
-            </div>
-            
-            <!-- Begin Tab -->
-            <div id="tabs" class="col-md-12" style="margin-top:20px">   
-                <ul class="nav nav-tabs" style="background-color:#efefef">
-                        <li class="active"><a data-toggle="tab" href="#tab-subscription" id="SUBS">Subscription</a></li>
-                        <li><a data-toggle="tab" href="#collapse-redemption" id="REDEMP">Redemption</a></li>
-                        <li><a data-toggle="tab" href="#collapse-reksaberjangka" id="SUBSRDB">Reksadana Berjangka</a></li>
-                        <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB">Switching Non RDB</a></li>
-                        <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB">Switching RDB</a></li>
-                        <li><a data-toggle="tab" href="#collapse-booking" id="BOOK">Booking</a></li>
-                </ul>
-
-                <div class="tab-content">
-                        <div id="tab-subscription" class="tab-pane fade in active">
-                            <h3>Subscription</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                     @{
-                                        Html.RenderPartial("_Subscription.cshtml", Model);
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapse-redemption" class="tab-pane fade">
-                            <h3>Redemption</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_Redemption.cshtml");
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapse-reksaberjangka" class="tab-pane fade">
-                            <h3>Reksadana Berjangka</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_ReksaBerjangka.cshtml", Model);
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapse-switchingnonrdb" class="tab-pane fade">
-                            <h3>SWITCHING NON RDB</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_SwitchingNonRDB.cshtml");
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapse-switchingrdb" class="tab-pane fade">
-                            <h3>SWITCHING RDB</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                   @{
-                                        Html.RenderPartial("_SwitchingRDB.cshtml");
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div id="collapse-booking" class="tab-pane fade">
-                            <h3>BOOKING</h3>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_Booking.cshtml");
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                </div>
-
-            </div>
-            <!-- End Tab -->
+            <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                <span class="btn-label">
+                    <i class="fa fa-edit"></i>
+                </span>
+                Edit
+            </button>
+            <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
+                <span class="btn-label">
+                    <i class="fa fa-save"></i>
+                </span>
+                Save
+            </button>
+            <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-danger waves-effect waves-light">
+                <span class="btn-label">
+                    <i class="fa fa-remove"></i>
+                </span>
+                Cancel
+            </button>
         </div>
     </div>
+    <!-- End Button -->
+</div>
+
+        <!-- Begin Tab -->
+        <div id="tabs" class="col-md-12" style="margin-top:20px">
+            <ul class="nav nav-tabs" style="background-color:#efefef">
+                <li class="active"><a data-toggle="tab" href="#tab-subscription" id="SUBS">Subscription</a></li>
+                <li><a data-toggle="tab" href="#collapse-redemption" id="REDEMP">Redemption</a></li>
+                <li><a data-toggle="tab" href="#collapse-reksaberjangka" id="SUBSRDB">Reksadana Berjangka</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB">Switching Non RDB</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB">Switching RDB</a></li>
+                <li><a data-toggle="tab" href="#collapse-booking" id="BOOK">Booking</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="tab-subscription" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_Subscription.cshtml", Model);
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse-redemption" class="tab-pane fade">
+                    <h3>Redemption</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_Redemption.cshtml");
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse-reksaberjangka" class="tab-pane fade">
+                    <h3>Reksadana Berjangka</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_ReksaBerjangka.cshtml", Model);
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse-switchingnonrdb" class="tab-pane fade">
+                    <h3>SWITCHING NON RDB</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_SwitchingNonRDB.cshtml");
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse-switchingrdb" class="tab-pane fade">
+                    <h3>SWITCHING RDB</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_SwitchingRDB.cshtml");
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="collapse-booking" class="tab-pane fade">
+                    <h3>BOOKING</h3>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                Html.RenderPartial("_Booking.cshtml");
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Tab -->
 <script>
     
 var _strTabName;
@@ -490,12 +477,13 @@ var strBranch;
             _NominalFee = $("#MoneyFeeSubs").val();
         }
         
+        var MoneyNomSubs = parseFloat($("#MoneyNomSubs").val().toString().replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);      
 
         var res  = GenerateTranCodeAndClientCode(_strTabName, IsSubsNew, $("#srcProductSubs_text1").val(),
             $("#srcClientSubs_text1").val(), $("#srcCIFSubs_text1").val(),
             //$("#checkFeeEditSubs").val(), _PercentageFee, 0
             $("#checkFeeEditSubs").val(), 1.5, 0
-            , $("#checkFullAmtSubs").val(), _NominalFee, $("#MoneyNomSubs").val(), 0, false, 0, 0
+            , $("#checkFullAmtSubs").val(), _NominalFee, MoneyNomSubs, 0, false, 0, 0
             , _intType);
 
 
@@ -557,7 +545,7 @@ var strBranch;
                     obj['KodeProduk'] = $("#srcProductSubs_text1").val();
                     obj['NamaProduk'] = $("#srcProductSubs_text2").val();
                     obj['ClientCode'] = strNewClientCode;
-                    obj["Nominal"] = $("#MoneyNomSubs").val();
+                    obj["Nominal"] = MoneyNomSubs;
                     if ($('#checkFeeEditSubs').prop('checked') == true) {
                         obj["EditFeeBy"] = $("#_ComboJenisSubs").val();
                     }
@@ -1290,11 +1278,11 @@ var strBranch;
             contentType: "application/json; charset=utf-8",
             success: function (data) {
                 if (data.blnResult) {
-                    //ResetForm();
-                    //DisableAllForm(false);
-                    //DisableFormTrxSubs(false);
-                    //DisableFormTrxRedemp(false);
-                    //DisableFormTrxRDB(false);
+                    ResetForm();
+                    DisableAllForm(false);
+                    DisableFormTrxSubs(false);
+                    DisableFormTrxRedemp(false);
+                    DisableFormTrxRDB(false);
                     swal("Success", data.ErrMsg, "success");
                     if (_strTabName == "SUBS") {
                         //$("#srcNoRefSubs_text1").val(data.strRefID);

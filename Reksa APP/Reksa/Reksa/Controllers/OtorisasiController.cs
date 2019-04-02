@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Reksa.Controllers
 {
@@ -20,7 +21,7 @@ namespace Reksa.Controllers
     {
         #region "Default Var"
         public string strModule = "Pro Reksa 2";
-        public int _intNIK = 10137;
+        public int _intNIK = 10035;
         public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
         public string _strBranch = "01010";
@@ -154,23 +155,6 @@ namespace Reksa.Controllers
         public ActionResult Transaksi()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<TreeViewModel> listTree = new List<TreeViewModel>();
-            listTree = GetTreeView("mnuAuthorizeTransaksiNew");
-            var items = new List<TreeViewModel>();
-            //var root = listTree[0];
-            //for (int i = 0; i < listTree.Count; i++)
-            //{
-            //    if (listTree[i].ParentId == "")
-            //    {
-            //        root = listTree[i];
-            //        items.Add(root);
-            //    }
-            //    else
-            //    {
-            //        root.Children.Add(listTree[i]);
-            //    }
-            //}
-            this.ViewBag.Tree = items;
             return View("AuthGeneralNew", vModel);
         }
         public ActionResult WM()
@@ -294,7 +278,64 @@ namespace Reksa.Controllers
                 
             }
             return Json(vModel);
-        }        
+        }
+        public JsonResult PopulateVerifyAuthBS(string Authorization, string TypeTrx, string strAction, string NoReferensi)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<OtorisasiModel.AuthTransaction> list = new List<OtorisasiModel.AuthTransaction>();
+            List<OtorisasiModel.AuthTransactionDetail> list1 = new List<OtorisasiModel.AuthTransactionDetail>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Otorisasi/PopulateVerifyAuthBS?Authorization=" + Authorization + "&TypeTrx=" + TypeTrx + "&Action=" + strAction + "&NoReferensi=" + NoReferensi + "&NIK=" + _intNIK).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+
+                JObject strObject = JObject.Parse(stringData);
+                blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                JToken TokenData = strObject["dsOut"];
+                string JsonData = JsonConvert.SerializeObject(TokenData);
+                dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+
+                _session.SetString("dsVerifyGlobalParam", JsonConvert.SerializeObject(dsResult));
+                List<OtorisasiModel.AuthTransaction> result = this.MapListOfObject<OtorisasiModel.AuthTransaction>(dsResult.Tables[0]);
+                List<OtorisasiModel.AuthTransactionDetail> result1 = this.MapListOfObject<OtorisasiModel.AuthTransactionDetail>(dsResult.Tables[1]);
+                list.AddRange(result);
+                list1.AddRange(result1);
+                //vModel.AuthTransaction = list;
+            }
+            return Json(new { blnResult, ErrMsg, list, list1 });
+        }
+        public ActionResult AuthorizeTransaction_BS(string listTranId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeTransaction_BS?listTranId=" + listTranId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
         public ActionResult NFS()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();

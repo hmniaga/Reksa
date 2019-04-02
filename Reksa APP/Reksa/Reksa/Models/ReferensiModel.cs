@@ -8,6 +8,6 @@ namespace Reksa.Models
     public class ReferensiModel
     {
         public string RefID { get; set; }
-        public System.DateTime? tanggalTransaksi { get; set; }
+        public DateTime TanggalTransaksi { get; set; }
     }
 }

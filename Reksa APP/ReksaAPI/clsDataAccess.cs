@@ -1874,8 +1874,8 @@ namespace ReksaAPI
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@dtRiskProfile", SqlDbType = System.Data.SqlDbType.Date, Value = dtpRiskProfile, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@dtExpRiskProfile", SqlDbType = System.Data.SqlDbType.Date, Direction = System.Data.ParameterDirection.Output },
+                    new SqlParameter() { ParameterName = "@dtRiskProfile", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtpRiskProfile, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@dtExpRiskProfile", SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Output },
                     new SqlParameter() { ParameterName = "@pnCIFNo", SqlDbType = System.Data.SqlDbType.BigInt, Value = lngCIFNO, Direction = System.Data.ParameterDirection.Input }
                 };
 
@@ -3545,9 +3545,9 @@ namespace ReksaAPI
         #endregion
 
         #region "OTORISASI"
-        public bool ReksaPopulateVerifyAuthBS(string strAuthorization, string strTypeTrx, string strAction, string strNoReferensi, int intNIK, out string ErrMsg)
+        public bool ReksaPopulateVerifyAuthBS(string strAuthorization, string strTypeTrx, string strAction, string strNoReferensi, int intNIK, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
+            dsOut = new DataSet();
             bool blnResult = false;
             ErrMsg = "";
             try
@@ -3572,6 +3572,36 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+
+        
+        public bool ReksaAuthorizeTransaction_BS(int intTranId, int intNIK, bool isApprove, out string strError)
+        {
+            DataSet dsOut = new DataSet();
+            bool blnResult = false;
+            strError = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@nTranId", SqlDbType = System.Data.SqlDbType.Int, Value = intTranId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@bAccepted", SqlDbType = System.Data.SqlDbType.Bit, Value = isApprove, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cNik", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaAuthorizeTransaction_BS", ref dbParam, out dsOut, out cmdOut, out strError))
+                    //if (this.ExecProc(QueryReksa(), "ReksaAuthorizeTransaction_BS", ref dbParam, out dsOut))
+                {
+                    blnResult = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                strError = ex.ToString();
+            }
+            return blnResult;
+        }
+
         public bool ReksaAuthorizeGlobalParam(string strId, string strTreeInterface, int intNIK, bool isApprove, ref string strError)
         {
             DataSet dsOut = new DataSet();
@@ -3595,7 +3625,6 @@ namespace ReksaAPI
             catch (Exception ex)
             {
                 strError = ex.ToString();
-                throw ex;
             }
             return blnResult;
         }

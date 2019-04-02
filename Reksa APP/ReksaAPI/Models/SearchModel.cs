@@ -90,7 +90,7 @@ namespace ReksaAPI.Models
         public class TransaksiRefID
         {
             public string RefID { get; set; }
-            public System.DateTime TanggalTransaksi { get; set; }
+            public DateTime TanggalTransaksi { get; set; }
         }
         public class Waperd
         {

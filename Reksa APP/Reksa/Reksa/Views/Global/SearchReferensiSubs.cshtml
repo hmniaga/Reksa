@@ -32,10 +32,10 @@
     function onRowReferensiSubsSelect(e) {
         var data = this.dataItem(this.select());
         var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var TanggalTransaksi = $.trim(data.TanggalTransaksi);
 
         $("#ReferensiSubsSelectedRefID").val(RefID);
-        $("#ReferensiSubsSelectedtanggalTransaksi").val(tanggalTransaksi);
+        $("#ReferensiSubsSelectedtanggalTransaksi").val(TanggalTransaksi);
     };
 
     $("#ReferensiSubsSelectButton").on("click", function () {
@@ -67,7 +67,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.RefID).Title("No Referensi");
-                        columns.Bound(m => m.tanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
                     })
                     .ToolBar(toolbar =>
                     {

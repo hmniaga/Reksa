@@ -4,44 +4,9 @@
     ViewData["Title"] = "Otorisasi";
 }
 
-<div class="col-md-3">
-    <div class="panel panel-default" style="padding-bottom:100%">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Authorization</a>
-            </h4>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-                    @(Html.Kendo().TreeView().Name("tvOtorisasi").Items(treeview =>
-                                {
-                                    treeview.Add().Text("Authorization")
-                                        .Expanded(true)
-                                        .Items(root =>
-                                        {
-                                            root.Add().Text("Transaksi")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("ti-folder");
-
-                                            root.Add().Text("Product")
-                                                .Expanded(true)
-                                                .SpriteCssClasses("folder");
-                                        });
-                                })
-                                .Events(events => events
-                            .Select("onSelect")
-
-                        )
-                    )
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Begin Button -->
-<div class="col-md-9">
+<div class="col-md-12">
     <div class="input-group">
         <button id=btnRefresh class="btn btn-default waves-effect waves-light">
             <span class="btn-label">
@@ -64,83 +29,527 @@
     </div>
 </div>
 <!-- End Button -->
-
-<div class="col-md-9">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-
+<!-- Begin Radio Button -->
+<div class="col-md-12">
+    <div class="card-box">
+        <div class="row" style="padding-bottom:10px">
+            <label class="col-sm-2 control-label">Authorization</label>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioNewAccount" value="ACC" name="radioInline" checked>
+                <label for="radioNewAccount">  New Account </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioTransaction" value="TRX" name="radioInline">
+                <label for="radioTransaction"> Transaction </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioBlocking" value="TRX" name="radioInline">
+                <label for="radioBlocking"> Blocking </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioReverse" value="TRX" name="radioInline">
+                <label for="radioReverse"> Reverse </label>
+            </div>
         </div>
-        <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
-            <div class="panel-body">
-                <div class="row">
-                    @(Html.Kendo().Grid(Model.Detail)
-                                         .Name("GridOtorisasi")
-                                         .Columns(columns =>
-                                         {
-                                             columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                             columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                             columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                             columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                             columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                             columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                             columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                         }).Pageable()
-                                     .Scrollable(s => s.Height(250))
-                                     .Selectable(selectable => selectable
-                                     .Mode(GridSelectionMode.Single))
-                            //.Events(events => events.Change("onRowBlokirSelect"))
-                    )
-                </div>
+        <div class="row" style="padding-bottom:10px">
+            <label class="col-sm-2 control-label">Jenis Transaksi</label>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioAllTrx" value="ACC" name="radioInline1" checked>
+                <label for="radioAllTrx">  All </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioSubs" value="TRX" name="radioInline1">
+                <label for="radioSubs"> Subscription </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioRedemption" value="TRX" name="radioInline1">
+                <label for="radioRedemption"> Redemption </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioRDB" value="TRX" name="radioInline1">
+                <label for="radioRDB"> RDB </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioSwitching" value="TRX" name="radioInline1">
+                <label for="radioSwitching"> Switching </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioSwcRDB" value="TRX" name="radioInline1">
+                <label for="radioSwcRDB"> Switching RDB </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioBooking" value="TRX" name="radioInline1">
+                <label for="radioBooking"> Booking </label>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom:10px">
+            <label class="col-sm-2 control-label">Action</label>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioNew" value="ACC" name="radioInline2" checked>
+                <label for="radioNew">  New </label>
+            </div>
+            <div class="radio radio-danger radio-inline">
+                <input type="radio" id="radioEdit" value="TRX" name="radioInline2">
+                <label for="radioEdit"> Edit </label>
             </div>
         </div>
     </div>
 </div>
-
-
-<div class="col-md-9">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Detail</a>
-            </h4>
-        </div>
-        <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
-            <div class="panel-body">
-                <div class="row">
-                    @(Html.Kendo().Grid(Model.Detail)
-                                .Name("GridOtorisasiDetail")
-                                .Columns(columns =>
-                                {
-                                    columns.Bound(p => p.CheckB).Width(100).Title("CheckB");
-                                    columns.Bound(p => p.TranId).Width(100).Title("TranId");
-                                    columns.Bound(p => p.TranCode).Width(150).Title("TranCode");
-                                    columns.Bound(p => p.ValueDate).Width(200).Title("ValueDate");
-                                    columns.Bound(p => p.ClientCode).Width(150).Title("ClientCode");
-                                    columns.Bound(p => p.CIFName).Width(100).Title("CIFName");
-                                    columns.Bound(p => p.FullAmount).Width(100).Title("FullAmount");
-                                }).Pageable()
-                            .Scrollable(s => s.Height(250))
-                            .Selectable(selectable => selectable
-                            .Mode(GridSelectionMode.Single))
-                            //.Events(events => events.Change("onRowBlokirSelect"))
-                    )
-                </div>
+<!-- Begin Radio Button -->
+    <!-- Begin DataGridView1 -->
+    <div class="col-md-12">
+        <div class="card-box">
+            <h3 id="groupBox1">Data Master</h3>
+            <div class="row" style="padding-bottom:10px">
+                <div id="GridOtorisasi"></div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    function onSelect(e) {
-        alert(this.text(e.node));
-        switch (this.text(e.node)) {
-            case "Agent":
-                $("#label1").val("Kode");
-                $("#label2").val("Keterangan");
-                $("#label3").val("Tanggal Libur");
-                $("#label4").val("Kode");
-                break;
+    <!-- End DataGridView1 -->
+    <!-- Begin DataGridView2 -->
+    <div class="col-md-12">
+        <div class="card-box">
+            <h3 id="groupBox2">Data Transaksi</h3>
+            <div class="row" style="padding-bottom:10px">
+                <div id="GridDetail"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Begin DataGridView2 -->
+    <script>
+        var strTransaction;
+        var strAction;
+        var strJenisTrx;
+        $(document).ready(function () {
+            $("#btnRefresh").click(function () {
+                subRefresh();
+            });
+            $("#btnProcess").click(function () {
+                swal({
+                    title: "Apakah akan melakukan Otorisasi Transaksi?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: 'btn-info',
+                    confirmButtonText: "Yes",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            subAcceptReject(true);
+                        } 
+                    });
+                
+            });
+            $("#btnReject").click(function () {
+                swal({
+                    title: "Reject Transaksi?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: 'btn-danger',
+                    confirmButtonText: "Yes",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            subAcceptReject(false);
+                        }
+                    });
+            });
+
+        });
+
+        function subRefresh() {
+            PopulateVerifyData("");
         }
 
-    }
+        function PopulateVerifyData(RefID)
+        {
+            if ($("#radioNewAccount").prop('checked') == true)
+            {
+                strTransaction = "ACC";
+            } else if ($("#radioTransaction").prop('checked') == true)
+            {
+                strTransaction = "TRX";
+            }
+            else if ($("#radioReverse").prop('checked') == true)
+            {
+                strTransaction = "REV";
+            }
+            else if ($("#radioBlocking").prop('checked') == true)
+            {
+                strTransaction = "BLK";
+            }
+            else
+            {
+                strTransaction = "";
+            }
 
-</script>
+            if ($("#radioAllTrx").prop('checked') == true)
+            {
+                strJenisTrx = "ALL";
+            }
+            else if ($("#radioSubs").prop('checked') == true)
+            {
+                strJenisTrx = "SUBS";
+            }
+            else if ($("#radioRedemption").prop('checked') == true)
+            {
+                strJenisTrx = "REDEMP";
+            }
+            else if ($("#radioRDB").prop('checked') == true)
+            {
+                strJenisTrx = "SUBSRDB";
+            }
+            else if ($("#radioSwitching").prop('checked') == true)
+            {
+                strJenisTrx = "SWCNONRDB";
+            }
+            else if ($("#radioSwcRDB").prop('checked') == true)
+            {
+                strJenisTrx = "SWCRDB";
+            }
+            else if ($("#radioBooking").prop('checked') == true)
+            {
+                strJenisTrx = "BOOK";
+            }
+            else
+            {
+                strJenisTrx = "";
+            }
+            if ($("#radioNew").prop('checked') == true) {
+                strAction = "ADD";
+            }
+            else if ($("#radioEdit").prop('checked') == true) {
+                strAction = "EDIT";
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '/Otorisasi/PopulateVerifyAuthBS',
+                data: { Authorization: strTransaction, TypeTrx: strJenisTrx, strAction: strAction, NoReferensi: RefID },
+                success: function (data) {
+                    $("#GridDetail").empty();
+                    if (data.blnResult) {
+                        if (RefID == "") {
+                            var gridOptions = populateGrid(data.list);
+                            var grid = $("#GridOtorisasi").data("kendoGrid");
+                            if (grid) {
+                                grid.setOptions(gridOptions);
+                            } else {
+                                $("#GridOtorisasi").kendoGrid(gridOptions);
+                            }
+                        } else
+                        {
+                            var gridOptions = populateGridDetail(data.list1);
+                            var grid = $("#GridDetail").data("kendoGrid");
+                            if (grid) {
+                                grid.setOptions(gridOptions);
+                            } else {
+                                $("#GridDetail").kendoGrid(gridOptions);
+                            }
+                        }
+                    }
+                    else {
+                        swal("Warning", data.ErrMsg, "warning");
+                    }
+                }
+            });
+        }
+
+        function populateGrid(response) {
+            if (response.length > 0) {
+                var columns = generateColumns(response);
+                return gridOptions = {
+                    dataSource: {
+                        transport: {
+                            read: function (options) {
+                                options.success(response);
+                            }
+                        },
+                        pageSize: 5,
+                        page: 1
+                    },
+                    change: onRowOtorisasiSelect,
+                    columns: columns,
+                    pageable: true,
+                    selectable: true,
+                    height: 300
+                };
+                
+            } else
+            {
+                $("#GridOtorisasi").empty();
+            }
+        }
+
+        function populateGridDetail(response) {
+            if (response.length > 0) {
+                var columns = generateColumnsDetail(response);
+                return gridOptions = {
+                    dataSource: {
+                        transport: {
+                            read: function (options) {
+                                options.success(response);
+                            }
+                        },
+                        pageSize: 6,
+                        page: 1
+                    },
+                    columns: columns,
+                    pageable: true,
+                    selectable: true,
+                    height: 300
+                };
+
+            } else {
+                $("#GridDetail").empty();
+            }
+        }
+
+        function generateColumns(response) {
+            var columnNames = Object.keys(response[0]);
+            return columnNames.map(function (name) {
+                var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
+                var value;
+                    value = 'NoReferensi';
+                return {
+                    headerTemplate: isIdColumn ? "Pilih" : name,
+                    template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= " + value + " #'" +
+                        "# if (CheckB) { #" +
+                        "checked='checked'" +
+                        "# } #" +
+                        "/>" : columnNames,
+                    field: name,
+                    width: isIdColumn ? 50 : 180,
+                    title: isIdColumn ? "CheckBox" : name
+                };
+            })
+        }
+
+        function generateColumnsDetail(response) {
+            var columnNames = Object.keys(response[0]);
+            return columnNames.map(function (name) {
+                var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
+                var value;
+                value = 'NoReferensi';
+                return {
+                    headerTemplate: isIdColumn ? "Pilih" : name,
+                    template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClickDetail(this)' value= '#= " + value + " #'" +
+                        "# if (CheckB) { #" +
+                        "checked='checked'" +
+                        "# } #" +
+                        "/>" : columnNames,
+                    field: name,
+                    width: isIdColumn ? 50 : 180,
+                    title: isIdColumn ? "CheckBox" : name
+                };
+            })
+        }
+        
+        function onCheckBoxClick(e) {
+            var state = $(e).is(':checked');
+            var value = e.value;
+
+            var grid = $('#GridOtorisasi').data('kendoGrid');
+            grid.refresh();
+
+            grid.tbody.find("tr[role='row']").each(function () {
+                var dataItem = grid.dataItem(this);
+
+                if (dataItem.NoReferensi == value) {
+                    dataItem.CheckB = state;
+                    if (state) {
+                        grid.select("tr:eq(value)");
+                    }
+                }
+            })
+            var chkAll = $('#chkSelectAll').is(':checked');
+            var isCheckedAll = true;
+            var countTrue = 0;
+            var countFalse = 0;
+            var countAll = 0;
+
+            $.each(grid.dataSource.view(), function () {
+                if (this['CheckB'] == true) {
+                    countTrue = countTrue + 1;
+                }
+                else {
+                    countFalse = countFalse + 1;
+                    isCheckedAll = false;
+                }
+                countAll = countAll + 1;
+            });
+            if (countFalse == 0 || (countFalse == 1 && !state)) {
+                $('#chkSelectAll').prop("checked", state);
+            }
+            grid.refresh();
+        }
+
+        function onCheckBoxClickDetail(e) {
+            var state = $(e).is(':checked');
+            var value = e.value;
+
+            var grid = $('#GridDetail').data('kendoGrid');
+            grid.refresh();
+
+            grid.tbody.find("tr[role='row']").each(function () {
+                var dataItem = grid.dataItem(this);
+
+                if (dataItem.NoReferensi == value) {
+                    dataItem.CheckB = state;
+                }
+            })
+
+            var chkAll = $('#chkSelectAllDetail').is(':checked');
+            var isCheckedAll = true;
+            var countTrue = 0;
+            var countFalse = 0;
+            var countAll = 0;
+
+            $.each(grid.dataSource.view(), function () {
+                if (this['CheckB'] == true) {
+                    countTrue = countTrue + 1;
+                }
+                else {
+                    countFalse = countFalse + 1;
+                    isCheckedAll = false;
+                }
+                countAll = countAll + 1;
+            });
+            if (countFalse == 0 || (countFalse == 1 && !state)) {
+                $('#chkSelectAllDetail').prop("checked", state);
+            }
+            grid.refresh();
+        }
+
+        function subAcceptReject(IsAccept) {
+
+            if ($('#radioNewAccount').prop('checked') == true) {
+                strTransaction = "ACC";
+            }
+            else if ($('#radioTransaction').prop('checked') == true) {
+                strTransaction = "TRX";
+            }
+            else if ($('#radioReverse').prop('checked') == true) {
+                strTransaction = "REV";
+            }
+            else if ($('#radioBlocking').prop('checked') == true) {
+                strTransaction = "BLK";
+            }
+            else {
+                strTransaction = "";
+            }
+            
+
+            if (strTransaction == "ACC") {
+
+            }
+            else if (strTransaction == "BLK")
+            {
+            }
+            else if (strTransaction == "TRX")
+            {
+                var IsEdit;
+                if ($('#radioNew').prop(':checked') == true)
+                {
+                    IsEdit = false;
+                }
+                else
+                {
+                    IsEdit = true;
+                }
+                var strDesc = "";
+                if (IsAccept == true) {
+                    strDesc = "approve";
+                }
+                else {
+                    strDesc = "reject";
+                }
+                
+                var selectedDetail;
+                var gridDetail = $("#GridDetail").data("kendoGrid");
+                gridDetail.refresh();
+                gridDetail.tbody.find("tr[role='row']").each(function () {
+                    var dataItem = gridDetail.dataItem(this);
+                    if (dataItem.Pilih == true) {
+                        selectedDetail = selectedDetail + 1;
+                    }
+                })
+
+                var selectedMain;
+                var gridMain = $("#GridOtorisasi").data("kendoGrid");
+                gridMain.refresh();
+                gridMain.tbody.find("tr[role='row']").each(function () {
+                    var dataItem = gridMain.dataItem(this);
+                    if (dataItem.Pilih == true) {
+                        selectedMain = selectedMain + 1;
+                    }
+                })
+
+                if (selectedDetail == 0) {
+                    swal("Warning", "Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");
+                    return;
+                }
+
+                if (selectedDetail > 1) {
+                    swal("Warning", "Harap checklist hanya 1 nomor referensi saja!", "warning");
+                    return;
+                }
+
+                if (selectedMain == 0) {
+                    swal("Warning", "Harap memilih data detail transaksi yang akan di" + strDesc + "!", "warning");
+                    return;
+                }
+
+                if ((IsAccept == true) && (IsEdit == false))
+                {
+                    
+                }
+
+                var dataItems = "";
+
+                gridDetail.refresh();
+                gridDetail.tbody.find("tr[role='row']").each(function () {
+                    var dataItem = gridDetail.dataItem(this);
+                    if (dataItem.TranType == 1 || dataItem.TranType == 8)
+                    {
+                        if (dataItem.CheckB == true) {
+                            dataItems += dataItem.TranId + "|";
+                        }
+                    }
+                })
+
+                console.log(dataItems);
+                console.log(IsAccept);
+                $.ajax({
+                    type: "POST",
+                    url: '/Otorisasi/AuthorizeTransaction_BS',
+                    data: { listTranId: dataItems, isApprove: IsAccept },
+                    success: function (data) {
+                        if (data.blnResult == true) {
+                            swal("Approved", "Proses Approve Berhasil", "success");
+                            
+                        }
+                        else {
+                            swal("Warning", data.ErrMsg, "warning");
+                        }
+                    }
+                });
+
+            }
+            else if (strTransaction == "REV")
+            {
+            }
+            subRefresh();
+        }
+
+        function onRowOtorisasiSelect(e) {
+            var data = this.dataItem(this.select());
+            PopulateVerifyData(data.NoReferensi);
+        };
+
+    </script>
