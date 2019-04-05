@@ -6,9 +6,9 @@
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchTrxProductRedemp() {
-        var value = $("#TrxProductRedempSearchComponentSearchTxt").val();
-        var grid = $("#TrxProductRedempSearchComponentGrid").data("kendoGrid");
+    function onSearchTrxProductRDB() {
+        var value = $("#TrxProductRDBSearchComponentSearchTxt").val();
+        var grid = $("#TrxProductRDBSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -29,47 +29,47 @@
         }
     }
 
-    function onRowTrxProductRedempSelect(e) {
+    function onRowTrxProductRDBSelect(e) {
         var data = this.dataItem(this.select());
         var ProdCode = $.trim(data.ProdCode);
         var ProdName = $.trim(data.ProdName);
         var ProdId = $.trim(data.ProdId);
         var ProdCurr = $.trim(data.ProdCCY);
 
-        $("#TrxProductRedempSelectedCode").val(ProdCode);
-        $("#TrxProductRedempSelectedName").val(ProdName);
-        $("#TrxProductRedempSelectedId").val(ProdId);
-        $("#TrxProductRedempSelectedCurr").val(ProdCurr);
+        $("#TrxProductRDBSelectedCode").val(ProdCode);
+        $("#TrxProductRDBSelectedName").val(ProdName);
+        $("#TrxProductRDBSelectedId").val(ProdId);
+        $("#TrxProductRDBSelectedCurr").val(ProdCurr);
     };
 
-    $("#TrxProductRedempSelectButton").on("click", function () {
-        var selectedCode = $("#TrxProductRedempSelectedCode").val();
-        var selectedName = $("#TrxProductRedempSelectedName").val();
-        var selectedId = $("#TrxProductRedempSelectedId").val();
-        var selectedCurr = $("#TrxProductRedempSelectedCurr").val();
+    $("#TrxProductRDBSelectButton").on("click", function () {
+        var selectedCode = $("#TrxProductRDBSelectedCode").val();
+        var selectedName = $("#TrxProductRDBSelectedName").val();
+        var selectedId = $("#TrxProductRDBSelectedId").val();
+        var selectedCurr = $("#TrxProductRDBSelectedCurr").val();
 
         var res = ValidateCurrency(selectedCurr);
 
         res.success(function (data) {
             if (data.length != 0) {
-                $("input[id='srcCurrencyRedemp_text2']").val(data[0].CurrencyName);
+                $("input[id='srcCurrencyRDB_text2']").val(data[0].CurrencyName);
             } else {
-                $("input[id='srcCurrencyRedemp_text2']").val('');
+                $("input[id='srcCurrencyRDB_text2']").val('');
             }
         });
 
-        $("input[id='srcProductRedemp_text1']").val(selectedCode).change();
-        $("input[id='srcProductRedemp_text2']").val(selectedName);
-        $("input[id='ProdIdRedemp']").val(selectedId);
-        $("input[id='ProdCCYRedemp']").val(selectedCurr);
-        $("input[id='srcCurrencyRedemp_text1']").val(selectedCurr);
+        $("input[id='srcProductRDB_text1']").val(selectedCode).change();
+        $("input[id='srcProductRDB_text2']").val(selectedName);
+        $("input[id='ProdIdRDB']").val(selectedId);
+        $("input[id='ProdCCYRDB']").val(selectedCurr);
+        $("input[id='srcCurrencyRDB_text1']").val(selectedCurr);
     });
 
-    $("#TrxProductRedempSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#TrxProductRDBSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#TrxProductRedempSearchComponentSearchBtn").click();
+            $("#TrxProductRDBSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -98,7 +98,7 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.TransaksiProduct>()
-                                            .Name("TrxProductRedempSearchComponentGrid")
+                                            .Name("TrxProductRDBSearchComponentGrid")
                                             .Columns(columns =>
                                             {
                                                 columns.Bound(m => m.ProdCode).Width(100).Title("Product Code");
@@ -110,7 +110,7 @@
                                             {
                                                 toolbar.ClientTemplateId("GridToolbarTemplate");
                                             })
-                                            .Events(events => events.Change("onRowTrxProductRedempSelect"))
+                                            .Events(events => events.Change("onRowTrxProductRDBSelect"))
                                             .Pageable()
                                             .Scrollable()
                                             .Selectable(selectable => selectable
@@ -130,24 +130,24 @@
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("TrxProductRedempSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("TrxProductRDBSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("TrxProductRedempSearchComponentSearchBtn")
+                            .Name("TrxProductRDBSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchTrxProductRedemp")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchTrxProductRDB")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="TrxProductRedempSelectedCode" name="TrxProductRedempSelectedCode" value="" />
-        <input type="hidden" id="TrxProductRedempSelectedName" name="TrxProductRedempSelectedName" value="" />
-        <input type="hidden" id="TrxProductRedempSelectedId" name="TrxProductRedempSelectedCId" value="" />
-        <input type="hidden" id="TrxProductRedempSelectedCurr" name="TrxProductRedempSelectedCurr" value="" />
+        <input type="hidden" id="TrxProductRDBSelectedCode" name="TrxProductRDBSelectedCode" value="" />
+        <input type="hidden" id="TrxProductRDBSelectedName" name="TrxProductRDBSelectedName" value="" />
+        <input type="hidden" id="TrxProductRDBSelectedId" name="TrxProductRDBSelectedCId" value="" />
+        <input type="hidden" id="TrxProductRDBSelectedCurr" name="TrxProductRDBSelectedCurr" value="" />
         
     </div>
     <div class="modal-footer">
-        <button type="submit" id="TrxProductRedempSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="TrxProductRDBSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

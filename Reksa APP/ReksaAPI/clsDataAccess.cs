@@ -3205,7 +3205,7 @@ namespace ReksaAPI
             dttSubsRDB.TableName = "SubsRDB";
             dttSubsRDB.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
             strXMLRDB = writer.ToString();
-
+            #region "OLD"
             //if (model.dtSubs != null && model.dtSubs.Count > 0 && model.strTranType == "SUBS")
             //{
             //    dttSubscription.Columns.Add("NoTrx");
@@ -3389,6 +3389,7 @@ namespace ReksaAPI
             //    dttSubsRDB.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
             //    strXMLRDB = writer.ToString();
             //}
+            #endregion
         }
 
         #endregion

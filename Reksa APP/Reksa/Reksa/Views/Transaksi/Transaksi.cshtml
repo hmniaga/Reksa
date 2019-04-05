@@ -67,7 +67,6 @@
                     </div>
                 </div>
                 <div id="collapse-redemption" class="tab-pane fade">
-                    <h3>Redemption</h3>
                     <div class="row">
                         <div class="col-md-12">
                             @{
@@ -77,7 +76,6 @@
                     </div>
                 </div>
                 <div id="collapse-reksaberjangka" class="tab-pane fade">
-                    <h3>Reksadana Berjangka</h3>
                     <div class="row">
                         <div class="col-md-12">
                             @{
@@ -87,7 +85,6 @@
                     </div>
                 </div>
                 <div id="collapse-switchingnonrdb" class="tab-pane fade">
-                    <h3>SWITCHING NON RDB</h3>
                     <div class="row">
                         <div class="col-md-12">
                             @{
@@ -97,7 +94,6 @@
                     </div>
                 </div>
                 <div id="collapse-switchingrdb" class="tab-pane fade">
-                    <h3>SWITCHING RDB</h3>
                     <div class="row">
                         <div class="col-md-12">
                             @{
@@ -107,7 +103,6 @@
                     </div>
                 </div>
                 <div id="collapse-booking" class="tab-pane fade">
-                    <h3>BOOKING</h3>
                     <div class="row">
                         <div class="col-md-12">
                             @{
@@ -131,6 +126,7 @@ var strBranch;
     var ByPercent = false;
     var intPeriod = 0;
     var IsRedempAll;
+    var globalJatuhTempoRDB;
 
     $(document).ready(function () {
         $('#tabs a[href="#tab-subscription"]').trigger('click');
@@ -155,7 +151,7 @@ var strBranch;
 
         //GetComponentSearch();
         GetKodeKantor();
-        //PopulateComboBox();
+        PopulateComboFrekDebet();
         //IsClickByDatagrid = false;
 
         //click
@@ -183,13 +179,17 @@ var strBranch;
             subAddRedemp();
         });
 
-    $("#srcProductSubs").click(function (ev) {
+        $("#btnAddRDB").click(function () {
+            subAddRDB();
+        });
+
+        $("#srcProductSubs").click(function (ev) {
         var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();            
         var url = '@Html.Raw(Url.Action("SearchTrxProductSubs", "Global"))';
         var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
         $("#ProductSubsModal .modal-content").load(target, function () {
         $("#ProductSubsModal .modal-content").empty().append(this);
-    });
+        });
         });
 
     $("#srcProductRedemp").click(function (ev) {
@@ -198,6 +198,15 @@ var strBranch;
         var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
                 $("#ProductRedempModal .modal-content").load(target, function () {
                     $("#ProductRedempModal .modal-content").empty().append(this);
+    });
+        });
+
+     $("#srcProductRDB").click(function (ev) {
+         var strCriteria = _strTabName + "#" + $('#srcCIFRDB_text1').val();            
+        var url = '@Html.Raw(Url.Action("SearchTrxProductRDB", "Global"))';
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+         $("#ProductRDBModal .modal-content").load(target, function () {
+             $("#ProductRDBModal .modal-content").empty().append(this);
     });
     });
 
@@ -214,7 +223,16 @@ var strBranch;
         $("#CustomerRedempModal .modal-content").load(target, function () {
             $("#CustomerRedempModal .modal-content").empty().append(this);
         });
-    });
+        });
+
+        $("#srcCIFRDB").click(function (ev) {
+            ev.preventDefault();
+            var target = $(this).attr("href");
+            $("#CustomerRDBModal .modal-content").load(target, function () {
+                $("#CustomerRDBModal .modal-content").empty().append(this);
+            });
+        });
+
     $("#srcNoRefSubs").click(function (ev) {
         ev.preventDefault();
         var target = $(this).attr("href");
@@ -228,7 +246,16 @@ var strBranch;
         $("#ReferensiRedempModal .modal-content").load(target, function () {
             $("#ReferensiRedempModal .modal-content").empty().append(this);
         });
-    });
+        });
+
+        $("#srcNoRefRDB").click(function (ev) {
+            ev.preventDefault();
+            var target = $(this).attr("href");
+            $("#ReferensiRDBModal .modal-content").load(target, function () {
+                $("#ReferensiRDBModal .modal-content").empty().append(this);
+            });
+        });
+
     $("#srcClientSubs").click(function (ev) {
         ev.preventDefault();
         var ProdId = $('#ProdIdSubs').val();
@@ -258,44 +285,95 @@ var strBranch;
     });
 
         $("#checkFullAmtSubs").click(function () {
-            if ($("#checkFeeEditSubs").prop('checked') == true)
+            if ($("#checkFeeEditSubs").prop('checked') == true) {
                 $("#checkFeeEditSubs").prop('checked', false)
-            if ($('#srcProductSubs_text1').val() != '')
-            {
+            }
+
+            if ($('#srcProductSubs_text1').val() != '') {
                 $("#_ComboJenisSubs").data('kendoDropDownList').enable(false);
                 $('#MoneyFeeSubs').prop('disabled', true);
                 $('#PercentageFeeSubs').prop('disabled', true);
+
+                var intProdId = $('#ProdIdSubs').val();
+                var intClientid
+                var intTranType;
+
+                intProdId = $("#ProdIdSubs").val();
+                if (IsSubsNew) {
+                    intTranType = 1;
+                    intClientid = 0;
+                }
+                else {
+                    intTranType = 2;
+                    ValidateClient($("#srcClientSubs_text1").val(), intProdId, function (result) { intClientid = result[0].Clientid; });
+                }
+
+                HitungFee(intProdId, intClientid, intTranType, $('#MoneyNomSubs').val(), 0
+                    , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
+                    , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
+                    , function (FeeCurr) {
+                        $("#labelFeeCurrencySubs").text("%");
+                        $("#_KeteranganFeeSubs").text(FeeCurr);
+                    },
+                    function (NominalFee) {
+                        $("#MoneyFeeSubs").val(NominalFee);
+                    },
+                    function (PctFee) {
+                        $("#PercentageFeeSubs").val(PctFee);
+                    }
+                );
             }
-            var decNominalFee;
-            var decPctFee;
-            var intProdId = $('#ProdIdSubs').val();
+        });
+
+        $("#checkFeeEditSubs").click(function () {
+            var intProdId;
             var intClientid
             var intTranType;
 
-            if (IsSubsNew) {
-                intTranType = 1;
-                intClientid = 0;
-            }
-            else {
-                intTranType = 2;
-                //cmpsrClientSubs.ValidateField();
-                intClientid = $('#ClientIdSubs').val();
-            }
-            
-            HitungFee(intProdId, intClientid, intTranType, $('#MoneyNomSubs').val(), 0
-                , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
-                , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
-                , function (FeeCurr) {
-                    $("#labelFeeCurrencySubs").text("%");
-                    $("#_KeteranganFeeSubs").text(FeeCurr);
-                },
-                function (NominalFee) {
-                    $("#MoneyFeeSubs").val(NominalFee);
-                },
-                function (PctFee) {
-                    $("#PercentageFeeSubs").val(PctFee);
+            if ($("#checkFeeEditSubs").prop('checked') == true) {
+                if (_intType != 0) {
+                    $("#_ComboJenisSubs").data('kendoDropDownList').enable(true);
+                    $("#MoneyFeeSubs").prop('disabled', false);
+                    $("#PercentageFeeSubs").prop('disabled', true);
                 }
-            );
+            } else
+            {
+                if ($("#srcProductSubs_text1").val() != '')
+                {
+                    $("#_ComboJenisSubs").data('kendoDropDownList').enable(false);
+                    $("#MoneyFeeSubs").prop('disabled', true);
+                    $("#PercentageFeeSubs").prop('disabled', true);
+
+                    var strPrdId = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
+                    intProdId = parseInt(strPrdId);
+
+                    if (IsSubsNew) {
+                        intTranType = 1;
+                        intClientid = 0;
+                    }
+                    else {
+                        intTranType = 2;
+                        var strClientId = GetImportantData("CLIENTID", $("#srcClientSubs_text1").val());
+                        intClientid = parseInt(strClientId);
+                    }
+
+                    HitungFee(intProdId, intClientid, intTranType, $('#MoneyNomSubs').val(), 0
+                        , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
+                        , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
+                        , function (FeeCurr) {
+                            $("#labelFeeCurrencySubs").text("%");
+                            $("#_KeteranganFeeSubs").text(FeeCurr);
+                        },
+                        function (NominalFee) {
+                            $("#MoneyFeeSubs").val(NominalFee);
+                        },
+                        function (PctFee) {
+                            $("#PercentageFeeSubs").val(PctFee);
+                        }
+                    );
+
+                }
+            }
         });
 
         $("#checkAll").click(function () {
@@ -331,13 +409,18 @@ var strBranch;
         }
         GetDataCIF($("#srcCIFRedemp_text1").val(), 'REDEMP');
     });
-        
-    $("#srcProductSubs_text1").change(function () {
-        $("#srcCurrencySubs_text1").val($("#ProdCCYSubs").val());
-        ValidateCurrency($("#ProdCCYSubs").val().trim(), function (output) {
-            $("#srcCurrencySubs_text2").val(output);
-        });
-        });
+
+
+    $("#srcCIFRDB_text1").change(function () {
+        if (_intType == 1) {
+            //if (!CheckCIF($("#srcCIFSubs_text1").val())) {
+            //    subCancel();
+            //    return;
+            //}
+        }
+        GetDataCIF($("#srcCIFRDB_text1").val(), 'SUBSRDB');
+    });
+
 
     $("#srcProductRedemp_text1").change(function () {
         var strCriteria = $('#srcCIFRedemp_text1').val() + "#" + $('#srcProductRedemp_text1').val() + "#" + _strTabName + "#0";
@@ -352,6 +435,63 @@ var strBranch;
             swal("Warning", "nanti syntax ini dihapus, ini cm buat debug karena oustanding nya masih 0", "warning");
             $("#OutstandingUnitRedemp").val('10000')
         });  
+
+    $("#srcCurrencySubs_text1").change(function () {
+            $("#labelFeeCurrencySubs").val($("#srcCurrencySubs_text1").val());
+            $("#_KeteranganFeeSubs").val('%');
+        });  
+
+        $("#JangkaWktRDB").change(function () {
+            if ($("#JangkaWktRDB").val() == 0)
+                $("#dtJatuhTempoRDB").val('');
+            else
+            {
+                if (_intType != 0)
+                {
+                    var jangkaWaktu = $("#JangkaWktRDB").val();
+                    var TodayDate = new Date();
+                    var jatuhTempo = TodayDate.setMonth(TodayDate.getMonth() + parseInt(jangkaWaktu));
+                    jatuhTempo = new Date(jatuhTempo);
+                    globalJatuhTempoRDB = jatuhTempo;
+                    $("#dtJatuhTempoRDB").val(jatuhTempo.getDate() + '/' + (jatuhTempo.getMonth() + 1) + '/' + jatuhTempo.getFullYear());
+                }
+            }
+        }); 
+
+        $("#MoneyNomRDB").change(function () {
+            $("#MoneyFeeRDB").val(0);
+            $("#PercentageFeeRDB").val(0);
+            $("#PercentageFeeRDB").prop('checked', false);
+            $("#_ComboJenisRDB").val('');
+            if ($("#checkFeeEditRDB").prop('checked') == false) {
+                $("#_ComboJenisRDB").data('kendoDropDownList').enable(false);
+                $("#MoneyFeeRDB").prop('disabled', true);
+            }
+            $("#_KeteranganFeeRDB").val('');
+            $("#labelFeeCurrencyRDB").val('');
+
+            if (($("#MoneyNomRDB").val() != 0) && ($("#srcProductRDB_text1").val() != "")
+            ) {
+                var intProdId, intTranType;
+                intProdId = $("#ProdIdRDB").val();
+                intTranType = 5;
+
+                HitungFee(intProdId, 0, intTranType, $('#MoneyNomRDB').val(), 0
+                    , true, $('#checkFeeEditRDB').val()
+                    , $('#PercentageFeeRDB').val(), 1, $('#srcCIFRDB_text1').val()
+                    , function (FeeCurr) {
+                        $("#labelFeeCurrencySubs").text(FeeCurr);
+                    },
+                    function (NominalFee) {
+                        $("#MoneyFeeRDB").val(NominalFee);
+                    },
+                    function (PctFee) {
+                        $("#PercentageFeeRDB").val(PctFee);
+                    }
+                );
+            }
+        }); 
+        
 
     ValidateOffice(strBranch, function (res) {
             $("#srcOfficeSubs_text2").val(res);
@@ -385,6 +525,18 @@ var strBranch;
             }
         );
         });
+
+    $("#srcSellerRDB_text1").change(function () {
+        $("#srcWaperdRDB_text1").val($("#srcSellerRDB_text1").val());
+        ValidateWaperd($("#srcSellerRDB_text1").val(),
+            function (WaperdNo) {
+                $("#srcWaperdRDB_text2").val(WaperdNo);
+            },
+            function (DateExpire) {
+                $("#textExpireWaperdRDB").val(DateExpire);
+            }
+        );
+    });
 
     $("#srcSellerSwc_text1").change(function () {
         $("#srcWaperdSwc_text1").val($("#srcSellerSwc_text1").val());
@@ -771,6 +923,158 @@ var strBranch;
         });
     }
 
+    function subAddRDB() {
+        var strWarnMsg = '';
+        var strWarnMsg2 = '';
+
+        var strTranCode = "";
+        var strNewClientCode = "";
+        var _PercentageFee;
+        var _NominalFee;
+        var intProductId = 0;
+
+        var grid = $("#dataGridViewRDB").data("kendoGrid");
+        grid.refresh();
+        var dataItem = grid.dataSource.view();
+        if (dataItem.length >= 3) {
+            swal("Warning", "Maksimal hanya dapat menambah 3 transaksi !", "warning");
+            return;
+        }
+        if ($("#srcProductRDB_text1").val() == "") {
+            swal("Warning", "Kode Produk harus diisi", "warning");
+            return;
+        }
+        if ($("#srcCurrencyRDB_text1").val().Text1 == "") {
+            swal("Warning", "Mata Uang Produk harus diisi", "warning");
+            return;
+        }
+        if ($("#MoneyNomRDB").val() == 0) {
+            swal("Warning", "Nominal harus diisi", "warning");
+            return;
+        }
+        if ($("#JangkaWktRDB").val() == 0) {
+            swal("Warning", "Jangka Waktu harus diisi", "warning");
+            return;
+        }
+        if ($("#cmbFrekPendebetanRDB").data('kendoDropDownList').value() == '') {
+            swal("Warning", "Frekuensi Pendebetan harus diisi", "warning");
+            return;
+        }
+        if ($("#cmbAutoRedempRDB").data('kendoDropDownList').value() == '') {
+            swal("Warning", "Auto Redemption harus diisi", "warning");
+            return;
+        }
+        if ($("#cmbAsuransiRDB").data('kendoDropDownList').value() == '') {
+            swal("Warning", "Asuransi harus diisi", "warning");
+            return;
+        }
+
+        var res = GenerateTranCodeAndClientCode(_strTabName, false, $("#srcProductRDB_text1").val(),
+            $("#srcClientRDB_text1").val(), $("#srcCIFRDB_text1").val(),
+            $("#checkFeeEditRDB").val(), $("#PercentageFeeRDB").val(), 0
+            , false, $("#MoneyFeeRDB").val(), $("#MoneyNomRDB").val(), 0, false, $("#cmbFrekPendebetanRDB").data('kendoDropDownList').value(), $("#JangkaWktRDB").val()
+            , _intType);
+
+        res.success(function (data) {
+            if (data.blnResult) {
+                strTranCode = data.strTrancode;
+                strNewClientCode = data.strClientCode;
+                strWarnMsg = data.strWarnMsg;
+                strWarnMsg2 = data.strWarnMsg2;
+
+                if (strWarnMsg2 != '') {
+                    swal({
+                        title: "Information",
+                        text: strWarnMsg2,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: 'btn-info',
+                        confirmButtonText: "Yes",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal("Canceled", "Proses transaksi dibatalkan.", "error");
+                                return;
+                            }
+                            else {
+                                swal("Confirmed", "", "success");
+                            }
+                        });
+                }
+
+                if (strTranCode != "") {
+                    var arrRDB = [];
+                    var obj = {};
+                    obj['NoTrx'] = '';
+                    var dateTglTransaksiRDB = toDate($("#dateTglTransaksiRDB").val());
+                    obj['TglTrx'] = dateTglTransaksiRDB;
+                    obj['KodeProduk'] = $("#srcProductRDB_text1").val();
+                    obj['NamaProduk'] = $("#srcProductRDB_text2").val();
+                    if ($('#checkFeeEditRDB').prop('checked') == true) {
+                        obj["EditFeeBy"] = $("#_ComboJenisRDB").val();
+                    }
+                    else {
+                        obj["EditFeeBy"] = "";
+                    }
+                    obj['ClientCode'] = strNewClientCode;
+                    obj["CCY"] = $("#srcCurrencyRDB_text1").val();
+                    obj["Nominal"] = $("#MoneyNomRDB").val();
+
+                    obj["JangkaWaktu"] = $("#JangkaWktRDB").val();
+                    obj["JatuhTempo"] = globalJatuhTempoRDB;
+                    obj["FrekPendebetan"] = $("#cmbFrekPendebetanRDB").data('kendoDropDownList').value();
+                    obj["AutoRedemption"] = $("#cmbAutoRedempRDB").data('kendoDropDownList').value();
+                    obj["Asuransi"] = $("#cmbAsuransiRDB").data('kendoDropDownList').value();
+
+                    obj["PhoneOrder"] = $("#checkPhoneOrderRDB").prop('checked');
+                    obj["EditFee"] = $("#checkFeeEditRDB").prop('checked');
+                    obj["JenisFee"] = $("#_ComboJenisRDB").val();
+                    obj["NominalFee"] = $("#MoneyFeeRDB").val();
+                    obj["FeeCurr"] = $("#labelFeeCurrencyRDB").text();
+                    obj["PctFee"] = $("#PercentageFeeRDB").val();
+                    obj["FeeKet"] = $("#_KeteranganFeeRDB").text();
+
+                    obj["ApaDiUpdate"] = false;
+                    obj["TrxTaxAmnesty"] = false;
+                    arrRDB.push(obj);
+
+                    var dataSet = grid.dataSource.view();
+                    $.merge(arrRDB, dataSet);
+
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: arrRDB
+                        });
+                    grid.setDataSource(dataSource);
+                    grid.dataSource.pageSize(5);
+                    grid.dataSource.page(1);
+                    grid.select("tr:eq(0)");
+
+                    subSetVisibleGrid(_strTabName);
+                    ResetFormTrxRDB();
+                    DisableFormTrxRDB(true);
+                    document.getElementById("btnEditRDB").disabled = true;
+                    document.getElementById("btnAddRDB").disabled = false;
+                    //if (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFSubs.Text1)) {
+                    //    checkPhoneOrderSubs.Enabled = false;
+                    //    checkPhoneOrderSubs.Checked = false;
+                    //}
+                    //else {
+                    //    checkPhoneOrderSubs.Enabled = true;
+                    //}
+                }
+                else {
+                    swal("Warning", "Gagal generate kode transaksi!", "warning");
+                }
+            }
+            else {
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        });
+    }
+
     function GetDataCIF(CIFNo, TabName)
     {
         $.ajax({
@@ -783,7 +1087,8 @@ var strBranch;
                         RefreshNasabahSubs(data);
                     } else if (TabName == "REDEMP") {
                         RefreshNasabahRedemp(data);
-                    } else if (TabName == "RDB") {
+                    } else if (TabName == "SUBSRDB") {
+                        RefreshNasabahRDB(data);
                     } else if (TabName == "SWC") {
                     } else if (TabName == "SWCRDB")
                     {
@@ -833,7 +1138,7 @@ var strBranch;
             IsSubsNew = true;
             DisableFormTrxSubs(true);
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFSubs", "Global"))';
             $('#srcCIFSubs').attr('href', url);
 
             $("#srcClientSubs_text1").prop('disabled', true);
@@ -852,7 +1157,7 @@ var strBranch;
             DisableFormTrxRedemp(true);
             IsRedempAll = false;
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFRedemp", "Global"))';
             $('#srcCIFRedemp').attr('href', url);
             
             strCriteria = _strTabName + "#" + $("#srcCIFRedemp_text1").val();
@@ -868,7 +1173,7 @@ var strBranch;
             DisableFormTrxRDB(true);
 
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFRDB", "Global"))';
             $('#srcCIFRDB').attr('href', url);
 
             $("#srcClientRDB_text1").prop('disabled', true);
@@ -885,7 +1190,7 @@ var strBranch;
         }
         else if (_strTabName == "BOOK") {
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFBooking", "Global"))';
             $('#srcCIFBooking').attr('href', url);
 
             strCriteria = _strTabName + "#" + $("#CIFNoBooking").val();
@@ -897,7 +1202,7 @@ var strBranch;
         }
         else if (_strTabName == "SWCNONRDB") {
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFSwc", "Global"))';
             $('#srcCIFSwc').attr('href', url);
 
             strCriteria = _strTabName + "#" + $("#srcCIFSwc_text1").val();
@@ -913,7 +1218,7 @@ var strBranch;
         }
         else if (_strTabName == "SWCRDB") {
             //REKSA_CIF_ALL
-            url = '@Html.Raw(Url.Action("SearchCIF", "Global"))';
+            url = '@Html.Raw(Url.Action("SearchCIFSwcRDB", "Global"))';
             $('#srcCIFSwcRDB').attr('href', url);
 
             strCriteria = _strTabName + "#" + $("#srcCIFSwcRDB_text1").val();
@@ -998,7 +1303,6 @@ var strBranch;
         else if (_strTabName == "SWCRDB") {
             CIFNo = $("#srcCIFSwcRDB_text1").val();
             RefID = $("#srcNoRefSwcRDB_text1").val();
-            console.log(RefID);
             $.ajax({
                 type: 'GET',
                 url: '/Transaksi/RefreshSwitchingRDB',
@@ -1266,6 +1570,136 @@ var strBranch;
             });
             MaintainAllTransaksi(model);
         }
+        else if (_strTabName == "SUBSRDB") {
+            if ($("#srcOfficeRDB_text1").val() == "") {
+                swal("Warning", "Kode Kantor harus diisi", "warning");
+                return;
+            }
+
+            //string strIsAllowed = "";
+            //if (clsValidator.ValidasiInputKodeKantor(ClQ, cmpsrKodeKantorRDB.Text1, out strIsAllowed)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateOfficeId], Kode kantor tidak terdaftar ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormRDB();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateOfficeId]! ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            //string strErrorMessage;
+            //strIsAllowed = "";
+            //if (clsValidator.ValidasiUserCBO(ClQ, cmpsrKodeKantorRDB.Text1, strBranch, out strIsAllowed, out strErrorMessage)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateUserCBOOffice], " + strErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormRDB();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateUserCBOOffice]!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            if ($("#srcCIFRDB_text1").val() == "") {
+                swal("Warning", "CIF harus diisi", "warning");
+                return;
+            }
+
+            //if (!GlobalFunctionCIF.RetrieveCIFData(intNIK, strBranch, strModule, strGuid, Int64.Parse(cmpsrCIFRDB.Text1))) {
+            //    MessageBox.Show("Gagal validasi CIF ke modul ProCIF", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            //if ((checkPhoneOrderRDB.Checked) && (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFRDB.Text1))) {
+            //    MessageBox.Show("Nasabah tidak memiliki fasilitas phone order!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            if ($("#textShareHolderIdRDB").val() == "") {
+                swal("Warning", "Shareholder ID harus terdaftar", "warning");
+                return;
+            }
+
+            if ($("#srcSellerRDB_text1").val() == "") {
+                swal("Warning", "NIK Seller harus diisi", "warning");
+                return;
+            }
+
+            if ($("#srcWaperdRDB_text1").val() == "") {
+                swal("Warning", "NIK Seller tidak terdaftar sbg WAPERD", "warning");
+                return;
+            }
+
+            var grid = $("#dataGridViewRDB").data("kendoGrid");
+            grid.refresh();
+            var dataItem = grid.dataSource.view();
+
+            if (dataItem.length == 0) {
+                swal("Warning", "Data transaksi RDB tidak boleh kosong!", "warning");
+                return;
+            }
+
+            //if (!System.Convert.ToBoolean(objFormDocument.chkbDocFCSubscriptionForm.CheckState)) {
+            //    MessageBox.Show("Formulir Subscription wajib ada", "Penerimaan Dokumen dari Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocFCIDCopy.CheckState)) {
+            //    MessageBox.Show("Copy Bukti Identitas wajib ada", "Penerimaan Dokumen dari Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCSubscriptionForm.CheckState)) {
+            //    MessageBox.Show("Copy Formulir Subscription wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCProspectus.CheckState)) {
+            //    MessageBox.Show("Prospektus wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCFundFactSheet.CheckState)) {
+            //    MessageBox.Show("Fund Fact Sheet wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+
+            var grid = $("#dataGridViewRDB").data("kendoGrid");
+            var arrSubs = [];
+            var arrRedemp = [];
+            var arrRDB;
+            arrRDB = grid.dataSource.view();
+
+            var model = JSON.stringify({
+                'intType': _intType,
+                'strTranType': _strTabName,
+                'RefID': $("#srcNoRefRDB_text1").val(),
+                'CIFNo': $("#srcCIFRDB_text1").val(),
+                'OfficeId': $("#srcOfficeRDB_text1").val(),
+                'NoRekening': $("#maskedRekeningRDB").val(),
+                'dtSubs': arrSubs,
+                'dtRedemp': arrRedemp,
+                'dtRDB': arrRDB,
+                'Inputter': $("#txtbInputterRDB").val(),
+                'Seller': $("#srcSellerRDB_text1").val(),
+                'Waperd': $("#srcWaperdRDB_text1").val(),
+                'NoRekeningUSD': $("#maskedRekeningRDBUSD").val(),
+                'NoRekeningMC': $("#maskedRekeningRDBMC").val(),
+                'Referentor': $("#srcReferentorRDB_text1").val(),
+                'pbDocFCSubscriptionForm': false,
+                'pbDocFCDevidentAuthLetter': false,
+                'pbDocFCJoinAcctStatementLetter': false,
+                'pbDocFCIDCopy': false,
+                'pbDocFCOthers': false,
+                'pbDocTCSubscriptionForm': false,
+                'pbDocTCTermCondition': false,
+                'pbDocTCProspectus': false,
+                'pbDocTCFundFactSheet': false,
+                'pbDocTCOthers': false,
+                'pcDocFCOthersList': '',
+                'pcDocTCOthersList': ''
+            });
+            MaintainAllTransaksi(model);
+        }
     }
 
     function MaintainAllTransaksi(model)
@@ -1496,6 +1930,21 @@ var strBranch;
 
     }
 
+    function RefreshNasabahRDB(data) {
+        $("#textSIDRDB").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurRDB").val(data.intUmur);
+        $("#textShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfileRDB = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileRDB").val(dtpRiskProfileRDB.getDate() + '/' + (dtpRiskProfileRDB.getMonth() + 1) + '/' + dtpRiskProfileRDB.getFullYear());
+        $("#maskedRekeningRDB").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningRDB").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningRDBMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+    } 
+
     function RefreshSwc(data) {
         $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
         $("#txtUmurSwc").val(data.CustomerIdentitas.Umur);
@@ -1673,23 +2122,23 @@ function RefreshBooking(data) {
     });
 }
 
-function ValidateOffice(OfficeId, result) {
-    $.ajax({
-        type: 'GET',
-        url: '/Global/ValidateOffice',
-        data: { Col1: OfficeId, Col2: '', Validate: 1 },
-        success: function (data) {
-            if (data.length != 0) {
-                result(data[0].OfficeName);
-            } else {
+    function ValidateOffice(OfficeId, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateOffice',
+            data: { Col1: OfficeId, Col2: '', Validate: 1 },
+            success: function (data) {
+                if (data.length != 0) {
+                    result(data[0].OfficeName);
+                } else {
+                    result("");
+                }
+            },
+            error: function (error) {
                 result("");
             }
-        },
-        error: function (error) {
-            result("");
-        }
-    });
-}
+        });
+    }
 
 function ValidateReferentor(ReferentorID, result) {
     $.ajax({
@@ -1774,7 +2223,7 @@ function ValidateClient(ClientCode, ProdId, result) {
                 }
             });
         }
-}
+    }
 
 function DisableAllForm(isEnabled) {
     DisableFormSubs(isEnabled);
@@ -1942,13 +2391,13 @@ function DisableFormRDB(isEnabled) {
     $("#srcSellerRDB_text1").prop('disabled', isEnabled);
     $("#srcReferentorRDB_text1").prop('disabled', isEnabled);
     if (!isEnabled) {
-        $("#srcNoRefRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+        $("#srcNorefRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
         $("#srcCIFRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
         $("#srcSellerRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
         $("#srcReferentorRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
     }
     else {
-        $("#srcNoRefRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+        $("#srcNorefRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
         $("#srcCIFRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
         $("#srcSellerRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
 
@@ -1971,7 +2420,7 @@ function DisableFormTrxRDB(isEnabled) {
     $("#textNoTransaksiRDB").prop('disabled', true);
     $("#dateTglTransaksiRDB").prop('disabled', true);
 
-    $("#srcCurrenyRDB_text1").prop('disabled', true);
+    $("#srcCurrencyRDB_text1").prop('disabled', true);
     $("#srcCurrenyRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
 
     $("#srcProductRDB_text1").prop('disabled', !isEnabled);
@@ -1991,15 +2440,15 @@ function DisableFormTrxRDB(isEnabled) {
         //    checkPhoneOrderBooking.Enabled = true;
         //}
     }
-    $("#cmbAutoRedempRDB").prop('disabled', !isEnabled);
-    $("#cmbAsuransiRDB").prop('disabled', !isEnabled);
+    $("#cmbAutoRedempRDB").data('kendoDropDownList').enable(isEnabled);
+    $("#cmbAsuransiRDB").data('kendoDropDownList').enable(isEnabled);
 
     document.getElementById("btnAddRDB").disabled = !isEnabled;
     document.getElementById("btnEditRDB").disabled = !isEnabled;
 
     $("#JangkaWktRDB").prop('disabled', !isEnabled);
     $("#dtJatuhTempoRDB").prop('disabled', true);
-    $("#cmbFrekPendebetanRDB").prop('disabled', !isEnabled);
+    $("#cmbFrekPendebetanRDB").data('kendoDropDownList').enable(isEnabled);
 
     $("#checkFeeEditRDB").prop('disabled', true);
     $("#_ComboJenisRDB").data('kendoDropDownList').enable(false);
@@ -2160,9 +2609,9 @@ function DisableFormSwcRDB(isEnabled) {
     $("#OutstandingUnitSwcRDB").prop('disabled', true);
     $("#JangkaWktSwcRDB").prop('disabled', true);
     $("#dtJatuhTempoSwcRDB").prop('disabled', true);
-    $("#cmbFrekPendebetanSwcRDB").prop('disabled', true);
-    $("#cmbAutoRedempSwcRDB").prop('disabled', true);
-    $("#cmbAsuransiSwcRDB").prop('disabled', true);
+    $("#cmbFrekPendebetanSwcRDB").data('kendoDropDownList').enable(false);
+    $("#cmbAutoRedempSwcRDB").data('kendoDropDownList').enable(false);
+    $("#cmbAsuransiSwcRDB").data('kendoDropDownList').enable(false);
 
     $("#MoneyFeeSwcRDB").prop('disabled', true);
     $("#PercentageFeeSwcRDB").prop('disabled', true);
@@ -2506,8 +2955,8 @@ function ResetFormTrxSubsRDB() {
     $('#srcProductRDB_text2').val('');
     $('#srcClientRDB_text1').val('');
     $('#srcClientRDB_text2').val('');
-    $('#srcCurrenyRDB_text1').val('');
-    $('#srcCurrenyRDB_text2').val('');
+    $('#srcCurrencyRDB_text1').val('');
+    $('#srcCurrencyRDB_text2').val('');
     $('#MoneyNomRDB').val(0);
     $('#checkPhoneOrderRDB').prop('checked', false);
 
@@ -2831,15 +3280,26 @@ function SetEnableOfficeId(strKodeKantor) {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             async: false
-        });
-
-        
+        });        
     }
 
     function HitungFee(ProdId, ClientId, TranType, TranAmt, TranUnit,
         FullAmount, IsFeeEdit, PercentageFeeInput,
-        Jenis, strCIFNo, FeeCurr, NominalFee, PctFee, intPeriod)
+        Jenis, strCIFNo, FeeCurr, NominalFee, PctFee)
     {
+        var model = JSON.stringify({
+            'ProdId': ProdId,
+            'ClientId': ClientId,
+            'TranType': TranType,
+            'TranAmt': TranAmt,
+            'TranUnit': TranUnit,
+            'FullAmount': FullAmount,
+            'IsFeeEdit': IsFeeEdit,
+            'PercentageFeeInput': PercentageFeeInput,
+            'Jenis': Jenis,
+            'strCIFNo': strCIFNo
+        });
+        console.log(model);
         $.ajax({
             type: 'GET',
             url: '/Transaksi/CalculateFee',
@@ -2850,7 +3310,7 @@ function SetEnableOfficeId(strKodeKantor) {
             success: function (data) {
                 if (data.blnResult) {
                     FeeCurr(data.resultFee.FeeCCY);
-                    intPeriod(data.resultFee.Period);
+                    intPeriod = data.resultFee.Period;
                     if (Jenis == 1) //hitung fee tanpa edit fee
                     {
                         var Fee = data.resultFee.Fee;
@@ -2947,5 +3407,38 @@ function SetEnableOfficeId(strKodeKantor) {
         const [day, month, year] = dateStr.split("/")
         return new Date(year, month - 1, day)
     }
+
+    function GetImportantData(CariApa, InputData)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/GetImportantData',
+            data: { CariApa: CariApa, InputData: InputData },
+            success: function (data) {
+                return data.value;
+            }
+        });
+    }
+
+    function PopulateComboFrekDebet() {
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/PopulateComboFrekDebet',
+            success: function (data) {
+                $("#cmbFrekPendebetanRDB").kendoDropDownList({
+                    dataSource: data.list,
+                    dataTextField: "FrekuensiPendebetan",
+                    dataValueField: "FrekuensiPendebetan"
+                });
+
+                $("#cmbFrekPendebetanSwcRDB").kendoDropDownList({
+                    dataSource: data.list,
+                    dataTextField: "FrekuensiPendebetan",
+                    dataValueField: "FrekuensiPendebetan"
+                });
+            }
+        });
+    }
+    
 </script>
 

@@ -295,7 +295,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="input-group">
-                                <button id ="btnDocumentSubs" class="btn btn-default waves-effect waves-light">
+                                <button id ="btnDocumentSubs" href="@Url.Action("Document", "Global" ) " data-toggle="modal" data-target="#DocumentModalSubs" class="btn btn-default waves-effect waves-light">
                                     <span class="btn-label">
                                         <i class="fa fa-search"></i>
                                     </span>
@@ -303,6 +303,16 @@
                                 </button>
                             </div>
                         </div>
+                    <script>
+                        $(function () {
+                            $('#btnDocumentSubs').click(function () {
+                                var value = $('#srcNoRefSubs_text1').val();
+                                $(this).attr('href', function () {
+                                    return '@Html.Raw(Url.Action("Document", "Global"))?IsEdit=false&TranId=0&IsSwitching=false&IsBooking=false,RefID=' + value;
+                                });
+                            });
+                        });
+                    </script>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Seller</label>
                             <div class="input-group">
@@ -419,6 +429,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>
     </div>
+</div>
+
+<div class="modal fade" id="DocumentModalSubs" tabindex="-1" role="dialog" aria-labelledby="DocumentModalSubsLabel">
+    <div class="modal-dialog" style="width:75%;">
+        <div class="modal-content">
+            
+        </div>
+        </div>
 </div>
 <!-- End Modal -->
 

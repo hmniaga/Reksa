@@ -48,6 +48,16 @@
         var selectedId = $("#TrxProductSubsSelectedId").val();
         var selectedCurr = $("#TrxProductSubsSelectedCurr").val();
 
+        var res = ValidateCurrency(selectedCurr);
+
+        res.success(function (data) {
+            if (data.length != 0) {
+                $("input[id='srcCurrencySubs_text2']").val(data[0].CurrencyName);
+            } else {
+                $("input[id='srcCurrencySubs_text2']").val('');
+            }
+        });
+
         $("input[id='srcProductSubs_text1']").val(selectedCode).change();
         $("input[id='srcProductSubs_text2']").val(selectedName);
         $("input[id='ProdIdSubs']").val(selectedId);
@@ -71,6 +81,14 @@
             search: Search,
             criteria: encodeURIComponent(criter)
         }
+    }
+
+    function ValidateCurrency(CurrCode) {
+            return $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateCurrency',
+                data: { Col1: CurrCode, Col2: '', Validate: 1 }
+            });
     }
 </script>
 <div class="modal-content">

@@ -247,18 +247,7 @@
                     <label class="col-sm-4 control-label">Frek Pendebetan</label>
                     <div class="input-group">
                         @(Html.Kendo().DropDownList().Name("cmbFrekPendebetanSwcRDB")
-                                        .BindTo(new List<SelectListItem>() {
-                                                                new SelectListItem() {
-                                                                Text = "By Nominal",
-                                                                Value = "0"
-                                                                },
-                                                                new SelectListItem() {
-                                                                Text = "By %",
-                                                                Value = "1"
-                                                                }
-                                        })
-                                        .DataTextField("Text")
-                                        .DataValueField("Value")
+                                        .HtmlAttributes(new { @style = "width: 90px;" })
                         )<label>&nbsp;&nbsp;&nbsp;Bulan</label>
                     </div>
                 </div>

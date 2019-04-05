@@ -470,76 +470,86 @@
                     strDesc = "reject";
                 }
                 
-                var selectedDetail;
+                var selectedDetail = 0;
                 var gridDetail = $("#GridDetail").data("kendoGrid");
-                gridDetail.refresh();
-                gridDetail.tbody.find("tr[role='row']").each(function () {
-                    var dataItem = gridDetail.dataItem(this);
-                    if (dataItem.Pilih == true) {
-                        selectedDetail = selectedDetail + 1;
-                    }
-                })
-
-                var selectedMain;
-                var gridMain = $("#GridOtorisasi").data("kendoGrid");
-                gridMain.refresh();
-                gridMain.tbody.find("tr[role='row']").each(function () {
-                    var dataItem = gridMain.dataItem(this);
-                    if (dataItem.Pilih == true) {
-                        selectedMain = selectedMain + 1;
-                    }
-                })
-
-                if (selectedDetail == 0) {
-                    swal("Warning", "Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");
-                    return;
-                }
-
-                if (selectedDetail > 1) {
-                    swal("Warning", "Harap checklist hanya 1 nomor referensi saja!", "warning");
-                    return;
-                }
-
-                if (selectedMain == 0) {
-                    swal("Warning", "Harap memilih data detail transaksi yang akan di" + strDesc + "!", "warning");
-                    return;
-                }
-
-                if ((IsAccept == true) && (IsEdit == false))
-                {
-                    
-                }
-
-                var dataItems = "";
-
-                gridDetail.refresh();
-                gridDetail.tbody.find("tr[role='row']").each(function () {
-                    var dataItem = gridDetail.dataItem(this);
-                    if (dataItem.TranType == 1 || dataItem.TranType == 8)
-                    {
+                
+                if (gridDetail == null) {
+                    swal({
+                        title: "Warning",
+                        text: "Harap memilih data master transaksi yang akan di" + strDesc + "!",
+                        type: "warning",
+                        showCancelButton: false,
+                        confirmButtonClass: 'btn-info',
+                        confirmButtonText: "OK",
+                        closeOnConfirm: true
+                    });
+                   }
+                else {
+                    gridDetail.refresh();
+                    gridDetail.tbody.find("tr[role='row']").each(function () {
+                        var dataItem = gridDetail.dataItem(this);
                         if (dataItem.CheckB == true) {
-                            dataItems += dataItem.TranId + "|";
+                            selectedDetail = selectedDetail + 1;
                         }
-                    }
-                })
+                    })
 
-                console.log(dataItems);
-                console.log(IsAccept);
-                $.ajax({
-                    type: "POST",
-                    url: '/Otorisasi/AuthorizeTransaction_BS',
-                    data: { listTranId: dataItems, isApprove: IsAccept },
-                    success: function (data) {
-                        if (data.blnResult == true) {
-                            swal("Approved", "Proses Approve Berhasil", "success");
-                            
+                    var selectedMain = 0;
+                    var gridMain = $("#GridOtorisasi").data("kendoGrid");
+                    gridMain.refresh();
+                    gridMain.tbody.find("tr[role='row']").each(function () {
+                        var dataItem = gridMain.dataItem(this);
+                        if (dataItem.CheckB == true) {
+                            selectedMain = selectedMain + 1;
                         }
-                        else {
-                            swal("Warning", data.ErrMsg, "warning");
-                        }
-                    }
-                });
+                    })
 
+
+                    if (selectedDetail == 0) {
+                        swal("Warning", "Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");
+                        return;
+                    }
+
+                    if (selectedDetail > 1) {
+                        swal("Warning", "Harap checklist hanya 1 nomor referensi saja!", "warning");
+                        return;
+                    }
+
+                    if (+selectedMain == 0) {
+                        swal("Warning", "Harap memilih data detail transaksi yang akan di" + strDesc + "!", "warning");
+                        return;
+                    }
+
+                    if ((IsAccept == true) && (IsEdit == false)) {
+
+                    }
+
+                    var dataItems = "";
+
+                    gridDetail.refresh();
+                    gridDetail.tbody.find("tr[role='row']").each(function () {
+                        var dataItem = gridDetail.dataItem(this);
+                        if (dataItem.TranType == 1 || dataItem.TranType == 8) {
+                            if (dataItem.CheckB == true) {
+                                dataItems += dataItem.TranId + "|";
+                            }
+                        }
+                    })
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/Otorisasi/AuthorizeTransaction_BS',
+                        data: { listTranId: dataItems, isApprove: IsAccept },
+                        success: function (data) {
+                            if (data.blnResult == true) {
+                                swal("Approved", "Proses Approve Berhasil", "success");
+
+                            }
+                            else {
+                                swal("Warning", data.ErrMsg, "warning");
+                            }
+                        }
+                    });
+                }
             }
             else if (strTransaction == "REV")
             {

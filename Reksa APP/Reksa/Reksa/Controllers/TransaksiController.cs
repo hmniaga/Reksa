@@ -50,8 +50,6 @@ namespace Reksa.Controllers
             ViewBag.strBranch = _strBranch;
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             List<TransactionModel.FrekuensiDebet> frek = new List<TransactionModel.FrekuensiDebet>();
-            frek = PopulateComboFrekDebet();
-            vModel.FrekuensiDebet = frek;
             return View("Transaksi", vModel);
         }
         public JsonResult GetDataCIF(string CIFNo)
@@ -496,42 +494,7 @@ namespace Reksa.Controllers
             }
             return intUmur;
         }
-        private List<TransactionModel.FrekuensiDebet> PopulateComboFrekDebet()
-        {
-            List<TransactionModel.FrekuensiDebet> list = new List<TransactionModel.FrekuensiDebet>();
-
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    client.DefaultRequestHeaders.Accept.Add(contentType);
-
-                    HttpResponseMessage response = client.GetAsync("/api/Global/PopulateCombo").Result;
-                    if (!response.IsSuccessStatusCode)
-                        throw new HttpRequestException();
-
-
-                    string strJson = response.Content.ReadAsStringAsync().Result;
-
-                    list = JsonConvert.DeserializeObject<List<TransactionModel.FrekuensiDebet>>(strJson);
-                }
-                catch (Exception e)
-                {
-                    list = new List<TransactionModel.FrekuensiDebet>();
-                }
-            }            
-            
-            return list;
-        }
-        private void HitungSwitchingFee()
-        {
-        }
-        private void HitungSwitchingRDBFee()
-        {            
-           
-        }
+        
         private void HitungBookingFee(string CIFNo, decimal BookingAmount, string ProductCode, bool ByPercent,
             bool IsFeeEdit, decimal PercentageFeeInput, out decimal PctFee,
             out string FeeCurr, out decimal NominalFee)
@@ -560,6 +523,62 @@ namespace Reksa.Controllers
 
         }
 
-        
+        public JsonResult GetImportantData(string CariApa, string InputData)
+        {
+            string value = "";
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/GetImportantData?CariApa=" + CariApa + "&Input=" + InputData).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(strJson);
+                    JToken TokenData = Object["value"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+
+                    value = JsonConvert.DeserializeObject<string>(JsonData);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+                return Json(new { value });
+            }
+
+            return Json(new { value });
+        }
+        public JsonResult PopulateComboFrekDebet()
+        {
+            List<TransactionModel.FrekuensiDebet> list = new List<TransactionModel.FrekuensiDebet>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Global/PopulateCombo").Result;
+                    if (!response.IsSuccessStatusCode)
+                        throw new HttpRequestException();
+
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<TransactionModel.FrekuensiDebet>>(strJson);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { list });
+            }
+            return Json(new { list });
+        }
+
+
     }
 }

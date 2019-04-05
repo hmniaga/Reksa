@@ -22,6 +22,43 @@ namespace Reksa.Controllers
             _strAPIUrl =  _config.GetValue<string>("APIServices:url");
         }
 
+        public ActionResult Document(bool IsEdit, int TranId, bool IsSwitching, bool IsBooking, string RefID)
+        {
+            ViewBag.IsEdit = IsEdit;
+            ViewBag.TranId = TranId;
+            ViewBag.IsSwitching = IsSwitching;
+            ViewBag.IsBooking = IsBooking;
+            ViewBag.RefID = RefID;
+            return View();
+        }
+
+        public ActionResult PopulateVerifyDocuments([DataSourceRequest]DataSourceRequest request, bool IsEdit, int TranId, bool IsSwitching, bool IsBooking, string RefID)
+        {
+            int total = 0;
+            List<DocumentModel> list = new List<DocumentModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Transaction/PopulateVerifyDocuments?TranId=" + TranId + "&IsEdit=" + IsEdit + "&IsSwitching=" + IsSwitching + "&IsBooking=" + IsBooking + "&strRefID=" + RefID).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<DocumentModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        
         public ActionResult SearchBooking(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -121,6 +158,12 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
             return View();
         }
+        public ActionResult SearchTrxProductRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
         public ActionResult SearchTrxProductRedemp(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -164,8 +207,6 @@ namespace Reksa.Controllers
 
             return Json(result);
         }
-
-
         public ActionResult ValidateBooking(string Col1, string Col2, int Validate, string criteria)
         {
             List<SwitchingModel> list = new List<SwitchingModel>();
@@ -180,8 +221,52 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
         public ActionResult SearchCIF(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
+        public ActionResult SearchCIFSubs(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCIFRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCIFRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
+        public ActionResult SearchCIFSwc(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
+        public ActionResult SearchCIFSwcRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCIFBooking(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -734,6 +819,14 @@ namespace Reksa.Controllers
 
             return View();
         }
+        public ActionResult SearchReferentorRDB(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+
         public ActionResult SearchReferentorRedemp(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -750,6 +843,13 @@ namespace Reksa.Controllers
             return View();
         }
         public ActionResult SearchSellerSwc(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchSellerRDB(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;

@@ -1,14 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Search Referensi";
+    ViewBag.Title = "Search Referentor";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
 
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchReferensi() {
-        var value = $("#ReferensiSearchComponentSearchTxt").val();
-        var grid = $("#ReferensiSearchComponentGrid").data("kendoGrid");
+    function onSearchReferentor() {
+        var value = $("#ReferentorSearchComponentSearchTxt").val();
+        var grid = $("#ReferentorSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -29,29 +29,28 @@
         }
     }
 
-    function onRowReferensiSelect(e) {
+    function onRowReferentorSelect(e) {
         var data = this.dataItem(this.select());
-        var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var dataId = $.trim(data.EMPLID);
+        var dataName = $.trim(data.NAME);
 
-        $("#ReferensiSelectedRefID").val(RefID);
-        $("#ReferensiSelectedtanggalTransaksi").val(tanggalTransaksi);
+        $("#ReferentorSelectedId").val(dataId);
+        $("#ReferentorSelectedText").val(dataName);
     };
 
-    $("#ReferensiSelectButton").on("click", function () {
-        var selectedRefID = $("#ReferensiSelectedRefID").val();
-        var selectedtanggalTransaksi = $("#ReferensiSelectedtanggalTransaksi").val();
+    $("#ReferentorSelectButton").on("click", function () {
+        var selectedId = $("#ReferentorSelectedId").val();
+        var selectedText = $("#ReferentorSelectedText").val();
 
-        $("input[name='ReferensiModel.RefID']").val(selectedRefID).change();
-        $("input[name='ReferensiModel.tanggalTransaksi']").val(selectedtanggalTransaksi);
-
+        $("input[id='srcReferentorRDB_text1']").val(selectedId).change();
+        $("input[id='srcReferentorRDB_text2']").val(selectedText);
     });
 
-    $("#ReferensiSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ReferentorSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ReferensiSearchComponentSearchBtn").click();
+            $("#ReferentorSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -62,18 +61,18 @@
         <h4>@ViewBag.Title</h4>
     </div>
     <div class="modal-body">
-        @(Html.Kendo().Grid<Reksa.Models.ReferensiModel>()
-                    .Name("ReferensiSearchComponentGrid")
+        @(Html.Kendo().Grid<Reksa.Models.ReferentorModel>()
+                    .Name("ReferentorSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.RefID).Title("No Referensi");
-                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.EMPLID).Width(100).Title("Referentor Id");
+                        columns.Bound(m => m.NAME).Width(100).Title("Referentor Name");
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowReferensiSelect"))
+                    .Events(events => events.Change("onRowReferentorSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -83,29 +82,27 @@
                         .PageSize(20)
                         .Model(model =>
                         {
-                            model.Id(m => m.RefID);
+                            model.Id(m => m.EMPLID);
                         })
-                        .Read(read => read.Action("SearchReferensiData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchReferentorData", "Global", new { search = search, criteria = criteria }))
                     )
         )
-
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ReferensiSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("ReferentorSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ReferensiSearchComponentSearchBtn")
+                            .Name("ReferentorSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchReferensi")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchReferentor")).ToClientTemplate()
             )
         </div>
         </script>
-
-        <input type="hidden" id="ReferensiSelectedRefID" name="ReferensiSelectedRefID" value="" />
-        <input type="hidden" id="ReferensiSelectedtanggalTransaksi" name="ReferensiSelectedtanggalTransaksi" value="" />
+        <input type="hidden" id="ReferentorSelectedId" name="ReferentorSelectedId" value="" />
+        <input type="hidden" id="ReferentorSelectedText" name="ReferentorSelectedText" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ReferensiSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ReferentorSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
