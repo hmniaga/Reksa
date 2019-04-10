@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">File Action</label>
                     <div class="input-group">
-                        @(Html.Kendo().DropDownList().Name("FileAction").BindTo(new List<SelectListItem>() { new SelectListItem() {
+                        @(Html.Kendo().DropDownList().Name("cmbFileAction").BindTo(new List<SelectListItem>() { new SelectListItem() {
                         Text = "UPLOAD", Value = "1" }, new SelectListItem() { Text = "DOWNLOAD",Value = "0"}}).DataTextField("Text").DataValueField("Value").Value("0")
                         .Events(e => { e.Change("onChangeFileAction").DataBound("onBoundFileAction");})
                         )
@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">File Type</label>
                     <div class="input-group">
-                        @(Html.Kendo().DropDownList().Name("FileType").HtmlAttributes(new { @id = "FileType", @style = "width: 400px;" })
+                        @(Html.Kendo().DropDownList().Name("cmbFileType").HtmlAttributes(new { @id = "cmbFileType", @style = "width: 400px;" })
                         .Events(e => { e.Change("onChangeFileType").DataBound("onBoundFileType"); })
                         )
                     </div>
@@ -40,12 +40,12 @@
                 <!-- Begin Input File Name -->
                 <div class="form-group">
                     <label id ="labelFileName" class="col-sm-3 control-label">File Name</label>
-                    <div id="inputfile" style="">
+                    <div id="txtFilePath" style="">
                         <input id="filename" type="file" class="filestyle" data-iconname="fa fa-cloud-upload">
                     </div>
                     
                     <div id="dateTrx" style="">
-                        @(Html.Kendo().DatePicker().Name("TransactionDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }))
+                        @(Html.Kendo().DatePicker().Name("dtTranDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }))
                     </div>
                 </div>
                 <!-- End Input File Name -->
@@ -80,49 +80,98 @@
 
     $("#btnGenerate").click(function ()
     {
-        var filepath = '';
-        document.getElementById('filename').click();
-        if (Type == "UPLOAD" && filepath != '') {
-            var TranDate = $("#TransactionDate").val().split("/");
-            var dtTran = TranDate[2] + TranDate[1] + TranDate[0];
-            $.ajax({
-                type: 'GET',
-                url: '/Report/NFSGenerateFileUpload',
-                data: { FileCode: Code, TranDate: dtTran },
-                success: function (data) {
-
-                }
-            });
+        if ($("#btnGenerate").text() == "Generate") {
+            var sFileCode = $("#cmbFileType").data('kendoDropDownList').value();
+            var iTranDate = $("#dtTranDate").val();
+            GenerateFileUpload(sFileCode, iTranDate);
+        }
+        else
+        {
+            SubSave();
         }
     });
 
-
-    function readURL(input) {
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                alert(e.target.result);
+    function GenerateFileUpload(sFileCode, iTranDate)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Report/NFSGenerateFileUpload',
+            data: { FileCode: sFileCode, TranDate: iTranDate },
+            success: function (data) {
+                if (data.blnResult == true) {
+                    swal("Success", data.ErrMsg, "success");
+                } else
+                {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
             }
+        });
+    }
 
-            reader.readAsDataURL(input.files[0]);
-        }
+    function SubSave()
+    {
+
     }
 
     $("#filename").change(function () {
-        readURL(this);
+        var url;
+        renderImage(this.files[0]);
+        subOpenCsvFile(url);
     });
+
+    function renderImage(file)
+    {
+        // generate a new FileReader object
+        var reader = new FileReader();
+
+        // inject an image with the src url
+        reader.onload = function (event) {
+            the_url = event.target.result
+            console.log(the_url);
+        }       
+    }
+
+    function subOpenCsvFile(url)
+    {
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", url, true);
+        oReq.responseType = "arraybuffer";
+
+        oReq.onload = function (e) {
+            var arraybuffer = oReq.response;
+
+            /* convert data to binary string */
+            var data = new Uint8Array(arraybuffer);
+            var arr = new Array();
+            for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+            var bstr = arr.join("");
+
+            /* Call XLSX */
+            var workbook = XLSX.read(bstr, {
+                type: "binary"
+            });
+
+            /* DO SOMETHING WITH workbook HERE */
+            var first_sheet_name = workbook.SheetNames[0];
+            /* Get worksheet */
+            var worksheet = workbook.Sheets[first_sheet_name];
+            console.log(XLSX.utils.sheet_to_json(worksheet, {
+                raw: true
+            }));
+        }
+
+        oReq.send();
+    }
 
     function onChangeFileType(e)
     {
-        var dropdownlist = $("#FileType").data("kendoDropDownList");
+        var dropdownlist = $("#cmbFileType").data("kendoDropDownList");
         Code = dropdownlist.value();
     }
 
     function onBoundFileType(e)
     {
-        var dropdownlist = $("#FileType").data("kendoDropDownList");
+        var dropdownlist = $("#cmbFileType").data("kendoDropDownList");
         var len = dropdownlist.dataSource.data().length;
 
         if (len > 0) {
@@ -133,20 +182,20 @@
     }
 
     function onChangeFileAction(e) {
-        var dropdownlist = $("#FileAction").data("kendoDropDownList");
+        var dropdownlist = $("#cmbFileAction").data("kendoDropDownList");
         Type = dropdownlist.text();
         if (Type == "UPLOAD")
         {
             $("#btnGenerate").text("Generate"); 
             $("#labelFileName").text("Transaction Date");
-            $('#inputfile').attr('style', 'display:none;');
+            $('#txtFilePath').attr('style', 'display:none;');
             $('#dateTrx').attr('style', '');
         }
         else
         {
             $("#btnGenerate").text("Save Data");
             $("#labelFileName").text("File Name");
-            $('#inputfile').attr('style', '');
+            $('#txtFilePath').attr('style', '');
             $('#dateTrx').attr('style', 'display:none;');
         }
 
@@ -155,7 +204,7 @@
             url: '/Report/GetFileTypeList',
             data: { FileType: Type },
             success: function (data) {
-                $("#FileType").kendoDropDownList({
+                $("#cmbFileType").kendoDropDownList({
                     dataTextField: "FileDesc",
                     dataValueField: "FileCode",
                     dataSource: data,
@@ -168,14 +217,19 @@
     }    
 
     function onBoundFileAction(e) {
-        var dropdownlist = $("#FileAction").data("kendoDropDownList");
+        var dropdownlist = $("#cmbFileAction").data("kendoDropDownList");
         var len = dropdownlist.dataSource.data().length;
 
         if (len > 0) {
             dropdownlist.select(0);
             onChangeFileAction();
         }
-    } 
+    }
+
+    function toDate(dateStr) {
+        const [day, month, year] = dateStr.split("/")
+        return new Date(year, month - 1, day)
+    }
 
 
 </script>

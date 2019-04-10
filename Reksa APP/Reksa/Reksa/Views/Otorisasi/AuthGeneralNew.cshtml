@@ -426,8 +426,7 @@
             grid.refresh();
         }
 
-        function subAcceptReject(IsAccept) {
-
+        function subAcceptReject(IsAccept) {            
             if ($('#radioNewAccount').prop('checked') == true) {
                 strTransaction = "ACC";
             }
@@ -446,7 +445,31 @@
             
 
             if (strTransaction == "ACC") {
+                var gridMain = $("#GridOtorisasi").data("kendoGrid");
+                var dataItems = "";
 
+                gridMain.refresh();
+                gridMain.tbody.find("tr[role='row']").each(function () {
+                    var dataItem = gridMain.dataItem(this);
+                        if (dataItem.CheckB == true) {
+                            dataItems += dataItem.NasabahId + "|";
+                        }
+                })
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Otorisasi/AuthorizeNasabah',
+                    data: { listNasabahId: dataItems, isApprove: IsAccept },
+                    success: function (data) {
+                        if (data.blnResult == true) {
+                            swal("Approved", "Proses Approve Berhasil", "success");
+
+                        }
+                        else {
+                            swal("Warning", data.ErrMsg, "warning");
+                        }
+                    }
+                });
             }
             else if (strTransaction == "BLK")
             {
@@ -472,6 +495,7 @@
                 
                 var selectedDetail = 0;
                 var gridDetail = $("#GridDetail").data("kendoGrid");
+
                 
                 if (gridDetail == null) {
                     swal({
@@ -498,11 +522,12 @@
                     gridMain.refresh();
                     gridMain.tbody.find("tr[role='row']").each(function () {
                         var dataItem = gridMain.dataItem(this);
+                        console.log(dataItem.CheckB);
                         if (dataItem.CheckB == true) {
                             selectedMain = selectedMain + 1;
                         }
                     })
-
+                    
 
                     if (selectedDetail == 0) {
                         swal("Warning", "Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");

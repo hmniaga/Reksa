@@ -46,13 +46,14 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult GlobalQuery(string strPopulate, [FromQuery]string SelectedId, [FromQuery]int NIK, [FromQuery]string GUID)
         {
-
+            bool blnResult;
+            string ErrMsg;
             DataSet dsResult = new DataSet();
             DataTable dt = new DataTable();
             List<SqlParameter> listParam = new List<SqlParameter>();
             string strCommand = cls.fnCreateCommand1(strPopulate, dt, NIK, GUID, out listParam, out string selectedId, 0);
-            dsResult = cls.ReksaGlobalQuery(strCommand, listParam);
-            return Json(dsResult);
+            blnResult = cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMsg);
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
 
 
@@ -265,6 +266,22 @@ namespace ReksaAPI.Controllers
         {
             List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
             list = cls.ReksaSrcTrxProduct(Col1, Col2, Validate, JenisTrx);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcTransSwitchIn")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcTransSwitchIn([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string ProdCode)
+        {
+            List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
+            list = cls.ReksaSrcTransSwitchIn(Col1, Col2, Validate, ProdCode);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcTransSwitchOut")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcTransSwitchOut([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
+            list = cls.ReksaSrcTransSwitchOut(Col1, Col2, Validate);
             return Json(list);
         }
         [Route("api/Global/GetSrcWaperd")]

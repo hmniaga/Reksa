@@ -31,6 +31,9 @@ namespace Reksa.Controllers
         private string sRealFileName;
         private string result;
         private string skyWriter;
+        private clsCSVFormat csv;
+        private string sSeparator = "", sFileName = "", sFormatFile = "", sFilterFile = "", sFieldKey = "", sFileCode = "";
+        string sXMLData;
 
         public ReportController(IConfiguration iconfig)
         {
@@ -50,13 +53,142 @@ namespace Reksa.Controllers
             NFSGetFileTypeList(FileType, out listType);
             return Json(listType);
         }
-
+        public JsonResult OpenCsvFile(string strFileName, string sFileCode)
+        {
+            string ErrMsg = "";
+            DataSet dsFile = new DataSet();
+            csv = new clsCSVFormat(dsFile);
+            if (GetFormatFile(sFileCode, out ErrMsg))
+            {
+                string[] sCol = this.sFieldKey.Trim().Split(new char[] { ',', ';' }, StringSplitOptions.None);
+                this.sXMLData = "";
+                if (!csv.GetCSVFile(strFileName, sCol, out sXMLData, out ErrMsg))
+                {
+                    return Json(new { ErrMsg, dsFile });
+                }
+            }
+            return Json( new { ErrMsg, dsFile });
+        }
         public JsonResult NFSGenerateFileUpload(string FileCode, string TranDate)
         {
-            List<FileModel.NFSFileListType> listType = new List<FileModel.NFSFileListType>();
-            int.TryParse(TranDate, out int intTrandate);
-            NFSGenerateFileUpload(@"D:\", FileCode, intTrandate);
-            return Json(listType);
+            bool blnResult = false;
+            string ErrMsg = "";
+            using (HttpClient client = new HttpClient())
+            {
+                DataSet dsData;
+                string sSeparator, sFileName, sFormatFile, sFilterFile;
+                bool bIsLog, bIsNeedAuth;
+                bIsLog = false;
+                bIsNeedAuth = false;
+                try
+                {
+                    string[] s;
+                    s = TranDate.Split('/');
+                    string strTranDate = s[2] + s[1] + s[0];
+                    int intTranDate;
+                    int.TryParse(strTranDate, out intTranDate);
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Report/NFSGenerateFileUpload?FileCode=" + FileCode + "&TranDate=" + intTranDate).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);                    
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = strObject["ds"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsData = JsonConvert.DeserializeObject<System.Data.DataSet>(JsonData);
+                    if (dsData != null)
+                    {
+                        if (Convert.ToBoolean(dsData.Tables[0].Rows[0]["IsdNeedApproval"]) == true)
+                        {
+                            if (dsData.Tables[2].Rows[0]["XMLData"].ToString() == "" || dsData.Tables[2].Rows[0]["XMLRawData"].ToString() == "")
+                            {
+                                blnResult = false;
+                                ErrMsg = "Data tidak tersedia.";
+                            }
+                        }
+                        if (dsData.Tables[0].Rows.Count == 0)
+                        {
+                            blnResult = false;
+                            ErrMsg = "Data Parameter tidak tersedia.";
+                        }
+                        if (dsData.Tables[1].Rows.Count == 0)
+                        {
+                            blnResult = false;
+                            ErrMsg = "Data Upload tidak tersedia.";
+                        }
+                        if (dsData.Tables[1].Rows.Count <= 1)
+                        {
+                            blnResult = false;
+                            ErrMsg = "Data tidak tersedia.";
+                        }
+
+                        sSeparator = dsData.Tables[0].Rows[0][0].ToString();
+                        sFileName = dsData.Tables[0].Rows[0][1].ToString();
+                        sFormatFile = dsData.Tables[0].Rows[0][2].ToString();
+                        sFilterFile = dsData.Tables[0].Rows[0][3].ToString();
+
+                        bIsLog = bool.Parse(dsData.Tables[0].Rows[0]["IsLogged"].ToString());
+                        bIsNeedAuth = bool.Parse(dsData.Tables[0].Rows[0]["IsdNeedApproval"].ToString());
+
+                        if (!bIsNeedAuth)
+                        {
+                            if (!CreateFileUpload(sSeparator, sFileName, sFormatFile, sFilterFile, dsData))
+                            {
+                                blnResult = false;
+                                ErrMsg = "Gagal create file.";
+                            }
+                            else
+                            {
+                                blnResult = true;
+                                ErrMsg = "Sukses Generate File Upload.";
+                            }
+                        }
+                        else
+                        {
+                            ErrMsg = "Proses Generate Textfile memerlukan approval supervisor.";
+                        }
+
+                        if (bIsLog || bIsNeedAuth) // Insert Generate Log
+                        {
+                            if (this.sRealFileName == null)
+                                this.sRealFileName = sFileName;
+
+                            string sXMLDataGenerate = "";
+                            string sXMLRawData = "";
+
+                            using (StringWriter sw = new StringWriter())
+                            {
+                                dsData.Tables[1].WriteXml(sw);
+                                result = sw.ToString();
+                            }
+                            if (dsData.Tables[2].Rows.Count == 0)
+                            {
+                                blnResult = false;
+                                ErrMsg = "Data Ototisasi tidak tersedia.";
+                            }
+                            if (dsData.Tables[2].Rows.Count > 0)
+                            {
+                                sXMLDataGenerate = result;
+                                sXMLRawData = dsData.Tables[2].Rows[0][1].ToString();
+                            }
+
+                            blnResult = ReksaNFSInsertLogFile(FileCode, sFileName, _intNIK.ToString(), intTranDate, sXMLDataGenerate, sXMLRawData, bIsLog, bIsNeedAuth, out ErrMsg);
+                            if (!blnResult)
+                            {
+                                ErrMsg = "Gagal Insert Log Data.";
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ErrMsg = "Error Get Data Upload : " + e.Message;
+                }
+                return Json(new { blnResult, ErrMsg });
+            }
         }
 
 
@@ -92,101 +224,15 @@ namespace Reksa.Controllers
             
         }
 
-        private void NFSGenerateFileUpload(string sPath, string strFileCode, int iTranDate)
+
+        private bool ReksaNFSInsertLogFile(string sFileCode, string sFileName, string strUserID, 
+            int iTranDate, string sXMLDataGenerate, string sXMLRawData, bool bIsLog, bool bIsNeedAuth, out string ErrMsg)
         {
-            string strErr = "";
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            ErrMsg = "";
+            try
             {
-                DataSet dsData;
-                string sSeparator, sFileName, sFormatFile, sFilterFile;
-                bool bIsLog, bIsNeedAuth;
-                bIsLog = false;
-                bIsNeedAuth = false;
-                try
-                {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    client.DefaultRequestHeaders.Accept.Add(contentType);
-
-                    HttpResponseMessage response = client.GetAsync("/api/Report/NFSGenerateFileUpload?FileCode=" + strFileCode + "&TranDate=" + iTranDate).Result;
-                    string strJson = response.Content.ReadAsStringAsync().Result;
-
-                    dsData = JsonConvert.DeserializeObject<System.Data.DataSet>(strJson);
-
-                    if (Convert.ToBoolean(dsData.Tables[0].Rows[0]["IsdNeedApproval"]) == true)
-                    {
-                        if (dsData.Tables[2].Rows[0]["XMLData"].ToString() == "" || dsData.Tables[2].Rows[0]["XMLRawData"].ToString() == "")
-                            throw new Exception("Data tidak tersedia.");
-                    }
-                    if (dsData.Tables[0].Rows.Count == 0)
-                        throw new Exception("Data Parameter tidak tersedia.");
-
-                    if (dsData.Tables[1].Rows.Count == 0)
-                        throw new Exception("Data Upload tidak tersedia.");
-
-                    if (dsData.Tables[1].Rows.Count <= 1)
-                        throw new Exception("Data tidak tersedia.");
-
-                    sSeparator = dsData.Tables[0].Rows[0][0].ToString();
-                    sFileName = dsData.Tables[0].Rows[0][1].ToString();
-                    sFormatFile = dsData.Tables[0].Rows[0][2].ToString();
-                    sFilterFile = dsData.Tables[0].Rows[0][3].ToString();
-
-                    bIsLog = bool.Parse(dsData.Tables[0].Rows[0]["IsLogged"].ToString());
-                    bIsNeedAuth = bool.Parse(dsData.Tables[0].Rows[0]["IsdNeedApproval"].ToString());
-
-                    if (!bIsNeedAuth)
-                    {
-                        if (!CreateFileUpload(sPath, sSeparator, sFileName, sFormatFile, sFilterFile, dsData))
-                            throw new Exception("Gagal create file.");
-
-                        strErr = "Sukses Generate File Upload.";
-                    }
-                    else
-                    {
-                        strErr = "Proses Generate Textfile memerlukan approval supervisor.";
-                    }
-
-                    if (bIsLog || bIsNeedAuth) // Insert Generate Log
-                    {
-                        if (this.sRealFileName == null)
-                            this.sRealFileName = sFileName;
-
-                        string sXMLDataGenerate = "";
-                        string sXMLRawData = "";
-
-                        using (StringWriter sw = new StringWriter())
-                        {
-                            dsData.Tables[1].WriteXml(sw);
-                            result = sw.ToString();
-                        }
-                        if (dsData.Tables[2].Rows.Count == 0)
-                            throw new Exception("Data Ototisasi tidak tersedia.");
-
-                        if (dsData.Tables[2].Rows.Count > 0)
-                        {
-                            sXMLDataGenerate = result;
-                            sXMLRawData = dsData.Tables[2].Rows[0][1].ToString();
-                        }
-
-                        ReksaNFSInsertLogFile(strFileCode, sFileName, _intNIK.ToString(), iTranDate, sXMLDataGenerate, sXMLRawData, bIsLog, bIsNeedAuth);
-                    }
-                }
-                catch (Exception e)
-                {
-                    strErr = e.ToString();
-                }
-            }
-        }
-
-
-        private void ReksaNFSInsertLogFile(string sFileCode, string sFileName, string strUserID, 
-            int iTranDate, string sXMLDataGenerate, string sXMLRawData, bool bIsLog, bool bIsNeedAuth)
-        {
-            string strErr = "";
-            using (HttpClient client = new HttpClient())
-            {
-                try
+                using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
@@ -195,16 +241,19 @@ namespace Reksa.Controllers
                     HttpResponseMessage response = client.GetAsync("/api/Report/NFSInsertLogFile?FileCode=" + sFileCode + "&FileName=" + sFileName + "&UserID=" + strUserID + "&TranDate=" + iTranDate + "&XMLDataGenerate=" + sXMLDataGenerate + "&XMLRawData=" + sXMLRawData + "&IsLog=" + bIsLog + "&IsNeedAuth=" + bIsNeedAuth).Result;
                     string strJson = response.Content.ReadAsStringAsync().Result;
 
-                    strErr = JsonConvert.DeserializeObject<string>(strJson);
-                }
-                catch (Exception e)
-                {
-                    strErr = e.ToString();
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                 }
             }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }            
+            return blnResult;
         }
 
-        private bool CreateFileUpload(string strPath, string sSeparator, string sFileName, string sFormatFile, string sFilterFile, DataSet dsData)
+        private bool CreateFileUpload(string sSeparator, string sFileName, string sFormatFile, string sFilterFile, DataSet dsData)
         {
             int row, col;
             bool CreateTextFile = false;
@@ -212,11 +261,9 @@ namespace Reksa.Controllers
 
             try
             {
-                if (strPath != "")
-                {
-                    skyWriter = Path.GetDirectoryName(strPath);
+                    skyWriter = Path.GetDirectoryName("C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT");
                     StreamWriter streamWriter1 = new StreamWriter(skyWriter + "\\" + sFileName + "." + sFormatFile);
-                    this.sRealFileName = strPath;
+                    this.sRealFileName = "C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT";
 
                     if (dsData.Tables[1].Rows.Count > 0)
                     {
@@ -242,7 +289,7 @@ namespace Reksa.Controllers
                     }
                     streamWriter1.Flush();
                     streamWriter1.Close();
-                }
+                
             }
 
             catch (Exception ex)
@@ -252,6 +299,39 @@ namespace Reksa.Controllers
             }
 
             return CreateTextFile;
+        }
+        private bool GetFormatFile(string strFileCode, out string ErrMsg)
+        {
+            bool bSuccess = false;
+            ErrMsg = "";
+            DataSet dsData = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Report/NFSGetFormatFile?FileCode=" + strFileCode).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    bSuccess = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = strObject["dsData"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsData = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+                this.sSeparator = dsData.Tables[0].Rows[0][2].ToString();
+                this.sFormatFile = dsData.Tables[0].Rows[0][3].ToString();
+                this.sFilterFile = dsData.Tables[0].Rows[0][4].ToString();
+                this.sFieldKey = dsData.Tables[0].Rows[0][5].ToString();
+            }
+            catch (Exception e)
+            {
+                ErrMsg = "Error Get Data Upload : " + e.Message;
+            }
+            return bSuccess;
         }
     }
 }

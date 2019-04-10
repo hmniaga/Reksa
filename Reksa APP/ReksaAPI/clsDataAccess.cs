@@ -665,25 +665,31 @@ namespace ReksaAPI
             }
             return list;
         }
-        public DataSet ReksaGlobalQuery(string strCommand, List<SqlParameter> listParam)
+        public bool ReksaGlobalQuery(string strCommand, List<SqlParameter> listParam, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
             List<CommonTreeViewModel> list = new List<CommonTreeViewModel>();
             try
             {               
                 if (this.ExecProc(QueryReksa(), strCommand, ref listParam, out dsOut))
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
                     {
-                        DataTable dtOut = dsOut.Tables[0];
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return dsOut;
+            return blnResult;
         }
         public bool ReksaValidateCBOOfficeId(string strOfficeID, out string IsEnable, out string strErrorMessage)
         {
@@ -1243,6 +1249,65 @@ namespace ReksaAPI
                 };
 
                 if (this.ExecProc(QueryReksa(), "ReksaSrcTrxProduct", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<SearchModel.TransaksiProduct> result = this.MapListOfObject<SearchModel.TransaksiProduct>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
+        public List<SearchModel.TransaksiProduct> ReksaSrcTransSwitchIn(string Col1, string Col2, int Validate, string ProdCode)
+        {
+            DataSet dsOut = new DataSet();
+            List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cProdCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = ProdCode, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcTransSwitchIn", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<SearchModel.TransaksiProduct> result = this.MapListOfObject<SearchModel.TransaksiProduct>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
+        public List<SearchModel.TransaksiProduct> ReksaSrcTransSwitchOut(string Col1, string Col2, int Validate)
+        {
+            DataSet dsOut = new DataSet();
+            List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcTransSwitchOut", ref dbParam, out dsOut))
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
@@ -2871,28 +2936,29 @@ namespace ReksaAPI
                 SqlCommand cmdOut = new SqlCommand();
                 if (this.ExecProc(QueryReksa(), "ReksaCalcFee", ref dbParam, out ds, out cmdOut, out ErrMsg))
                 {
-                    decimal Fee, PercentageFeeOutput, FeeBased, RedempUnit, RedempDev, TaxFeeBased, FeeBased3, FeeBased4, FeeBased5;
+                    double Fee, PercentageFeeOutput, FeeBased, RedempUnit, RedempDev, TaxFeeBased, FeeBased3, FeeBased4, FeeBased5;
                     int Period, IsRDB;
                     resultFee.FeeCCY = cmdOut.Parameters["@pcFeeCCY"].Value.ToString();
-                    decimal.TryParse(cmdOut.Parameters["@pnFee"].Value.ToString(), out Fee);
-                    resultFee.Fee = Fee;
-                    decimal.TryParse(cmdOut.Parameters["@pdPercentageFeeOutput"].Value.ToString(), out PercentageFeeOutput);
-                    resultFee.PercentageFeeOutput = PercentageFeeOutput;
-                    decimal.TryParse(cmdOut.Parameters["@pmFeeBased"].Value.ToString(), out FeeBased);
-                    resultFee.FeeBased = FeeBased;
-                    decimal.TryParse(cmdOut.Parameters["@pmRedempUnit"].Value.ToString(), out RedempUnit);
-                    resultFee.RedempUnit = RedempUnit;
-                    decimal.TryParse(cmdOut.Parameters["@pmRedempDev"].Value.ToString(), out RedempDev);
-                    resultFee.RedempDev = RedempDev;
+                    double.TryParse(cmdOut.Parameters["@pnFee"].Value.ToString(), out Fee);
+                    Fee = System.Math.Round(Fee, 2);
+                    resultFee.Fee = (decimal)Fee;
+                    double.TryParse(cmdOut.Parameters["@pdPercentageFeeOutput"].Value.ToString(), out PercentageFeeOutput);
+                    resultFee.PercentageFeeOutput = (decimal)PercentageFeeOutput;
+                    double.TryParse(cmdOut.Parameters["@pmFeeBased"].Value.ToString(), out FeeBased);
+                    resultFee.FeeBased = (decimal)FeeBased;
+                    double.TryParse(cmdOut.Parameters["@pmRedempUnit"].Value.ToString(), out RedempUnit);
+                    resultFee.RedempUnit = (decimal)RedempUnit;
+                    double.TryParse(cmdOut.Parameters["@pmRedempDev"].Value.ToString(), out RedempDev);
+                    resultFee.RedempDev = (decimal)RedempDev;
                     resultFee.ErrMsg = cmdOut.Parameters["@pmErrMsg"].Value.ToString();
-                    decimal.TryParse(cmdOut.Parameters["@pmTaxFeeBased"].Value.ToString(), out TaxFeeBased);
-                    resultFee.TaxFeeBased = TaxFeeBased;
-                    decimal.TryParse(cmdOut.Parameters["@pmFeeBased3"].Value.ToString(), out FeeBased3);
-                    resultFee.FeeBased3 = FeeBased3;
-                    decimal.TryParse(cmdOut.Parameters["@pmFeeBased4"].Value.ToString(), out FeeBased4);
-                    resultFee.FeeBased4 = FeeBased4;
-                    decimal.TryParse(cmdOut.Parameters["@pmFeeBased5"].Value.ToString(), out FeeBased5);
-                    resultFee.FeeBased5 = FeeBased5;
+                    double.TryParse(cmdOut.Parameters["@pmTaxFeeBased"].Value.ToString(), out TaxFeeBased);
+                    resultFee.TaxFeeBased = (decimal)TaxFeeBased;
+                    double.TryParse(cmdOut.Parameters["@pmFeeBased3"].Value.ToString(), out FeeBased3);
+                    resultFee.FeeBased3 = (decimal)FeeBased3;
+                    double.TryParse(cmdOut.Parameters["@pmFeeBased4"].Value.ToString(), out FeeBased4);
+                    resultFee.FeeBased4 = (decimal)FeeBased4;
+                    double.TryParse(cmdOut.Parameters["@pmFeeBased5"].Value.ToString(), out FeeBased5);
+                    resultFee.FeeBased5 = (decimal)FeeBased5;
                     int.TryParse(cmdOut.Parameters["@pnPeriod"].Value.ToString(), out Period);
                     resultFee.Period = Period;
                     int.TryParse(cmdOut.Parameters["@pnIsRDB"].Value.ToString(), out IsRDB);
@@ -3424,10 +3490,11 @@ namespace ReksaAPI
             return list;
         }
 
-        public List<FileModel.NFSFormatFile> ReksaNFSGetFormatFile(string strFileCode)
+        public bool ReksaNFSGetFormatFile(string strFileCode, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
-            List<FileModel.NFSFormatFile> list = new List<FileModel.NFSFormatFile>();
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -3439,23 +3506,22 @@ namespace ReksaAPI
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
-                        DataTable dtOut = dsOut.Tables[0];
-
-                        List<FileModel.NFSFormatFile> result = this.MapListOfObject<FileModel.NFSFormatFile>(dtOut);
-                        list.AddRange(result);
+                        blnResult = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return list;
+            return blnResult;
         }
 
-        public DataSet ReksaNFSGenerateFileUpload(string sFileCode, int iTranDate)
+        public bool ReksaNFSGenerateFileUpload(string sFileCode, int iTranDate, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -3468,15 +3534,15 @@ namespace ReksaAPI
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
-                      
+                        blnResult = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return dsOut;
+            return blnResult;
         }
 
         public DataSet ReksaNFSGenerateFileDownload(string sFileCode, string sFileName, string xmlData, string sUserID)
@@ -3509,10 +3575,11 @@ namespace ReksaAPI
             return dsOut;
         }
 
-        public string ReksaNFSInsertLogFile(string sFileCode, string sFileName, string strUserID,
-            int iTranDate, string sXMLDataGenerate, string sXMLRawData, bool bIsLog, bool bIsNeedAuth)
+        public bool ReksaNFSInsertLogFile(string sFileCode, string sFileName, string strUserID,
+            int iTranDate, string sXMLDataGenerate, string sXMLRawData, bool bIsLog, bool bIsNeedAuth, out string ErrMsg)
         {
-            string strErr = "";
+            bool blnResult = false;
+            ErrMsg = "";
             DataSet dsOut = new DataSet();
             try
             {
@@ -3528,21 +3595,14 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pbIsNeedAuth", SqlDbType = System.Data.SqlDbType.Bit,  Value = bIsNeedAuth, Direction = System.Data.ParameterDirection.Input}
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaNFSInsertLogFile", ref dbParam, out dsOut))
-                {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
-                    {
-
-                    }
-                }
+                blnResult = this.ExecProc(QueryReksa(), "ReksaNFSInsertLogFile", ref dbParam, out dsOut);                
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return strErr;
+            return blnResult;
         }
-
         #endregion
 
         #region "OTORISASI"
@@ -3573,8 +3633,32 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaAuthorizeNasabah(int intNasabahId, int intNIK, bool isApprove, out string strError)
+        {
+            DataSet dsOut = new DataSet();
+            bool blnResult = false;
+            strError = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cNik", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@bAccepted", SqlDbType = System.Data.SqlDbType.Bit, Value = isApprove, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nNasabahId", SqlDbType = System.Data.SqlDbType.Int, Value = intNasabahId, Direction = System.Data.ParameterDirection.Input }
+                };
 
-        
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaAuthorizeNasabah", ref dbParam, out dsOut, out cmdOut, out strError))
+                {
+                    blnResult = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                strError = ex.ToString();
+            }
+            return blnResult;
+        }
         public bool ReksaAuthorizeTransaction_BS(int intTranId, int intNIK, bool isApprove, out string strError)
         {
             DataSet dsOut = new DataSet();
@@ -3626,6 +3710,66 @@ namespace ReksaAPI
             catch (Exception ex)
             {
                 strError = ex.ToString();
+            }
+            return blnResult;
+        }
+        #endregion
+        #region "UTILITAS"
+        public bool ReksaPopulateProcess(int intNIK, string strGuid,
+           ref List<ProcessModel> listProcess, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNik", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.NVarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateProcess", ref dbParam, out dsOut))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<ProcessModel> Process = this.MapListOfObject<ProcessModel>(dtOut);
+
+                        listProcess.AddRange(Process);
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data Process tidak ditemukan";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
+        public bool SPProcess(string SPName, int ProcessId, int intNIK, string strGuid, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnProcessId", SqlDbType = System.Data.SqlDbType.Int, Value = ProcessId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.NVarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input }
+                };
+                blnResult = this.ExecProc(QueryReksa(), SPName, ref dbParam, out dsOut);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
             }
             return blnResult;
         }

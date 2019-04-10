@@ -50,6 +50,44 @@ namespace Reksa.Models
             public string NAV { get; set; }
             public string EffectiveAfter { get; set; }
         }
+        public class Subscription
+        {
+            public bool CheckB { get; set; }
+            public long BillId { get; set; }
+            public string BillName { get; set; }
+            public string DebitCredit { get; set; }
+            public DateTime CreateDate { get; set; }
+            public DateTime ValueDate { get; set; }
+            public string ProdCode { get; set; }
+            public string CustodyCode { get; set; }
+            public string BillCCY { get; set; }
+            public decimal TotalBill { get; set; }
+            public decimal Fee { get; set; }
+            public decimal FeeBased { get; set; }
+            public decimal TaxFeeBased { get; set; }
+            public decimal FeeBased3 { get; set; }
+            public decimal FeeBased4 { get; set; }
+            public decimal FeeBased5 { get; set; }
+        }
+        public class Redemption
+        {
+            public bool CheckB { get; set; }
+            public long BillId { get; set; }
+            public string BillName { get; set; }
+            public string DebitCredit { get; set; }
+            public DateTime CreateDate { get; set; }
+            public DateTime PaymentDate { get; set; }
+            public string ProdCode { get; set; }
+            public string CustodyCode { get; set; }
+            public string BillCCY { get; set; }
+            public decimal TotalBill { get; set; }
+            public decimal Fee { get; set; }
+            public decimal FeeBased { get; set; }
+            public decimal TaxFeeBased { get; set; }
+            public decimal FeeBased3 { get; set; }
+            public decimal FeeBased4 { get; set; }
+            public decimal FeeBased5 { get; set; }
+        }
         public class AuthParamGlobal
         {
             public bool CheckB { get; set; }
@@ -81,11 +119,19 @@ namespace Reksa.Models
             public string OfficeId { get; set; }
             public string NoSID { get; set; }
             public string ShareholderID { get; set; }
+            public string RiskProfile { get; set; }
+            public DateTime LastUpdateRiskProfile { get; set; }
+            public string TransaksiMelaluiTelepon { get; set; }
+            public string KaryawanOCBCNISP { get; set; }
             public string NoCIF { get; set; }
             public string NamaNasabah { get; set; }
             public string NoRekRelasiIDR { get; set; }
+            public string NamaRekRelasiIDR { get; set; }
             public string NoRekRelasiUSD { get; set; }
+            public string NamaRekRelasiUSD { get; set; }
             public string NoRekRelasiMulticurrency { get; set; }
+            public string NamaRekRelasiMulticurrency { get; set; }
+            public string AlamatKonfirmasi { get; set; }
             public string NIKWAPERD { get; set; }
             public string NamaWAPERD { get; set; }
             public string NIKSeller { get; set; }
@@ -93,6 +139,8 @@ namespace Reksa.Models
             public string NIKReferentor { get; set; }
             public string NamaReferentor { get; set; }
             public string UserInput { get; set; }
+            public DateTime TanggalInput { get; set; }
+            public string NasabahId { get; set; }
             public string UserName { get; set; }
             public string TranType { get; set; }
             public string NoCIFBigInt { get; set; }

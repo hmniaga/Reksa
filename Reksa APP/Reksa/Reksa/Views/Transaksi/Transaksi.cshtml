@@ -208,6 +208,24 @@ var strBranch;
          $("#ProductRDBModal .modal-content").load(target, function () {
              $("#ProductRDBModal .modal-content").empty().append(this);
     });
+        });
+
+        $("#srcProductSwcOut").click(function (ev) {
+         var strCriteria = _strTabName + "#" + $('#srcCIFSwc_text1').val();            
+        var url = '@Html.Raw(Url.Action("SearchTrxProductSwcOut", "Global"))';
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+         $("#ProductSwcOutModal .modal-content").load(target, function () {
+             $("#ProductSwcOutModal .modal-content").empty().append(this);
+    });
+        });
+
+        $("#srcProductSwcIn").click(function (ev) {
+            var strCriteria = $('#srcProductSwcOut_text1').val();            
+        var url = '@Html.Raw(Url.Action("SearchTrxProductSwcIn", "Global"))';
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+            $("#ProductSwcInModal .modal-content").load(target, function () {
+                $("#ProductSwcInModal .modal-content").empty().append(this);
+    });
     });
 
     $("#srcCIFSubs").click(function (ev) {
@@ -419,6 +437,16 @@ var strBranch;
             //}
         }
         GetDataCIF($("#srcCIFRDB_text1").val(), 'SUBSRDB');
+        });
+
+    $("#srcCIFSwc_text1").change(function () {
+        if (_intType == 1) {
+            //if (!CheckCIF($("#srcCIFSubs_text1").val())) {
+            //    subCancel();
+            //    return;
+            //}
+        }
+        GetDataCIF($("#srcCIFSwc_text1").val(), 'SWC');
     });
 
 
@@ -1090,6 +1118,7 @@ var strBranch;
                     } else if (TabName == "SUBSRDB") {
                         RefreshNasabahRDB(data);
                     } else if (TabName == "SWC") {
+                        RefreshNasabahSwc(data);
                     } else if (TabName == "SWCRDB")
                     {
                     }
@@ -1992,6 +2021,21 @@ var strBranch;
             $("#srcReferentorSwc_text2").val(output);
         });
     }
+
+    function RefreshNasabahSwc(data) {
+        $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
+        $("#txtUmurSwc").val(data.intUmur);
+        $("#textShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
+        $("#txtbRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
+        var dtpRiskProfileSwc = new Date(data.RiskProfileModel.LastUpdate);
+        $("#dtpRiskProfileSwc").val(dtpRiskProfileSwc.getDate() + '/' + (dtpRiskProfileSwc.getMonth() + 1) + '/' + dtpRiskProfileSwc.getFullYear());
+        $("#maskedRekeningSwc").val(data.CustomerIdentitas.AccountId);
+        $("#textNamaRekeningSwc").val(data.CustomerIdentitas.AccountName);
+        $("#maskedRekeningSwcUSD").val(data.CustomerIdentitas.AccountIdUSD);
+        $("#textNamaRekeningSwcUSD").val(data.CustomerIdentitas.AccountNameUSD);
+        $("#maskedRekeningSwcMC").val(data.CustomerIdentitas.AccountIdMC);
+        $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
+    } 
 
 function RefreshSwcRDB(data) {
     $("#textSIDSwcRDB").val(data.CustomerIdentitas.CIFSID);
@@ -3287,19 +3331,7 @@ function SetEnableOfficeId(strKodeKantor) {
         FullAmount, IsFeeEdit, PercentageFeeInput,
         Jenis, strCIFNo, FeeCurr, NominalFee, PctFee)
     {
-        var model = JSON.stringify({
-            'ProdId': ProdId,
-            'ClientId': ClientId,
-            'TranType': TranType,
-            'TranAmt': TranAmt,
-            'TranUnit': TranUnit,
-            'FullAmount': FullAmount,
-            'IsFeeEdit': IsFeeEdit,
-            'PercentageFeeInput': PercentageFeeInput,
-            'Jenis': Jenis,
-            'strCIFNo': strCIFNo
-        });
-        console.log(model);
+        
         $.ajax({
             type: 'GET',
             url: '/Transaksi/CalculateFee',
@@ -3314,7 +3346,6 @@ function SetEnableOfficeId(strKodeKantor) {
                     if (Jenis == 1) //hitung fee tanpa edit fee
                     {
                         var Fee = data.resultFee.Fee;
-                        Fee = Math.round(Fee * 100) / 100
                         NominalFee (Fee);
 
                         var PercentFee = data.resultFee.PercentageFeeOutput;
@@ -3333,7 +3364,6 @@ function SetEnableOfficeId(strKodeKantor) {
                     {
                         if (ByPercent == true) {
                             var newFee = data.resultFee.Fee;
-                            newFee = Math.round(newFee * 100) / 100;
                             PctFee (newFee);
                         }
                         else if (ByPercent == false) {

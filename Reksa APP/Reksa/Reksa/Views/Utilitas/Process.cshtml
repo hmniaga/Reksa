@@ -1,0 +1,161 @@
+﻿@model Reksa.ViewModels.UtilitasListViewModel
+@{
+    ViewData["Title"] = "Process";
+}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="m-t-0 header-title">
+                <a>Process</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+
+            <div class="card-box">
+                <!-- Begin Button -->
+                <div>
+                    <div class="input-group">
+                        <button id=btnProcess class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                            <span class="btn-label">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            Process
+                        </button>
+                    </div>
+                </div>
+                <!-- End Button -->
+            </div>
+
+            @(Html.Kendo().Grid(Model.listProcess)
+                .Name("dataGridView1")
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.CheckB).ClientTemplate("<input type='checkbox' onclick='onCheckBoxProcessClick(this)' value= '#= ProcessId #' " + "# if (CheckB) { #" + "checked='checked'" + "# } #" + "/>").ClientHeaderTemplate("<input type='checkbox' id='chkProcessSelectAll' onclick='checkProcessAll(this)'/>").Width(30).Title("Pilih").Sortable(false);
+                    columns.Bound(p => p.ProcessId).Width(150).Title("ProcessId");
+                    columns.Bound(p => p.SPName).Width(150).Title("SPName");
+                    columns.Bound(p => p.ProcessName).Width(150).Title("ProcessName");
+                    columns.Bound(p => p.ProcessStatus).Width(150).Title("ProcessStatus");
+                    columns.Bound(p => p.CutOffSystem).Width(150).Title("CutOffSystem");
+                })
+                .Pageable()
+                .Scrollable(s => s.Height(300))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+            )
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        subRefresh();
+    });
+    
+    $("#btnProcess").click(function () {
+        var grid = $("#dataGridView1").data("kendoGrid");
+        grid.refresh();
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+            if (dataItem.CheckB == true) {
+                subProcess(dataItem.SPName, dataItem.ProcessId, dataItem.ProcessName);
+            }
+        })
+    });
+
+    function subRefresh()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Utilitas/PopulateProcess',
+            success: function (data) {
+                if (data.blnResult)
+                {
+                    if (data.listProcess.length != 0) {
+                        var dataSource = new kendo.data.DataSource(
+                            {
+                                data: data.listProcess
+                            });
+                        var grid = $('#dataGridView1').data('kendoGrid');
+                        grid.setDataSource(dataSource);
+                        grid.dataSource.pageSize(5);
+                        grid.dataSource.page(1);
+                        grid.select("tr:eq(0)");
+
+                        grid.hideColumn('Pilih');
+                    } else {
+                        $("#dataGridView1").data('kendoGrid').dataSource.data([]);
+                    }
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+
+    function subProcess(SPName, ProcessId, ProcessName)
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/Utilitas/subProcess',
+            data: { SPName: SPName, ProcessId: ProcessId },
+            success: function (data) {
+                if (data.blnResult) {
+                    swal("Success", ProcessName + " Telah Dijalankan", "success");
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+        subRefresh();
+    }
+
+    function checkProcessAll(e) {
+        var state = $(e).is(':checked');
+        var grid = $('#dataGridView1').data('kendoGrid');
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] != state)
+                this.dirty = true;
+
+            this['CheckB'] = state;
+        });
+        grid.refresh();
+    }
+
+    function onCheckBoxProcessClick(e) {
+        var state = $(e).is(':checked');
+        var value = e.value;
+        var grid = $('#dataGridView1').data('kendoGrid');
+        grid.refresh();
+
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+
+            if (dataItem.ProcessId == value) {
+                dataItem.CheckB = state;
+            }
+        })
+
+        var chkAll = $('#chkProcessSelectAll').is(':checked');
+        var isCheckedAll = false;
+        var countTrue = 0;
+        var countFalse = 0;
+        var countAll = 0;
+
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] == true) {
+                countTrue = countTrue + 1;
+            }
+            else {
+                countFalse = countFalse + 1;
+                isCheckedAll = false;
+            }
+            countAll = countAll + 1;
+        });
+        if (countFalse == 0 || (countFalse == 1 && !state)) {
+            $('#chkProcessSelectAll').prop("checked", state);
+        }
+        grid.refresh();
+    } 
+</script>

@@ -99,14 +99,37 @@
                 type: 'GET',
                 url: '/Otorisasi/PopulateGridMain',
                 data: { treename: treename, strPopulate: strPopulate, SelectedId: SelectedId },
-                success: function (response) {
-                    if (treename == 'Transaksi') {
-                        $("#GridOtorisasiDetail").empty(); 
-                        populateGrid(response.MainTranksasi);
+                success: function (data) {
+                    console.log(data);
+                    if (data.blnResult) {
+                        if (treename == 'Transaksi') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainTranksasi);
+                        }
+                        else if (treename == 'Product') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainProduct);
+                        }
+                        else if (treename == 'Subscription') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainSubscription);
+                        }
+                        else if (treename == 'Redemption') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainRedemption);
+                        }
+                        else if (treename == 'Devident Payment') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainRedemption);
+                        }
+                        else if (treename == 'Maintenance Fee') {
+                            $("#GridOtorisasiDetail").empty();
+                            populateGrid(data.vModel.MainRedemption);
+                        }
                     }
-                    else if (treename == 'Product') {
-                        $("#GridOtorisasiDetail").empty(); 
-                        populateGrid(response.MainProduct);
+                    else
+                    {
+                        swal("Warning", data.ErrMsg, "warning");
                     }
                 }
             });

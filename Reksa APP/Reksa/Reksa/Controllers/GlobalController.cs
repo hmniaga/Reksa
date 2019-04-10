@@ -158,6 +158,18 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
             return View();
         }
+        public ActionResult SearchTrxProductSwcIn(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchTrxProductSwcOut(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
         public ActionResult SearchTrxProductRDB(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -191,6 +203,78 @@ namespace Reksa.Controllers
                 MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(contentType);
                 HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTrxProduct?Col1=" + search + "&Col2=&Validate=0&JenisTrx=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TransaksiProduct>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult SearchTransSwitchInData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<TransaksiProduct> list = new List<TransaksiProduct>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTransSwitchIn?Col1=" + search + "&Col2=&Validate=0&ProdCode=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TransaksiProduct>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult SearchTransSwitchOutData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<TransaksiProduct> list = new List<TransaksiProduct>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTransSwitchOut?Col1=" + search + "&Col2=&Validate=0").Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<TransaksiProduct>>(stringData);
             }

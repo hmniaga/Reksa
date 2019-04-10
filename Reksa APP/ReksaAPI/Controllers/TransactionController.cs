@@ -158,7 +158,7 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/Transaction/MaintainAllTransaksiNew")]
         [HttpGet("{id}")]
-        public JsonResult MaintainAllTransaksiNew([FromQuery]int NIK, [FromQuery]string GUID, [FromBody]TransactionModel.MaintainTransaksi model)
+        public JsonResult   MaintainAllTransaksiNew([FromQuery]int NIK, [FromQuery]string GUID, [FromBody]TransactionModel.MaintainTransaksi model)
         {
             bool blnResult = false;
             string ErrMsg = "";

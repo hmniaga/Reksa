@@ -226,12 +226,15 @@ namespace Reksa.Controllers
         public JsonResult GekExpRiskProfile(string CIFNo, string RiskProfile)
         {
             bool blnResult = false;
-            DateTime dtRiskProfile, dtExp;
+            DateTime dtRiskProfile, dtExp = new DateTime();
             DateTime.TryParse(RiskProfile, out dtRiskProfile);
-            string strEmail;
+            string strEmail = "";
             string ErrMsg = "";
-            blnResult = CekExpRiskProfile(CIFNo, dtRiskProfile, out strEmail, out dtExp, out ErrMsg);
 
+            if (RiskProfile != "")
+            {
+                blnResult = CekExpRiskProfile(CIFNo, dtRiskProfile, out strEmail, out dtExp, out ErrMsg);
+            }
             return Json(new { blnResult, ErrMsg, dtExp, strEmail });
         }
         public JsonResult SetDocStatus(string CIFNo)
@@ -651,6 +654,12 @@ namespace Reksa.Controllers
             ErrMsg = "";
             strEmail = "";
             dtExpiredRiskProfile = new DateTime();
+
+            if(dtRiskProfile == null)
+            {
+                return true;
+            }
+
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -668,7 +677,10 @@ namespace Reksa.Controllers
                     blnResult = Object.SelectToken("blnResult").Value<bool>();
                     ErrMsg = Object.SelectToken("errMsg").Value<string>();
                     strEmail = Object.SelectToken("strEmail").Value<string>();
-                    dtExpiredRiskProfile = Object.SelectToken("dtExpiredRiskProfile").Value<DateTime>();
+
+                    JToken TokenExpiredRiskProfile = Object["dtExpiredRiskProfile"];
+                    string strJsonExpiredRiskProfile = JsonConvert.SerializeObject(TokenExpiredRiskProfile);
+                    dtExpiredRiskProfile = JsonConvert.DeserializeObject<DateTime>(strJsonExpiredRiskProfile);
                 }
             }
             catch (Exception e)

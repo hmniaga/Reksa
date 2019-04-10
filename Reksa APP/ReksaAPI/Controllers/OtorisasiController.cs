@@ -55,7 +55,7 @@ namespace ReksaAPI.Controllers
                     if (treeid == "REKSA3")
                     {
                     }
-                    dsResult = cls.ReksaGlobalQuery(strCommand, listParam);
+                    cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMessage);
                 }
             }
             return Json(new { SuccessMessage, ErrMessage });
@@ -70,6 +70,27 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaPopulateVerifyAuthBS(Authorization, TypeTrx, Action, NoReferensi, NIK, out dsOut, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyAuthBS - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsOut });
+        }
+        [Route("api/Otorisasi/AuthorizeNasabah")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeNasabah([FromQuery]string listNasabahId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intNasabahId = 0;
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            string[] selectedNasabahId;
+            listNasabahId = (listNasabahId + "***").Replace("|***", "");
+            selectedNasabahId = listNasabahId.Split('|');
+
+            foreach (string s in selectedNasabahId)
+            {
+                int.TryParse(s, out intNasabahId);
+                blnResult = cls.ReksaAuthorizeNasabah(intNasabahId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeNasabah - Core .Net SqlClient Data Provider\n", "");
+            }
+
+            return Json(new { blnResult, ErrMsg });
         }
         [Route("api/Otorisasi/AuthorizeTransaction_BS")]
         [HttpPost("{id}")]
@@ -92,7 +113,5 @@ namespace ReksaAPI.Controllers
             
             return Json(new { blnResult, ErrMsg });
         }
-        
-
     }
 }

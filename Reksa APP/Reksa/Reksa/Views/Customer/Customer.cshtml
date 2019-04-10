@@ -9,126 +9,128 @@
     <div class="panel panel-default" id="contentCustomer">
         <div class="panel-heading">
             <h4 class="m-t-0 header-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Nasabah</a>
+                <a>Nasabah</a>
             </h4>
         </div>
         <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
             <div class="panel-body">
-                <!-- Begin Header -->
-                <div class="col-md-6">
-                    <!-- Begin Search Kantor -->
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Kode Kantor</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcOffice_text1" }).Enable(false)
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <!-- Begin Search Kantor -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Kantor</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcOffice_text1" }).Enable(false)
 
-                            <span class="input-group-btn">
-                                <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
+                                <span class="input-group-btn">
+                                    <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
+                                </span>
+
+                                @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcOffice_text2" }).Enable(false)
+                            </div>
+                        </div>
+                        <!-- End Search Kantor -->
+                        <!-- Begin Search CIF -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">No CIF</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @id = "srcCIF_text1", @class = "form-control input-sm", @required = "required" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.NasabahId).HtmlAttributes(new { @id = "idNasabah", @class = "form-control input-sm", @type = "hidden" })
+
+                                <span class="input-group-btn">
+                                    <a id="srcCIF" href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                </span>
+                                @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @id = "srcCIF_text2", @class = "form-control input-sm col-md-3", @required = "required", style = "width: 200%;" }).Enable(false)
+                            </div>
+                        </div>
+
+
+                        <!-- End Search CIF -->
+                    </div>
+                    <!-- Begin Button Refresh -->
+                    <div class="col-md-2">
+                        <button id=btnRefresh type="button" class="btn btn-default waves-effect waves-light">
+                            <span class="btn-label">
+                                <i class="fa fa-refresh"></i>
                             </span>
-
-                            @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcOffice_text2" }).Enable(false)
+                            Refresh
+                        </button>
+                    </div>
+                    <!-- End Button Refresh -->
+                    <!-- Begin Label Status -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"></label>
+                            <div class="input-group">
+                                <h1 id="lblStatus">@ViewData["Status"]</h1>
+                            </div>
                         </div>
                     </div>
-                    <!-- End Search Kantor -->
-                    <!-- Begin Search CIF -->
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">No CIF</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @id = "srcCIF_text1", @class = "form-control input-sm", @required = "required" }).Enable(false)
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.NasabahId).HtmlAttributes(new { @id = "idNasabah", @class = "form-control input-sm", @type = "hidden" })
-
-                            <span class="input-group-btn">
-                                <a id="srcCIF" href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
-                            </span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @id = "srcCIF_text2", @class = "form-control input-sm col-md-3", @required = "required", style = "width: 200%;" }).Enable(false)
-                        </div>
-                    </div>
-
-
-                    <!-- End Search CIF -->
+                    <!-- End Label Status -->
                 </div>
-                <!-- Begin Button Refresh -->
-                <div class="col-md-2">
-                    <button id=btnRefresh type="button" class="btn btn-default waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-refresh"></i>
-                        </span>
-                        Refresh
-                    </button>
-                </div>
-                <!-- End Button Refresh -->
-                <!-- Begin Label Status -->
-                <div class="col-md-4" style="padding-bottom: 30px">
-
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label"></label>
-                        <div class="input-group">
-                            <h1 id="lblStatus">@ViewData["Status"]</h1>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Label Status -->
                 <!-- Begin Jenis Nasabah -->
                 <div class="col-md-12">
-                    <div class="form-group">
+                    <div class="col-md-6" style="padding-top:80px">
                         <div class="input-group">
-                            <label class="col-sm-12 control-label">Jenis Nasabah</label>
-                            <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFTypeName).HtmlAttributes(new { @id = "CIFTypeName", @class = "form-control input-sm", style = "width: 500%" }).Enable(false)
-                            <span class="input-group-btn"></span>
-                            <label class="col-sm-12 control-label">Sub Segment</label>
-                            <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.SubSegment).HtmlAttributes(new { @id = "textSubSegment", @class = "form-control input-sm" }).Enable(false)
-                            <span class="input-group-btn"></span>
-                            <label class="col-sm-3 control-label">Segment</label>
-                            <span class="input-group-btn"></span>
-                            @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.Segment).HtmlAttributes(new { @id = "textSegment", @class = "form-control input-sm" }).Enable(false)
+                            <button id="buttonadd" type="button" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                New
+                            </button>
+
+                            <button id="buttonedit" type="button" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Edit
+                            </button>
+
+                            <button id="buttondelete" type="button" class="btn btn-danger waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                Delete
+                            </button>
+
+                            <button id="buttonsave" type="submit" style="display:none;" class="btn btn-warning waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-save"></i>
+                                </span>
+                                Save
+                            </button>
+                            <button id="buttonCancel" type="button" style="display:none;" class="btn btn-pink waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-remove"></i>
+                                </span>
+                                Cancel
+                            </button>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Jenis Nasabah</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.CIFTypeName).HtmlAttributes(new { @id = "CIFTypeName", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Sub Segment</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.SubSegment).HtmlAttributes(new { @id = "textSubSegment", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Segment</label>
+                            <div class="input-group">
+                                @Html.Kendo().TextBoxFor(model => model.CustomerIdentitas.Segment).HtmlAttributes(new { @id = "textSegment", @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 <!-- End Jenis Nasabah -->
-                <!-- End Header -->
-                <!-- Begin Buttons -->
-                <div class="col-md-12" style="padding-top:20px;">
-                    <div class="input-group">
-                        <button id="buttonadd" type="button" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                            New
-                        </button>
-
-                        <button id="buttonedit" type="button" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            Edit
-                        </button>
-
-                        <button id="buttondelete" type="button" class="btn btn-danger waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-trash"></i>
-                            </span>
-                            Delete
-                        </button>
-
-                        <button id="buttonsave" type="submit" style="display:none;" class="btn btn-warning waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-save"></i>
-                            </span>
-                            Save
-                        </button>
-                        <button id="buttonCancel" type="button" style="display:none;" class="btn btn-pink waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-remove"></i>
-                            </span>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-                <!-- End Buttons -->
-
-                <div class="col-md-12" style="margin-top:20px">
+                <div class="col-md-12">
                     <ul class="nav nav-tabs" style="background-color:#efefef">
                         <li class="active"><a data-toggle="tab" href="#tab-identitas" id="MCI">Identitas</a></li>
                         <li><a data-toggle="tab" href="#tab-aktifitas" id="MCA">Aktifitas</a></li>
@@ -138,7 +140,6 @@
 
                     <div class="tab-content">
                         <div id="tab-identitas" class="tab-pane fade in active">
-                            <h3>Identitas</h3>
                             <div class="row">
                                 <div class="col-md-12">
                                     @{
@@ -148,7 +149,6 @@
                             </div>
                         </div>
                         <div id="tab-aktifitas" class="tab-pane fade">
-                            <h3>Aktifitas</h3>
                             <div class="row">
                                 <div class="col-md-12">
                                     @{
@@ -158,7 +158,6 @@
                             </div>
                         </div>
                         <div id="tab-blokir" class="tab-pane fade">
-                            <h3>Blokir</h3>
                             <div class="row">
                                 <div class="col-md-12">
                                     @{
@@ -168,7 +167,6 @@
                             </div>
                         </div>
                         <div id="tab-npwp" class="tab-pane fade">
-                            <h3>NPwP</h3>
                             <div class="row">
                                 <div class="col-md-12">
                                     @{
@@ -197,25 +195,14 @@
             <div class="modal fade" id="ErrorSubsModal" tabindex="-1" role="dialog" aria-labelledby="ErrorSubsModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4>Daftar Error</h4>
-                        </div>
-                        <div class="modal-body">
-                            @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorList>()
-                                                                            .Name("GridError")
-                                                                            .Columns(columns =>
-                                                                            {
-                                                                                columns.Bound(m => m.fieldName).Width(200).Title("FieldName");
-                                                                                columns.Bound(m => m.description).Width(500).Title("Description");
-                                                                            })
-                                                                            .Pageable()
-                                                                            .Scrollable(s => s.Height(300))
-                                                                            .Selectable(selectable => selectable
-                                                                                .Mode(GridSelectionMode.Single))
-                            )
-                        </div>
-                        <div class="modal-footer">
+                        <div class="panel panel-color panel-warning">
+                            <div class="panel-heading">
+                                <button type="button" class="close m-t-5" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 class="m-t-0 header-title">Daftar Error</h3>
+                            </div>
+                        </div>  
+                        <div class="panel-body">
+                            @(Html.Kendo().Grid<Reksa.Models.TransactionModel.ErrorList>().Name("GridError").Columns(columns =>{columns.Bound(m => m.fieldName).Width(200).Title("FieldName");columns.Bound(m => m.description).Width(500).Title("Description");}).Pageable().Scrollable(s => s.Height(300)).Selectable(selectable => selectable.Mode(GridSelectionMode.Single)))
                             <button type="submit" id="btnOKErrorSubs" class="btn btn-info pull-left" data-dismiss="modal">
                                 <span class="glyphicon glyphicon-ok"></span> OK
                             </button>
@@ -326,7 +313,7 @@
                         document.getElementById("btnGenerateNoDokTanpaNPWP").disabled = true;
                     }
                     else {
-                        swal("Error", data.ErrMsg, "error");
+                        swal("Error GetNoNPWPCounter", data.ErrMsg, "error");
                     }
                 }
             });
@@ -647,10 +634,10 @@
                     swal("Warning", "Kode Kantor harus terisi!", "warning");
                     return;
                 }
-                if ($('#textShareHolderId').val() == "") {
-                    swal("Warning", "Shareholder ID harus terisi!", "warning");
-                    return;
-                }
+                //if ($('#textShareHolderId').val() == "") {
+                //    swal("Warning", "Shareholder ID harus terisi!", "warning");
+                //    return;
+                //}
                 if (($('#maskedRekening').val() != "") && ($('#maskedRekeningMC').val() != "")) {
                     swal("Warning", "Harap hanya mengisi salah satu, Rekening IDR atau Rekening Multicurrency saja!", "warning");
                     return;
@@ -729,12 +716,11 @@
                         closeOnCancel: false
                     },
                         function (isConfirm) {
-                            if (!isConfirm) {
-                                swal("Error", "Gagal Simpan Data", "error");
-                                return;
+                            if (isConfirm) {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
                             }
                             else {
-                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                                swal({ title: "Error", text: "Gagal Simpan Data", type: "error" });
                             }
                         });
                 }
@@ -750,12 +736,11 @@
                         closeOnConfirm: false
                     },
                         function (isConfirm) {
-                            if (!isConfirm) {
-                                swal("Error", "Gagal Simpan Data", "error");
-                                return;
+                            if (isConfirm) {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
                             }
                             else {
-                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                                swal({ title: "Error", text: "Gagal Simpan Data", type: "error" });
                             }
                         });
                 }
@@ -772,13 +757,12 @@
                         closeOnCancel: false
                     },
                         function (isConfirm) {
-                            if (!isConfirm) {
-                                swal("Error", "Gagal Simpan Data", "error");
-                                return;
+                            if (isConfirm) {
+                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
                             }
                             else
                             {
-                                swal("Confirmed", "Rekening milik pemegang reksadana", "success");
+                                swal({ title: "Error", text: "Gagal Simpan Data", type: "error" });
                             }
                         });
                 }
@@ -928,9 +912,7 @@
                 'SelectedId': SelectedId, 
                 'HeaderAddress': arrHeader
             });
-
-            console.log(model);
-
+            
             $.ajax({
                 type: "POST",
                 data: model,
@@ -958,7 +940,6 @@
                             },
                                 function (isConfirm) {
                                     if (isConfirm) {
-                                        console.log(data.dtError);
                                         var dataSource = new kendo.data.DataSource(
                                             {
                                                 data: data.dtError
@@ -1024,7 +1005,7 @@
                         subResetToolBar();
                     }
                     else {
-                        swal("Error", data.strErrMsg, "error");
+                        swal("Error MaintainBlokir", data.strErrMsg, "error");
                     }
                 }
             });
@@ -1514,7 +1495,7 @@
                 }
                 else
                 {
-                    swal("Error", data.strErrMsg, "error");
+                    swal("Error ValidateOfficeId", data.strErrMsg, "error");
                     result(false);
                 }
             }
@@ -1540,7 +1521,7 @@
                     }
                 }
                 else {
-                    swal("Error", data.strErrMsg, "error");
+                    swal("Error ValidasiCBOKodeKantor", data.strErrMsg, "error");
                     result(false);
                 }
             }
@@ -1585,7 +1566,7 @@
                     }
                 }
                 else {
-                    swal("Error", data.ErrMsg, "error");
+                    swal("Error SetDocStatus", data.ErrMsg, "error");
                 }
             }
         });
@@ -1657,7 +1638,7 @@
                     result(true);
                 }
                 else {
-                    swal("Error", data.ErrMsg, "error"); 
+                    swal("Error GetKonfAddress", data.ErrMsg, "error"); 
                     result(false);
                 }
             }
@@ -1710,7 +1691,7 @@
                     intMaxYear = data.intExpRiskProfileYear;
                 }
                 else {
-                    swal("Error", data.ErrMsg, "error");
+                    swal("Error GetRiskProfileParam", data.ErrMsg, "error");
                 }
             }
         });
@@ -1749,7 +1730,7 @@
                     }
                 }
                 else {
-                    swal("Error", data.ErrMsg, "error");
+                    swal("Error GetAccountRelationDetail", data.ErrMsg, "error");
                     result(false);
                 }
             }
@@ -1764,7 +1745,7 @@
             data: { strRiskProfile: $("#dtpRiskProfile").val(), strExpRiskProfile: $("#dtExpiredRiskProfile").val(), CIFNo: $("#srcCIF_text1").val() },
             success: function (data) {
                 if (data.blnResult == false) {
-                    swal("Error", data.ErrMsg, "error");
+                    swal("Error SaveExpRiskProfile", data.ErrMsg, "error");
                 }
             }
         });

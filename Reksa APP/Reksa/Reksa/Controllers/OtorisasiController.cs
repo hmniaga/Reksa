@@ -180,6 +180,29 @@ namespace Reksa.Controllers
             this.ViewBag.Tree = items;
             return View("AuthGeneral", vModel);
         }
+        public ActionResult Bill()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeBill");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
         public ActionResult ApproveReject(string listId, string treeid, bool isApprove)
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -249,35 +272,70 @@ namespace Reksa.Controllers
         }
         public JsonResult PopulateGridMain(string treename, string strPopulate, string SelectedId)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             var EncodedstrPopulate = System.Net.WebUtility.UrlEncode(strPopulate);
             List<OtorisasiModel.MainTranksasi> list = new List<OtorisasiModel.MainTranksasi>();
             List<OtorisasiModel.MainProduct> list1 = new List<OtorisasiModel.MainProduct>();
-
-            using (HttpClient client = new HttpClient())
+            List<OtorisasiModel.Subscription> listSubscription = new List<OtorisasiModel.Subscription>();
+            List<OtorisasiModel.Redemption> listRedemption = new List<OtorisasiModel.Redemption>();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Global/GlobalQuery?strPopulate=" + EncodedstrPopulate + "&SelectedId="+ SelectedId + "&NIK="+ _intNIK +"&GUID=" + _strGuid).Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                DataSet dsResult = JsonConvert.DeserializeObject<DataSet>(stringData);
-                _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
-                if (treename == "Transaksi")
+                using (HttpClient client = new HttpClient())
                 {
-                    List<OtorisasiModel.MainTranksasi> result = this.MapListOfObject<OtorisasiModel.MainTranksasi>(dsResult.Tables[0]);
-                    list.AddRange(result);
-                    vModel.MainTranksasi = list;
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GlobalQuery?strPopulate=" + EncodedstrPopulate + "&SelectedId=" + SelectedId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    DataSet dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    if (dsResult.Tables.Count > 0)
+                    {
+                        if (treename == "Transaksi")
+                        {
+                            List<OtorisasiModel.MainTranksasi> result = this.MapListOfObject<OtorisasiModel.MainTranksasi>(dsResult.Tables[0]);
+                            list.AddRange(result);
+                            vModel.MainTranksasi = list;
+                        }
+                        else if (treename == "Product")
+                        {
+                            List<OtorisasiModel.MainProduct> result = this.MapListOfObject<OtorisasiModel.MainProduct>(dsResult.Tables[0]);
+                            list1.AddRange(result);
+                            vModel.MainProduct = list1;
+                        }
+                        else if (treename == "Subscription")
+                        {
+                            List<OtorisasiModel.Subscription> result = this.MapListOfObject<OtorisasiModel.Subscription>(dsResult.Tables[0]);
+                            listSubscription.AddRange(result);
+                            vModel.MainSubscription = listSubscription;
+                        }
+                        else if (treename == "Redemption")
+                        {
+                            List<OtorisasiModel.Redemption> result = this.MapListOfObject<OtorisasiModel.Redemption>(dsResult.Tables[0]);
+                            listRedemption.AddRange(result);
+                            vModel.MainRedemption = listRedemption;
+                        }
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
                 }
-                else if (treename == "Product")
-                {
-                    List<OtorisasiModel.MainProduct> result = this.MapListOfObject<OtorisasiModel.MainProduct>(dsResult.Tables[0]);
-                    list1.AddRange(result);
-                    vModel.MainProduct = list1;
-                }
-                
             }
-            return Json(vModel);
+            catch(Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, vModel });
+            }
+            return Json(new { blnResult, ErrMsg, vModel });
         }
         public JsonResult PopulateVerifyAuthBS(string Authorization, string TypeTrx, string strAction, string NoReferensi)
         {
@@ -310,6 +368,31 @@ namespace Reksa.Controllers
                 //vModel.AuthTransaction = list;
             }
             return Json(new { blnResult, ErrMsg, list, list1 });
+        }
+        public ActionResult AuthorizeNasabah(string listNasabahId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeNasabah?listNasabahId=" + listNasabahId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
         }
         public ActionResult AuthorizeTransaction_BS(string listTranId, bool isApprove)
         {

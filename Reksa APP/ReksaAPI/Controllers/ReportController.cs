@@ -30,18 +30,23 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult NFSGetFormatFile([FromQuery]string FileCode)
         {
-            List<FileModel.NFSFormatFile> listFileType = new List<FileModel.NFSFormatFile>();
-            listFileType = cls.ReksaNFSGetFormatFile(FileCode);
-            return Json(new { listFileType });
+            bool blnResult = false;
+            string ErrMsg;
+            DataSet dsData = new DataSet();
+            blnResult = cls.ReksaNFSGetFormatFile(FileCode, out dsData, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSGetFormatFile - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsData });
         }
 
         [Route("api/Report/NFSGenerateFileUpload")]
         [HttpGet("{id}")]
         public JsonResult NFSGenerateFileUpload([FromQuery]string FileCode, [FromQuery]int TranDate)
         {
+            bool blnResult;
+            string ErrMsg;
             DataSet ds = new DataSet();
-            ds = cls.ReksaNFSGenerateFileUpload(FileCode, TranDate);
-            return Json(ds);
+            blnResult = cls.ReksaNFSGenerateFileUpload(FileCode, TranDate, out ds, out ErrMsg);
+            return Json( new { blnResult, ErrMsg, ds });
         }
 
         [Route("api/Report/NFSGenerateFileDownload")]
@@ -59,10 +64,11 @@ namespace ReksaAPI.Controllers
             [FromQuery]int TranDate, [FromQuery]string XMLDataGenerate, [FromQuery]string XMLRawData, [FromQuery]bool IsLog,
             [FromQuery]bool IsNeedAuth)
         {
-            string strError = "";
-            strError = cls.ReksaNFSInsertLogFile(FileCode, FileName, UserID, TranDate, XMLDataGenerate,
-                XMLRawData, IsLog, IsNeedAuth);
-            return Json(strError);
+            bool blnResult;
+            string ErrMsg = "";
+            blnResult = cls.ReksaNFSInsertLogFile(FileCode, FileName, UserID, TranDate, XMLDataGenerate,
+                XMLRawData, IsLog, IsNeedAuth, out ErrMsg);
+            return Json(new { blnResult, ErrMsg });
         }
 
        

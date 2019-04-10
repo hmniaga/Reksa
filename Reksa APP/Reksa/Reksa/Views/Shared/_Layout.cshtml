@@ -32,7 +32,7 @@
     @RenderSection("JavaScript", required: false)
 </head>
 
-<body class="fixed-left">
+<body class="fixed-left widescreen">
     <!-- Begin page -->
     <div id="wrapper">
         <!-- Top Bar Start -->
@@ -40,37 +40,30 @@
             <!-- LOGO -->
             <div class="topbar-left">
                 <div class="text-center">
-                    <a href="@Url.Action("Index", "Home")" class="logo"><i class="fa fa-home icon-c-logo"></i><span>Reksa<i class="ion-social-buffer"></i>Dana</span></a>
+                    <a href="@Url.Action("Index", "Home")" class="logo" style="font-size:small"><span>Reksa<i class="ion-social-buffer"></i>Dana</span></a>
                 </div>
             </div>
 
             <!-- Button mobile view to collapse sidebar menu -->
-            <div class="navbar navbar-default" role="navigation">
+            <div class="navbar navbar-default" role="navigation" style="font-size:small">
                 <div class="container">
                     <div class="">
-                        <!--ini toggle button sidebar <div class="pull-left">
-                            <button class="button-menu-mobile open-left waves-effect waves-light">
-                                <i class="md md-menu"></i>
-                            </button>
-                            <span class="clearfix"></span>
-                        </div>-->
-
                         <ul class="nav navbar-nav navbar-right pull-right">
+                            <!-- Begin Home -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="@Url.Action("Index", "Home")" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-home" style="color:#dadada"></i> Home
                                 </a>
                             </li>
-                            <!-- End of List Menu 2 -->
-                            <!-- List Menu 2 -->
+                            <!-- End Home -->
+                            <!-- Begin Master -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-users" style="color:#dadada"></i> Master
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Master</li>
-
-                                    <!-- Sub Menu 1 -->
+                                    <li class="notifi-title">Master</li>
+                                    <!-- Begin Nasabah -->
                                     <a href="@Url.Action("Customer", "Customer")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -79,12 +72,13 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Nasabah</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Nasabah</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 1-->
-                                    <!-- Sub Menu 2 -->
+                                    </a>
+                                    <!-- End Nasabah-->
+                                    <!-- Begin Info Produk -->
                                     <a href="@Url.Action("InfoProduk", "Master")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -93,12 +87,13 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Info Produk</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Info Produk</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 2-->
-                                    <!-- Sub Menu 3 -->
+                                    </a>
+                                    <!-- End Info Produk -->
+                                    <!-- Begin Unit Nasabah -->
                                     <a href="@Url.Action("UnitNasabah", "Master")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -107,12 +102,13 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Tawaran Unit Nasabah</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Tawaran Unit Nasabah</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 3-->
-                                    <!-- Sub Menu 3 -->
+                                    </a>
+                                    <!-- End Unit Nasabah -->
+                                    <!-- Begin Unit Ditawarkan -->
                                     <a href="@Url.Action("UnitDitawarkan", "Master")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -121,24 +117,38 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Tawaran Unit</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Tawaran Unit</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 3-->
-
+                                    </a>
+                                    <!-- End Unit Ditawarkan -->
+                                    <!-- Begin Event -->
+                                    <a href="@Url.Action("Event", "Master")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-tags noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Event</h5>
+                                                <p class="m-0">
+                                                    <small>Event</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Event -->
                                 </ul>
                             </li>
-                            <!-- End of List Menu 2 -->
-                            <!-- List Menu 3 -->
+                            <!-- End Master -->
+                            <!-- Begin Transaksi -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-exchange" style="color:#dadada"></i> Transaksi
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Transaksi</li>
-
-                                    <!-- Sub Menu 1 -->
+                                    <li class="notifi-title">Transaksi</li>
+                                    <!-- Begin Transaksi -->
                                     <a href="@Url.Action("Transaksi", "Transaksi")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -151,8 +161,9 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 1-->
-                                    <!-- Sub Menu 2 -->
+                                    </a>
+                                    <!-- End Transaksi -->
+                                    <!-- Begin Tunggakan -->
                                     <a href="@Url.Action("Tunggakan", "Transaksi")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -165,34 +176,19 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 2-->
-
+                                    </a>
+                                    <!-- End Tunggakan -->
                                 </ul>
                             </li>
-                            <!-- End of List Menu 3 -->
-                            <!-- List Menu 4 -->
+                            <!-- End Transaksi -->
+                            <!-- Begin Reporting -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-file" style="color:#dadada"></i> Reporting
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Generate Report</li>
-
-                                    <!-- Sub Menu 1 -->
-                                    <a href="@Url.Action("NFSUpload", "Report")" class="list-group-item">
-                                        <div class="media">
-                                            <div class="pull-left p-r-10">
-                                                <em class="fa fa-download noti-custom" style="border-radius:99px; padding:5px"></em>
-                                            </div>
-                                            <div class="media-body">
-                                                <h5 class="media-heading">NFS Upload - Download File</h5>
-                                                <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a><!-- end Sub menu 1-->
-                                    <!-- Sub Menu 1 -->
+                                    <li class="notifi-title">Generate Report</li>
+                                    <!-- Begin Report KYC -->
                                     <a href="@Url.Action("ReportKYC", "Report")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -201,22 +197,37 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Generate Report KYC</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Generate Report KYC</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 1-->
-
+                                    </a>
+                                    <!-- End Report KYC-->
+                                    <!-- Begin NFS Upload -->
+                                    <a href="@Url.Action("NFSUpload", "Report")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-download noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">NFS Upload - Download File</h5>
+                                                <p class="m-0">
+                                                    <small>Upload dan Download File NFS </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End NFS Upload-->
                                 </ul>
                             </li>
-                            <!-- End of List Menu 4 -->
-                            <!-- List Menu 5 -->
+                            <!-- End Reporting -->
+                            <!-- Begin Transaksi TT -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-globe" style="color:#dadada"></i> Transaksi TT
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Telegraphic Transfer</li>
+                                    <li class="notifi-title">Telegraphic Transfer</li>
 
                                     <!-- Sub Menu 1 -->
                                     <a href="@Url.Action("ParameterTT", "Transaksi")" class="list-group-item">
@@ -227,7 +238,7 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Parameter TT Completion</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Parameter TT Completion</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -241,7 +252,7 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Outgoing TT</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Outgoing TT</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -253,9 +264,9 @@
                                                 <em class="fa fa-check-square noti-custom" style="border-radius:99px; padding:5px"></em>
                                             </div>
                                             <div class="media-body">
-                                                <h5 class="media-heading">Otorize Outgoing TT</h5>
+                                                <h5 class="media-heading">Otorisai Outgoing TT</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Otorisai Outgoing TT</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -263,16 +274,15 @@
 
                                 </ul>
                             </li>
-                            <!-- End of List Menu 5 -->
-                            <!-- List Menu 6 -->
+                            <!-- End Transaksi TT -->
+                            <!-- Begin Otorisasi -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-check-circle-o" style="color:#dadada"></i> Otorisasi
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Otorisasi</li>
-
-                                    <!-- Transaksi -->
+                                    <li class="notifi-title">Otorisasi</li>
+                                    <!-- Begin Otorisasi Transaksi -->
                                     <a href="@Url.Action("Transaksi", "Otorisasi")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -281,12 +291,58 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Otorisasi Transaksi</h5>
                                                 <p class="m-0">
-                                                    <small><small>Otorisasi transaksi reksadana</small></small>
+                                                    <small>Otorisasi Transaksi Reksadana</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 2-->
-                                    <!-- Sub Menu 2 -->
+                                    </a>
+                                    <!-- End Otorisasi Transaksi-->
+                                    <!-- Begin Otorisasi WM -->
+                                    <a href="@Url.Action("WM", "Otorisasi")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-signal noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Otorisasi Wealth Management</h5>
+                                                <p class="m-0">
+                                                    <small>Otorisasi Wealth Management</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Otorisasi WM -->
+                                    <!-- Begin Otorisasi Bill -->
+                                    <a href="@Url.Action("Bill", "Otorisasi")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-signal noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Bill</h5>
+                                                <p class="m-0">
+                                                    <small>Otorisasi Bill</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Otorisasi Bill -->
+                                    <!-- Begin Otorisai NFS -->
+                                    <a href="@Url.Action("NFS", "Otorisasi")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-upload noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Otorisasi NFS Generate Upload</h5>
+                                                <p class="m-0">
+                                                    <small>Otorisasi NFS Generate Upload</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Otorisai NFS -->
+                                    <!-- Begin Otorisasi Parameter -->
                                     <a href="@Url.Action("ParameterReksadana", "Otorisasi")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -299,35 +355,8 @@
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 2-->
-                                    <!-- Sub Menu 3 -->
-                                    <a href="@Url.Action("WM", "Otorisasi")" class="list-group-item">
-                                        <div class="media">
-                                            <div class="pull-left p-r-10">
-                                                <em class="fa fa-signal noti-custom" style="border-radius:99px; padding:5px"></em>
-                                            </div>
-                                            <div class="media-body">
-                                                <h5 class="media-heading">Otorisasi Wealth Management</h5>
-                                                <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a><!-- end Sub menu 3-->
-                                    <!-- Sub Menu 4 -->
-                                    <a href="@Url.Action("NFS", "Otorisasi")" class="list-group-item">
-                                        <div class="media">
-                                            <div class="pull-left p-r-10">
-                                                <em class="fa fa-upload noti-custom" style="border-radius:99px; padding:5px"></em>
-                                            </div>
-                                            <div class="media-body">
-                                                <h5 class="media-heading">Otorisasi NFS Generate Upload</h5>
-                                                <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a><!-- end Sub menu 4-->
+                                    </a>
+                                    <!-- End Otorisasi Parameter-->
                                     <!-- Sub Menu 1 -->
                                     <a href="@Url.Action("ParameterFee", "Otorisasi")" class="list-group-item">
                                         <div class="media">
@@ -345,16 +374,70 @@
 
                                 </ul>
                             </li>
-                            <!-- End of List Menu 6 -->
-                            <!-- List Menu 7 -->
+                            <!-- End Otorisasi -->
+                            <!-- Begin Utilitas -->
+                            <li class="dropdown top-menu-item-xs">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="fa fa-wrench" style="color:#dadada"></i> Utilitas
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
+                                    <li class="notifi-title">Utilitas</li>
+                                    <!-- Begin Process -->
+                                    <a href="@Url.Action("Process", "Utilitas")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-check noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Process</h5>
+                                                <p class="m-0">
+                                                    <small>Process</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Process-->
+                                    <!-- Begin Import File -->
+                                    <a href="@Url.Action("ImportFile", "Utilitas")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-signal noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Import File</h5>
+                                                <p class="m-0">
+                                                    <small>Import File</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Import File -->
+                                    <!-- Begin Sinkronisasi Outstanding -->
+                                    <a href="@Url.Action("SinkronisasiOutstanding", "Utilitas")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-signal noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Sinkronisasi Outstanding</h5>
+                                                <p class="m-0">
+                                                    <small>Sinkronisasi Outstanding</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Sinkronisasi Outstanding -->
+                                </ul>
+                            </li>
+                            <!-- End Utilitas -->
+                            <!-- Begin PO -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-ticket" style="color:#dadada"></i> PO
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>Purchase Order</li>
-
-                                    <!-- Sub Menu 1 -->
+                                    <li class="notifi-title">Purchase Order</li>
+                                    <!-- Begin Cut Maintenance Fee -->
                                     <a href="@Url.Action("CutMaintenanceFee", "PO")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -363,12 +446,13 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Cut Maintain Fee</h5>
                                                 <p class="m-0">
-                                                    <small>Otorisasi parameter dalam Fee</small>
+                                                    <small>Cut Maintain Fee</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 1-->
-                                    <!-- Sub Menu 2 -->
+                                    </a>
+                                    <!-- End Cut MaintenanceFee-->
+                                    <!-- Begin Cut Redemption Fee -->
                                     <a href="@Url.Action("CutRedemptionFee", "PO")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -377,12 +461,13 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Cut Redemption Fee</h5>
                                                 <p class="m-0">
-                                                    <small><small>Otorisasi parameter dalam Reksadana</small></small>
+                                                    <small>Cut Redemption Fee</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 2-->
-                                    <!-- Sub Menu 3 -->
+                                    </a>
+                                    <!-- End Cut Redemption Fee -->
+                                    <!-- Begin Discount Redemp Fee -->
                                     <a href="@Url.Action("DiscountRedempFee", "PO")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
@@ -391,13 +476,14 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Discount Redemption Fee</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Discount Redemption Fee</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 3-->
-                                    <!-- Sub Menu 4 -->
-                                    <a href="@Url.Action("AdjustRedempFee", "PO")" class="list-group-item">
+                                    </a>
+                                    <!-- End Discount Redemp Fee -->
+                                    <!-- Begin Adjust Redemp Date -->
+                                    <a href="@Url.Action("AdjustRedempDate", "PO")" class="list-group-item">
                                         <div class="media">
                                             <div class="pull-left p-r-10">
                                                 <em class="fa fa-calendar noti-custom" style="border-radius:99px; padding:5px"></em>
@@ -405,22 +491,53 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Adjust Redemption Date</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Adjust Redemption Date</small>
                                                 </p>
                                             </div>
                                         </div>
-                                    </a><!-- end Sub menu 4-->
+                                    </a>
+                                    <!-- End Adjust Redemp Date -->
+                                    <!-- Begin Batalkan Transaksi -->
+                                    <a href="@Url.Action("BatalkanTransaksi", "PO")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-calendar noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Batalkan Transaksi</h5>
+                                                <p class="m-0">
+                                                    <small>Batalkan Transaksi</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Batalkan Transaksi -->
+                                    <!-- Begin Adjustment NAV Date -->
+                                    <a href="@Url.Action("AdjustmentNAVDate", "PO")" class="list-group-item">
+                                        <div class="media">
+                                            <div class="pull-left p-r-10">
+                                                <em class="fa fa-calendar noti-custom" style="border-radius:99px; padding:5px"></em>
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">Adjustment NAV Date</h5>
+                                                <p class="m-0">
+                                                    <small>Adjustment NAV Date</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <!-- End Adjustment NAV Date -->
 
                                 </ul>
                             </li>
-                            <!-- End of List Menu 7 -->
-                            <!-- List Menu 8 -->
+                            <!-- End PO -->
+                            <!-- Begin Settings -->
                             <li class="dropdown top-menu-item-xs">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fa fa-cog" style="color:#dadada"></i> Settings
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg" aria-labelledby="navbarDropdown">
-                                    <li class="notifi-title"><span class="label label-success pull-right">New 2</span>ALL SETTINGS</li>
+                                    <li class="notifi-title">ALL SETTINGS</li>
 
                                     <!-- Sub Menu 1 -->
                                     <a href="@Url.Action("Index", "Parameter")" class="list-group-item">
@@ -487,7 +604,7 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Parameter Maintenance Fee</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Parameter Maintenance Fee</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -501,7 +618,7 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Parameter UpFront &amp; Selling Fee</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Parameter UpFront &amp; Selling Fee</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -515,7 +632,7 @@
                                             <div class="media-body">
                                                 <h5 class="media-heading">Parameter Switching Fee</h5>
                                                 <p class="m-0">
-                                                    <small>There are <span class="text-primary font-600">2</span> new updates available</small>
+                                                    <small>Parameter Switching Fee</small>
                                                 </p>
                                             </div>
                                         </div>
@@ -523,8 +640,7 @@
 
                                 </ul>
                             </li>
-                            <!-- End of List Menu 8 -->
-
+                            <!-- End Settings -->
                             <li class="dropdown top-menu-item-xs">
                                 <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
                                     <i class="icon-bell" style="color:yellow"></i> <span class="badge badge-xs badge-danger">2</span>
@@ -532,29 +648,6 @@
                                 <ul class="dropdown-menu dropdown-menu-lg">
                                     <li class="notifi-title"><span class="label label-default pull-right">New 2</span>Notification</li>
                                     <li class="list-group slimscroll-noti notification-list">
-
-                                        <!-- Start Menu Top-->
-                                        <!--<div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                            <ul class="navbar-nav mr-auto">
-                                                <li class="nav-item dropdown">
-                                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Dropdown
-                                                    </a>
-                                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                            <form class="form-inline my-2 my-lg-0">
-                                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                                            </form>
-                                        </div>-->
-                                        <!-- End Menu Top-->
-                                        <!-- list item-->
                                         <a href="javascript:void(0);" class="list-group-item">
                                             <div class="media">
                                                 <div class="pull-left p-r-10">
@@ -592,13 +685,9 @@
                                     </li>
                                 </ul>
                             </li>
-
-
-
                             <li class="hidden-xs">
                                 <a href="#" id="btn-fullscreen" class="waves-effect waves-light"><i class="icon-size-fullscreen" style="color:yellow"></i></a>
                             </li>
-
                             <li class="dropdown top-menu-item-xs">
                                 <a href="" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-user" style="color:yellow"></i></a>
                                 <ul class="dropdown-menu">
@@ -616,119 +705,15 @@
             </div>
         </div>
         <!-- Top Bar End -->
-        <!--
-        <div class="left side-menu">
-            <div class="sidebar-inner slimscrollleft">
-                <div id="sidebar-menu">
-                    <ul>
-                        <li class="text-muted menu-title">Reksa - Menu</li>
-
-                        <li class="has_sub">
-                            <a href="@Url.Action("Index", "Home")" class="waves-effect"><i class="fa fa-home"></i> <span> Home </span></a>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-cog"></i> <span> Setup </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("Index", "Parameter")">Parameter</a></li>
-                                <li><a href="@Url.Action("Global", "Parameter")">Parameter Global</a></li>
-                                <li><a href="@Url.Action("SubscriptionFee", "Parameter")">Parameter Subscription Fee</a></li>
-                                <li><a href="@Url.Action("RedemptionFee", "Parameter")">Parameter Redemption Fee</a></li>
-                                <li><a href="@Url.Action("MaintenanceFee", "Parameter")">Parameter Maintenance Fee</a></li>
-                                <li><a href="@Url.Action("UpFrontSellingFee", "Parameter")">Parameter Up Front & Selling Fee</a></li>
-                                <li><a href="@Url.Action("SwitchingFee", "Parameter")">Parameter Switching Fee</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-large"></i> <span> Master </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                @*<li><a href="@Url.Action("Client", "Master")">Client</a></li>*@
-                                <li><a href="@Url.Action("Customer", "Customer")">Nasabah</a></li>
-                                <li><a href="@Url.Action("InfoProduk", "Master")">Info Produk</a></li>
-                                <li><a href="@Url.Action("UnitNasabah", "Master")">Unit Nasabah Ditawarkan</a></li>
-                                <li><a href="@Url.Action("UnitDitawarkan", "Master")">Unit Ditawarkan</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-usd"></i> <span> Transaksi </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("Transaksi", "Transaksi")">Transaksi Reksadana</a></li>
-                                <li><a href="@Url.Action("Tunggakan", "Transaksi")">Tunggakan</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-file"></i> <span> Generate Report </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("NFSUpload", "Report")">NFS Upload/Download File</a></li>
-                                <li><a href="@Url.Action("ReportKYC", "Report")">Generate Report KYC</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-briefcase"></i> <span> Transaksi TT </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("ParameterTT", "Transaksi")">Parameter TT Completion</a></li>
-                                <li><a href="@Url.Action("OutgoingTT", "Transaksi")">Outgoing TT</a></li>
-                                <li><a href="@Url.Action("OtorOutgoingTT", "Transaksi")">Otorisasi Outgoing TT</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bank"></i> <span> PO </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("CutMaintenanceFee", "PO")">Cut Maintenance Fee</a></li>
-                                <li><a href="@Url.Action("CutRedemptionFee", "PO")">Cut Redemption Fee</a></li>
-                                <li><a href="@Url.Action("DiscountRedempFee", "PO")">Discount Redemption Fee</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Adjust Redemption Date</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Batalkan Transaksi</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Batalkan Transaksi IB MB</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Adjustment NAV Date</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Sinkronisasi OS Unit/Transaksi</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Sinkronisasi NAV/Deviden</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Subscription Limit Alert</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Jurnal RTGS</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Jurnal SKN</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Reject Booking & Cancel Transaction</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Override Maintenance Fee</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Recalculate Maintenance Fee</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Revisi Pencadangan Fee</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Cut Selling Fee</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Maintain Transaksi Reksadana Berjangka</a></li>
-                                <li><a href="@Url.Action("AdjustRedempFee", "PO")">Cut Off Premi Asuransi</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_sub">
-                            <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-search"></i> <span> Otorisasi </span> <span class="menu-arrow"></span> </a>
-                            <ul class="list-unstyled">
-                                <li><a href="@Url.Action("ParameterReksadana", "Otorisasi")">Otorisasi Parameter Reksadana</a></li>
-                                <li><a href="@Url.Action("WM", "Otorisasi")">Otorisasi WM</a></li>
-                                <li><a href="@Url.Action("WM", "Otorisasi")">Bill</a></li>
-                                <li><a href="@Url.Action("Transaksi", "Otorisasi")">Otorisasi Transaksi</a></li>
-                                <li><a href="@Url.Action("NFS", "Otorisasi")">Otorisasi NFS Generate Upload</a></li>
-                                <li><a href="@Url.Action("ParameterFee", "Otorisasi")">Otorisasi Parameter Fee</a></li>
-                            </ul>
-                        </li>
-
-                    </ul>
-                    <div class="clearfix"></div>
+        <div class="content-page" style="margin-left:0px">
+            <!-- Start content -->
+            <div class="content">
+                <div class="container">
+                    @RenderBody()
                 </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>-->
-    </div>
-    <div class="content-page" style="margin-left:0px">
-        <!-- Start content -->
-        <div class="content">
-            <div class="container">
-                @RenderBody()
             </div>
         </div>
     </div>
-
     <!-- jQuery  -->
     @*<script src="~/lib/assets/js/jquery.min.js"></script>*@
     <script src="~/lib/assets/js/bootstrap.min.js"></script>
@@ -752,6 +737,9 @@
     <!-- Sweet Alert-->
     <script src="~/lib/assets/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
     <script src="~/lib/assets/pages/jquery.sweet-alert.init.js"></script>
+
+    <!-- xlsx -->
+    <script src="~/js/xlsx.full.min.js"></script>
 
     <script src="~/lib/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
     <script src="~/lib/assets/plugins/autoNumeric/autoNumeric.js" type="text/javascript"></script>

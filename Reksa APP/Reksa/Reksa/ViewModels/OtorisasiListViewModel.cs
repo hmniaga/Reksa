@@ -13,6 +13,8 @@ namespace Reksa.ViewModels
         public List<OtorisasiModel.Detail> Detail{ get; set; }
         public List<OtorisasiModel.MainTranksasi> MainTranksasi { get; set; }
         public List<OtorisasiModel.MainProduct> MainProduct { get; set; }
+        public List<OtorisasiModel.Subscription> MainSubscription { get; set; }
+        public List<OtorisasiModel.Redemption> MainRedemption { get; set; }
         public List<OtorisasiModel.AuthTransaction> AuthTransaction { get; set; }
         
     }
