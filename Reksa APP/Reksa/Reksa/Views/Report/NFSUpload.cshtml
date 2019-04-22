@@ -41,11 +41,11 @@
                 <div class="form-group">
                     <label id ="labelFileName" class="col-sm-3 control-label">File Name</label>
                     <div id="txtFilePath" style="">
-                        <input id="filename" type="file" class="filestyle" data-iconname="fa fa-cloud-upload">
+                        <input id="filename" type="file" accept=".csv, .txt" class="filestyle" data-iconname="fa fa-cloud-upload">
                     </div>
                     
                     <div id="dateTrx" style="">
-                        @(Html.Kendo().DatePicker().Name("dtTranDate").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }))
+                        @(Html.Kendo().DatePicker().Name("dtTranDate").Format("dd/MM/yyyy").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 130px;" }))
                     </div>
                 </div>
                 <!-- End Input File Name -->
@@ -58,25 +58,138 @@
                         </span>
                         Generate
                     </button>
-                    <button id=btnView onclick="ExportToTable()" type="button" class="btn btn-default waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-search"></i>
-                        </span>
-                        View
-                    </button>
                 </div>
                 <!-- End Button Generate -->
             </div>
             <div class="col-md-12">
-                <table id="exceltable"></table>
+                <table id="dgvData"></table>
             </div>
         </div>
     </div>
 </div>
 <script>
+var X = XLSX;
+var process_wb = (function() {
+    var to_json = function to_json(workbook) {
+        var data = [];
+        workbook.SheetNames.forEach(function(y) {
+            var worksheet = workbook.Sheets[y];
+            var headers = {};
+            for (z in worksheet) {
+                if (z[0] === '!') continue;
+                //parse out the column, row, and value
+                var tt = 0;
+                for (var i = 0; i < z.length; i++) {
+                    if (!isNaN(z[i])) {
+                        tt = i;
+                        break;
+                    }
+                };
+                var col = z.substring(0, tt);
+                var row = parseInt(z.substring(tt));
+                var value = worksheet[z].v;
+
+                //store header names
+                if (row == 1 && value) {
+                    headers[col] = value;
+                    continue;
+                }
+
+                if (!data[row]) data[row] = {};
+                data[row][headers[col]] = value;
+            }
+            //drop those first two rows which are empty
+            data.shift();
+            data.shift();
+            //console.log(data);
+    });
+    return data;
+};
+    return function process_wb(wb) {
+        var result = to_json(wb);
+        if (result.length == 0) {
+            swal("Warning", "No Data Result!!", "warning");
+            $("#dgvData").empty();            
+        }
+        else
+        {
+            populateGrid(result);
+        }
+    };
+})();
+
+
+var do_file = (function() {
+    return function do_file(files) {
+        var f = files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {            
+            var data = e.target.result;
+            data = new Uint8Array(data);
+            process_wb(X.read(data, {type: 'array'}));
+    };
+     reader.readAsArrayBuffer(f);
+};
+})();
+
+
+    (function () {
+    var xlf = document.getElementById('filename');
+        if(!xlf.addEventListener) return;
+    function handleFile(e) {do_file(e.target.files); }
+        xlf.addEventListener('change', handleFile, false);
+    })();
+
+    // add the grid options here 
+    function populateGrid(response) {
+        var columns = generateColumns(response);
+        var gridOptions = {
+            dataSource: {
+                transport: {
+                    read: function (options) {
+                        options.success(response);
+                    }
+                },
+                pageSize: 10,
+                page: 1
+            },
+            columns: columns,
+            pageable: true,
+            selectable: true,
+            height: 400
+        };
+        // reuse the same grid, swapping its options as needed
+        var grid = $("#dgvData").data("kendoGrid");
+        if (grid) {
+            grid.setOptions(gridOptions);
+            grid.select("tr:eq(0)");
+        } else {
+            $("#dgvData").kendoGrid(gridOptions);
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            return {
+                field: name,
+                width: 200,
+                title: name
+            };
+        })
+    }
+
+</script>
+
+<script>
     var Type;
     var Code;
-
+    $(document).ready(function () {
+        var gridOptions = {
+            height: 400
+        };
+        $("#dgvData").kendoGrid(gridOptions);
+    });
 
     $("#btnGenerate").click(function ()
     {
@@ -94,13 +207,15 @@
     function GenerateFileUpload(sFileCode, iTranDate)
     {
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '/Report/NFSGenerateFileUpload',
             data: { FileCode: sFileCode, TranDate: iTranDate },
             success: function (data) {
-                if (data.blnResult == true) {
-                    swal("Success", data.ErrMsg, "success");
-                } else
+                if (data.blnResult) {
+                    window.location = '/Report/Download?fileGuid=' + data.FileGuid
+                        + '&filename=' + data.FileName;
+                }
+                else
                 {
                     swal("Warning", data.ErrMsg, "warning");
                 }
@@ -110,59 +225,44 @@
 
     function SubSave()
     {
-
-    }
-
-    $("#filename").change(function () {
-        var url;
-        renderImage(this.files[0]);
-        subOpenCsvFile(url);
-    });
-
-    function renderImage(file)
-    {
-        // generate a new FileReader object
-        var reader = new FileReader();
-
-        // inject an image with the src url
-        reader.onload = function (event) {
-            the_url = event.target.result
-            console.log(the_url);
-        }       
-    }
-
-    function subOpenCsvFile(url)
-    {
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", url, true);
-        oReq.responseType = "arraybuffer";
-
-        oReq.onload = function (e) {
-            var arraybuffer = oReq.response;
-
-            /* convert data to binary string */
-            var data = new Uint8Array(arraybuffer);
-            var arr = new Array();
-            for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
-            var bstr = arr.join("");
-
-            /* Call XLSX */
-            var workbook = XLSX.read(bstr, {
-                type: "binary"
-            });
-
-            /* DO SOMETHING WITH workbook HERE */
-            var first_sheet_name = workbook.SheetNames[0];
-            /* Get worksheet */
-            var worksheet = workbook.Sheets[first_sheet_name];
-            console.log(XLSX.utils.sheet_to_json(worksheet, {
-                raw: true
-            }));
+        var grid = $("#dgvData").data("kendoGrid");
+        grid.refresh();
+        var dataItem = grid.dataSource.view();
+        if (dataItem.length == 0) {
+            swal("Warning", "Data tidak boleh kosong!", "warning");
+            return;
         }
+        
+        var sFileCode = $("#cmbFileType").data('kendoDropDownList').value();
+        var sFileName = document.getElementById('filename');
+        var arr;
+        arr = grid.dataSource.view();
+        var model = JSON.stringify({
+            'FileCode': sFileCode,
+            'FileName': sFileName.files[0].name,
+            'listKYC': arr,
+        });
+        
+        $.ajax({
+            type: 'POST',
+            url: '/Report/NFSGenerateFileDownload',
+            data: model,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.blnResult == true) {
+                    swal("Success", data.ErrMsg, "success");
+                } else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
 
-        oReq.send();
     }
 
+
+
+    
     function onChangeFileType(e)
     {
         var dropdownlist = $("#cmbFileType").data("kendoDropDownList");
@@ -186,14 +286,16 @@
         Type = dropdownlist.text();
         if (Type == "UPLOAD")
         {
-            $("#btnGenerate").text("Generate"); 
+            $("#btnGenerate").attr('class', 'btn btn-default waves-effect waves-light');
+            $("#btnGenerate").html('<span class="btn-label"><i class= "fa fa-cog"></i></span >Generate');
             $("#labelFileName").text("Transaction Date");
             $('#txtFilePath').attr('style', 'display:none;');
             $('#dateTrx').attr('style', '');
         }
         else
         {
-            $("#btnGenerate").text("Save Data");
+            $("#btnGenerate").attr('class', 'btn btn-warning waves-effect waves-light');
+            $("#btnGenerate").html('<span class="btn-label"><i class= "fa fa-save"></i></span >Save Data');
             $("#labelFileName").text("File Name");
             $('#txtFilePath').attr('style', '');
             $('#dateTrx').attr('style', 'display:none;');

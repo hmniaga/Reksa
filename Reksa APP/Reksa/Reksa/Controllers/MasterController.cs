@@ -15,10 +15,10 @@ namespace Reksa.Controllers
     {
         #region "Default Var"
         public string strModule;
-        public int _intNIK;
-        public string _strGuid;
+        public int _intNIK = 10137;
+        public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
-        public string _strBranch;
+        public string _strBranch = "01010";
         public int _intClassificationId;
         private IConfiguration _config;
         private string _strAPIUrl;
@@ -50,6 +50,37 @@ namespace Reksa.Controllers
         {
             return View();
         }
+        public JsonResult RefreshProduct(int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<ProductModel> listProduct = new List<ProductModel>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Master/RefreshProduct?ProdId="+ ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = strObject["listProduct"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    listProduct = JsonConvert.DeserializeObject<List<ProductModel>>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listProduct });
+        }
+
         public IActionResult UnitNasabah()
         {
             return View("UnitNasabahDitawarkan");

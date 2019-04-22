@@ -93,9 +93,12 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult GetListClient([FromQuery]string CIFNO)
         {
-            List<CustomerAktifitasModel.ClientList> listClient = new List<CustomerAktifitasModel.ClientList>();           
-            cls.ReksaGetListClient(CIFNO, ref listClient);
-            return Json(new { listClient} );
+            bool blnResult;
+            string ErrMsg;
+            List<CustomerAktifitasModel.ClientList> listClient = new List<CustomerAktifitasModel.ClientList>();
+            blnResult = cls.ReksaGetListClient(CIFNO, ref listClient, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetListClient - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listClient } );
         }
         [Route("api/Customer/GetListClientRDB")]
         [HttpGet("{id}")]

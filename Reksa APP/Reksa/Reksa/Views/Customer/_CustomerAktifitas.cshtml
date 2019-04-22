@@ -11,7 +11,7 @@
                         .Columns(columns =>
                         {
                             columns.Bound(p => p.Pilih)
-                            .ClientTemplate("<input type='checkbox' onclick='onCheckBoxClickClient(this)' value= '#= ProdCode #' " +
+                            .ClientTemplate("<input type='checkbox' onclick='onCheckBoxClickClient(this)' value= '#= ClientId #' " +
                             "# if (Pilih) { #" +
                             "checked='checked'" +
                             "# } #" +
@@ -20,16 +20,20 @@
                             .Width(30).Title("Pilih")
                             .Sortable(false);
                             columns.Bound(p => p.ProdCode).Hidden();
-                            columns.Bound(p => p.ProdCode).Width(150).Title("Kode Produk");
-                            columns.Bound(p => p.ProdName).Width(170).Title("Nama Produk");
-                            columns.Bound(p => p.ClientId).Width(100).Title("Client Id");
-                            columns.Bound(p => p.ClientCode).Width(100).Title("Client Code");
-                            columns.Bound(p => p.NAV).Width(100).Title("NAV");
-                            columns.Bound(p => p.UnitBalance).Format("{0:###,###.##}").Width(200).Title("Unit Balance");
-                            columns.Bound(p => p.UnitNominal).Format("{0:###,###.##}").Width(200).Title("Unit Nominal");
-                            columns.Bound(p => p.Flag).Width(100).Title("Flag");
-                            columns.Bound(p => p.CIFStatus).Width(150).Title("CIF Status");
-                            columns.Bound(p => p.RDBNonRDB).Width(200).Title("RDB/Non RDB");
+                            columns.Bound(p => p.ProdCode).Width(110).Title("Kode Produk");
+                            columns.Bound(p => p.ProdName).Width(250).Title("Nama Produk");
+                            columns.Bound(p => p.ClientId).Hidden();
+                            columns.Bound(p => p.ClientCode).Width(130).Title("Client Code");
+                            columns.Bound(p => p.NAV).Width(140).Title("NAV");
+                            columns.Bound(p => p.UnitBalance).Format("{0:###,###.##}").Width(140).Title("Unit Balance");
+                            columns.Bound(p => p.UnitNominal).Format("{0:###,###.##}").Width(140).Title("Unit Nominal");
+                            columns.Bound(p => p.Flag).Width(50).Title("Flag").ClientTemplate("<input type='checkbox' onclick='onCheckBoxFlag(this)' value= '#= ClientId #' " +
+                            "# if (Flag) { #" +
+                            "checked='checked'" +
+                            "# } #" +
+                            "/>");
+                            columns.Bound(p => p.CIFStatus).Width(90).Title("CIF Status");
+                            columns.Bound(p => p.RDBNonRDB).Width(120).Title("RDB/Non RDB");
                         }).Pageable()
                         .Scrollable(s => s.Height(250))
                         .Selectable(selectable => selectable
@@ -86,7 +90,7 @@
 </div>
 <div class="col-md-12">
     <div class="card-box">
-        <h3 class="panel-title">Tabel Aktifitas berdasarkan Transaski</h3>
+        <h3 class="panel-title">Tabel Aktifitas berdasarkan Transaksi</h3>
         <div class="row">
             <div class="col-md-12">
                 <!-- Begin StartDate -->
@@ -165,7 +169,7 @@
 <script>
 function checkAllClient(e) {
     var state = $(e).is(':checked');
-    var grid = $('#dgvClientCode').data('GridClient');
+    var grid = $('#dgvClientCode').data('kendoGrid');
     $.each(grid.dataSource.view(), function () {
         if (this['Pilih'] != state)
             this.dirty = true;
@@ -173,19 +177,53 @@ function checkAllClient(e) {
         this['Pilih'] = state;
     });
     grid.refresh();
-}
+    }
+
+    
+    function onCheckBoxFlag(e) {
+        var state = $(e).is(':checked');
+        var guid = e.value;
+
+        var grid = $('#dgvClientCode').data('kendoGrid');
+        grid.refresh();
+
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+
+            if (dataItem.ClientId == guid) {
+                dataItem.Flag = state;
+            }
+        })
+
+        var countTrue = 0;
+        var countFalse = 0;
+        var countAll = 0;
+
+        $.each(grid.dataSource.view(), function () {
+            if (this['Flag'] == true) {
+                countTrue = countTrue + 1;
+            }
+            else {
+                countFalse = countFalse + 1;
+                isCheckedAll = false;
+            }
+            countAll = countAll + 1;
+        });
+        grid.refresh();
+    }
+
 function onCheckBoxClickClient(e) {
     var state = $(e).is(':checked');
     var guid = e.value;
 
-    var grid = $('#dgvClientCode').data('GridClient');
+    var grid = $('#dgvClientCode').data('kendoGrid');
     grid.refresh();
 
     grid.tbody.find("tr[role='row']").each(function () {
         var dataItem = grid.dataItem(this);
 
-        if (dataItem.Guid == guid) {
-            dataItem.Select = state;
+        if (dataItem.ClientId == guid) {
+            dataItem.Pilih = state;
         }
     })
 
@@ -196,7 +234,7 @@ function onCheckBoxClickClient(e) {
     var countAll = 0;
 
     $.each(grid.dataSource.view(), function () {
-        if (this['Select'] == true) {
+        if (this['Pilih'] == true) {
             countTrue = countTrue + 1;
         }
         else {
@@ -208,7 +246,6 @@ function onCheckBoxClickClient(e) {
     if (countFalse == 0 || (countFalse == 1 && !state)) {
         $('#chkSelectAllClient').prop("checked", state);
     }
-
     grid.refresh();
     }
 
@@ -228,13 +265,17 @@ var clientId;
                     $("#txtRDBJangkaWaktu").val(data.listRDB[0].JangkaWaktu);
                     var dateJT = new Date(data.listRDB[0].JatuhTempo);
                     $("#dtRDBJatuhTempo").val(dateJT.getDate() + '/' + (dateJT.getMonth() + 1) + '/' + dateJT.getFullYear());
-                    $("#chkAutoRedemp").val(data.listRDB[0].AutoRedemption);
-                    $("#chkRDBAsuransi").val(data.listRDB[0].Asuransi);
+                    $('#chkAutoRedemp').prop('checked', data.listRDB[0].AutoRedemption);
+                    $('#chkRDBAsuransi').prop('checked', data.listRDB[0].Asuransi);
                     $("#textFrekPendebetan").val(data.listRDB[0].FrekPendebetan);
                 }
                 else
                 {
-                    swal("Warning", data.ErrMsg, "warning");
+                    $("#txtRDBJangkaWaktu").val('');
+                    $("#dtRDBJatuhTempo").val('');
+                    $('#chkAutoRedemp').prop('checked', false);                    
+                    $('#chkRDBAsuransi').prop('checked', false);
+                    $("#textFrekPendebetan").val('');
                 }
             }
         });

@@ -305,6 +305,69 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+        public ActionResult SearchCalcDev(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCalcDevData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<CalcDevident> list = new List<CalcDevident>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCalcDevident?Col1=&Col2=" + search + "&Validate=0").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<CalcDevident>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
+
+        }
+        public ActionResult ValidateCalcDev(string Col1, string Col2, int Validate, string criteria)
+        {
+            List<CalcDevident> list = new List<CalcDevident>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCalcDevident?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate + "&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<CalcDevident>>(stringData);
+            }
+            return Json(list);
+        }
         public ActionResult SearchCIF(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -574,6 +637,67 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+        public ActionResult SearchCustody(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCustodyData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<SearchCustody> list = new List<SearchCustody>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCustody?Col1=&Col2=" + search + "&Validate=0").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<SearchCustody>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
+        }
+        public ActionResult ValidateCustody(string Col1, string Col2, int Validate)
+        {
+            List<SearchCustody> list = new List<SearchCustody>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCustody?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SearchCustody>>(stringData);
+            }
+            return Json(list);
+        }
         public ActionResult SearchCustomer(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -662,8 +786,7 @@ namespace Reksa.Controllers
                     result.Total = total;
                     result.Data = list;
                 }
-                return Json(result);
-                      
+                return Json(result);                      
         }
         public ActionResult ValidateCustomer(string Col1, string Col2, int Validate)
         {
@@ -1350,5 +1473,118 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, strNoDocNPWP });
         }
+        public ActionResult SearchTypeReksa(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchTypeReksaData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<SearchTypeReksa> list = new List<SearchTypeReksa>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcType?Col1=" + search + "&Col2=&Validate=0").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SearchTypeReksa>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult ValidateTypeReksa(string Col1, string Col2, int Validate)
+        {
+            List<SearchTypeReksa> list = new List<SearchTypeReksa>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcType?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SearchTypeReksa>>(stringData);
+            }
+            return Json(list);
+        }
+        public ActionResult SearchManInvestasi(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchManInvestasiData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<SearchManInv> list = new List<SearchManInv>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcManInv?Col1=" + search + "&Col2=&Validate=0").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SearchManInv>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult ValidateManInv(string Col1, string Col2, int Validate)
+        {
+            List<SearchManInv> list = new List<SearchManInv>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcManInv?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<SearchManInv>>(stringData);
+            }
+            return Json(list);
+        }
+
     }
 }

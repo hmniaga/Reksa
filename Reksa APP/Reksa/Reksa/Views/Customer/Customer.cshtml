@@ -516,16 +516,21 @@
             url: '/Customer/RefreshCustomer',
             data: { strCIFNo: CIFNo, intClientId: BlokirClientId, idAccordions: _strTabName },
             success: function (data) {
-                if ((_strTabName == "MCI") || (_strTabName == "MCN")) {
-                    RefreshIdentitas(data);
-                    RefreshNPWP(data);
+                if (data.blnResult) {
+                    if ((_strTabName == "MCI") || (_strTabName == "MCN")) {
+                        RefreshIdentitas(data.vModel);
+                        RefreshNPWP(data.vModel);
+                    }
+                    else if ((_strTabName == "MCI") || (_strTabName == "MCA")) {
+                        RefreshAktifitas(data.vModel);
+                    }
+                    else if (_strTabName == "MCB") {
+                        RefreshBlokir(data.vModel);
+                    }
                 }
-                else if ((_strTabName == "MCI") || (_strTabName == "MCA")) {
-                    //RefreshIdentitas(data);
-                    RefreshAktifitas(data);
-                }
-                else if (_strTabName == "MCB") {
-                    RefreshBlokir(data);
+                else
+                {
+                    swal("Warning", data.ErrMsg, "warning");
                 }
             }
         });

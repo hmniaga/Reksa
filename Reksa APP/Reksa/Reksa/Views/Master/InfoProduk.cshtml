@@ -1,14 +1,12 @@
 ﻿@using Kendo.Mvc.UI
 @model Reksa.ViewModels.MasterListViewModel
-
 @{
     ViewData["Title"] = "Info Produk";
 }
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="m-t-0 header-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Info Produk</a>
+            <a>Info Produk</a>
         </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
@@ -19,17 +17,17 @@
                     <label class="col-sm-3 control-label">Kode Produk</label>
                     <div class="input-group">
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" }).Enable(false)
-
                         <span class="input-group-btn">
-                            <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdId", @type = "hidden" })
                     </div>
                 </div>
                 <!-- End Kode Product -->
             </div>
             <div class="col-md-2">
-                <button class="btn btn-default waves-effect waves-light" id=myButton>
+                <button class="btn btn-default waves-effect waves-light" id="btnRefresh">
                     <span class="btn-label">
                         <i class="fa fa-refresh"></i>
                     </span>
@@ -37,92 +35,77 @@
                 </button>
             </div>
             <div class="col-md-4" style="padding-bottom: 30px">
-                <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label class="col-sm-4 control-label"></label>
                         <div class="input-group">
-                            <h1 id="labelStatus">Default</h1>
+                            <h3 id="label27">Default</h3>
                         </div>
                     </div>
-                </form>
             </div>
-
             <!-- Begin Buttons -->
-            <div class="col-md-12" style="padding-top:2%">
+            <div class="col-md-12">
                 <div class="input-group">
-                    <button id="buttonadd" class="btn btn-default waves-effect waves-light">
+                    <button id="btnAdd" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                         <span class="btn-label">
                             <i class="fa fa-plus"></i>
                         </span>
                         New
                     </button>
-
-                    <button id="buttonedit" class="btn btn-info waves-effect waves-light">
+                    <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                         <span class="btn-label">
                             <i class="fa fa-edit"></i>
                         </span>
                         Edit
                     </button>
-
-                    <button id="buttondelete" class="btn btn-danger waves-effect waves-light">
+                    <button id="btnDelete" class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
                         <span class="btn-label">
                             <i class="fa fa-trash"></i>
                         </span>
                         Delete
                     </button>
-
-                    <button id="buttonsave" class="btn btn-warning waves-effect waves-light">
+                    <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="margin-right:10px">
                         <span class="btn-label">
                             <i class="fa fa-save"></i>
                         </span>
                         Save
                     </button>
+                    <button id="btnCancel" class="btn btn-pink waves-effect waves-light" style="margin-right:10px">
+                        <span class="btn-label">
+                            <i class="fa fa-remove"></i>
+                        </span>
+                        Cancel
+                    </button>
                 </div>
             </div>
             <!-- End Buttons -->
-            <!-- Begin Accordions -->
-            <div class="col-md-12">
-                <div class="panel-group" id="accordion-infoproduk">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-general" aria-expanded="false" class="collapsed">
-                                    General Info
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-general" class="panel-collapse collapse">
-                            <div class="panel-body">
+            <!-- Begin Tab nav 12 Oct 2019 -->
+            <div class="col-md-12" style="margin-top:20px">
+                <ul class="nav nav-tabs" style="background-color:#efefef">
+                    <li class="active"><a data-toggle="tab" href="#home"><i class="fa fa-info-circle"></i> General Info</a></li>
+                    <li><a data-toggle="tab" href="#menu1"><i class="fa fa-money"></i> Fee</a></li>
+                    <li><a data-toggle="tab" href="#menu2"><i class="fa fa-clock-o"></i> Reksadana Berjangka</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                        <div class="row">
+                            <div class="col-md-12">
                                 @{
                                     Html.RenderPartial("_InfoProdukGeneral.cshtml", Model);
                                 }
                             </div>
                         </div>
-
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-fee" aria-expanded="false" class="collapsed">
-                                    Fee
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-fee" class="panel-collapse collapse">
-                            <div class="panel-body">
+                    </div>
+                    <div id="menu1" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-md-12">
                                 @{
                                     Html.RenderPartial("_InfoProdukFee.cshtml", Model);
                                 }
                             </div>
                         </div>
-
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-infoproduk" href="#collapse-rdb" aria-expanded="false" class="collapsed">
-                                    Reksa Dana Berjangka
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-rdb" class="panel-collapse collapse">
-                            <div class="panel-body">
+                    </div>
+                    <div id="menu2" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-md-12">
                                 @{
                                     Html.RenderPartial("_InfoProdukRDB.cshtml", Model);
                                 }
@@ -131,16 +114,11 @@
                     </div>
                 </div>
             </div>
-            <!-- End Accordions -->
+            <!-- End Tab Nav -->
+
         </div>
         <!-- Begin Modals -->
-        <div class="modal fade" id="OffcieModal" tabindex="-1" role="dialog" aria-labelledby="OffcieModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="CustomerModal" tabindex="-1" role="dialog" aria-labelledby="CustomerModalLabel">
+        <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"></div>
             </div>
@@ -148,22 +126,416 @@
         <!-- End Modals -->
     </div>
 </div>
-
 <script>
+    var _intType;
+
     $(document).ready(function () {
-        $("#buttonadd").click(function () {
-            $("#labelStatus").text("NEW");
+        $("#label27").text('');
+        subResetToolBar();
+        SetReadOnly(true);
+        var gridOptions = {
+            height: 300
+        };
+        $("#dataGridView1").kendoGrid(gridOptions);
+        $("#dataGridView2").kendoGrid(gridOptions);
+        $("#dataGridView3").kendoGrid(gridOptions);
+        $("#dataGridView4").kendoGrid(gridOptions);
+        $("#dataGridView5").kendoGrid(gridOptions);
+        $("#dataGridView6").kendoGrid(gridOptions);
+        $("#dataGridView7").kendoGrid(gridOptions);
+        $("#dataGridView8").kendoGrid(gridOptions);
+        $("#dgvMaintenanceFee").kendoGrid(gridOptions);
+        
+
+        $("#btnRefresh").click(function () {
+            subRefresh();
         });
-        $("#buttonedit").click(function () {
-            $("#labelStatus").text("UPDATING");
+        $("#btnAdd").click(function () {
+            subNew();
         });
-        $("#buttondelete").click(function () {
-            $("#labelStatus").text("DELETE");
+        $("#btnEdit").click(function () {
+            
         });
-        $("#buttonsave").click(function () {
-            $("#labelStatus").text("SAVE");
+        $("#btnDelete").click(function () {
         });
+        $("#btnSave").click(function () {
+        });
+        $("#btnCancel").click(function () {
+            subCancel();
+        });
+        $("#radioButton1").change(function () {
+            $('#groupBox4').show();
+            $('#groupBox5').hide();
+        });
+        $("#radioButton2").change(function () {
+            $('#groupBox4').hide();
+            $('#groupBox5').show();
+        });
+
     });
 
-</script>
+    function subNew()
+    {
+        SetReadOnly(false);
+    }
 
+    function subCancel()
+    {
+        ResetForm();
+        SetReadOnly(true);
+        _intType = 0;
+        subResetToolBar();
+        subRefresh();
+    }
+
+    function subRefresh()
+    {
+        ResetForm();
+        SetReadOnly(true);
+        $.ajax({
+            type: 'GET',
+            url: '/Master/RefreshProduct',
+            data: { ProdId: $("#ProdId").val() },
+            success: function (data) {
+                if (data.blnResult) {
+                    switch (data.listProduct[0].Status)
+                    {
+                        case 0:
+                            {
+                                $("#label27").text("Status Produk : Belum Aktif");
+                                break;
+                            }
+                        case 1:
+                            {
+                                $("#label27").text("Status Produk : Aktif");
+                                break;
+                            }
+                        case 2:
+                            {
+                                $("#label27").text("Status Produk : Rejected");
+                                break;
+                            }
+                    }
+
+                    $("#MoneyNAV").val(data.listProduct[0].NAV);
+                    $("#textBox1").val($("#ProdCode").val());
+                    $("#textBox2").val(data.listProduct[0].ProdName);
+
+                    $("#ManInvCode").val(data.listProduct[0].ManInvCode);                    
+                    ValidateManInv($("#ManInvCode").val(), function (output) {
+                        $("#ManInvName").val(output);
+                    });
+                    $("#CustodyCode").val(data.listProduct[0].CustodyCode);
+                    ValidateCustody($("#CustodyCode").val(), function (output) {
+                        $("#CustodyName").val(output);
+                    });
+                    $("#CurrencyCode").val(data.listProduct[0].ProdCCY);
+                    ValidateCurrency($("#CurrencyCode").val(), function (output) {
+                        $("#CurrencyName").val(output);
+                    });
+                    $("#MIAccountId").val(data.listProduct[0].MIAccountId);
+                    $("#CTDAccountId").val(data.listProduct[0].CTDAccountId);
+
+                    $("#MoneyOPMaksUnit").val(data.listProduct[0].MaxTotalUnit);
+                    $("#MoneyOPMaksNom").val(+$("#MoneyOPMaksUnit").val() * +$("#MoneyNAV").val());
+
+                    $("#textBox7").val(data.listProduct[0].MaxDailyCust);
+                    $("#MoneyOPMaksPerNas").val(+$("#textBox7").val() * +$("#MoneyOPMaksUnit").val() / 100);
+                    var dateTimePicker1 = new Date(data.listProduct[0].ChangeDate);
+                    $("#dateTimePicker1").val(dateTimePicker1.getDate() + '/' + (dateTimePicker1.getMonth() + 1) + '/' + dateTimePicker1.getFullYear());
+                    var dateTimePicker2 = new Date(data.listProduct[0].ValueDate);
+                    $("#dateTimePicker2").val(dateTimePicker2.getDate() + '/' + (dateTimePicker2.getMonth() + 1) + '/' + dateTimePicker2.getFullYear());
+                    $("#textBox13").val(data.listProduct[0].SubcFeeBased);
+                    $("#textBox15").val(data.listProduct[0].RedempFeeBased);
+                    $("#textBox16").val(data.listProduct[0].MaintenanceFee);
+
+                    $("#TypeCode").val(data.listProduct[0].TypeCode);
+                    ValidateTypeReksa($("#TypeCode").val(), function (output) {
+                        $("#TypeName").val(output);
+                    });
+                    $("#CalcDevCode").val(data.listProduct[0].CalcCode);
+                    ValidateCalcDev($("#CalcDevCode").val(), function (output) {
+                        $("#CalcDevName").val(output);
+                    });
+                    $("#MoneyCEMinUnit").val(data.listProduct[0].MinTotalUnit);
+                    $("#MoneyCEaxUnit").val(data.listProduct[0].MaxTotalUnit);
+
+                    var dateTimePicker3 = new Date(data.listProduct[0].PeriodStart);
+                    $("#dateTimePicker3").val(dateTimePicker3.getDate() + '/' + (dateTimePicker3.getMonth() + 1) + '/' + dateTimePicker3.getFullYear());
+                    var dateTimePicker4 = new Date(data.listProduct[0].PeriodEnd);
+                    $("#dateTimePicker4").val(dateTimePicker4.getDate() + '/' + (dateTimePicker4.getMonth() + 1) + '/' + dateTimePicker4.getFullYear());
+                    var dateTimePicker5 = new Date(data.listProduct[0].MatureDate);
+                    $("#dateTimePicker5").val(dateTimePicker5.getDate() + '/' + (dateTimePicker5.getMonth() + 1) + '/' + dateTimePicker5.getFullYear());
+
+                    $("#textBox3").val(data.listProduct[0].UpFrontFee);
+                    $("#textBox4").val(data.listProduct[0].SellingFee);
+                    $("#txtFundCode").val(data.listProduct[0].NFSFundCode);
+
+                    if (data.listProduct[0].CloseEndBit == "1") {
+                        $("#radioButton1").prop('checked', false);
+                        $("#radioButton2").prop('checked', true);
+                    }
+                    else {
+                        $("#radioButton1").prop('checked', true);
+                        $("#radioButton2").prop('checked', false);
+                    }
+                }
+                else
+                {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+
+    function SetReadOnly(status)
+    {
+        $("#radioButton1").prop('disabled', status);
+        $("#radioButton2").prop('disabled', status);
+        $("#checkBox1").prop('disabled', status);
+
+        $("#TypeCode").prop('disabled', status); $("#TypeName").prop('disabled', status);
+        $("#ManInvCode").prop('disabled', status); $("#ManInvName").prop('disabled', status);
+        $("#CustodyCode").prop('disabled', status); $("#CustodyName").prop('disabled', status);
+        $("#CurrencyCode").prop('disabled', status); $("#CurrencyName").prop('disabled', status);
+        // 7 $("#checkBox1").prop('disabled', status); $("#checkBox1").prop('disabled', status);
+        // 8 $("#checkBox1").prop('disabled', status); $("#checkBox1").prop('disabled', status);
+
+        if (!status)
+        {
+            $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#cmpsrSearch3").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#cmpsrSearch4").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#cmpsrSearch5").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#cmpsrSearch7").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+            $("#cmpsrSearch8").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
+        }
+        else
+        {
+            $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cmpsrSearch3").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cmpsrSearch4").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cmpsrSearch5").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cmpsrSearch7").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#cmpsrSearch8").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+        }
+
+        $("#textBox1").prop('disabled', status);
+        $("#textBox2").prop('disabled', status);
+        $("#textBox3").prop('disabled', status);
+        $("#textBox4").prop('disabled', status);
+
+        $("#MoneyOPMaksUnit").prop('disabled', status);
+        $("#MoneyOPMaksPerNas").prop('disabled', status);
+        $("#textBox7").prop('disabled', status);
+
+        $("#MoneyNAV").prop('disabled', status);
+
+        $("#dateTimePicker1").data("kendoDatePicker").enable(!status);
+        $("#dateTimePicker2").data("kendoDatePicker").enable(!status);
+
+        $("#textBox13").prop('disabled', status);
+        $("#textBox15").prop('disabled', status);
+        $("#textBox16").prop('disabled', status);
+        $("#txtbDevidentPct").prop('disabled', status);
+        $("#txtbEffectiveDays").prop('disabled', status);
+        $("#MoneyCEMinUnit").prop('disabled', status);
+        $("#MoneyCEMaxUnit").prop('disabled', status);
+
+        $("#dateTimePicker3").data("kendoDatePicker").enable(!status);
+        $("#dateTimePicker4").data("kendoDatePicker").enable(!status);
+        $("#dateTimePicker5").data("kendoDatePicker").enable(!status);
+        $("#dateTimePicker6").data("kendoDatePicker").enable(!status);
+
+        //dataGridView1.Enabled = !status;
+        //dataGridView2.Enabled = !status;
+        //dataGridView3.Enabled = !status;
+        //dataGridView4.Enabled = !status;
+
+        //dgvMaintenanceFee.Enabled = !status;
+        //dataGridView5.Enabled = !status;
+        $("#txtFundCode").prop('disabled', status);
+    }
+
+    function ResetForm()
+    {
+        $("#label27").text("");
+        $("#radioButton1").prop('checked', true);
+        $("#radioButton2").prop('checked', false);
+        $("#checkBox1").prop('checked', false);
+
+        $("#ManInvCode").val(""); $("#ManInvName").val("");
+        $("#CustodyCode").val(""); $("#CustodyName").val("");
+        $("#CurrencyCode").val(""); $("#CurrencyName").val("");
+
+        $("#CustodyCode").val(""); $("#CustodyName").val("");
+        $("#ManInvCode").val(""); $("#ManInvName").val("");
+        $("#CustodyCode").val(""); $("#CustodyName").val("");
+
+        $("#textBox1").val("");
+        $("#textBox2").val("");
+        $("#textBox3").val("");
+        $("#MoneyOPMaksUnit").val(0);
+        $("#MoneyOPMaksNom").val(0);
+        $("#textBox7").val("");
+        $("#MoneyOPMaksPerNas").val(0);
+        $("#MoneyNAV").val(0);
+
+        var Today = new Date();
+        $("#dateTimePicker1").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        $("#dateTimePicker2").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+
+        $("#textBox12").val("");
+        $("#textBox13").val("");
+        $("#textBox15").val("");
+        $("#textBox16").val("");
+        $("#TypeCode").val(""); $("#TypeName").val("");
+        $("#txtbDevidentPct").val("");
+        $("#txtbEffectiveDays").val("1");
+
+        $("#MoneyCEMaxUnit").val(0);
+        $("#MoneyCEMinUnit").val(0);
+        $("#dateTimePicker3").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        $("#dateTimePicker4").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        $("#dateTimePicker5").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        $("#dateTimePicker6").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        
+        //dataGridView1.DataSource = null;
+        //dataGridView2.DataSource = null;
+        //dataGridView3.DataSource = null;
+        //dataGridView4.DataSource = null;
+
+        //dgvMaintenanceFee.DataSource = null;
+
+        //try {
+        //    dataGridView1.Columns.Remove("Fee");
+        //    dataGridView1.Columns.Remove("Period");
+        //    dataGridView1.Columns.Remove("Nominal");
+        //    dataGridView2.Columns.Remove("Fee");
+        //    dataGridView2.Columns.Remove("Period");
+        //    dataGridView2.Columns.Remove("Nominal");
+        //    dataGridView3.Columns.Remove("Fee");
+        //    dataGridView3.Columns.Remove("Nominal");
+        //    dataGridView4.Columns.Remove("Fee");
+        //    dataGridView4.Columns.Remove("Nominal");
+        //    //20090525, oscar, REKSADN003, begin
+        //    //parameter maintenance fee AUM
+        //    dgvMaintenanceFee.Columns.Remove("AUMMin");
+        //    dgvMaintenanceFee.Columns.Remove("AUMMax");
+        //    dgvMaintenanceFee.Columns.Remove("NispPct");
+        //    dgvMaintenanceFee.Columns.Remove("FundMgrPct");
+        //    //20090525, oscar, REKSADN003, end
+        //}
+        //catch (Exception ex)
+        //{
+        //}
+    }
+
+    function subResetToolBar()
+    {
+        document.getElementById("btnRefresh").disabled = false;
+        document.getElementById("btnAdd").disabled = false;
+        document.getElementById("btnEdit").disabled = false;
+        document.getElementById("btnDelete").disabled = false;
+        document.getElementById("btnSave").disabled = true;
+        document.getElementById("btnCancel").disabled = true;
+    }
+    
+    function ValidateCalcDev(CalcCode, result) {
+        if (CalcCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateCalcDev',
+                data: { Col1: CalcCode, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].CalcName);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
+        else {
+            result('');
+        }
+    }
+
+    function ValidateCurrency(CurrCode, result) {
+        if (CurrCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateCurrency',
+                data: { Col1: CurrCode, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].CurrencyName);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
+        else
+        {
+            result('');
+        }
+    }
+    function ValidateCustody(CustCode, result) {
+        if (TypeCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateCustody',
+                data: { Col1: CustCode, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].CustodyName);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
+        else {
+            result('');
+        }
+    }
+    function ValidateManInv(ManInvCode, result) {
+        if (TypeCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateManInv',
+                data: { Col1: ManInvCode, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].ManInvName);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
+        else {
+            result('');
+        }
+    }
+    function ValidateTypeReksa(TypeCode, result) {
+        if (TypeCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateTypeReksa',
+                data: { Col1: TypeCode, Col2: '', Validate: 1 },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].TypeName);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
+        else {
+            result('');
+        }
+    }
+</script>

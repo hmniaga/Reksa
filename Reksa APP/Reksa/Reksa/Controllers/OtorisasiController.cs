@@ -108,10 +108,10 @@ namespace Reksa.Controllers
             }
             return Json(vModel);
         }
-        public ActionResult AuthorizeGlobalParam(string listId, string InterfaceId, bool isApprove)
+        public JsonResult AuthorizeGlobalParam(string listId, string InterfaceId, bool isApprove)
         {
             bool blnResult = false;
-            string ErrorMessage = "";
+            string ErrMsg = "";
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             try
             {
@@ -127,28 +127,39 @@ namespace Reksa.Controllers
                 DataTable dtNew = dv1.ToTable();
                 if (dtNew == null || dtNew.Columns.Count == 0)
                 {
-                    ErrorMessage = "No data to save!";
-                    return Json(new { blnResult, ErrorMessage });
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
                 }
-                blnResult = subApproveParamGlobal(dtNew, InterfaceId, isApprove);
+                blnResult = subApproveParamGlobal(dtNew, InterfaceId, isApprove, out ErrMsg);
             }
             catch
             {
-                ErrorMessage = "Approve data failed!";
-                return Json(new { blnResult, ErrorMessage });
+                ErrMsg = "Approve data failed!";
+                return Json(new { blnResult, ErrMsg });
             }
-            return Json(new { blnResult, ErrorMessage });
+            return Json(new { blnResult, ErrMsg });
         }
-        private bool subApproveParamGlobal(DataTable dtData, string InterfaceId, bool isApprove)
+        private bool subApproveParamGlobal(DataTable dtData, string InterfaceId, bool isApprove, out string ErrMsg)
         {
             bool blnResult = false;
-            var Content = new StringContent(JsonConvert.SerializeObject(dtData));
-            using (HttpClient client = new HttpClient())
+            ErrMsg = "";
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                var request = client.PostAsync("/api/Otorisasi/AuthorizeGlobalParam?InterfaceId=" + InterfaceId + "&isApprove=" + isApprove + "&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
-                var response = request.Result.Content.ReadAsStringAsync().Result;
+                var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeGlobalParam?InterfaceId=" + InterfaceId + "&isApprove=" + isApprove + "&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
             }
             return blnResult;
         }
@@ -203,8 +214,10 @@ namespace Reksa.Controllers
             this.ViewBag.Tree = items;
             return View("AuthGeneral", vModel);
         }
-        public ActionResult ApproveReject(string listId, string treeid, bool isApprove)
+        public JsonResult ApproveReject(string listId, string treeid, bool isApprove)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             try
             {
@@ -214,8 +227,8 @@ namespace Reksa.Controllers
 
                 if (ListTree == null || ListTree.Count == 0)
                 {
-                    TempData["ErrorMessage"] = "No query to save!";
-                    return RedirectToAction("WM");                    
+                    ErrMsg = "No query to save!";
+                    return Json(new { blnResult, ErrMsg });
                 }
                 string strQueryApprove = ListTree[0].button1_query.ToString();
                 string strQueryReject = ListTree[0].button2_query.ToString();
@@ -244,29 +257,39 @@ namespace Reksa.Controllers
                 DataTable dtNew = dv1.ToTable();
                 if (dtNew == null || dtNew.Columns.Count == 0)
                 {
-                    TempData["ErrorMessage"] = "No data to save!";
-                    return RedirectToAction("Index");
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
                 }
-                subApproveReject(strQuery, dtNew, treeid, isApprove);                
+                blnResult = subApproveReject(strQuery, dtNew, treeid, isApprove, out ErrMsg);                
             }
-            catch
+            catch(Exception e)
             {
-                TempData["ErrorMessage"] = "Approve data failed!";
-                return RedirectToAction("Index");
+                ErrMsg = e.Message;
             }
-            return View("AuthGeneral", vModel);
+            return Json(new { blnResult, ErrMsg } );
         }
-        private bool subApproveReject(string strPopulate, DataTable dtData, string treeid, bool isApprove)
+        private bool subApproveReject(string strPopulate, DataTable dtData, string treeid, bool isApprove, out string ErrMsg)
         {
             bool blnResult = false;
-            var EncodedstrPopulate = System.Net.WebUtility.UrlEncode(strPopulate);
-            var Content = new StringContent(JsonConvert.SerializeObject(dtData));
-            using (HttpClient client = new HttpClient())
+            ErrMsg = "";
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                var request = client.PostAsync("/api/Otorisasi/ApproveReject?strPopulate=" + EncodedstrPopulate + "&treeid="+ treeid + "&isApprove="+ isApprove + "&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
-                var response = request.Result.Content.ReadAsStringAsync().Result;
+                var EncodedstrPopulate = System.Net.WebUtility.UrlEncode(strPopulate);
+                var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/ApproveReject?strPopulate=" + EncodedstrPopulate + "&treeid=" + treeid + "&isApprove=" + isApprove + "&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
             }
             return blnResult;
         }
@@ -274,12 +297,10 @@ namespace Reksa.Controllers
         {
             bool blnResult = false;
             string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             var EncodedstrPopulate = System.Net.WebUtility.UrlEncode(strPopulate);
-            List<OtorisasiModel.MainTranksasi> list = new List<OtorisasiModel.MainTranksasi>();
-            List<OtorisasiModel.MainProduct> list1 = new List<OtorisasiModel.MainProduct>();
-            List<OtorisasiModel.Subscription> listSubscription = new List<OtorisasiModel.Subscription>();
-            List<OtorisasiModel.Redemption> listRedemption = new List<OtorisasiModel.Redemption>();
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -295,37 +316,11 @@ namespace Reksa.Controllers
 
                     JToken TokenData = Object["dsResult"];
                     string JsonData = JsonConvert.SerializeObject(TokenData);
-                    DataSet dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
                     _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
-                    if (dsResult.Tables.Count > 0)
+                    if (dsResult.Tables.Count == 0)
                     {
-                        if (treename == "Transaksi")
-                        {
-                            List<OtorisasiModel.MainTranksasi> result = this.MapListOfObject<OtorisasiModel.MainTranksasi>(dsResult.Tables[0]);
-                            list.AddRange(result);
-                            vModel.MainTranksasi = list;
-                        }
-                        else if (treename == "Product")
-                        {
-                            List<OtorisasiModel.MainProduct> result = this.MapListOfObject<OtorisasiModel.MainProduct>(dsResult.Tables[0]);
-                            list1.AddRange(result);
-                            vModel.MainProduct = list1;
-                        }
-                        else if (treename == "Subscription")
-                        {
-                            List<OtorisasiModel.Subscription> result = this.MapListOfObject<OtorisasiModel.Subscription>(dsResult.Tables[0]);
-                            listSubscription.AddRange(result);
-                            vModel.MainSubscription = listSubscription;
-                        }
-                        else if (treename == "Redemption")
-                        {
-                            List<OtorisasiModel.Redemption> result = this.MapListOfObject<OtorisasiModel.Redemption>(dsResult.Tables[0]);
-                            listRedemption.AddRange(result);
-                            vModel.MainRedemption = listRedemption;
-                        }
-                    }
-                    else
-                    {
+                        blnResult = false;
                         ErrMsg = "Data tidak ada di database";
                     }
                 }
@@ -333,9 +328,9 @@ namespace Reksa.Controllers
             catch(Exception e)
             {
                 ErrMsg = e.Message;
-                return Json(new { blnResult, ErrMsg, vModel });
+                return Json(new { blnResult, ErrMsg, dsResult });
             }
-            return Json(new { blnResult, ErrMsg, vModel });
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public JsonResult PopulateVerifyAuthBS(string Authorization, string TypeTrx, string strAction, string NoReferensi)
         {

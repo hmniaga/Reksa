@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Search Type Dana Reksa";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchTypeReksa() {
+        var value = $("#TypeReksaSearchComponentSearchTxt").val();
+        var grid = $("#TypeReksaSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowTypeReksaSelect(e) {
+        var data = this.dataItem(this.select());
+        var TypeCode = $.trim(data.TypeCode);
+        var TypeName = $.trim(data.TypeName);
+        var TypeId = $.trim(data.TypeId);
+
+        $("#TypeReksaSelectedCode").val(TypeCode);
+        $("#TypeReksaSelectedName").val(TypeName);
+        $("#TypeReksaSelectedId").val(TypeId);
+    };
+
+    $("#TypeReksaSelectButton").on("click", function () {
+        var selectedCode = $("#TypeReksaSelectedCode").val();
+        var selectedName = $("#TypeReksaSelectedName").val();
+        var selectedId = $("#TypeReksaSelectedId").val();
+        
+        $("input[id='TypeCode']").val(selectedCode).change();
+        $("input[id='TypeName']").val(selectedName);
+        $("input[id='TypeId']").val(selectedId);
+    });
+
+    $("#TypeReksaSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#TypeReksaSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+        
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.SearchTypeReksa>()
+                                            .Name("TypeReksaSearchComponentGrid")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(m => m.TypeCode).Width(100).Title("Type Code");
+                                                columns.Bound(m => m.TypeName).Width(100).Title("Type Name");
+                                                columns.Bound(m => m.TypeId).Hidden();
+                                            })
+                                            .ToolBar(toolbar =>
+                                            {
+                                                toolbar.ClientTemplateId("GridToolbarTemplate");
+                                            })
+                                            .Events(events => events.Change("onRowTypeReksaSelect"))
+                                            .Pageable()
+                                            .Scrollable()
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(m => m.TypeCode);
+                                                })
+                                                .Read(read =>
+                                                read.Action("SearchTypeReksaData", "Global").Data("getData"))
+                                            )
+        )
+
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("TypeReksaSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("TypeReksaSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchTypeReksa")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="TypeReksaSelectedCode" name="TypeReksaSelectedCode" value="" />
+        <input type="hidden" id="TypeReksaSelectedName" name="TypeReksaSelectedName" value="" />
+        <input type="hidden" id="TypeReksaSelectedId" name="TypeReksaSelectedCId" value="" />
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="TypeReksaSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

@@ -5,10 +5,54 @@
     ViewData["Title"] = "Subscription Fee";
 }
 
+<div class="card-box">
+    <div class="row">
+        <!-- Begin Buttons -->
+        <div class="col-md-12">
+            <div class="input-group">
+                <button id="btnNew" class="btn btn-default waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    New
+                </button>
+
+                <button id="btnEdit" class="btn btn-info waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-edit"></i>
+                    </span>
+                    Edit
+                </button>
+
+                <button id="btnDelete" class="btn btn-danger waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-trash"></i>
+                    </span>
+                    Delete
+                </button>
+
+                <button id="btnSave" style="display:none;" class="btn btn-warning waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>
+                    Save
+                </button>
+                <button id="btnCancel" type="button" style="display:none;" class="btn btn-pink waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-remove"></i>
+                    </span>
+                    Cancel
+                </button>
+            </div>
+        </div>
+        <!-- End Buttons -->
+    </div>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="m-t-0 header-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Subscription Fee</a>
+            <a>Subscription Fee</a>
         </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
@@ -17,11 +61,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Produk</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id ="ProdCode", @class = "form-control input-sm" })
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id ="ProdCode", @class = "form-control input-sm" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "ProdName", @class = "form-control input-sm col-md-3", style = "width: 200%;" })
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "ProdName", @class = "form-control input-sm col-md-3", style = "width: 200%;" }).Enable(false)
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm",  @type = "Hidden" })
 
                     </div>
@@ -35,149 +79,68 @@
                     Refresh
                 </button>
             </div>
-            <!-- Begin Buttons -->
-            <div class="col-md-12" style="padding-top:4%">
-                <div class="input-group">
-                    <button id="btnNew" class="btn btn-default waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-plus"></i>
-                        </span>
-                        New
-                    </button>
-
-                    <button id="btnEdit" class="btn btn-info waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-edit"></i>
-                        </span>
-                        Edit
-                    </button>
-
-                    <button id="btnDelete" class="btn btn-danger waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-trash"></i>
-                        </span>
-                        Delete
-                    </button>
-
-                    <button id="btnSave" style="display:none;" class="btn btn-warning waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        Save
-                    </button>
-                    <button id="btnCancel" type="button" style="display:none;" class="btn btn-pink waves-effect waves-light">
-                        <span class="btn-label">
-                            <i class="fa fa-remove"></i>
-                        </span>
-                        Cancel
-                    </button>
-                </div>
-            </div>
-            <!-- End Buttons -->
-            <!-- Begin Accordions -->
-            <div class="col-md-12">
-                <div class="panel-group" id="accordion-subsfee">
-                    <div class="panel panel-default">
-                        <!-- Begin Subs Fee -->
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-subsfee" aria-expanded="false" class="collapsed">
-                                    Subs Fee
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-subsfee" class="panel-collapse collapse">
-                            <div class="col-md-6">
-                                <div class="card-box">
-                                    <h3 class="panel-title">Percentage Non Karyawan</h3>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">Minimum % Fee</label>
-                                        <div class="input-group">
-                                            @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMinPctNonKary", @class = "form-control input-sm" })
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">Maksimum % Fee</label>
-                                        <div class="input-group">
-                                            @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMaxPctNonKary", @class = "form-control input-sm" })
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-box">
-                                    <h3 class="panel-title">Percentage Karyawan</h3>
+            <!-- Begin Tabs -->
+            <div class="col-md-12" style="padding-top:20px">
+                <ul class="nav nav-tabs" style="background-color:#efefef">
+                    <li class="active"><a data-toggle="tab" href="#tab-subsfee" id="tabPage1">Subs Fee</a></li>
+                    <li><a data-toggle="tab" href="#tab-tiering" id="tabPage2">Tiering Notification</a></li>
+                    <li><a data-toggle="tab" href="#tab-settingGL" id="tabPage3">Setting GL</a></li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Begin Subs Fee -->
+                    <div id="tab-subsfee" class="tab-pane fade in active">
+             
+                                <div class="col-md-6">
+                                    <div class="card-box">
+                                        <h3 class="panel-title">Percentage Non Karyawan</h3>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">Minimum % Fee</label>
+                                            <label class="col-sm-4 control-label">Minimum % Fee</label>
                                             <div class="input-group">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeEmployee).HtmlAttributes(new {@id = "_txtMinPctKary", @class = "form-control input-sm" })
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMinPctNonKary", @class = "form-control input-sm" })
+
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">Maksimum % Fee</label>
+                                            <label class="col-sm-4 control-label">Maksimum % Fee</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMaxPctNonKary", @class = "form-control input-sm" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-box">
+                                        <h3 class="panel-title">Percentage Karyawan</h3>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Minimum % Fee</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeEmployee).HtmlAttributes(new { @id = "_txtMinPctKary", @class = "form-control input-sm" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Maksimum % Fee</label>
                                             <div class="input-group">
                                                 @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeEmployee).HtmlAttributes(new { @id = "_txtMaxPctKary", @class = "form-control input-sm" })
                                             </div>
                                         </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- End Subs Fee -->
-                        <!-- Begin Tiering Notification -->
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-tiering" aria-expanded="false" class="collapsed">
-                                    Tiering Notification
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-tiering" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="col-md-4">
-                                            <form class="form-horizontal" role="form">
-                                                <label class="col-sm-4 control-label">Dari Persentase</label>
-                                                <div class="input-group m-t-10">
-                                                    @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @id = "_fromPercent", @class = "form-control input-sm" })
-                                                    <span class="input-group-addon">
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <form class="form-horizontal" role="form">
-                                                <label class="col-sm-3 control-label">Sampai</label>
-                                                <div class="input-group m-t-10">
-                                                    @Html.Kendo().TextBox().Name("_toPercent").HtmlAttributes(new { @id = "_toPercent", @class = "form-control input-sm" })
-                                                    <span class="input-group-addon">
-                                                        %
-                                                    </span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <form class="form-horizontal" role="form">
-                                                <label class="col-sm-3 control-label">Persetujuan</label>
-                                                <div class="input-group m-t-10">
-                                                    @Html.Kendo().TextBox().Name("_Persetujuan").HtmlAttributes(new { @id = "_Persetujuan", @class = "form-control input-sm", @style = "width:250px" }).Enable(false)
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12" style="padding-top:2%">
-                                        <h3 class="panel-title">*) Tiering Notification ini hanya untuk Non Karyawan</h3>
-                                    </div>
-                                    <div class="col-md-12" style="padding-top:2%">
-                                        <button id ="btnAdd" class="btn btn-default waves-effect waves-light">
+                   
+                    </div>
+                    <!-- End Subs Fee -->
+                    <!-- Begin Tiering Notification -->
+                    <div id="tab-tiering" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-box">
+                                    <div class="row">
+                                        <button id="btnAdd" class="btn btn-default waves-effect waves-light">
                                             <span class="btn-label">
                                                 <i class="fa fa-plus"></i>
                                             </span>
                                             Tambah
                                         </button>
-                                        <button id="btnHapus"class="btn btn-danger waves-effect waves-light">
+                                        <button id="btnHapus" class="btn btn-danger waves-effect waves-light">
                                             <span class="btn-label">
                                                 <i class="fa fa-trash"></i>
                                             </span>
@@ -195,36 +158,60 @@
                                             </span>
                                             Batal
                                         </button>
-                                        @(Html.Kendo().Grid<Reksa.Models.ReksaTieringNotificationSubs>(Model.ReksaTieringNotificationSubs)
-                                        .Name("dataGridView1")
-                                        .Columns(columns =>
-                                        {
-                                            columns.Bound(p => p.ProdId).Width(150).Title("Produk Id").Hidden();
-                                            columns.Bound(p => p.PercentFrom).Width(150).Title("Percent From");
-                                            columns.Bound(p => p.PercentTo).Width(150).Title("Percent To");
-                                            columns.Bound(p => p.MustApproveBy).Width(150).Title("Persetujuan");
-                                        }).Pageable()
-                                        .Scrollable(s => s.Height(200))
-                                        .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
-                                        .Events(events => events.Change("onRowSubsFeeSelect"))
-                                        )
-
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label class="col-sm-5 control-label">Dari Persentase</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("KodeProduk").HtmlAttributes(new { @id = "_fromPercent", @class = "form-control input-sm" })
+                                        <span class="input-group-addon">
+                                            %
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-sm-3 control-label">Sampai</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("_toPercent").HtmlAttributes(new { @id = "_toPercent", @class = "form-control input-sm" })
+                                        <span class="input-group-addon">
+                                            %
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-sm-4 control-label">Persetujuan</label>
+                                    <div class="input-group">
+                                        @Html.Kendo().TextBox().Name("_Persetujuan").HtmlAttributes(new { @id = "_Persetujuan", @class = "form-control input-sm", @style = "width:200px" }).Enable(false)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="padding-top:2%">
+                                <h3 class="panel-title">*) Tiering Notification ini hanya untuk Non Karyawan</h3>
+                                <div class="col-md-8">
+                                    @(Html.Kendo().Grid<Reksa.Models.ReksaTieringNotificationSubs>(Model.ReksaTieringNotificationSubs)
+                                                                                                    .Name("dataGridView1")
+                                                                                                    .Columns(columns =>
+                                                                                                    {
+                                                                                                        columns.Bound(p => p.ProdId).Width(150).Title("Produk Id").Hidden();
+                                                                                                        columns.Bound(p => p.PercentFrom).Width(150).Title("Percent From");
+                                                                                                        columns.Bound(p => p.PercentTo).Width(150).Title("Percent To");
+                                                                                                        columns.Bound(p => p.MustApproveBy).Width(150).Title("Persetujuan");
+                                                                                                    }).Pageable()
+                                                                                                    .Scrollable(s => s.Height(200))
+                                                                                                    .Selectable(selectable => selectable.Mode(GridSelectionMode.Single))
+                                                                                                    .Events(events => events.Change("onRowSubsFeeSelect"))
+                                    )
+                                </div>
+                            </div>
                         </div>
-                        <!-- End Tiering Notification -->
-                        <!-- Begin Setting GL -->
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion-subsfee" href="#collapse-settinggl" aria-expanded="false" class="collapsed">
-                                    Setting GL
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapse-settinggl" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <div class="col-md-12">
+                    </div>
+                    <!-- End Tiering Notification -->
+                    <div id="tab-settingGL" class="tab-pane fade">
+                        <div class="col-md-12">
+                            <div class="card-box">
+                                <div class="row">
                                     <form class="form-inline">
                                         <div class="form-group m-r-10" style="padding-left:150px">
                                             <label>Nama GL</label>
@@ -427,11 +414,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- End Setting GL -->
-                    </div>
                 </div>
-            </div>
-            <!-- End Accordions -->
         </div>
         <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
             <div class="modal-dialog" role="document">
@@ -439,8 +422,9 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
-
+</div>
 
 <script>
     var intMyType;

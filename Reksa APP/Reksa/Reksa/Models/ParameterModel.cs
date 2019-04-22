@@ -74,4 +74,10 @@ namespace Reksa.Models
         public decimal PercentTo { get; set; }
         public string Persetujuan { get; set; }
     }
+    public class parameterKYC
+    {
+        public string ClientCode { get; set; }
+        public string SII { get; set; }
+        public string IFUA { get; set; }
+    }
 }

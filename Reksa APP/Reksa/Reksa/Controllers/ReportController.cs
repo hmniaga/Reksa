@@ -69,17 +69,18 @@ namespace Reksa.Controllers
             }
             return Json( new { ErrMsg, dsFile });
         }
-        public JsonResult NFSGenerateFileUpload(string FileCode, string TranDate)
+        public ActionResult NFSGenerateFileUpload(string FileCode, string TranDate)
         {
             bool blnResult = false;
             string ErrMsg = "";
             using (HttpClient client = new HttpClient())
             {
                 DataSet dsData;
-                string sSeparator, sFileName, sFormatFile, sFilterFile;
+                string sSeparator, sFileName = "", sFormatFile, sFilterFile = "";
                 bool bIsLog, bIsNeedAuth;
                 bIsLog = false;
                 bIsNeedAuth = false;
+                string handle = "";
                 try
                 {
                     string[] s;
@@ -107,22 +108,26 @@ namespace Reksa.Controllers
                             {
                                 blnResult = false;
                                 ErrMsg = "Data tidak tersedia.";
+                                return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                             }
                         }
                         if (dsData.Tables[0].Rows.Count == 0)
                         {
                             blnResult = false;
                             ErrMsg = "Data Parameter tidak tersedia.";
+                            return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                         }
                         if (dsData.Tables[1].Rows.Count == 0)
                         {
                             blnResult = false;
                             ErrMsg = "Data Upload tidak tersedia.";
+                            return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                         }
                         if (dsData.Tables[1].Rows.Count <= 1)
                         {
                             blnResult = false;
                             ErrMsg = "Data tidak tersedia.";
+                            return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                         }
 
                         sSeparator = dsData.Tables[0].Rows[0][0].ToString();
@@ -135,10 +140,11 @@ namespace Reksa.Controllers
 
                         if (!bIsNeedAuth)
                         {
-                            if (!CreateFileUpload(sSeparator, sFileName, sFormatFile, sFilterFile, dsData))
+                            if (!CreateFileUpload(sSeparator, sFileName, sFormatFile, sFilterFile, dsData, out handle, out ErrMsg))
                             {
                                 blnResult = false;
                                 ErrMsg = "Gagal create file.";
+                                return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                             }
                             else
                             {
@@ -168,6 +174,7 @@ namespace Reksa.Controllers
                             {
                                 blnResult = false;
                                 ErrMsg = "Data Ototisasi tidak tersedia.";
+                                return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
                             }
                             if (dsData.Tables[2].Rows.Count > 0)
                             {
@@ -187,10 +194,25 @@ namespace Reksa.Controllers
                 {
                     ErrMsg = "Error Get Data Upload : " + e.Message;
                 }
-                return Json(new { blnResult, ErrMsg });
+                return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
             }
         }
 
+        [HttpGet]
+        public virtual ActionResult Download(string fileGuid, string fileName)
+        {
+            if (TempData[fileGuid] != null)
+            {
+                byte[] data = TempData[fileGuid] as byte[];
+                return File(data, "text/plain", fileName+".txt");
+            }
+            else
+            {
+                // Problem - Log the error, generate a blank file,
+                //           redirect to another controller action - whatever fits with your application
+                return new EmptyResult();
+            }
+        }
 
         private void NFSGetFileTypeList(string strFileType, out List<FileModel.NFSFileListType> listType)
         {
@@ -217,14 +239,50 @@ namespace Reksa.Controllers
                 }
             }
         }
-
-        private void NFSGenerateFileDownload(string strFileCode, int iTranDate)
+        public ActionResult NFSGenerateFileDownload([FromBody] FileModel.CSVFormatFile model)
         {
-            
-            
+            bool blnResult = false;
+            string ErrMsg = "";
+            string xmlData = "";
+            DataSet dsXML = new DataSet();
+            DataTable dtTable = new DataTable();
+            dtTable.TableName = "Table";
+            dtTable.Columns.Add("ClientCode");
+            dtTable.Columns.Add("IFUA");
+            dtTable.Columns.Add("SII");
+            try
+            {
+                for (int i = 0; i < model.listKYC.Count; i++)
+                {
+                    DataRow dtrGL = dtTable.NewRow();
+                    dtrGL["ClientCode"] = model.listKYC[i].ClientCode;
+                    dtrGL["IFUA"] = model.listKYC[i].IFUA;
+                    dtrGL["SII"] = model.listKYC[i].SII;
+                    dtTable.Rows.Add(dtrGL);
+                }
+                dsXML.Tables.Add(dtTable);
+                xmlData = dsXML.GetXml();
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Report/NFSGenerateFileDownload?FileCode=" + model.FileCode + "&FileName=" + model.FileName + "&xmlData="+ xmlData + "&UserID=" + _intNIK).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
         }
-
-
         private bool ReksaNFSInsertLogFile(string sFileCode, string sFileName, string strUserID, 
             int iTranDate, string sXMLDataGenerate, string sXMLRawData, bool bIsLog, bool bIsNeedAuth, out string ErrMsg)
         {
@@ -253,19 +311,23 @@ namespace Reksa.Controllers
             return blnResult;
         }
 
-        private bool CreateFileUpload(string sSeparator, string sFileName, string sFormatFile, string sFilterFile, DataSet dsData)
+        private bool CreateFileUpload(string sSeparator, string sFileName, string sFormatFile, string sFilterFile, DataSet dsData, 
+            out string handle , out string strError)
         {
             int row, col;
             bool CreateTextFile = false;
-            string strError = "";
-
+            strError = "";
+            handle = Guid.NewGuid().ToString();
             try
             {
-                    skyWriter = Path.GetDirectoryName("C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT");
-                    StreamWriter streamWriter1 = new StreamWriter(skyWriter + "\\" + sFileName + "." + sFormatFile);
-                    this.sRealFileName = "C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT";
+                    //skyWriter = Path.GetDirectoryName("C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT");
+                    //StreamWriter streamWriter1 = new StreamWriter(skyWriter + "\\" + sFileName + "." + sFormatFile);
+                    //this.sRealFileName = "C:\\Users\\Hp\\Documents\\- PROJECTS -\\RESULT";
 
                     if (dsData.Tables[1].Rows.Count > 0)
+                    {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (var streamWriter = new StreamWriter(memoryStream))
                     {
                         for (row = 0; row < dsData.Tables[1].Rows.Count; row++)
                         {
@@ -273,23 +335,22 @@ namespace Reksa.Controllers
                             {
                                 if (col == dsData.Tables[1].Columns.Count - 1) //Data akhir
                                 {
-                                    streamWriter1.WriteLine(dsData.Tables[1].Rows[row][col].ToString());
+                                    streamWriter.WriteLine(dsData.Tables[1].Rows[row][col].ToString());
                                 }
                                 else
-                                    streamWriter1.Write(dsData.Tables[1].Rows[row][col].ToString() + sSeparator);
+                                    streamWriter.Write(dsData.Tables[1].Rows[row][col].ToString() + sSeparator);
                             }
                         }
-
-                        CreateTextFile = true;
+                        streamWriter.Flush();
+                        TempData[handle] =  memoryStream.ToArray();
+                    }
+                    CreateTextFile = true;
                     }
                     else
                     {
                         strError = "Tidak ada data untuk periode tersebut. ";
                         CreateTextFile = false;
-                    }
-                    streamWriter1.Flush();
-                    streamWriter1.Close();
-                
+                    }                
             }
 
             catch (Exception ex)
@@ -297,7 +358,6 @@ namespace Reksa.Controllers
                 strError = ex.Message;
                 CreateTextFile = false;
             }
-
             return CreateTextFile;
         }
         private bool GetFormatFile(string strFileCode, out string ErrMsg)

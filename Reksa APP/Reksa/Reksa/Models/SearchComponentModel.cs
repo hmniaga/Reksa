@@ -50,4 +50,38 @@
         }
 
     }
+    public class SearchTypeReksa
+    {
+        public string TypeCode { get; set; }
+        public string TypeName { get; set; }
+        public int TypeId { get; set; }
+    }
+    public class SearchManInv
+    {
+        public string ManInvCode { get; set; }
+        public string ManInvName { get; set; }
+        public int ManInvId { get; set; }
+    }
+    public class SearchCustody
+    {
+        public string CustodyCode { get; set; }
+        public string CustodyName { get; set; }
+        public int CustodyId { get; set; }
+    }
+    public class MIAccount
+    {
+        public string MIAccountId { get; set; }
+        public string MIAccountName { get; set; }
+    }
+    public class CTDAccount
+    {
+        public string CTDAccountId { get; set; }
+        public string CTDAccountName { get; set; }
+    }
+    public class CalcDevident
+    {
+        public string CalcCode { get; set; }
+        public string CalcName { get; set; }
+        public string CalcId { get; set; }
+    }
 }

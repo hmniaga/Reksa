@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Search Custody";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchCustody() {
+        var value = $("#CustodySearchComponentSearchTxt").val();
+        var grid = $("#CustodySearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowCustodySelect(e) {
+        var data = this.dataItem(this.select());
+        var CustodyCode = $.trim(data.CustodyCode);
+        var CustodyName = $.trim(data.CustodyName);
+        var CustodyId = $.trim(data.CustodyId);
+
+        $("#CustodySelectedCode").val(CustodyCode);
+        $("#CustodySelectedName").val(CustodyName);
+        $("#CustodySelectedId").val(CustodyId);
+    };
+
+    $("#CustodySelectButton").on("click", function () {
+        var selectedCode = $("#CustodySelectedCode").val();
+        var selectedName = $("#CustodySelectedName").val();
+        var selectedId = $("#CustodySelectedId").val();
+        
+        $("input[id='CustodyCode']").val(selectedCode).change();
+        $("input[id='CustodyName']").val(selectedName);
+        $("input[id='CustodyId']").val(selectedId);
+    });
+
+    $("#CustodySearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#CustodySearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+        
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.SearchCustody>()
+                                            .Name("CustodySearchComponentGrid")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(m => m.CustodyCode).Width(100).Title("Custody Code");
+                                                columns.Bound(m => m.CustodyName).Width(100).Title("Custody Name");
+                                                columns.Bound(m => m.CustodyId).Hidden();
+                                            })
+                                            .ToolBar(toolbar =>
+                                            {
+                                                toolbar.ClientTemplateId("GridToolbarTemplate");
+                                            })
+                                            .Events(events => events.Change("onRowCustodySelect"))
+                                            .Pageable()
+                                            .Scrollable()
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(m => m.CustodyCode);
+                                                })
+                                                .Read(read =>
+                                                read.Action("SearchCustodyData", "Global").Data("getData"))
+                                            )
+        )
+
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("CustodySearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("CustodySearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchCustody")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="CustodySelectedCode" name="CustodySelectedCode" value="" />
+        <input type="hidden" id="CustodySelectedName" name="CustodySelectedName" value="" />
+        <input type="hidden" id="CustodySelectedId" name="CustodySelectedCId" value="" />
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="CustodySelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

@@ -7,7 +7,7 @@
 }
 
 <div class="col-md-3">
-    <div class="panel panel-default" style="padding-bottom:100%">
+    <div class="panel panel-default" style="padding-bottom:80%">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Authorization</a>
@@ -34,25 +34,27 @@
 
 <!-- Begin Button -->
 <div class="col-md-9">
-    <div class="input-group">
-        <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
-            <span class="btn-label">
-                <i class="fa fa-refresh"></i>
-            </span>
-            Refresh
-        </button>
-        <button id=btnApprove class="btn btn-info waves-effect waves-light">
-            <span class="btn-label">
-                <i class="fa fa-cogs"></i>
-            </span>
-            Process
-        </button>
-        <button id="btnReject" class="btn btn-danger waves-effect waves-light">
-            <span class="btn-label">
-                <i class="fa fa-times"></i>
-            </span>
-            Reject
-        </button>
+    <div class="card-box">
+        <div class="row">
+            <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
+                <span class="btn-label">
+                    <i class="fa fa-refresh"></i>
+                </span>
+                Refresh
+            </button>
+            <button id=btnApprove class="btn btn-info waves-effect waves-light">
+                <span class="btn-label">
+                    <i class="fa fa-cogs"></i>
+                </span>
+                Process
+            </button>
+            <button id="btnReject" class="btn btn-danger waves-effect waves-light">
+                <span class="btn-label">
+                    <i class="fa fa-times"></i>
+                </span>
+                Reject
+            </button>
+        </div>
     </div>
 </div>
 <!-- End Button -->
@@ -60,11 +62,6 @@
 
 <div class="col-md-9">
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Detail</a>
-            </h4>
-        </div>
         <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
             <div class="panel-body">
                 <div class="row">
@@ -100,7 +97,7 @@
                         columns.Bound(p => p.LastUpdate).Width(200);
                         columns.Bound(p => p.LastUser).Width(200);
                     }).Pageable()
-                    .Scrollable(s => s.Height(600))
+                    .Scrollable(s => s.Height(400))
                     .Selectable(selectable => selectable
                         .Mode(GridSelectionMode.Single))
                     )
@@ -389,10 +386,14 @@
                         url: "/Otorisasi/AuthorizeGlobalParam",
                         data: { listId: dataItems, InterfaceId: IdInterface, isApprove: isApprove },
                         success: function (data) {
-                            if (isApprove == true)
-                                swal("Approved!", "Your data has been aprroved", "success");
-                            else
-                                swal("Rejected!", "Your data has been rejected", "success");
+                            if (data.blnResult) {
+                                if (isApprove == true)
+                                    swal("Approved!", "Your data has been aprroved", "success");
+                                else
+                                    swal("Rejected!", "Your data has been rejected", "success");
+                            } else {
+                                swal("Warning", data.ErrMsg, "warning");
+                            }
 
                             subRefresh();
                         }

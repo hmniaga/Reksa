@@ -22,5 +22,12 @@ namespace Reksa.Models
             public string FilterFileDialog { get; set; }
             public string FieldKey1 { get; set; }
         }
+
+        public class CSVFormatFile
+        {
+            public string FileCode { get; set; }
+            public string FileName { get; set; }
+            public List<parameterKYC> listKYC { get; set; }
+        }
     }
 }

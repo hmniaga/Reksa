@@ -46,16 +46,19 @@ namespace ReksaAPI.Controllers
             string ErrMsg;
             DataSet ds = new DataSet();
             blnResult = cls.ReksaNFSGenerateFileUpload(FileCode, TranDate, out ds, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSGenerateFileUpload - Core .Net SqlClient Data Provider\n", "");
             return Json( new { blnResult, ErrMsg, ds });
         }
 
         [Route("api/Report/NFSGenerateFileDownload")]
         [HttpGet("{id}")]
         public JsonResult NFSGenerateFileDownload([FromQuery]string FileCode, [FromQuery]string FileName, [FromQuery]string xmlData, [FromQuery]string UserID)
-        { 
-            DataSet dsResult = new DataSet();
-            dsResult = cls.ReksaNFSGenerateFileDownload(FileCode, FileName, xmlData, UserID);
-            return Json(dsResult);
+        {
+            bool blnResult;
+            string ErrMsg;
+            blnResult = cls.ReksaNFSGenerateFileDownload(FileCode, FileName, xmlData, UserID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSGenerateFileDownload - Core .Net SqlClient Data Provider\n", "");
+            return Json( new { blnResult, ErrMsg });
         }
 
         [Route("api/Report/NFSInsertLogFile")]
@@ -68,6 +71,7 @@ namespace ReksaAPI.Controllers
             string ErrMsg = "";
             blnResult = cls.ReksaNFSInsertLogFile(FileCode, FileName, UserID, TranDate, XMLDataGenerate,
                 XMLRawData, IsLog, IsNeedAuth, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSInsertLogFile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
 

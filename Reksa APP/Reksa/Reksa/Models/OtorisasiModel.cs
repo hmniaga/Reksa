@@ -18,76 +18,7 @@ namespace Reksa.Models
             public string FullAmount { get; set; }
             public string ProdCode { get; set; }
             public string AgentCode { get; set; }
-        }
-
-        public class MainTranksasi
-        {
-            public bool CheckB { get; set; }
-            public string TranId { get; set; }
-            public string TranCode { get; set; }
-            public string ValueDate { get; set; }
-            public string ClientCode { get; set; }
-            public string CIFName { get; set; }
-            public string FullAmount { get; set; }
-            public string ProdCode { get; set; }
-            public string AgentCode { get; set; }
-            public string TranDesc { get; set; }
-            public string TranCCY { get; set; }
-            public string TranAmt { get; set; }
-            public string TranUnit { get; set; }
-            public string SubcFee { get; set; }
-            public string RedempFee { get; set; }
-        }
-        public class MainProduct
-        {
-            public bool CheckB { get; set; }
-            public string ProdId { get; set; }
-            public string ProdCode { get; set; }
-            public string ProdName { get; set; }
-            public string ProdCCY { get; set; }
-            public string TypeName { get; set; }
-            public string ManInvName { get; set; }
-            public string NAV { get; set; }
-            public string EffectiveAfter { get; set; }
-        }
-        public class Subscription
-        {
-            public bool CheckB { get; set; }
-            public long BillId { get; set; }
-            public string BillName { get; set; }
-            public string DebitCredit { get; set; }
-            public DateTime CreateDate { get; set; }
-            public DateTime ValueDate { get; set; }
-            public string ProdCode { get; set; }
-            public string CustodyCode { get; set; }
-            public string BillCCY { get; set; }
-            public decimal TotalBill { get; set; }
-            public decimal Fee { get; set; }
-            public decimal FeeBased { get; set; }
-            public decimal TaxFeeBased { get; set; }
-            public decimal FeeBased3 { get; set; }
-            public decimal FeeBased4 { get; set; }
-            public decimal FeeBased5 { get; set; }
-        }
-        public class Redemption
-        {
-            public bool CheckB { get; set; }
-            public long BillId { get; set; }
-            public string BillName { get; set; }
-            public string DebitCredit { get; set; }
-            public DateTime CreateDate { get; set; }
-            public DateTime PaymentDate { get; set; }
-            public string ProdCode { get; set; }
-            public string CustodyCode { get; set; }
-            public string BillCCY { get; set; }
-            public decimal TotalBill { get; set; }
-            public decimal Fee { get; set; }
-            public decimal FeeBased { get; set; }
-            public decimal TaxFeeBased { get; set; }
-            public decimal FeeBased3 { get; set; }
-            public decimal FeeBased4 { get; set; }
-            public decimal FeeBased5 { get; set; }
-        }
+        }     
         public class AuthParamGlobal
         {
             public bool CheckB { get; set; }

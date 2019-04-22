@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using ReksaAPI.Models;
 
 namespace ReksaAPI.Controllers
 {
-    
     public class MasterController : Controller
     {
         private IConfiguration _config;
@@ -16,8 +14,18 @@ namespace ReksaAPI.Controllers
         {
             _config = iconfig;
             cls = new clsDataAccess(_config);
+        }        
+        [Route("api/Master/RefreshProduct")]
+        [HttpGet("{id}")]
+        public JsonResult RefreshProduct([FromQuery]int ProdId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<SearchModel.Product> listProduct = new List<SearchModel.Product>();
+            blnResult = cls.ReksaRefreshProduct(ProdId, NIK, GUID, out listProduct, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshProduct - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listProduct });
         }
-
         [Route("api/Master/InqUnitNasabahDitwrkan")]
         [HttpGet("{id}")]
         public JsonResult InqUnitNasabahDitwrkan([FromQuery]string CIFNo, [FromQuery]string ProdCode, [FromQuery]int NIK, [FromQuery]string GUID, [FromQuery]DateTime CurrDate)

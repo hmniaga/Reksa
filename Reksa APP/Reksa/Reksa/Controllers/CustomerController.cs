@@ -69,6 +69,7 @@ namespace Reksa.Controllers
         public JsonResult RefreshCustomer(string strCIFNo, int intClientId, string idAccordions)
         {
             ViewData["Status"] = "Status";
+            bool blnResult = false;
             string ErrMsg = "";
 
             CustomerListViewModel vModel = new CustomerListViewModel();
@@ -161,7 +162,7 @@ namespace Reksa.Controllers
             {
                 List<ActivityModel> listCLientActivity = new List<ActivityModel>();
                 List<ListClientModel> listClientModel = new List<ListClientModel>();
-                ReksaGetListClient(strCIFNo, out listClientModel);
+                blnResult = ReksaGetListClient(strCIFNo, out listClientModel, out ErrMsg);
                 vModel.CustomerListClient = listClientModel;
                 vModel.CustomerActivity = listCLientActivity;
             }
@@ -177,7 +178,7 @@ namespace Reksa.Controllers
                 vModel.CustomerBlokir = listCLientBlokir;
             }
             
-            return Json(vModel);
+            return Json( new { blnResult, ErrMsg, vModel });
         }
         public JsonResult GetCIFData(string CIFNo, int NPWP)
         {
@@ -689,12 +690,14 @@ namespace Reksa.Controllers
             }
             return blnResult;
         }
-        private void ReksaGetListClient(string strCIFNo, out List<ListClientModel> listCust)
+        private bool ReksaGetListClient(string strCIFNo, out List<ListClientModel> listCust, out string ErrMsg)
         {
+            bool blnResult = false;
+            ErrMsg = "";
             listCust = new List<ListClientModel>();
-            using (HttpClient client = new HttpClient())
+            try
             {
-                try
+                using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
@@ -704,17 +707,20 @@ namespace Reksa.Controllers
                     string strJson = response.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                     JToken strTokenClient = strObject["listClient"];
                     string strJsonClient = JsonConvert.SerializeObject(strTokenClient);
 
                     listCust = JsonConvert.DeserializeObject<List<ListClientModel>>(strJsonClient);
-                    
-                }
-                catch (Exception e)
-                {
-                    string strErr = e.ToString();
+
                 }
             }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return blnResult;
         }
         private bool GetDataRDB(string ClientCode, out List<ClientRDBModel> listCust, out string ErrMsg)
         {

@@ -142,7 +142,30 @@ namespace ReksaAPI.Controllers
             //}
             return Json(list);
         }
-
+        [Route("api/Global/GetSrcCustody")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcCustody([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.Custody> list = new List<SearchModel.Custody>();
+            //if (cls.setCFMAST(""))
+            //{
+            list = cls.ReksaSrcCustody(Col1, Col2, Validate);
+            //cls.clearDATA("CFMAST_v");
+            //}
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcCalcDevident")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcCalcDevident([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.CalcDevident> list = new List<SearchModel.CalcDevident>();
+            //if (cls.setCFMAST(""))
+            //{
+            list = cls.ReksaSrcCalc(Col1, Col2, Validate);
+            //cls.clearDATA("CFMAST_v");
+            //}
+            return Json(list);
+        }
         [Route("api/Global/GetSrcCustomer")]
         [HttpGet("{id}")]
         public JsonResult GetSrcCustomer([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
@@ -209,6 +232,14 @@ namespace ReksaAPI.Controllers
         {
             List<SearchModel.Product> list = new List<SearchModel.Product>();
             list = cls.ReksaSrcProduct(Col1, Col2, Validate, Status);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcManInv")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcManInv([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.ManInvestasi> list = new List<SearchModel.ManInvestasi>();
+            list = cls.ReksaSrcManInv(Col1, Col2, Validate);
             return Json(list);
         }
         [Route("api/Global/GetSrcOffice")]
@@ -282,6 +313,14 @@ namespace ReksaAPI.Controllers
         {
             List<SearchModel.TransaksiProduct> list = new List<SearchModel.TransaksiProduct>();
             list = cls.ReksaSrcTransSwitchOut(Col1, Col2, Validate);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcType")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcType([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.TypeReksadana> list = new List<SearchModel.TypeReksadana>();
+            list = cls.ReksaSrcType(Col1, Col2, Validate);
             return Json(list);
         }
         [Route("api/Global/GetSrcWaperd")]

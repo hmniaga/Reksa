@@ -23,42 +23,35 @@ namespace ReksaAPI.Controllers
         [HttpPost("{id}")]
         public JsonResult AuthorizeGlobalParam([FromQuery] string InterfaceId, [FromQuery] bool isApprove, [FromQuery]int NIK, [FromQuery]string GUID, [FromBody]DataTable dtData)
         {
-            string ErrMessage = "";
+            string ErrMsg = "";
             bool blnResult = false;
             for (int i = 0; i < dtData.Rows.Count; i++)
             {
-                blnResult = cls.ReksaAuthorizeGlobalParam(dtData.Rows[i]["Id"].ToString(), InterfaceId, NIK, isApprove, ref ErrMessage);
+                blnResult = cls.ReksaAuthorizeGlobalParam(dtData.Rows[i]["Id"].ToString(), InterfaceId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeGlobalParam - Core .Net SqlClient Data Provider\n", "");
             }
-            return Json(new { ErrMessage });
+            return Json(new { blnResult, ErrMsg });
         }
         [Route("api/Otorisasi/ApproveReject")]
         [HttpPost("{id}")]
         public JsonResult ApproveReject([FromQuery]string strPopulate, [FromQuery] string treeid, [FromQuery] bool isApprove, [FromQuery]int NIK, [FromQuery]string GUID, [FromBody]DataTable dtData)
         {
+            bool blnResult = false;
             DataSet dsResult = new DataSet();
             string strCommand = "";
             string selectedId = "";
-            string SuccessMessage = "";
-            string ErrMessage = "";
-            string ErrMessage2 = "";
-            string ErrMessage3 = "";
+            string ErrMsg = "";
             List<SqlParameter> listParam = new List<SqlParameter>();
             for (int i = 0; i < dtData.Rows.Count; i++)
             {
                 strCommand = cls.fnCreateCommand1(strPopulate, dtData, NIK, GUID, out listParam, out selectedId, i);
                 if (isApprove)
                 {
-                    if (treeid == "REKSA2" || treeid == "REKSA7")
-                    {
-                        cls.CekUmurNasabah(selectedId, treeid, out ErrMessage);
-                    }
-                    if (treeid == "REKSA3")
-                    {
-                    }
-                    cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMessage);
+                    blnResult = cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMsg);
+                    ErrMsg = ErrMsg.Replace(strCommand + " - Core .Net SqlClient Data Provider\n", "");
                 }
             }
-            return Json(new { SuccessMessage, ErrMessage });
+            return Json(new { blnResult, ErrMsg });
         }
         [Route("api/Otorisasi/PopulateVerifyAuthBS")]
         [HttpGet("{id}")]
@@ -69,6 +62,17 @@ namespace ReksaAPI.Controllers
             DataSet dsOut = new DataSet();
             blnResult = cls.ReksaPopulateVerifyAuthBS(Authorization, TypeTrx, Action, NoReferensi, NIK, out dsOut, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyAuthBS - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsOut });
+        }
+        [Route("api/Otorisasi/NFSFileCekPendingOtorisasi")]
+        [HttpGet("{id}")]
+        public JsonResult NFSFileCekPendingOtorisasi([FromQuery]string TypeGet, [FromQuery]int LogId)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+            DataSet dsOut = new DataSet();
+            blnResult = cls.ReksaNFSFileCekPendingOtorisasi(TypeGet, LogId, out dsOut, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSFileCekPendingOtorisasi - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsOut });
         }
         [Route("api/Otorisasi/AuthorizeNasabah")]
