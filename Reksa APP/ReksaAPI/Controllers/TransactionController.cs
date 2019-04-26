@@ -92,9 +92,12 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult GetLatestNAV([FromQuery]int ProdId, [FromQuery]int NIK, [FromQuery]string GUID)
         {
-            decimal NAV;
-            NAV = cls.ReksaGetLatestNAV(ProdId, NIK, GUID);
-            return Json(new { NAV });
+            bool blnResult = false;
+            string ErrMsg = "";
+            decimal decNAV;
+            blnResult = cls.ReksaGetLatestNAV(ProdId, NIK, GUID, out decNAV, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetLatestNAV - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, decNAV });
         }
 
         [Route("api/Transaction/CheckSubsType")]
@@ -125,6 +128,7 @@ namespace ReksaAPI.Controllers
             string ErrMsg;
             CalculateFeeModel.CalculateFeeResponse resultFee = new CalculateFeeModel.CalculateFeeResponse();
             blnResult = cls.ReksaCalcFee(model, out resultFee, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCalcFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, resultFee });
         }
 
@@ -132,8 +136,11 @@ namespace ReksaAPI.Controllers
         [HttpGet]
         public JsonResult CalculateSwitchingFee([FromBody]CalculateFeeModel.SwitchingRequest feeModel)
         {
+            bool blnResult;
+            string ErrMsg;
             CalculateFeeModel.SwitchingResponses resultFee = new CalculateFeeModel.SwitchingResponses();
-            resultFee = cls.ReksaCalcSwitchingFee(feeModel);
+            blnResult = cls.ReksaCalcSwitchingFee(feeModel, out resultFee, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCalcSwitchingFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { resultFee });
         }
 
@@ -141,9 +148,12 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult CalculateSwitchingRDBFee([FromBody]CalculateFeeModel.SwitchingRDBRequest feeModel)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             CalculateFeeModel.SwitchingRDBResponses resultFee = new CalculateFeeModel.SwitchingRDBResponses();
-            resultFee = cls.ReksaCalcSwitchingRDBFee(feeModel);
-            return Json(new { resultFee });
+            blnResult = cls.ReksaCalcSwitchingRDBFee(feeModel, out resultFee, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCalcSwitchingRDBFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, resultFee });
         }
 
         [Route("api/Transaction/CalculateBookingFee")]
@@ -152,9 +162,12 @@ namespace ReksaAPI.Controllers
             [FromQuery]string ProductCode, [FromQuery]bool IsByPercent, [FromQuery]bool IsFeeEdit, 
             [FromQuery]decimal PercentageFeeInput)
         {
-            cls.ReksaCalcBookingFee(CIFNo, Amount, ProductCode, IsByPercent, IsFeeEdit, PercentageFeeInput
-            , out decimal PercentageFeeOutput, out string FeeCCY, out decimal Fee);
-            return Json(new { PercentageFeeOutput, FeeCCY, Fee });
+            bool blnResult = false;
+            string ErrMsg = "";
+            blnResult  = cls.ReksaCalcBookingFee(CIFNo, Amount, ProductCode, IsByPercent, IsFeeEdit, PercentageFeeInput
+            , out decimal PercentageFeeOutput, out string FeeCCY, out decimal Fee, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCalcBookingFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, PercentageFeeOutput, FeeCCY, Fee });
         }
         [Route("api/Transaction/MaintainAllTransaksiNew")]
         [HttpGet("{id}")]

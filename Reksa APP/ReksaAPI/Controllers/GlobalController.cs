@@ -211,11 +211,7 @@ namespace ReksaAPI.Controllers
         public JsonResult GetSrcCIFAll([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
         {
             List<SearchModel.Customer> list = new List<SearchModel.Customer>();
-            if (cls.setCFMAST(""))
-            {
-                list = cls.ReksaSrcCIFAll(Col1, Col2, Validate);
-                cls.clearDATA("CFMAST_v");
-            }
+            list = cls.ReksaSrcCIFAll(Col1, Col2, Validate);
             return Json(list);
         }
         [Route("api/Global/GetSrcCurrency")]

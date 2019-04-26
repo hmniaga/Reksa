@@ -38,9 +38,12 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult InqUnitDitwrkan([FromQuery]string ProdCode, [FromQuery]int NIK, [FromQuery]string GUID, [FromQuery]DateTime CurrDate)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             decimal sisaUnit;
-            sisaUnit = cls.ReksaInqUnitDitwrkan(ProdCode, NIK, GUID, CurrDate);
-            return Json(new { sisaUnit });
+            blnResult = cls.ReksaInqUnitDitwrkan(ProdCode, NIK, GUID, CurrDate, out sisaUnit, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaInqUnitDitwrkan - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, sisaUnit });
         }
         private JsonResult Json(object p, object allowGet)
         {

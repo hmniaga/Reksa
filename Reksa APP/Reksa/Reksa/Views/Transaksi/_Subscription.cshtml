@@ -8,11 +8,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Kantor</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @id = "srcOfficeSubs_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @id = "srcOfficeSubs_text1", @class = "form-control input-sm", style = "width: 150%;font-size: 90%;" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcOfficeSubs" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OfficeSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @id = "srcOfficeSubs_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @id = "srcOfficeSubs_text2", @class = "form-control input-sm", style = "width: 150%;font-size: 90%" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Search Office -->
@@ -133,7 +133,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">No Transaksi</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBox().Name("textNoTransaksiSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px" }).Enable(false)
+                            @Html.Kendo().TextBox().Name("textNoTransaksiSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:200px;font-size: 80%;" }).Enable(false)
                         </div>
                     </div>
                     <!-- End No Transaksi -->
@@ -149,11 +149,11 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Kode Produk</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text1" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcProductSubs_text1" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcProductSubs" href="@Url.Action("SearchTrxProductSubs", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductSubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcProductSubs_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdSubs", @type = "hidden" })
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdCCY).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCCYSubs", @type = "hidden" })
                         </div>
@@ -163,11 +163,11 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Client Code</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text1" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcClientSubs_text1" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcClientSubs" href="@Url.Action("SearchClientSubs", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientSubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcClientSubs_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdSubs", @type = "hidden" })
                         </div>
                     </div>
@@ -176,11 +176,11 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Nominal</label>
                         <div class="input-group col-md-9">
-                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text1" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcCurrencySubs_text1" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencySubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcCurrencySubs_text2" }).Enable(false)
                             <span class="input-group-btn"></span>
                             <input id="MoneyNomSubs" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 100%;">
                         </div>

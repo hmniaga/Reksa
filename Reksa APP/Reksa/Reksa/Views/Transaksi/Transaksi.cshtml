@@ -164,9 +164,7 @@ var strBranch;
         $("#btnEdit").click(function () {
             subUpdate();
         });
-        $("#btnSave").click(function () {
-            subSave();
-        });
+        
         $("#btnCancel").click(function () {
             subCancel();
         });
@@ -1748,7 +1746,7 @@ var strBranch;
                     DisableFormTrxRDB(false);
                     swal("Success", data.ErrMsg, "success");
                     if (_strTabName == "SUBS") {
-                        //$("#srcNoRefSubs_text1").val(data.strRefID);
+                        $("#srcNoRefSubs_text1").val(data.strRefID);
                         //cmpsrNoRefSubs.ValidateField();
                     }
                     else if (_strTabName == "REDEMP") {
@@ -1759,7 +1757,7 @@ var strBranch;
                         //cmpsrNoRefRDB.Text1 = dbParam[2].Value.ToString();
                         //cmpsrNoRefRDB.ValidateField();
                     }
-                    //subRefresh();
+                    subRefresh();
                 }
                 else {
                     if (data.dtError.length > 0) {
@@ -1830,18 +1828,22 @@ var strBranch;
     }
 
     function RefreshSubscription(data) {
-        $("#textSIDSubs").val(data.CustomerIdentitas.CIFSID);
-        $("#txtUmurSubs").val(data.TransactionSubsDetail.Umur);
-        $("#textShareHolderIdSubs").val(data.CustomerIdentitas.ShareholderID);
-        $("#txtbRiskProfileSubs").val(data.RiskProfileModel.RiskProfile);
-        var dtpRiskProfileSubs = new Date(data.RiskProfileModel.LastUpdate);
-        $("#dtpRiskProfileSubs").val(dtpRiskProfileSubs.getDate() + '/' + (dtpRiskProfileSubs.getMonth() + 1) + '/' + dtpRiskProfileSubs.getFullYear());
-        $("#maskedRekeningSubs").val(data.CustomerIdentitas.AccountId);
-        $("#textNamaRekeningSubs").val(data.CustomerIdentitas.AccountName);
-        $("#maskedRekeningSubsUSD").val(data.CustomerIdentitas.AccountIdUSD);
-        $("#textNamaRekeningSubsUSD").val(data.CustomerIdentitas.AccountNameUSD);
-        $("#maskedRekeningSubsMC").val(data.CustomerIdentitas.AccountIdMC);
-        $("#textNamaRekeningSubsMC").val(data.CustomerIdentitas.AccountNameMC);
+        if (data.CustomerIdentitas != null)
+        {
+            $("#textSIDSubs").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurSubs").val(data.TransactionSubsDetail.Umur);
+            $("#textShareHolderIdSubs").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileSubs").val(data.RiskProfileModel.RiskProfile);
+            var dtpRiskProfileSubs = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileSubs").val(dtpRiskProfileSubs.getDate() + '/' + (dtpRiskProfileSubs.getMonth() + 1) + '/' + dtpRiskProfileSubs.getFullYear());
+            $("#maskedRekeningSubs").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningSubs").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningSubsUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningSubsUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningSubsMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningSubsMC").val(data.CustomerIdentitas.AccountNameMC);
+        }       
+        
         $("#txtbInputterSubs").val(data.TransactionSubsDetail.Inputter);
         $("#srcSellerSubs_text1").val(data.TransactionSubsDetail.Seller);
         $("#srcWaperdSubs_text1").val(data.TransactionSubsDetail.Waperd);
@@ -3469,6 +3471,115 @@ function SetEnableOfficeId(strKodeKantor) {
             }
         });
     }
-    
+
+    function HitungBookingFee(CIFNo, BookingAmount, ProductCode, ByPercent,
+        IsFeeEdit, PercentageFeeInput) {
+
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/HitungBookingFee',
+            data: {
+                CIFNo: CIFNo, BookingAmount: BookingAmount, ProductCode: ProductCode, ByPercent: ByPercent,
+                IsFeeEdit: IsFeeEdit, PercentageFeeInput: PercentageFeeInput
+            },
+            success: function (data) {
+                if (data.blnResult) {
+                 
+                }
+                else {
+                }
+            }
+        });
+    }    
+    function HitungSwitchingFee(ProdCodeSwitchOut, ProdCodeSwitchIn, Jenis, TranAmt,
+        Unit, IsEdit, PercentageInput, IsEmployee) {
+        var model = JSON.stringify({
+            'ProdSwitchOut': ProdCodeSwitchOut,
+            'ProdSwitchIn': ProdCodeSwitchIn,
+            'Jenis': Jenis,
+            'TranAmt': TranAmt,
+            'Unit': Unit,
+            'NAV': NAV,
+            'IsEdit': IsEdit,
+            'PercentageInput': PercentageInput,
+            'IsEmployee': IsEmployee
+        });
+
+        $.ajax({
+            type: 'POST',
+            data: model,
+            url: '/Transaksi/HitungSwitchingFee',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.blnResult) {
+
+                }
+                else {
+                }
+            }
+        });
+    }
+    function HitungSwitchingRDBFee(ProdIdSwitchOut, ClientIdSwitchOut, Unit, IsEdit, PercentageInput) {
+        var model = JSON.stringify({
+            'ProdSwitchOut': ProdIdSwitchOut,
+            'ClientSwitchOut': ClientIdSwitchOut,
+            'Unit': Unit,
+            'IsEdit': IsEdit,
+            'PercentageInput': PercentageInput
+        });
+
+        $.ajax({
+            type: 'POST',
+            data: model,
+            url: '/Transaksi/HitungSwitchingRDBFee',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.blnResult) {
+
+                }
+                else {
+                }
+            }
+        });
+    }
+
+    function GetDataRDB(clientCode)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Customer/GetDataRDB',
+            data: { strClientCode: clientCode },
+            success: function (data) {
+                if (data.blnResult == true) {
+
+                }
+                else {
+                
+                }
+            }
+        });
+    }
+
+    function GetLatestNAV(ProdId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/GetLatestNAV',
+            data: { ProdId: ProdId },
+            success: function (data) {
+                if (data.blnResult == true) {
+
+                }
+                else {
+
+                }
+            }
+        });
+    }
+
+    $("#btnSave").click(function () {
+        subSave();
+    });
 </script>
 

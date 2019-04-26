@@ -226,6 +226,8 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             vModel.TransactionSubsDetail = new TransactionModel.SubscriptionDetail();
+            List<CustomerIdentitasModel> listCust = new List<CustomerIdentitasModel>();
+            List<RiskProfileModel> listRisk = new List<RiskProfileModel>();
             if (_strTabName != null && !_strTabName.Equals(""))
             {
                 blnResult = RefreshTransaction(_strTabName, RefID, CIFNo,
@@ -234,14 +236,22 @@ namespace Reksa.Controllers
                     out List<TransactionModel.RedemptionList> listRedemption,
                     out List<TransactionModel.SubscriptionRDBList> listSubsRDB,
                     out ErrMsg);
-                blnResult = RefreshNasabah(CIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
+                if (CIFNo != null)
+                {
+                    blnResult = RefreshNasabah(CIFNo, out listCust, out listRisk, out List<CustomerNPWPModel> listNPWP, out ErrMsg);
+                }
 
                 vModel.TransactionSubsDetail = listSubsDetail[0];
                 vModel.ListSubscription = listSubsrption;
                 vModel.ListRedemption = listRedemption;
                 vModel.ListSubsRDB = listSubsRDB;
-                vModel.CustomerIdentitas = listCust[0];
-                vModel.RiskProfileModel = listRisk[0];
+                if (vModel.CustomerIdentitas != null) {
+                    vModel.CustomerIdentitas = listCust[0];
+                }
+                if (vModel.RiskProfileModel != null)
+                {
+                    vModel.RiskProfileModel = listRisk[0];
+                }
 
                 int intUmur = HitungUmur(CIFNo);
                 vModel.TransactionSubsDetail.Umur = intUmur;
@@ -494,35 +504,153 @@ namespace Reksa.Controllers
             }
             return intUmur;
         }
-        
-        private void HitungBookingFee(string CIFNo, decimal BookingAmount, string ProductCode, bool ByPercent,
-            bool IsFeeEdit, decimal PercentageFeeInput, out decimal PctFee,
-            out string FeeCurr, out decimal NominalFee)
+        public JsonResult GetLatestNAV(string ProdId)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            string ErrMsg = "";
+            decimal NAV = 0;
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                HttpResponseMessage response = client.GetAsync("api/Transaction/CalculateBookingFee?CIFNo="+ CIFNo + "&Amount="+ BookingAmount + "&ProductCode="+ ProductCode + "&IsByPercent="+ ByPercent + "&IsFeeEdit=" + IsFeeEdit + "&PercentageFeeInput=" + PercentageFeeInput).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.GetAsync("api/Transaction/GetLatestNAV?ProdId=" + ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenPctFee = strObject["PercentageFeeOutput"];
-                JToken strTokenCCY = strObject["FeeCCY"];
-                JToken strTokenNomFee = strObject["Fee"];
-                string strJsonPctFee = JsonConvert.SerializeObject(strTokenPctFee);
-                string strJsonCCY = JsonConvert.SerializeObject(strTokenCCY);
-                string strJsonNomFee = JsonConvert.SerializeObject(strTokenNomFee);
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
 
-                PctFee = JsonConvert.DeserializeObject<decimal>(strJsonPctFee);
-                NominalFee = JsonConvert.DeserializeObject<decimal>(strJsonNomFee);
-                FeeCurr = JsonConvert.DeserializeObject<string>(strJsonCCY);
+                    JToken strdecNAV = strObject["decNAV"];
+                    string strJsonNAV = JsonConvert.SerializeObject(strdecNAV);
+                    NAV = JsonConvert.DeserializeObject<decimal>(strJsonNAV);
+                }
             }
-
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, NAV });
         }
+        public JsonResult HitungBookingFee(string CIFNo, decimal BookingAmount, string ProductCode, bool ByPercent,
+            bool IsFeeEdit, decimal PercentageFeeInput)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            decimal PctFee = 0;
+            string FeeCurr = "";
+            decimal NominalFee = 0;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
+                    HttpResponseMessage response = client.GetAsync("api/Transaction/CalculateBookingFee?CIFNo=" + CIFNo + "&Amount=" + BookingAmount + "&ProductCode=" + ProductCode + "&IsByPercent=" + ByPercent + "&IsFeeEdit=" + IsFeeEdit + "&PercentageFeeInput=" + PercentageFeeInput).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken strTokenPctFee = strObject["PercentageFeeOutput"];
+                    JToken strTokenCCY = strObject["FeeCCY"];
+                    JToken strTokenNomFee = strObject["Fee"];
+
+                    string strJsonPctFee = JsonConvert.SerializeObject(strTokenPctFee);
+                    string strJsonCCY = JsonConvert.SerializeObject(strTokenCCY);
+                    string strJsonNomFee = JsonConvert.SerializeObject(strTokenNomFee);
+
+                    PctFee = JsonConvert.DeserializeObject<decimal>(strJsonPctFee);
+                    NominalFee = JsonConvert.DeserializeObject<decimal>(strJsonNomFee);
+                    FeeCurr = JsonConvert.DeserializeObject<string>(strJsonCCY);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, PctFee, NominalFee, FeeCurr });
+        }
+        public ActionResult HitungSwitchingFee([FromBody]SwitchingRequest model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            SwitchingResponses calcFeeResult = new SwitchingResponses();
+            try
+            {
+                if (model != null)
+                {
+                    model.NIK = _intNIK;
+                    model.Guid = _strGuid;
+                }
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+
+                    var request = client.PostAsync("api/Transaction/CalculateSwitchingFee", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken strFee = strObject["resultFee"];
+                    string strJsonFee = JsonConvert.SerializeObject(strFee);
+
+                    calcFeeResult = JsonConvert.DeserializeObject<SwitchingResponses>(strJsonFee);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, calcFeeResult });
+        }
+        public ActionResult HitungSwitchingRDBFee([FromBody]SwitchingRDBRequest model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            SwitchingRDBResponses calcFeeResult = new SwitchingRDBResponses();
+            try
+            {
+                if (model != null)
+                {
+                    model.NIK = _intNIK;
+                    model.Guid = _strGuid;
+                }
+                var Content = new StringContent(JsonConvert.SerializeObject(model));                
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+
+                    var request = client.PostAsync("api/Transaction/CalculateSwitchingRDBFee", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken strFee = strObject["resultFee"];
+                    string strJsonFee = JsonConvert.SerializeObject(strFee);
+
+                    calcFeeResult = JsonConvert.DeserializeObject<SwitchingRDBResponses>(strJsonFee);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, calcFeeResult });
+        }
         public JsonResult GetImportantData(string CariApa, string InputData)
         {
             string value = "";

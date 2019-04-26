@@ -356,13 +356,13 @@ namespace Reksa.Controllers
                 dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
 
                 _session.SetString("dsVerifyGlobalParam", JsonConvert.SerializeObject(dsResult));
-                List<OtorisasiModel.AuthTransaction> result = this.MapListOfObject<OtorisasiModel.AuthTransaction>(dsResult.Tables[0]);
-                List<OtorisasiModel.AuthTransactionDetail> result1 = this.MapListOfObject<OtorisasiModel.AuthTransactionDetail>(dsResult.Tables[1]);
-                list.AddRange(result);
-                list1.AddRange(result1);
+                //List<OtorisasiModel.AuthTransaction> result = this.MapListOfObject<OtorisasiModel.AuthTransaction>(dsResult.Tables[0]);
+                //List<OtorisasiModel.AuthTransactionDetail> result1 = this.MapListOfObject<OtorisasiModel.AuthTransactionDetail>(dsResult.Tables[1]);
+                //list.AddRange(result);
+                //list1.AddRange(result1);
                 //vModel.AuthTransaction = list;
             }
-            return Json(new { blnResult, ErrMsg, list, list1 });
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public ActionResult AuthorizeNasabah(string listNasabahId, bool isApprove)
         {
@@ -389,6 +389,156 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
+        public ActionResult AuthorizeBlocking(string listBlockId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeBlocking?listBlockId=" + listBlockId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult AuthorizeTranReversal(string listTranId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeTranReversal?listTranId=" + listTranId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult AuthorizeSwcReversal(string listTranId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeSwcReversal?listTranId=" + listTranId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult CekUmurNasabah(string SelectedId, string TreeId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/CekUmurNasabah?SelectedId=" + SelectedId + "&TreeId=" + TreeId, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult CekRiskProfile(string SelectedId, string TreeId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/CekRiskProfile?SelectedId=" + SelectedId + "&TreeId=" + TreeId, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult CekTieringNotification(string SelectedId, string TreeId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/CekTieringNotification?SelectedId=" + SelectedId + "&TreeId=" + TreeId, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
         public ActionResult AuthorizeTransaction_BS(string listTranId, bool isApprove)
         {
             bool blnResult = false;
@@ -401,6 +551,56 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
                     var request = client.PostAsync("/api/Otorisasi/AuthorizeTransaction_BS?listTranId=" + listTranId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult AuthorizeSwitching_BS(string listTranId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeSwitching_BS?listTranId=" + listTranId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult AuthorizeBooking(string listBookingId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/AuthorizeBooking?listBookingId=" + listBookingId + "&isApprove=" + isApprove + "&NIK=" + _intNIK, Content);
                     var response = request.Result.Content.ReadAsStringAsync().Result;
                     JObject strObject = JObject.Parse(response);
                     blnResult = strObject.SelectToken("blnResult").Value<bool>();

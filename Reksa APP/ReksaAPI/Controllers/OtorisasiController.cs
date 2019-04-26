@@ -96,11 +96,32 @@ namespace ReksaAPI.Controllers
 
             return Json(new { blnResult, ErrMsg });
         }
-        [Route("api/Otorisasi/AuthorizeTransaction_BS")]
+        [Route("api/Otorisasi/AuthorizeBlocking")]
         [HttpPost("{id}")]
-        public JsonResult AuthorizeTransaction_BS([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        public JsonResult AuthorizeBlocking([FromQuery]string listBlockId, [FromQuery]bool isApprove, [FromQuery]int NIK)
         {
-            int intTranId = 0; 
+            int intBlockId = 0;
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            string[] selectedBlockId;
+            listBlockId = (listBlockId + "***").Replace("|***", "");
+            selectedBlockId = listBlockId.Split('|');
+
+            foreach (string s in selectedBlockId)
+            {
+                int.TryParse(s, out intBlockId);
+                blnResult = cls.ReksaAuthorizeBlocking(intBlockId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeBlocking - Core .Net SqlClient Data Provider\n", "");
+            }
+
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/AuthorizeTranReversal")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeTranReversal([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intTranId = 0;
             string ErrMsg = "";
             bool blnResult = false;
 
@@ -111,11 +132,143 @@ namespace ReksaAPI.Controllers
             foreach (string s in selectedTranId)
             {
                 int.TryParse(s, out intTranId);
+                blnResult = cls.ReksaAuthorizeTranReversal(intTranId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeTranReversal - Core .Net SqlClient Data Provider\n", "");
+            }
+
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/AuthorizeSwcReversal")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeSwcReversal([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intTranId = 0;
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            string[] selectedTranId;
+            listTranId = (listTranId + "***").Replace("|***", "");
+            selectedTranId = listTranId.Split('|');
+
+            foreach (string s in selectedTranId)
+            {
+                int.TryParse(s, out intTranId);
+                blnResult = cls.ReksaAuthorizeSwcReversal(intTranId, NIK, isApprove, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaAuthorizeSwcReversal - Core .Net SqlClient Data Provider\n", "");
+            }
+
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/AuthorizeTransaction_BS")]
+        [HttpGet("{id}")]
+        public JsonResult AuthorizeTransaction_BS([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intTranId = 0; 
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            //string[] selectedTranId;
+            //listTranId = (listTranId + "***").Replace("|***", "");
+            //selectedTranId = listTranId.Split('|');
+
+            //foreach (string s in selectedTranId)
+            //{
+                int.TryParse(listTranId, out intTranId);
                 blnResult = cls.ReksaAuthorizeTransaction_BS(intTranId, NIK, isApprove, out ErrMsg);
                 ErrMsg = ErrMsg.Replace("ReksaAuthorizeTransaction_BS - Core .Net SqlClient Data Provider\n", "");
-            }
+            //}
             
             return Json(new { blnResult, ErrMsg });
         }
+        [Route("api/Otorisasi/AuthorizeSwitching_BS")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeSwitching_BS([FromQuery]string listTranId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intTranId = 0;
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            //string[] selectedTranId;
+            //listTranId = (listTranId + "***").Replace("|***", "");
+            //selectedTranId = listTranId.Split('|');
+
+            //foreach (string s in selectedTranId)
+            //{
+            int.TryParse(listTranId, out intTranId);
+            blnResult = cls.ReksaAuthorizeSwitching_BS(intTranId, NIK, isApprove, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaAuthorizeSwitching_BS - Core .Net SqlClient Data Provider\n", "");
+            //}
+
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/AuthorizeBooking")]
+        [HttpPost("{id}")]
+        public JsonResult AuthorizeBooking([FromQuery]string listBookingId, [FromQuery]bool isApprove, [FromQuery]int NIK)
+        {
+            int intBookingId = 0;
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            //string[] selectedTranId;
+            //listTranId = (listTranId + "***").Replace("|***", "");
+            //selectedTranId = listTranId.Split('|');
+
+            //foreach (string s in selectedTranId)
+            //{
+            int.TryParse(listBookingId, out intBookingId);
+            blnResult = cls.ReksaAuthorizeBooking(intBookingId, NIK, isApprove, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaAuthorizeBooking - Core .Net SqlClient Data Provider\n", "");
+            //}
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/CheckValiditasData")]
+        [HttpPost("{id}")]
+        public JsonResult CheckValiditasData([FromQuery]int intTranId, [FromQuery]int intTranType, [FromQuery]double decNominal, [FromQuery]double decUnit,
+            [FromQuery]bool FullAmount, [FromQuery]string ChannelDesc, [FromQuery]double FeeAmount, [FromQuery]double FeePercent, [FromQuery]int intJangkaWaktu,
+            [FromQuery]bool AutoRedemp, [FromQuery]bool Asuransi, [FromQuery]int FrekPendebetan)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            blnResult = cls.ReksaCheckValiditasData(intTranId, intTranType, decNominal, decUnit,
+            FullAmount, ChannelDesc, FeeAmount, FeePercent, intJangkaWaktu,
+            AutoRedemp, Asuransi, FrekPendebetan, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCheckValiditasData - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/CekUmurNasabah")]
+        [HttpPost("{id}")]
+        public JsonResult CekUmurNasabah([FromQuery]string SelectedId, [FromQuery]string TreeId)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            blnResult = cls.ReksaCekNotifikasiBS(SelectedId, TreeId, "AGE", out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCekNotifikasiBS - Core .Net SqlClient Data Provider\n", "");        
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/CekRiskProfile")]
+        [HttpPost("{id}")]
+        public JsonResult CekRiskProfile([FromQuery]string SelectedId, [FromQuery]string TreeId)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            blnResult = cls.ReksaCekNotifikasiBS(SelectedId, TreeId, "RISKPROFILE", out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCekNotifikasiBS - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/CekTieringNotification")]
+        [HttpPost("{id}")]
+        public JsonResult CekTieringNotification([FromQuery]string SelectedId, [FromQuery]string TreeId)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            blnResult = cls.ReksaCekTieringNotification(SelectedId, TreeId, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCekTieringNotification - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        
     }
 }

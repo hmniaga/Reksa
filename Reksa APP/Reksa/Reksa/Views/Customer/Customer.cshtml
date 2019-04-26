@@ -709,6 +709,7 @@
                     return;
                 }
                 if (($('#maskedRekening').val() != "") && ($('#tbNamaRekening').val() != $('#srcCIF_text2').val())) {
+                    
                     swal({
                         title: "Apakah rekening IDR tersebut milik pemegang reksadana?",
                         text: "",
@@ -726,8 +727,10 @@
                             }
                             else {
                                 swal({ title: "Error", text: "Gagal Simpan Data", type: "error" });
+                                return;
                             }
                         });
+                    
                 }
                 if (($('#maskedRekeningUSD').val() != "") && ($('#tbNamaRekeningUSD').val() != $('#srcCIF_text2').val())) {
                     swal({
@@ -813,8 +816,8 @@
                     return;
                 }
                 if ($("#txtbRiskProfile").val() == "") {
-                    swal("Warning", "Data risk profile wajib ada. Mohon lengkapi dulu data Nasabah", "warning");
-                    return;
+                        swal("Warning", "Data risk profile wajib ada. Mohon lengkapi dulu data Nasabah", "warning");
+                    return;                  
                 }
                 GetRiskProfileParam();
 

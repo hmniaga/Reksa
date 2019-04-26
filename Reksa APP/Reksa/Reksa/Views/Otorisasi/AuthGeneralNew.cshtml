@@ -104,7 +104,7 @@
     <div class="card-box">
         <h3 id="groupBox1">Data Master</h3>
         <div class="row" style="padding-bottom:10px">
-            <div id="GridOtorisasi"></div>
+            <div id="dataGridView1"></div>
         </div>
     </div>
 </div>
@@ -112,9 +112,19 @@
 <!-- Begin DataGridView2 -->
 <div class="col-md-12">
     <div class="card-box">
-        <h3 id="groupBox2">Data Transaksi</h3>
+        <h3 id="groupBox2"></h3>
         <div class="row" style="padding-bottom:10px">
-            <div id="GridDetail"></div>
+            <div id="dataGridView2"></div>
+        </div>
+    </div>
+</div>
+<!-- Begin DataGridView2 -->
+<!-- Begin DataGridView3 -->
+<div class="col-md-12">
+    <div class="card-box">
+        <h3 id="groupBox3"></h3>
+        <div class="row" style="padding-bottom:10px">
+            <div id="dataGridView3"></div>
         </div>
     </div>
 </div>
@@ -140,7 +150,7 @@
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        subAcceptReject(true);
+                        setTimeout(function () { subAcceptReject(true) }, 500);
                     }
                 });
 
@@ -158,15 +168,40 @@
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        subAcceptReject(false);
+                        setTimeout(function () { subAcceptReject(false) }, 500);
                     }
                 });
         });
         var gridOptions = {
             height: 300
         };
-        $("#GridOtorisasi").kendoGrid(gridOptions);
-        $("#GridDetail").kendoGrid(gridOptions);
+        $("#dataGridView1").kendoGrid(gridOptions);
+        $("#dataGridView2").kendoGrid(gridOptions);
+        $("#dataGridView3").kendoGrid(gridOptions);
+
+        $("#radioTransaction").change(function () {
+            if ($("#radioTransaction").prop('checked') == true) {
+                subDisableAllTrxControl(true);
+            }
+            else {
+                subDisableAllTrxControl(false);
+            }
+        });
+        $("#radioReverse").change(function () {
+            if ($("#radioReverse").prop('checked') == true) {
+                subDisableAllTrxControl(true);
+                subDisableAllActionControl(false);
+                $("#radioBooking").prop('disabled', true);
+                document.getElementById("btnReject").disabled = true;
+            }
+            else
+            {
+                subDisableAllTrxControl(false);
+                subDisableAllActionControl(true);
+                $("#radioBooking").prop('disabled', false);
+                document.getElementById("btnReject").disabled = false;
+            }
+        });
     });
 
     function subRefresh() {
@@ -220,37 +255,286 @@
             strAction = "EDIT";
         }
 
+        var gridView1 = $("#dataGridView1").data("kendoGrid");
+        var gridView2 = $("#dataGridView2").data("kendoGrid");
+        var gridView3 = $("#dataGridView3").data("kendoGrid");
+
         $.ajax({
             type: 'GET',
             url: '/Otorisasi/PopulateVerifyAuthBS',
             data: { Authorization: strTransaction, TypeTrx: strJenisTrx, strAction: strAction, NoReferensi: RefID },
             success: function (data) {
-                $("#GridDetail").empty();
-                if (data.blnResult) {
-                    if (RefID == "") {
-                        var gridOptions = populateGrid(data.list);
-                        var grid = $("#GridOtorisasi").data("kendoGrid");
-                        if (grid) {
-                            grid.setOptions(gridOptions);
-                        } else {
-                            $("#GridOtorisasi").kendoGrid(gridOptions);
+                if (data.blnResult) {                    
+                    if (ObjectLength(data.dsResult) != 0) {
+                        if (RefID == "") {
+                            var gridView1data = populateGrid(data.dsResult.table);
+                            if (gridView1) {
+                                gridView1.setOptions(gridView1data);
+                            } else {
+                                $("#dataGridView1").kendoGrid(gridView1data);
+                            }
+
+                            var gridViewData = {
+                                height: 300
+                            };
+                            $("#dataGridView2").kendoGrid(gridViewData);
+                            $("#dataGridView3").kendoGrid(gridViewData);
+
+                            if (ObjectLength(data.dsResult) == 2) {
+                                var gridView2Data = populateGridDetail(data.dsResult.table1);
+                                if (gridView2) {
+                                    gridView2.setOptions(gridView2Data);
+                                } else {
+                                    $("#dataGridView2").kendoGrid(gridView2Data);
+                                }
+                            }
+
+                            if ((strTransaction == "TRX") || (strTransaction == "REV")) {
+                                gridView1.hideColumn('tranType');
+                                gridView1.hideColumn('noCIFBigInt');
+                                gridView1.hideColumn('noCIF19');
+                                if (data.dsResult.table1.length > 0) {
+                                    gridView2.hideColumn('checkB');
+                                }
+                                $("#groupBox1").text('Data Master');
+                                $("#groupBox2").text('');
+                                $("#groupBox3").text('');
+                            } else {
+                                if (strAction == "ADD") {
+                                    $("#groupBox1").text('Data Master');
+                                    $("#groupBox2").text('');
+                                    $("#groupBox3").text('');
+                                }
+                                else if (strAction == "EDIT") {
+                                    $("#groupBox1").text('Data Lama');
+                                    $("#groupBox2").text('Data Baru');
+                                    $("#groupBox3").text('');
+                                }
+                                else {
+                                    $("#groupBox1").text('');
+                                    $("#groupBox2").text('');
+                                    $("#groupBox3").text('');
+                                }
+                            }
                         }
-                    } else {
-                        var gridOptions = populateGridDetail(data.list1);
-                        var grid = $("#GridDetail").data("kendoGrid");
-                        if (grid) {
-                            grid.setOptions(gridOptions);
-                        } else {
-                            $("#GridDetail").kendoGrid(gridOptions);
+                        else {
+                            if (ObjectLength(data.dsResult) >= 2 && data.dsResult.table1.length != 0) {
+                                var gridView2Data = populateGridDetail(data.dsResult.table1);
+                                if (gridView2) {
+                                    gridView2.setOptions(gridView2Data);
+                                } else {
+                                    $("#dataGridView2").kendoGrid(gridView2Data);
+                                }
+                                if ((strTransaction == "TRX") || (strTransaction == "REV")) {
+                                    gridView2.hideColumn('tranType');
+                                    if (strAction == "ADD") {
+                                        $("#groupBox2").text('Data Transaksi');
+                                    }
+                                    else if (strAction == "EDIT") {
+                                        $("#groupBox2").text('Data Lama');
+                                    }
+                                    else {
+                                        $("#groupBox2").text('');
+                                    }
+
+                                    if (strJenisTrx == "SUBS") {
+                                        gridView2.hideColumn('kodeProdukSwcOut');
+                                        gridView2.hideColumn('kodeProdukSwcIn');
+                                        gridView2.hideColumn('clientCodeSwcOut');
+                                        gridView2.hideColumn('clientCodeSwcIn');
+                                        gridView2.hideColumn('unitTransaksi');
+                                        gridView2.hideColumn('jangkaWaktu');
+                                        gridView2.hideColumn('jatuhTempo');
+                                        gridView2.hideColumn('frekPendebetan');
+                                        gridView2.hideColumn('asuransi');
+                                        gridView2.hideColumn('autoRedemption');
+                                        gridView2.hideColumn('today');
+                                    }
+                                    else if (strJenisTrx == "REDEMP") {
+                                        gridView2.hideColumn('kodeProdukSwcOut');
+                                        gridView2.hideColumn('kodeProdukSwcIn');
+                                        gridView2.hideColumn('clientCodeSwcOut');
+                                        gridView2.hideColumn('clientCodeSwcIn');
+                                        gridView2.hideColumn('jangkaWaktu');
+                                        gridView2.hideColumn('jatuhTempo');
+                                        gridView2.hideColumn('frekPendebetan');
+                                        gridView2.hideColumn('asuransi');
+                                        gridView2.hideColumn('autoRedemption');
+                                        gridView2.hideColumn('mataUang');
+                                        gridView2.hideColumn('nominalTransaksi');
+                                        gridView2.hideColumn('fullAmount');
+                                        gridView2.hideColumn('today');
+                                    }
+                                    else if (strJenisTrx == "SUBSRDB") {
+                                        gridView2.hideColumn('KodeProdukSwcOut');
+                                        gridView2.hideColumn('KodeProdukSwcIn');
+                                        gridView2.hideColumn('ClientCodeSwcOut');
+                                        gridView2.hideColumn('ClientCodeSwcIn');
+                                        gridView2.hideColumn('UnitTransaksi');
+                                        gridView2.hideColumn('FullAmount');
+                                        gridView2.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "SWCNONRDB") {
+                                        gridView2.hideColumn('KodeProduk');
+                                        gridView2.hideColumn('ClientCode');
+                                        gridView2.hideColumn('NominalTransaksi');
+                                        gridView2.hideColumn('FullAmount');
+                                        gridView2.hideColumn('JangkaWaktu');
+                                        gridView2.hideColumn('JatuhTempo');
+                                        gridView2.hideColumn('FrekPendebetan');
+                                        gridView2.hideColumn('Asuransi');
+                                        gridView2.hideColumn('AutoRedemption');
+                                        gridView2.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "SWCRDB") {
+                                        gridView2.hideColumn('KodeProduk');
+                                        gridView2.hideColumn('ClientCode');
+                                        gridView2.hideColumn('NominalTransaksi');
+                                        gridView2.hideColumn('FullAmount');
+                                        gridView2.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "BOOK") {
+                                        gridView2.hideColumn('ClientCode');
+                                        gridView2.hideColumn('KodeProdukSwcOut');
+                                        gridView2.hideColumn('KodeProdukSwcIn');
+                                        gridView2.hideColumn('ClientCodeSwcOut');
+                                        gridView2.hideColumn('ClientCodeSwcIn');
+                                        gridView2.hideColumn('FullAmount');
+                                        gridView2.hideColumn('UnitTransaksi');
+                                        gridView2.hideColumn('JangkaWaktu');
+                                        gridView2.hideColumn('JatuhTempo');
+                                        gridView2.hideColumn('FrekPendebetan');
+                                        gridView2.hideColumn('Asuransi');
+                                        gridView2.hideColumn('AutoRedemption');
+                                        gridView2.hideColumn('Today');
+                                    }
+                                }
+                                else {
+                                    if (strAction == "ADD") {
+                                        $("#groupBox2").text('');
+                                    }
+                                    else if (strAction == "EDIT") {
+                                        $("#groupBox2").text('Data Baru');
+                                    }
+                                    else {
+                                        $("#groupBox2").text('');
+                                    }
+                                }
+                            }
+                            if (ObjectLength(data.dsResult) == 3 && data.dsResult.table2.length != 0) {
+                                var gridView3Data = populateGridDetail(data.dsResult.table2);
+                                if (gridView3) {
+                                    gridView3.setOptions(gridView3Data);
+                                } else {
+                                    $("#dataGridView3").kendoGrid(gridView3Data);
+                                }
+                                if ((strTransaction == "TRX") || (strTransaction == "REV")) {
+                                    gridView3.hideColumn('tranType');
+
+                                    if (strAction == "EDIT") {
+                                        $("#groupBox3").text('Data Baru');
+                                    }
+                                    else {
+                                        $("#groupBox3").text('');
+                                    }
+
+                                    if (strJenisTrx == "SUBS") {
+                                        gridView3.hideColumn('KodeProdukSwcOut');
+                                        gridView3.hideColumn('KodeProdukSwcIn');
+                                        gridView3.hideColumn('ClientCodeSwcOut');
+                                        gridView3.hideColumn('ClientCodeSwcIn');
+                                        gridView3.hideColumn('UnitTransaksi');
+                                        gridView3.hideColumn('JangkaWaktu');
+                                        gridView3.hideColumn('JatuhTempo');
+                                        gridView3.hideColumn('FrekPendebetan');
+                                        gridView3.hideColumn('Asuransi');
+                                        gridView3.hideColumn('AutoRedemption');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "REDEMP") {
+                                        gridView3.hideColumn('KodeProdukSwcOut');
+                                        gridView3.hideColumn('KodeProdukSwcIn');
+                                        gridView3.hideColumn('ClientCodeSwcOut');
+                                        gridView3.hideColumn('ClientCodeSwcIn');
+                                        gridView3.hideColumn('JangkaWaktu');
+                                        gridView3.hideColumn('JatuhTempo');
+                                        gridView3.hideColumn('FrekPendebetan');
+                                        gridView3.hideColumn('Asuransi');
+                                        gridView3.hideColumn('AutoRedemption');
+                                        gridView3.hideColumn('MataUang');
+                                        gridView3.hideColumn('NominalTransaksi');
+                                        gridView3.hideColumn('FullAmount');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "SUBSRDB") {
+                                        gridView3.hideColumn('KodeProdukSwcOut');
+                                        gridView3.hideColumn('KodeProdukSwcIn');
+                                        gridView3.hideColumn('ClientCodeSwcOut');
+                                        gridView3.hideColumn('ClientCodeSwcIn');
+                                        gridView3.hideColumn('UnitTransaksi');
+                                        gridView3.hideColumn('FullAmount');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "SWCNONRDB") {
+                                        gridView3.hideColumn('KodeProduk');
+                                        gridView3.hideColumn('ClientCode');
+                                        gridView3.hideColumn('NominalTransaksi');
+                                        gridView3.hideColumn('FullAmount');
+                                        gridView3.hideColumn('JangkaWaktu');
+                                        gridView3.hideColumn('JatuhTempo');
+                                        gridView3.hideColumn('FrekPendebetan');
+                                        gridView3.hideColumn('Asuransi');
+                                        gridView3.hideColumn('AutoRedemption');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "SWCRDB") {
+                                        gridView3.hideColumn('KodeProduk');
+                                        gridView3.hideColumn('ClientCode');
+                                        gridView3.hideColumn('NominalTransaksi');
+                                        gridView3.hideColumn('FullAmount');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                    else if (strJenisTrx == "BOOK") {
+                                        gridView3.hideColumn('ClientCode');
+                                        gridView3.hideColumn('KodeProdukSwcOut');
+                                        gridView3.hideColumn('KodeProdukSwcIn');
+                                        gridView3.hideColumn('ClientCodeSwcIn');
+                                        gridView3.hideColumn('FullAmount');
+                                        gridView3.hideColumn('UnitTransaksi');
+                                        gridView3.hideColumn('JangkaWaktu');
+                                        gridView3.hideColumn('JatuhTempo');
+                                        gridView3.hideColumn('FrekPendebetan');
+                                        gridView3.hideColumn('Asuransi');
+                                        gridView3.hideColumn('AutoRedemption');
+                                        gridView3.hideColumn('Today');
+                                    }
+                                }
+                                else {
+                                    $("#groupBox3").text('');
+                                }
+                            }
                         }
                     }
                 }
                 else {
-                    swal("Warning", data.ErrMsg, "warning");
+                    $("#dataGridView1").empty();
+                    $("#dataGridView2").empty();
+                    $("#dataGridView3").empty();
+                    //swal("Warning", data.ErrMsg, "warning");
                 }
             }
         });
     }
+
+    function ObjectLength(object) {
+        var length = 0;
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                ++length;
+            }
+        }
+        return length;
+    };
 
     function populateGrid(response) {
         if (response.length > 0) {
@@ -273,7 +557,7 @@
             };
 
         } else {
-            $("#GridOtorisasi").empty();
+            $("#dataGridView1").empty();
         }
     }
 
@@ -297,20 +581,20 @@
             };
 
         } else {
-            $("#GridDetail").empty();
+            $("#dataGridView2").empty();
         }
     }
 
     function generateColumns(response) {
         var columnNames = Object.keys(response[0]);
         return columnNames.map(function (name) {
-            var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
+            var isIdColumn = name.indexOf("checkB") > -1 || name.indexOf("CheckBox") > -1;
             var value;
-            value = 'NoReferensi';
+            value = 'noReferensi';
             return {
                 headerTemplate: isIdColumn ? "Pilih" : name,
                 template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= " + value + " #'" +
-                    "# if (CheckB) { #" +
+                    "# if (checkB) { #" +
                     "checked='checked'" +
                     "# } #" +
                     "/>" : columnNames,
@@ -324,13 +608,13 @@
     function generateColumnsDetail(response) {
         var columnNames = Object.keys(response[0]);
         return columnNames.map(function (name) {
-            var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
+            var isIdColumn = name.indexOf("checkB") > -1 || name.indexOf("CheckBox") > -1;
             var value;
-            value = 'NoReferensi';
+            value = 'tranId';
             return {
                 headerTemplate: isIdColumn ? "Pilih" : name,
                 template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClickDetail(this)' value= '#= " + value + " #'" +
-                    "# if (CheckB) { #" +
+                    "# if (checkB) { #" +
                     "checked='checked'" +
                     "# } #" +
                     "/>" : columnNames,
@@ -345,14 +629,14 @@
         var state = $(e).is(':checked');
         var value = e.value;
 
-        var grid = $('#GridOtorisasi').data('kendoGrid');
+        var grid = $('#dataGridView1').data('kendoGrid');
         grid.refresh();
 
         grid.tbody.find("tr[role='row']").each(function () {
             var dataItem = grid.dataItem(this);
 
-            if (dataItem.NoReferensi == value) {
-                dataItem.CheckB = state;
+            if (dataItem.noReferensi == value) {
+                dataItem.checkB = state;
                 if (state) {
                     grid.select("tr:eq(value)");
                 }
@@ -365,7 +649,7 @@
         var countAll = 0;
 
         $.each(grid.dataSource.view(), function () {
-            if (this['CheckB'] == true) {
+            if (this['checkB'] == true) {
                 countTrue = countTrue + 1;
             }
             else {
@@ -384,14 +668,14 @@
         var state = $(e).is(':checked');
         var value = e.value;
 
-        var grid = $('#GridDetail').data('kendoGrid');
+        var grid = $('#dataGridView2').data('kendoGrid');
         grid.refresh();
 
         grid.tbody.find("tr[role='row']").each(function () {
             var dataItem = grid.dataItem(this);
 
-            if (dataItem.NoReferensi == value) {
-                dataItem.CheckB = state;
+            if (dataItem.tranId == value) {
+                dataItem.checkB = state;
             }
         })
 
@@ -402,7 +686,7 @@
         var countAll = 0;
 
         $.each(grid.dataSource.view(), function () {
-            if (this['CheckB'] == true) {
+            if (this['checkB'] == true) {
                 countTrue = countTrue + 1;
             }
             else {
@@ -434,16 +718,15 @@
             strTransaction = "";
         }
 
-
         if (strTransaction == "ACC") {
-            var gridMain = $("#GridOtorisasi").data("kendoGrid");
+            var gridMain = $("#dataGridView1").data("kendoGrid");
             var dataItems = "";
 
             gridMain.refresh();
             gridMain.tbody.find("tr[role='row']").each(function () {
                 var dataItem = gridMain.dataItem(this);
-                if (dataItem.CheckB == true) {
-                    dataItems += dataItem.NasabahId + "|";
+                if (dataItem.checkB == true) {
+                    dataItems += dataItem.nasabahId + "|";
                 }
             })
 
@@ -453,8 +736,12 @@
                 data: { listNasabahId: dataItems, isApprove: IsAccept },
                 success: function (data) {
                     if (data.blnResult == true) {
-                        swal("Approved", "Proses Approve Berhasil", "success");
-
+                        if (IsAccept) {
+                            swal("Approved", "Proses Otorisasi Berhasil", "success");
+                        } else
+                        {
+                            swal("Rejected", "Proses Reject Berhasil", "success");
+                        }
                     }
                     else {
                         swal("Warning", data.ErrMsg, "warning");
@@ -462,10 +749,39 @@
                 }
             });
         }
-        else if (strTransaction == "BLK") {
+        else if (strTransaction == "BLK")
+        {
+            var gridMain = $("#dataGridView1").data("kendoGrid");
+            var dataItems = "";
+
+            gridMain.refresh();
+            gridMain.tbody.find("tr[role='row']").each(function () {
+                var dataItem = gridMain.dataItem(this);
+                if (dataItem.checkB == true) {
+                    dataItems += dataItem.kodeBlokir + "|";
+                }
+            })
+
+            $.ajax({
+                type: "POST",
+                url: '/Otorisasi/AuthorizeBlocking',
+                data: { listBlockId: dataItems, isApprove: IsAccept },
+                success: function (data) {
+                    if (data.blnResult == true) {
+                        if (IsAccept) {
+                            swal("Approved", "Proses Otorisasi Berhasil", "success");
+                        } else {
+                            swal("Rejected", "Proses Reject Berhasil", "success");
+                        }
+                    }
+                    else {
+                        swal("Warning", data.ErrMsg, "warning");
+                    }
+                }
+            });
         }
         else if (strTransaction == "TRX") {
-            var IsEdit;
+            var IsEdit = false;
             if ($('#radioNew').prop(':checked') == true) {
                 IsEdit = false;
             }
@@ -478,16 +794,13 @@
             }
             else {
                 strDesc = "reject";
-            }
-
+            }            
             var selectedDetail = 0;
-            var gridDetail = $("#GridDetail").data("kendoGrid");
-
-
+            var gridDetail = $("#dataGridView2").data("kendoGrid");
             if (gridDetail == null) {
                 swal({
                     title: "Warning",
-                    text: "Harap memilih data master transaksi yang akan di" + strDesc + "!",
+                    text: "Harap memilih data detail transaksi yang akan di" + strDesc + "!",
                     type: "warning",
                     showCancelButton: false,
                     confirmButtonClass: 'btn-info',
@@ -499,78 +812,302 @@
                 gridDetail.refresh();
                 gridDetail.tbody.find("tr[role='row']").each(function () {
                     var dataItem = gridDetail.dataItem(this);
-                    if (dataItem.CheckB == true) {
+                    if (dataItem.checkB == true) {
                         selectedDetail = selectedDetail + 1;
                     }
                 })
 
                 var selectedMain = 0;
-                var gridMain = $("#GridOtorisasi").data("kendoGrid");
+                var gridMain = $("#dataGridView1").data("kendoGrid");
                 gridMain.refresh();
                 gridMain.tbody.find("tr[role='row']").each(function () {
                     var dataItem = gridMain.dataItem(this);
-                    console.log(dataItem.CheckB);
-                    if (dataItem.CheckB == true) {
+                    if (dataItem.checkB == true) {
                         selectedMain = selectedMain + 1;
                     }
                 })
-
-
+                
                 if (selectedDetail == 0) {
+                    //alert("Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");
                     swal("Warning", "Harap memilih data master transaksi yang akan di" + strDesc + "!", "warning");
                     return;
                 }
-
                 if (selectedDetail > 1) {
                     swal("Warning", "Harap checklist hanya 1 nomor referensi saja!", "warning");
                     return;
                 }
-
-                if (+selectedMain == 0) {
+                if (selectedMain == 0) {
                     swal("Warning", "Harap memilih data detail transaksi yang akan di" + strDesc + "!", "warning");
                     return;
                 }
-
                 if ((IsAccept == true) && (IsEdit == false)) {
 
                 }
-
+                
                 var dataItems = "";
-
                 gridDetail.refresh();
                 gridDetail.tbody.find("tr[role='row']").each(function () {
                     var dataItem = gridDetail.dataItem(this);
-                    if (dataItem.TranType == 1 || dataItem.TranType == 8) {
-                        if (dataItem.CheckB == true) {
-                            dataItems += dataItem.TranId + "|";
+                    console.log(dataItem.tranId);
+                    if (dataItem.checkB == true) {
+                        if (dataItem.tranType == 1 || dataItem.tranType == 8) {
+                            //dataItems += dataItem.tranId + "|";
+                            if (IsAccept) {
+                                CekUmurNasabah(dataItem.tranId, "REKSA2", function (ErrMessage2) {
+                                    if (ErrMessage2 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage2, "warning") }, 500);
+                                    }
+                                });
+                                CekRiskProfile(dataItem.tranId, "REKSA2", function (ErrMessage3) {
+                                    if (ErrMessage3 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage3, "warning") }, 500);
+                                    }
+                                });
+                                CekTieringNotification(dataItem.tranId, "REKSA2", function (ErrMessage) {
+                                    if (ErrMessage != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage, "warning") }, 500);
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: '/Otorisasi/AuthorizeTransaction_BS',
+                                data: { listTranId: dataItem.tranId, isApprove: IsAccept },
+                                success: function (data) {
+                                    if (data.blnResult == true) {
+                                        if (IsAccept) {
+                                            setTimeout(function () { swal("Approved", "Proses Approve Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        } else {
+                                            setTimeout(function () { swal("Rejected", "Proses Reject Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        }
+                                    }
+                                    else {
+                                        setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                    }
+                                }
+                            });
+                        }
+                        else if (dataItem.tranType == 3) {
+                            //dataItems += dataItem.tranId + "|";
+                            if (IsAccept) {
+                                CekTieringNotification(dataItem.tranId, "REKSA2", function (ErrMessage) {
+                                    if (ErrMessage != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage, "warning") }, 500);
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: '/Otorisasi/AuthorizeTransaction_BS',
+                                data: { listTranId: dataItem.tranId, isApprove: IsAccept },
+                                success: function (data) {
+                                    if (data.blnResult == true) {
+                                        if (IsAccept) {
+                                            setTimeout(function () { swal("Approved", "Proses Approve Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        } else {
+                                            setTimeout(function () { swal("Rejected", "Proses Reject Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        }
+                                    }
+                                    else {
+                                        setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                    }
+                                }
+                            });
+                        }
+                        else if (dataItem.tranType == 6 || dataItem.tranType == 9) {
+                            //dataItems += dataItem.TranId + "|";
+                            if (IsAccept) {
+                                CekUmurNasabah(dataItem.tranId, "REKSA7", function (ErrMessage2) {
+                                    if (ErrMessage2 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage2, "warning")}, 500);                                        
+                                    }
+                                });
+                                CekRiskProfile(dataItem.tranId, "REKSA7", function (ErrMessage3) {
+                                    if (ErrMessage3 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage3, "warning")}, 500);
+                                    }
+                                });
+                                CekTieringNotification(dataItem.tranId, "REKSA7", function (ErrMessage) {
+                                    if (ErrMessage != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage, "warning") }, 500);
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: '/Otorisasi/AuthorizeSwitching_BS',
+                                data: { listTranId: dataItem.tranId, isApprove: IsAccept },
+                                success: function (data) {
+                                    if (data.blnResult == true) {
+                                        if (IsAccept) {
+                                            setTimeout(function () { swal("Approved", "Proses Approve Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        } else {
+                                            setTimeout(function () { swal("Rejected", "Proses Reject Kode Transaksi :" + dataItem.kodeTransaksi + " Berhasil", "success")}, 500);
+                                        }
+                                    }
+                                    else {
+                                        setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                    }
+                                }
+                            });
+
+                        }
+                        else if (dataItem.tranType == 7) {
+                            dataItems += dataItem.tranId + "|";
+                            if (IsAccept) {
+                                CekUmurNasabah(dataItem.tranId, "REKSA3", function (ErrMessage2) {
+                                    if (ErrMessage2 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage2, "warning") }, 500);
+                                    }
+                                });
+                                CekRiskProfile(dataItem.tranId, "REKSA3", function (ErrMessage3) {
+                                    if (ErrMessage3 != "") {
+                                        setTimeout(function () { swal("Warning", ErrMessage3, "warning") }, 500);
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: '/Otorisasi/AuthorizeBooking',
+                                data: { listBookingId: dataItem.tranId, isApprove: IsAccept },
+                                success: function (data) {
+                                    if (data.blnResult == true) {
+                                        if (IsAccept) {
+                                            setTimeout(function () { swal("Approved", "Proses Approve Kode Booking :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        } else {
+                                            setTimeout(function () { swal("Rejected", "Proses Reject Kode Booking :" + dataItem.kodeTransaksi + " Berhasil", "success") }, 500);
+                                        }
+                                    }
+                                    else {
+                                        setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            setTimeout(function () { swal("Warning", "Tipe Transaksi tidak dikenali!", "warning") }, 500);
                         }
                     }
                 })
-
-                $.ajax({
-                    type: "POST",
-                    url: '/Otorisasi/AuthorizeTransaction_BS',
-                    data: { listTranId: dataItems, isApprove: IsAccept },
-                    success: function (data) {
-                        if (data.blnResult == true) {
-                            swal("Approved", "Proses Approve Berhasil", "success");
-
-                        }
-                        else {
-                            swal("Warning", data.ErrMsg, "warning");
-                        }
-                    }
-                });
             }
         }
         else if (strTransaction == "REV") {
+            var gridView2 = $("#dataGridView2").data("kendoGrid");
+            var selectedTranId = "";
+            var selectedTranIdSwc = "";
+            var intJumlah = 0;
+            gridView2.refresh();
+            gridView2.tbody.find("tr[role='row']").each(function () {
+                var dataItem = gridView2.dataItem(this);
+                if (dataItem.checkB == true) {
+                    intJumlah = intJumlah + 1;
+                    if (dataItem.tranType == 1 || dataItem.tranType == 3 || dataItem.tranType == 8) {
+                        selectedTranId += dataItem.tranId + "|";
+                    } else if (dataItem.tranType == 6 || dataItem.tranType == 9) {
+                        selectedTranIdSwc += dataItem.tranId + "|";
+                    }
+                }
+            })
+            if (intJumlah != "") {
+                if (selectedTranId != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Otorisasi/AuthorizeTranReversal',
+                        data: { listTranId: selectedTranId, isApprove: IsAccept },
+                        success: function (data) {
+                                if (data.blnResult == true) {
+                                    if (selectedTranIdSwc != "") {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/Otorisasi/AuthorizeSwcReversal',
+                                            data: { listTranId: selectedTranIdSwc, isApprove: IsAccept },
+                                            success: function (data) {
+                                                if (data.blnResult == true) {
+                                                    if (IsAccept) {
+                                                        setTimeout(function () { swal("Approved", "Proses Otorisasi Berhasil", "success") }, 500);
+                                                    } else {
+                                                        setTimeout(function () { swal("Rejected", "Proses Reject Berhasil", "success") }, 500);
+                                                    }
+                                                }
+                                                else {
+                                                    setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                                }
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        if (IsAccept) {
+                                            setTimeout(function () { swal("Approved", "Proses Otorisasi Berhasil", "success") }, 500);
+                                        } else {
+                                            setTimeout(function () { swal("Rejected", "Proses Reject Berhasil", "success") }, 500);
+                                        }
+                                    }
+                                }
+                                else {
+                                    setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500);
+                                }
+                            
+                        }
+                    });
+                }                
+            } else
+            {
+                setTimeout(function () { swal("Warning", "Harap memilih data detail transaksi yang akan direverse!", "warning") }, 500);
+            }
         }
         subRefresh();
     }
 
     function onRowOtorisasiSelect(e) {
         var data = this.dataItem(this.select());
-        PopulateVerifyData(data.NoReferensi);
+        PopulateVerifyData(data.noReferensi);
     };
 
+    function subDisableAllTrxControl(IsEnabled)
+    {
+        $("#radioAllTrx").prop('disabled', !IsEnabled);
+        $("#radioSubs").prop('disabled', !IsEnabled);
+        $("#radioRedemption").prop('disabled', !IsEnabled);
+        $("#radioRDB").prop('disabled', !IsEnabled);
+        $("#radioSwitching").prop('disabled', !IsEnabled);
+        $("#radioSwcRDB").prop('disabled', !IsEnabled);
+        $("#radioBooking").prop('disabled', !IsEnabled);
+    }
+    function subDisableAllActionControl(IsEnabled)
+    {
+        $("#radioNew").prop('disabled', !IsEnabled);
+        $("#radioEdit").prop('disabled', !IsEnabled);
+    }
+    function CekUmurNasabah(SelectedId, TreeId, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Otorisasi/CekUmurNasabah',
+            data: { SelectedId: SelectedId, TreeId: TreeId },
+            success: function (data) {
+                result(data.ErrMsg);
+            }
+        });
+    }
+    function CekRiskProfile(SelectedId, TreeId, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Otorisasi/CekRiskProfile',
+            data: { SelectedId: SelectedId, TreeId: TreeId },
+            success: function (data) {
+                result(data.ErrMsg);
+            }
+        });
+    }
+    function CekTieringNotification(SelectedId, TreeId, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Otorisasi/CekTieringNotification',
+            data: { SelectedId: SelectedId, TreeId: TreeId },
+            success: function (data) {
+                result(data.ErrMsg);
+            }
+        });
+    }
 </script>

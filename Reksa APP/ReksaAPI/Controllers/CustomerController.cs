@@ -158,12 +158,12 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Customer/MaintainBlokir")]
         [HttpPost]
-        public JsonResult MaintainBlokir([FromBody] CustomerBlokirModel Blokir)
-        {            
-            string strErrMsg;
-            cls.ReksaMaintainBlokir(Blokir, 
-                "", false, 10137, "7ijsfs39", out strErrMsg);
-            return Json(new { strErrMsg });
+        public JsonResult MaintainBlokir([FromBody] CustomerBlokirModel model)
+        {
+            bool blnResult;
+            string ErrMsg;
+            blnResult = cls.ReksaMaintainBlokir(model, "", false, 10137, "7ijsfs39", out ErrMsg);
+            return Json(new { blnResult, ErrMsg });
         }
 
         [Route("api/Customer/SaveExpRiskProfile")]
