@@ -112,5 +112,17 @@ namespace Reksa.Models
             public int TrxTaxAmnesty { get; set; }
             public DateTime Today { get; set; }
         }
+        public class NFSFilePendingOtorisasi
+        {
+            public string LogId { get; set; }
+            public string Period { get; set; }
+            public string TypeUpload { get; set; }
+        }
+        public class NFSFilePendingDetailOtorisasi
+        {
+            public string Field { get; set; }
+            public string OldValue { get; set; }
+            public string NewValue { get; set; }
+        }
     }
 }

@@ -8,6 +8,19 @@ namespace ReksaAPI.Models
     public class POModel
     {
     }
+    public class ProductNAV
+    {
+        public int ProdId { get; set; }
+        public string ProdCCY { get; set; }
+        public string Status { get; set; }
+        public string CloseEndBit { get; set; }
+        public string IsDeviden { get; set; }
+        public decimal NAV { get; set; }
+        public DateTime NAVValueDate { get; set; }
+        public DateTime DevidenDate { get; set; }
+        public string DevidenType { get; set; }
+        public bool IsHargaUnitPerHari { get; set; }
+    }
     public class JurnalRTGS
     {
         public string TranGuid { get; set; }
@@ -31,5 +44,14 @@ namespace ReksaAPI.Models
         public string BeneficiaryBankAddress3 { get; set; }
         public string PaymentDetails1 { get; set; }
         public string PaymentDetails2 { get; set; }
+    }
+    public class ListProduct
+    {
+        public bool CheckB { get; set; }
+        public int ProdId { get; set; }
+        public string ProdCode { get; set; }
+        public string ProdName { get; set; }
+        public string CustodyCode { get; set; }
+
     }
 }

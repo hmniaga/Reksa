@@ -28,11 +28,19 @@ namespace ReksaAPI.Controllers
         {
             bool blnResult;
             string ErrMsg;
+
             List<CustomerIdentitasModel.IdentitasDetail> listCust = new List<CustomerIdentitasModel.IdentitasDetail>();
             List<CustomerIdentitasModel.RiskProfileDetail> listRisk = new List<CustomerIdentitasModel.RiskProfileDetail>();
             List<CustomerNPWPModel> listCustNPWP = new List<CustomerNPWPModel>();
-            blnResult = cls.ReksaRefreshNasabah(CIFNO, NIK, Guid, ref listCust, ref listRisk, ref listCustNPWP, out ErrMsg);
-            ErrMsg = ErrMsg.Replace("ReksaRefreshNasabah - Core .Net SqlClient Data Provider\n", "");
+ 
+
+            blnResult = cls.setDataCustomerByProcedure(CIFNO, "ReksaRefreshNasabah", out ErrMsg);
+            if (blnResult)
+            {
+                blnResult = false;
+                blnResult = cls.ReksaRefreshNasabah(CIFNO, NIK, Guid, ref listCust, ref listRisk, ref listCustNPWP, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaRefreshNasabah - Core .Net SqlClient Data Provider\n", "");
+            }
             return Json(new { blnResult, ErrMsg, listCust, listRisk, listCustNPWP });
         }
 
@@ -158,11 +166,12 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Customer/MaintainBlokir")]
         [HttpPost]
-        public JsonResult MaintainBlokir([FromBody] CustomerBlokirModel model)
+        public JsonResult MaintainBlokir([FromQuery]string BlockDesc, [FromQuery]bool isAccepted, [FromQuery]int NIK, [FromQuery]string GUID, [FromBody] CustomerBlokirModel model)
         {
             bool blnResult;
             string ErrMsg;
-            blnResult = cls.ReksaMaintainBlokir(model, "", false, 10137, "7ijsfs39", out ErrMsg);
+            blnResult = cls.ReksaMaintainBlokir(model, BlockDesc, isAccepted, NIK, GUID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainBlokir - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
 
@@ -207,8 +216,12 @@ namespace ReksaAPI.Controllers
             bool blnResult;
             string ErrMsg;
             List<CIFDataModel> CIFData = new List<CIFDataModel>();
-            blnResult = cls.ReksaGetCIFData(CIFNo, NIK, GUID, NPWP,  ref CIFData,  out ErrMsg);
-            ErrMsg = ErrMsg.Replace("ReksaGetCIFData - Core .Net SqlClient Data Provider\n", "");
+            blnResult = cls.setDataCustomerByProcedure(CIFNo, "ReksaGetCIFData", out ErrMsg);
+            if (blnResult)
+            {
+                blnResult = cls.ReksaGetCIFData(CIFNo, NIK, GUID, NPWP, ref CIFData, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaGetCIFData - Core .Net SqlClient Data Provider\n", "");
+            }
             return Json(new { blnResult, ErrMsg, CIFData });
         }
 

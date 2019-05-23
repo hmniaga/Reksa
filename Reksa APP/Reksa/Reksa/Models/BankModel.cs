@@ -11,4 +11,11 @@ namespace Reksa.Models
         public string BankDesc { get; set; }
         public int BankId { get; set; }
     }
+    public class BankCodeModel
+    {
+        public string KodeBank { get; set; }
+        public string NamaBank { get; set; }
+        public string Branch { get; set; }
+        public string Alamat { get; set; }
+    }
 }

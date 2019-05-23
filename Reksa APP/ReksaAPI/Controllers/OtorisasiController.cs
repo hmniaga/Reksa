@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using ReksaAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,11 +46,8 @@ namespace ReksaAPI.Controllers
             for (int i = 0; i < dtData.Rows.Count; i++)
             {
                 strCommand = cls.fnCreateCommand1(strPopulate, dtData, NIK, GUID, out listParam, out selectedId, i);
-                if (isApprove)
-                {
-                    blnResult = cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMsg);
-                    ErrMsg = ErrMsg.Replace(strCommand + " - Core .Net SqlClient Data Provider\n", "");
-                }
+                blnResult = cls.ReksaGlobalQuery(false, strCommand, listParam, out dsResult, out ErrMsg);
+                ErrMsg = ErrMsg.Replace(strCommand + " - Core .Net SqlClient Data Provider\n", "");
             }
             return Json(new { blnResult, ErrMsg });
         }
@@ -70,11 +68,34 @@ namespace ReksaAPI.Controllers
         {
             string ErrMsg = "";
             bool blnResult = false;
-            DataSet dsOut = new DataSet();
-            blnResult = cls.ReksaNFSFileCekPendingOtorisasi(TypeGet, LogId, out dsOut, out ErrMsg);
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaNFSFileCekPendingOtorisasi(TypeGet, LogId, out dsResult, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaNFSFileCekPendingOtorisasi - Core .Net SqlClient Data Provider\n", "");
-            return Json(new { blnResult, ErrMsg, dsOut });
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/Otorisasi/NFSCekPendingDetailOtorisasi")]
+        [HttpGet("{id}")]
+        public JsonResult NFSCekPendingDetailOtorisasi([FromQuery]int CIFNo, [FromQuery]int LogId)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaNFSCekPendingDetailOtorisasi(CIFNo, LogId, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNFSCekPendingDetailOtorisasi - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Otorisasi/UpdateFlagApprovalNFSGenerate")]
+        [HttpGet("{id}")]
+        public JsonResult UpdateFlagApprovalNFSGenerate([FromQuery]string Type, [FromQuery]int LogId, [FromQuery]string NIK)
+        {
+            string ErrMsg = "";
+            bool blnResult = false;
+
+            blnResult = cls.ReksaUpdateFlagApprovalNFSGenerate(LogId, Type, NIK, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaUpdateFlagApprovalNFSGenerate - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }        
         [Route("api/Otorisasi/AuthorizeNasabah")]
         [HttpPost("{id}")]
         public JsonResult AuthorizeNasabah([FromQuery]string listNasabahId, [FromQuery]bool isApprove, [FromQuery]int NIK)

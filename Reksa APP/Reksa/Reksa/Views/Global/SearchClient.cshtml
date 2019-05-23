@@ -2,8 +2,7 @@
     ViewBag.Title = "Search Client";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
+    int ProdId = (int)ViewBag.ProdId;
 
     Layout = null;
 }
@@ -46,17 +45,10 @@
         var selectedId = $("#ClientSelectedId").val();
         var selectedText = $("#ClientSelectedText").val();
         var selectedClientId = $("#ClientSelectedClientId").val();
-        var parameterSeq = $("#ClientParameterSeq").val();
-        var parameterType = $("#ClientParameterType").val();
 
-        if (parameterSeq && parameterSeq > 0) {
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdCode").val(selectedId).change();
-            $("#Client-" + parameterType + "-" + parameterSeq + " .Parameter_ProdName").val(selectedText);
-        } else {
-            $("input[name='ClientModel.ClientCode']").val(selectedId).change();
-            $("input[name='ClientModel.ClientName']").val(selectedText);
-            $("input[name='ClientModel.ClientId']").val(selectedClientId);
-        }
+        $("input[name='ClientModel.ClientCode']").val(selectedId).change();
+        $("input[name='ClientModel.ClientName']").val(selectedText);
+        $("input[name='ClientModel.ClientId']").val(selectedClientId);
     });
 
     $("#ClientSearchComponentSearchTxt").on("keypress", function (e) {
@@ -78,10 +70,8 @@
             .Name("ClientSearchComponentGrid")
             .Columns(columns =>
             {
-                columns.Bound(m => m.ClientCode);
-                columns.Bound(m => m.ClientName);
-                columns.Bound(m => m.ClientId);
-                columns.Bound(m => m.CIFNo);
+                columns.Bound(m => m.ClientCode).Width(150).Title("Client Code");
+                columns.Bound(m => m.ClientName).Width(500).Title("Client Name");
             })
             @*.ToolBar(toolbar =>
             {
@@ -109,7 +99,7 @@
                 {
                     model.Id(m => m.ClientCode);
                 })
-                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria }))
+                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria, ProdId = ProdId }))
             )
         )
 

@@ -37,6 +37,19 @@ namespace Reksa.Controllers
             UtilitasListViewModel vModel = new UtilitasListViewModel();
             return View("Process", vModel);
         }
+        public ActionResult ImportFile()
+        {
+            ViewBag.strBranch = _strBranch;
+            UtilitasListViewModel vModel = new UtilitasListViewModel();
+            return View("ImportFile", vModel);
+        }
+        public ActionResult SinkronisasiOutstanding()
+        {
+            ViewBag.strBranch = _strBranch;
+            UtilitasListViewModel vModel = new UtilitasListViewModel();
+            return View("SinkronisasiOut", vModel);
+        }
+        
         public JsonResult PopulateProcess()
         {
             bool blnResult = false;

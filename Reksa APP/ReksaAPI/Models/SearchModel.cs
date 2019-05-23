@@ -19,6 +19,13 @@ namespace ReksaAPI.Models
             public string BankDesc { get; set; }
             public int BankId { get; set; }
         }
+        public class BankCode
+        {
+            public string KodeBank { get; set; }
+            public string NamaBank { get; set; }
+            public string Branch { get; set; }
+            public string Alamat { get; set; }
+        }
         public class Booking
         {
             public string RefID { get; set; }
@@ -110,6 +117,13 @@ namespace ReksaAPI.Models
             public DateTime JoinDate { get; set; }
             public bool IsEmployee { get; set; }
             public string IsRDB { get; set; }
+        }
+        public class ClientSwitchIn
+        {
+            public string ClientCode { get; set; }
+            public string ClientName { get; set; }
+            public string ClientId { get; set; }
+            public string CIFNo { get; set; }
         }
         public class TransaksiProduct
         {

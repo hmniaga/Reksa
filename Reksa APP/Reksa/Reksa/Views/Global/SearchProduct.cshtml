@@ -13,10 +13,10 @@
         var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
-        grid.dataSource.transport.options.read.url = parsedUrl;
-
-        grid.dataSource.page(1);
+        grid.dataSource.transport.options.read.url = parsedUrl;        
         grid.dataSource.read();
+        grid.dataSource.page(1);
+        grid.select("tr:eq(0)");
         grid.refresh();
     }
 
@@ -74,7 +74,6 @@
                     {
                         columns.Bound(m => m.ProdCode);
                         columns.Bound(m => m.ProdName);
-                        columns.Bound(m => m.ProdId);
                     })
                     .ToolBar(toolbar =>
                     {

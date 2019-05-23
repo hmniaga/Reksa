@@ -52,7 +52,7 @@ namespace ReksaAPI.Controllers
             DataTable dt = new DataTable();
             List<SqlParameter> listParam = new List<SqlParameter>();
             string strCommand = cls.fnCreateCommand1(strPopulate, dt, NIK, GUID, out listParam, out string selectedId, 0);
-            blnResult = cls.ReksaGlobalQuery(strCommand, listParam, out dsResult, out ErrMsg);
+            blnResult = cls.ReksaGlobalQuery(true, strCommand, listParam, out dsResult, out ErrMsg);
             return Json(new { blnResult, ErrMsg, dsResult });
         }
 
@@ -122,6 +122,15 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcBank(Col1, Col2, Validate, ProdId);
             return Json(list);
         }
+        [Route("api/Global/GetSrcBankCode")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcBankCode([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.BankCode> list = new List<SearchModel.BankCode>();
+            DataSet dsOut = new DataSet();
+            list = cls.ReksaSrcBankCode(Col1, Col2, Validate);
+            return Json(list);
+        }        
         [Route("api/Global/GetSrcBooking")]
         [HttpGet("{id}")]
         public JsonResult GetSrcBooking([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery] int Validate, [FromQuery]string Criteria)
@@ -271,6 +280,14 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcSwitchingRDB(Col1, Col2, Validate, Criteria);
             return Json(list);
         }
+        [Route("api/Global/GetSrcClientSwitchIn")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcClientSwitchIn([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string Criteria)
+        {
+            List<SearchModel.ClientSwitchIn> list = new List<SearchModel.ClientSwitchIn>();
+            list = cls.ReksaSrcClientSwitchIn(Col1, Col2, Validate, Criteria);
+            return Json(list);
+        }        
         [Route("api/Global/GetSrcTrxClientNew")]
         [HttpGet("{id}")]
         public JsonResult GetSrcTrxClientNew([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string Criteria)

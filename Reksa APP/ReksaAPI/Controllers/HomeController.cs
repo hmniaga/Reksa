@@ -14,13 +14,13 @@ namespace ReksaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class HomeController : Controller
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<string> Get()
+        public IActionResult Index()
         {
-            return "WELCOME - REKSA WEB API";
+            return View();
         }
 
         // GET api/values/5

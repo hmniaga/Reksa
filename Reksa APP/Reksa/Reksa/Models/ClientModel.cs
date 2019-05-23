@@ -82,4 +82,11 @@ namespace Reksa.Models
         public bool IsEmployee { get; set; }
         public string IsRDB { get; set; }
     }
+    public class ClientSwitchIn
+    {
+        public string ClientCode { get; set; }
+        public string ClientName { get; set; }
+        public string ClientId { get; set; }
+        public string CIFNo { get; set; }
+    }
 }

@@ -195,6 +195,63 @@ namespace Reksa.Models
         {
             public string FrekuensiPendebetan { get; set; }
         }
+        public class MaintainSwitching
+        {
+            public int intType { get; set; }
+            public int strTranType { get; set; }
+            public string strTranCode { get; set; }
+            public int intTranId { get; set; }
+            public DateTime dtTranDate { get; set; }
+            public int intProdIdSwcOut { get; set; }
+            public int intProdIdSwcIn { get; set; }
+            public int intClientIdSwcOut { get; set; }
+            public int intClientIdSwcIn { get; set; }
+            public int intFundIdSwcOut { get; set; }
+            public int intFundIdSwcIn { get; set; }
+            public string strSelectedAccNo { get; set; }
+            public int intAgentIdSwcOut { get; set; }
+            public int intAgentIdSwcIn { get; set; }
+            public string strTranCCY { get; set; }
+            public decimal decTranAmt { get; set; }
+            public decimal decTranUnit { get; set; }
+            public decimal decSwitchingFee { get; set; }
+            public decimal decNAVSwcOut { get; set; }
+            public decimal decNAVSwcIn { get; set; }
+            public DateTime dtNAVValueDate { get; set; }
+            public decimal decUnitBalanceSwcOut { get; set; }
+            public decimal decUnitBalanceNomSwcOut { get; set; }
+            public decimal decUnitBalanceSwcIn { get; set; }
+            public decimal decUnitBalanceNomSwcIn { get; set; }
+            public int intUserSuid { get; set; }
+            public bool isByUnit { get; set; }
+            public int intSalesId { get; set; }
+            public string strGuid { get; set; }
+            public string strInputter { get; set; }
+            public int intSeller { get; set; }
+            public int intWaperd { get; set; }
+            public bool isFeeEdit { get; set; }
+            public bool isDocFCSubscriptionForm { get; set; }
+            public bool isDocFCDevidentAuthLetter { get; set; }
+            public bool isDocFCJoinAcctStatementLetter { get; set; }
+            public bool isDocFCIDCopy { get; set; }
+            public bool isDocFCOthers { get; set; }
+            public bool isDocTCSubscriptionForm { get; set; }
+            public bool isDocTCTermCondition { get; set; }
+            public bool isDocTCProspectus { get; set; }
+            public bool isDocTCFundFactSheet { get; set; }
+            public bool isDocTCOthers { get; set; }
+            public string strDocFCOthersList { get; set; }
+            public string strDocTCOthersList { get; set; }
+            public decimal decPercentageFee { get; set; }
+            public bool isByPhoneOrder { get; set; }
+            public string strCIFNo { get; set; }
+            public string strOfficeId { get; set; }
+            public string strRefID { get; set; }
+            public bool isNew { get; set; }
+            public string strClientCodeSwitchInNew { get; set; }
+            public int intReferentor { get; set; }
+            public bool isTrxTaxAmnesty { get; set; }
+        }
         public class MaintainTransaksi
         {
             public int intType { get; set; }
@@ -288,6 +345,36 @@ namespace Reksa.Models
         {
             public string fieldName { get; set; }
             public string description { get; set; }
+        }
+        public class Tunggakan
+        {
+            public string RekRelasi { get; set; }
+            public string Status { get; set; }
+            public decimal JumlahTunggakan { get; set; }
+            public DateTime TglAngsuran { get; set; }
+            public DateTime TglBayar { get; set; }
+        }
+        public class TransactionTT
+        {
+            public int ProdId { get; set; }
+            public string ProdCurr { get; set; }
+            public string NamaPemohon { get; set; }
+            public string AlamatPemohon1 { get; set; }
+            public string AlamatPemohon2 { get; set; }
+            public string NamaPenerima { get; set; }
+            public string AlamatPenerima1 { get; set; }
+            public string AlamatPenerima2 { get; set; }
+            public string AlamatPenerima3 { get; set; }
+            public string BeneficiaryBankCode { get; set; }
+            public string BeneficiaryAccNo { get; set; }
+            public string BeneficiaryBankName { get; set; }
+            public string BeneficiaryBankAddress { get; set; }
+            public string PaymentRemarks1 { get; set; }
+            public string PaymentRemarks2 { get; set; }
+            public string NoRekProduk { get; set; }
+            public string GLBiayaFullAmt { get; set; }
+            public int InputterNIK { get; set; }
+            public string ActionType { get; set; }
         }
     }
 }

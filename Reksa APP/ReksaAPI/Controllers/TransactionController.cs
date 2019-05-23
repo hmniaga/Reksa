@@ -183,7 +183,20 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaMaintainAllTransaksiNew - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, strRefID, dtError });
         }
+        [Route("api/Transaction/MaintainSwitching")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainSwitching([FromBody]TransactionModel.MaintainSwitching model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
 
+            DataTable dtError = new DataTable();
+            blnResult = cls.ReksaMaintainSwitching(model, out ErrMsg, out strRefID, out dtError);
+
+            ErrMsg = ErrMsg.Replace("ReksaMaintainSwitching - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, strRefID, dtError });
+        }
         [Route("api/Transaction/GenerateTranCodeClientCode")]
         [HttpGet("{id}")]
         public JsonResult GenerateTranCodeClientCode([FromBody]TransactionModel.GenerateClientCode model)
@@ -196,7 +209,50 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaGenerateTranCodeClientCode - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, strData });
         }
+        [Route("api/Transaction/GetRegulerSubscriptionTunggakan")]
+        [HttpGet("{id}")]
+        public JsonResult GetRegulerSubscriptionTunggakan([FromQuery]int ClientId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<TransactionModel.Tunggakan> listTunggakan = new List<TransactionModel.Tunggakan>();
+            blnResult = cls.ReksaRegulerSubscriptionTunggakan(ClientId, out ErrMsg, out listTunggakan);
+            ErrMsg = ErrMsg.Replace("ReksaRegulerSubscriptionTunggakan - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listTunggakan });
+        }
+        [Route("api/Transaction/PopulateTTCompletion")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateTTCompletion([FromQuery]int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            TransactionModel.TransactionTT listTTCompletion = new TransactionModel.TransactionTT();
+            blnResult = cls.ReksaPopulateTTCompletion(ProdId, out ErrMsg, out listTTCompletion);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateTTCompletion - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listTTCompletion });
+        }
+        [Route("api/Transaction/MaintainCompletion")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainCompletion([FromBody]TransactionModel.TransactionTT model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
 
+            blnResult = cls.ReksaMaintainCompletion(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainCompletion - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Transaction/InitializeDataTTCompletion")]
+        [HttpGet("{id}")]
+        public JsonResult InitializeDataTTCompletion([FromQuery]int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            TransactionModel.TransactionTT listTTCompletion = new TransactionModel.TransactionTT();
+            blnResult = cls.ReksaInitializeDataTTCompletion(ProdId, out ErrMsg, out listTTCompletion);
+            ErrMsg = ErrMsg.Replace("ReksaInitializeDataTTCompletion - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listTTCompletion });
+        }
         private JsonResult Json(object p, object allowGet)
         {
             throw new NotImplementedException();

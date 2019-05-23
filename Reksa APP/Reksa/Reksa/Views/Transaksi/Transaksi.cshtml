@@ -48,12 +48,12 @@
         <!-- Begin Tab -->
         <div id="tabs" class="col-md-12" style="margin-top:20px">
             <ul class="nav nav-tabs" style="background-color:#efefef">
-                <li class="active"><a data-toggle="tab" href="#tab-subscription" id="SUBS">Subscription</a></li>
-                <li><a data-toggle="tab" href="#collapse-redemption" id="REDEMP">Redemption</a></li>
-                <li><a data-toggle="tab" href="#collapse-reksaberjangka" id="SUBSRDB">Reksadana Berjangka</a></li>
-                <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB">Switching Non RDB</a></li>
-                <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB">Switching RDB</a></li>
-                <li><a data-toggle="tab" href="#collapse-booking" id="BOOK">Booking</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab-subscription" id="SUBS"><i class="fa fa-shopping-cart"></i> Subscription</a></li>
+                <li><a data-toggle="tab" href="#collapse-redemption" id="REDEMP"><i class="fa fa-tags"></i> Redemption</a></li>
+                <li><a data-toggle="tab" href="#collapse-reksaberjangka" id="SUBSRDB"><i class="fa fa-hourglass-1"></i>  Reksadana Berjangka</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB"><i class="fa fa-exchange"></i>  Switching Non RDB</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB"><i class="fa fa-exchange"></i> <i class="fa fa-hourglass-1"></i>  Switching RDB</a></li>
+                <li><a data-toggle="tab" href="#collapse-booking" id="BOOK"><i class="fa fa-thumb-tack"></i> Booking</a></li>
             </ul>
 
             <div class="tab-content">
@@ -127,6 +127,8 @@ var strBranch;
     var intPeriod = 0;
     var IsRedempAll;
     var globalJatuhTempoRDB;
+    var _NAVSwcOutNonRDB;
+    var _NAVSwcInNonRDB;
 
     $(document).ready(function () {
         $('#tabs a[href="#tab-subscription"]').trigger('click');
@@ -241,12 +243,36 @@ var strBranch;
         });
         });
 
-        $("#srcCIFRDB").click(function (ev) {
-            ev.preventDefault();
-            var target = $(this).attr("href");
-            $("#CustomerRDBModal .modal-content").load(target, function () {
-                $("#CustomerRDBModal .modal-content").empty().append(this);
-            });
+    $("#srcCIFRDB").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#CustomerRDBModal .modal-content").load(target, function () {
+            $("#CustomerRDBModal .modal-content").empty().append(this);
+        });
+        });
+
+    $("#srcCIFSwc").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#CustomerSwcModal .modal-content").load(target, function () {
+            $("#CustomerSwcModal .modal-content").empty().append(this);
+        });
+        });
+
+    $("#srcCIFSwcRDB").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#CustomerSwcRDBModal .modal-content").load(target, function () {
+            $("#CustomerSwcRDBModal .modal-content").empty().append(this);
+        });
+        });
+
+    $("#srcCIFBooking").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#CustomerBookingModal .modal-content").load(target, function () {
+            $("#CustomerBookingModal .modal-content").empty().append(this);
+        });
         });
 
     $("#srcNoRefSubs").click(function (ev) {
@@ -264,13 +290,13 @@ var strBranch;
         });
         });
 
-        $("#srcNoRefRDB").click(function (ev) {
-            ev.preventDefault();
-            var target = $(this).attr("href");
-            $("#ReferensiRDBModal .modal-content").load(target, function () {
-                $("#ReferensiRDBModal .modal-content").empty().append(this);
-            });
+    $("#srcNoRefRDB").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        $("#ReferensiRDBModal .modal-content").load(target, function () {
+            $("#ReferensiRDBModal .modal-content").empty().append(this);
         });
+    });
 
     $("#srcClientSubs").click(function (ev) {
         ev.preventDefault();
@@ -324,7 +350,7 @@ var strBranch;
                     ValidateClient($("#srcClientSubs_text1").val(), intProdId, function (result) { intClientid = result[0].Clientid; });
                 }
 
-                HitungFee(intProdId, intClientid, intTranType, $('#MoneyNomSubs').val(), 0
+                HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
                     , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
                     , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
                     , function (FeeCurr) {
@@ -373,7 +399,7 @@ var strBranch;
                         intClientid = parseInt(strClientId);
                     }
 
-                    HitungFee(intProdId, intClientid, intTranType, $('#MoneyNomSubs').val(), 0
+                    HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
                         , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
                         , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
                         , function (FeeCurr) {
@@ -445,8 +471,10 @@ var strBranch;
             //}
         }
         GetDataCIF($("#srcCIFSwc_text1").val(), 'SWC');
+        var strCriteria = $('#srcCIFSwc_text1').val() + "#" + $('#srcProductSwcOut_text1').val() + "#" + _strTabName + "#0";
+        var url = '@Html.Raw(Url.Action("SearchTrxClientSwcOut", "Global"))';
+        $('#srcClientSwcOut').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
     });
-
 
     $("#srcProductRedemp_text1").change(function () {
         var strCriteria = $('#srcCIFRedemp_text1').val() + "#" + $('#srcProductRedemp_text1').val() + "#" + _strTabName + "#0";
@@ -456,11 +484,18 @@ var strBranch;
 
     $("#srcClientRedemp_text1").change(function () {
             
-            //GetLatestBalance($("#ClientIdRedemp").val(), function (res) { $("#OutstandingUnitRedemp").val(res) });
+            GetLatestBalance($("#ClientIdRedemp").val(), function (res) { $("#OutstandingUnitRedemp").val(res) });
             //nanti ini dihapus
-            swal("Warning", "nanti syntax ini dihapus, ini cm buat debug karena oustanding nya masih 0", "warning");
-            $("#OutstandingUnitRedemp").val('10000')
+            //swal("Warning", "nanti syntax ini dihapus, ini cm buat debug karena oustanding nya masih 0", "warning");
+            //$("#OutstandingUnitRedemp").val('10000')
         });  
+
+    $("#srcClientSwcOut_text1").change(function () {
+        var strCriteria = $('#ProdIdSwcIn').val() + "#" + $('#srcCIFSwc_text1').val() + "#0";
+        var url = '@Html.Raw(Url.Action("SearchClientSwcIn", "Global"))';
+        $('#srcClientSwcIn').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
+        GetLatestBalance($("#ClientIdSwcOut").val(), function (res) { $("#OutstandingUnitSwc").val(res) });
+    });  
 
     $("#srcCurrencySubs_text1").change(function () {
             $("#labelFeeCurrencySubs").val($("#srcCurrencySubs_text1").val());
@@ -503,7 +538,7 @@ var strBranch;
                 intTranType = 5;
 
                 HitungFee(intProdId, 0, intTranType, $('#MoneyNomRDB').val(), 0
-                    , true, $('#checkFeeEditRDB').val()
+                    , true, $('#checkFeeEditRDB').prop('checked')
                     , $('#PercentageFeeRDB').val(), 1, $('#srcCIFRDB_text1').val()
                     , function (FeeCurr) {
                         $("#labelFeeCurrencySubs").text(FeeCurr);
@@ -613,7 +648,7 @@ var strBranch;
                 swal("Warning", "Client Code harus diisi", "warning");
                 return;
             }
-        if ($("#MoneyNomSubs").val() == 0) {
+        if ($("#MoneyNomSubs").data("kendoNumericTextBox").value() == 0) {
             swal("Warning", "Nominal harus diisi", "warning");
             return;
         }
@@ -655,7 +690,8 @@ var strBranch;
             _NominalFee = $("#MoneyFeeSubs").val();
         }
         
-        var MoneyNomSubs = parseFloat($("#MoneyNomSubs").val().toString().replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);      
+        //var MoneyNomSubs = parseFloat($("#MoneyNomSubs").val().toString().replace(/\./g, "").replace(/\,/g, ".")).toFixed(2);      
+        var MoneyNomSubs = $("#MoneyNomSubs").data("kendoNumericTextBox").value();
 
         var res  = GenerateTranCodeAndClientCode(_strTabName, IsSubsNew, $("#srcProductSubs_text1").val(),
             $("#srcClientSubs_text1").val(), $("#srcCIFSubs_text1").val(),
@@ -1300,12 +1336,12 @@ var strBranch;
             });
         }
         else if (_strTabName == "SUBSRDB") {
-            if ($("#srcNorefRDB_text1").val().length == 0) {
+            if ($("#srcNoRefRDB_text1").val().length == 0) {
                 swal("Warning", "Silahkan Pilih kode Nomor referensi terlebih dahulu!", "warning");
                 return;
             }
             CIFNo = $("#srcCIFRDB_text1").val();
-            RefID = $("#srcNorefRDB_text1").val();
+            RefID = $("#srcNoRefRDB_text1").val();
             $.ajax({
                 type: 'GET',
                 url: '/Transaksi/RefreshTransaction',
@@ -1357,8 +1393,7 @@ var strBranch;
     }
 
     function subSave() {
-        if (_strTabName == "SUBS")
-        {
+        if (_strTabName == "SUBS") {
             if ($("#srcOfficeSubs_text1").val() == "") {
                 swal("Warning", "Kode Kantor harus diisi", "warning");
                 return;
@@ -1451,7 +1486,7 @@ var strBranch;
             //    return;
             //}
 
-            var grid = $("#dataGridViewSubs").data("kendoGrid");            
+            var grid = $("#dataGridViewSubs").data("kendoGrid");
             var arrSubs;
             var arrRedemp = [];
             var arrRDB = [];
@@ -1486,7 +1521,7 @@ var strBranch;
                 'pcDocFCOthersList': '',
                 'pcDocTCOthersList': ''
             });
-            MaintainAllTransaksi(model);           
+            MaintainAllTransaksi(model);
         }
         else if (_strTabName == "REDEMP") {
             if ($("#srcOfficeRedemp_text1").val() == "") {
@@ -1727,6 +1762,237 @@ var strBranch;
             });
             MaintainAllTransaksi(model);
         }
+        else if (_strTabName == "SWCNONRDB")
+        {
+            if ($("#srcOfficeSwc_text1").val() == "") {
+                swal("Warning", "Kode Kantor harus diisi", "warning");
+                return;
+            }
+            //string strIsAllowed = "";
+            //if (clsValidator.ValidasiInputKodeKantor(ClQ, cmpsrKodeKantorSwc.Text1, out strIsAllowed)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateOfficeId], Kode kantor tidak terdaftar ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormSwc();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateOfficeId]! ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            //string strErrorMessage;
+            //strIsAllowed = "";
+            //if (clsValidator.ValidasiUserCBO(ClQ, cmpsrKodeKantorSwc.Text1, strBranch, out strIsAllowed, out strErrorMessage)) {
+            //    if (strIsAllowed == "0") {
+            //        MessageBox.Show("Error [ReksaValidateUserCBOOffice], " + strErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        ResetFormSwc();
+            //        return;
+            //    }
+            //}
+            //else {
+            //    MessageBox.Show("Error [ReksaValidateUserCBOOffice]!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            if ($("#srcCIFSwc_text1").val() == "") {
+                swal("Warning", "CIF harus diisi", "warning");
+                return;
+            }
+
+            //if (!GlobalFunctionCIF.RetrieveCIFData(intNIK, strBranch, strModule, strGuid, Int64.Parse(cmpsrCIFSubs.Text1))) {
+            //    swal("Warning", "Gagal validasi CIF ke modul ProCIF", "warning");
+            //    return;
+            //}
+            //if ((checkPhoneOrderSwc.Checked) && (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFSwc.Text1))) {
+            //    MessageBox.Show("Nasabah tidak memiliki fasilitas phone order!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            //if ($("#textShareHolderIdSwc").val() == "") {
+            //    swal("Warning", "Shareholder ID harus terdaftar", "warning");
+            //    return;
+            //}
+            if ($("#srcProductSwcOut_text1").val() == "") {
+                swal("Warning", "Produk Switch Out Switching belum dipilih", "warning");
+                return;
+            }
+            if ($("#srcProductSwcIn_text1").val() == "") {
+                swal("Warning", "Produk Switch In Switching belum dipilih", "warning");
+                return;
+            }
+            if ($("#srcClientSwcOut_text1").val() == "") {
+                swal("Warning", "Client Code Switch Out Switching belum dipilih", "warning");
+                return;
+            }
+            if (($("#srcClientSwcIn_text1").val() == "") && (IsSubsNew == false)) {
+                swal("Warning", "Client Code Switch Out Switching belum dipilih", "warning");
+                return;
+            }
+            if ($("#RedempSwc").val() == "") {
+                swal("Warning", "Jumlah unit Switching harus diisi!", "warning");
+                return;
+            }
+            if (_intType == 1) {
+                if (+$("#RedempSwc").val() > +$("#OutstandingUnitSwc").val()) {
+                    swal("Warning", "Jumlah unit Switching tidak boleh lebih besar dari Outstanding Unit!", "warning");
+                    return;
+                }
+            }
+            //if (!System.Convert.ToBoolean(objFormDocument.chkbDocFCSubscriptionForm.CheckState)) {
+            //    MessageBox.Show("Formulir Subscription wajib ada", "Penerimaan Dokumen dari Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocFCIDCopy.CheckState)) {
+            //    MessageBox.Show("Copy Bukti Identitas wajib ada", "Penerimaan Dokumen dari Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCSubscriptionForm.CheckState)) {
+            //    MessageBox.Show("Copy Formulir Subscription wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCProspectus.CheckState)) {
+            //    MessageBox.Show("Prospektus wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+            //else if (!System.Convert.ToBoolean(objFormDocument.chkbDocTCFundFactSheet.CheckState)) {
+            //    MessageBox.Show("Fund Fact Sheet wajib ada", "Dokumen yang diterima oleh Nasabah");
+            //    return;
+            //}
+            if ($("#srcSellerSwc_text1").val() == "") {
+                swal("Warning", "NIK Seller harus diisi", "warning");
+                return;
+            }
+            if ($("#srcWaperdSwc_text1").val() == "") {
+                swal("Warning", "NIK Seller tidak terdaftar sbg WAPERD", "warning");
+                return;
+            }
+
+            ////cek risk profile
+            //string RiskProfile;
+            //TimeSpan diff;
+            //DateTime LastUpdateRiskProfile;
+            //DateTime ExpRiskProfile;
+            //CekRiskProfile(cmpsrCIFSwc.Text1, dateTglTransaksiSwc.Value, out RiskProfile, out LastUpdateRiskProfile,
+            //    out ExpRiskProfile,
+            //    out diff);
+
+            //if (RiskProfile.Trim() == "") {
+            //    MessageBox.Show("CIF : " + cmpsrCIFSwc.Text1 + "\nData risk profile harus dilengkapi di Pro CIF", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+
+            @*if (ExpRiskProfile < System.DateTime.Today)
+                {
+                    if (MessageBox.Show("CIF : " + cmpsrCIFSwc.Text1 +
+                        "\nTanggal Last Update Risk Profile : " + LastUpdateRiskProfile.ToString("dd-MMM-yyyy") +
+                        "\nTanggal Last Update risk profile sudah expired" +
+                        "\nApakah Risk Profile Nasabah berubah? ", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        MessageBox.Show("Lakukan Perubahan Risk Profile di Pro CIF-Menu Inquiry and Maintenance-Data Pribadi", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                    else
+                    {
+                        OleDbParameter[] Param2 = new OleDbParameter[2];
+                        (Param2[0] = new OleDbParameter("@pcCIFNo", OleDbType.VarChar, 13)).Value = cmpsrCIFSwc.Text1;
+                        (Param2[1] = new OleDbParameter("@pdNewLastUpdate", OleDbType.Date)).Value = dateTglTransaksiSwc.Value;
+
+                        if (!ClQ.ExecProc("dbo.ReksaManualUpdateRiskProfile", ref Param2))
+                        {
+                            MessageBox.Show("Gagal simpan last update risk profile", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                }*@
+
+            var intSwcType, intClientIdSwcIn;
+            if (IsSwitchingAll)
+            {
+                intSwcType = 6;
+            }
+            else
+            {
+                intSwcType = 5;
+            }
+            if (IsSubsNew) {
+                intClientIdSwcIn = 0;
+            }
+            else {
+                intClientIdSwcIn = $("#ClientIdSwcIn").val();
+            }
+
+            var decUnitBalanceNomSwcOut, decUnitBalanceNomSwcIn;
+
+            decUnitBalanceNomSwcOut = nispOutstandingUnitSwc.Value * _NAVSwcOutNonRDB;
+            decUnitBalanceNomSwcIn = OutstandingUnitSwcIn * _NAVSwcInNonRDB;
+
+            var intReferentor;
+
+            if ($("#srcReferentorSwc_text1").val() == '') {
+                intReferentor = 0;
+            }
+            else {
+                intReferentor = $("#srcReferentorSwc_text1").val();
+            }
+
+            var model = JSON.stringify({
+                'intType': _intType,
+                'strTranType': intSwcType,
+                'strTranCode': $("#textNoTransaksiSwc").val(),
+                'intTranId': 1,
+                'dtTranDate': $("#dateTglTransaksiSwc").val(),
+                'intProdIdSwcOut': $("#ProdIdSwcOut").val(),
+                'intProdIdSwcIn': $("#ProdIdSwcIn").val(),
+                'intClientIdSwcOut': $("#ClientIdSwcOut").val(),
+                'intClientIdSwcIn': intClientIdSwcIn,
+                'intFundIdSwcOut': 0,
+                'intFundIdSwcIn': 0,
+                'strSelectedAccNo': $("#maskedRekeningSwc").val(),
+                'intAgentIdSwcOut': 0,
+                'intAgentIdSwcIn': 0,
+                'strTranCCY': $("#ProdCCYSwcOut").val(),
+                'decTranAmt': 0,
+                'decTranUnit': $("#RedempSwc").val(),
+                'decSwitchingFee': $("#MoneyFeeSwc").val(),
+                'decNAVSwcOut': _NAVSwcOutNonRDB,
+                'decNAVSwcIn': _NAVSwcInNonRDB,
+                //Add 1 hari
+                'dtNAVValueDate': $("#dateTglTransaksiSwc").val(),
+                'decUnitBalanceSwcOut': $("#OutstandingUnitSwc").val(),
+                'decUnitBalanceNomSwcOut': decUnitBalanceNomSwcOut,
+                'decUnitBalanceSwcIn': OutstandingUnitSwcIn,
+                'decUnitBalanceNomSwcIn': decUnitBalanceNomSwcIn,
+                'intUserSuid': '',
+                'isByUnit': true,
+                'intSalesId': 0,
+                'strGuid': '',
+                'strInputter': $("#txtbInputterSwc").val(),
+                'intSeller': $("#srcSellerSwc_text1").val(),
+                'intWaperd': $("#srcWaperdSwc_text1").val(),
+                'isFeeEdit': $("#checkFeeEditSwc").prop('checked'),
+                'isDocFCSubscriptionForm': false,
+                'isDocFCDevidentAuthLetter': false,
+                'isDocFCJoinAcctStatementLetter': false,
+                'isDocFCIDCopy': false,
+                'isDocFCOthers': false,
+                'isDocTCSubscriptionForm': false,
+                'isDocTCTermCondition': false,
+                'isDocTCProspectus': false,
+                'isDocTCFundFactSheet': false,
+                'isDocTCOthers': false,
+                'strDocFCOthersList': '',
+                'strDocTCOthersList': '',
+                'decPercentageFee': $("#PercentageFeeSwc").val(),
+                'isByPhoneOrder': $("#checkPhoneOrderSwc").prop('checked'),
+                'strCIFNo': $("#srcCIFSwc_text1").val(),
+                'strOfficeId': $("#srcOfficeSwc_text1").val(),
+                'strRefID': $("#srcNoRefSwc_text1").val(),
+                'isNew': IsSubsNew,
+                'strClientCodeSwitchInNew': $("#srcClientSwcIn_text1").val(),
+                'intReferentor': intReferentor,
+                'isTrxTaxAmnesty': false
+            });
+            MaintainSwitching(model);
+        }
     }
 
     function MaintainAllTransaksi(model)
@@ -1749,12 +2015,12 @@ var strBranch;
                         $("#srcNoRefSubs_text1").val(data.strRefID);
                         //cmpsrNoRefSubs.ValidateField();
                     }
-                    else if (_strTabName == "REDEMP") {
-                        //cmpsrNoRefRedemp.Text1 = dbParam[2].Value.ToString();
+                    else if (_strTabName == "REDEMP") {                        
+                        $("#srcNoRefRedemp_text1").val(data.strRefID); 
                         //cmpsrNoRefRedemp.ValidateField();
                     }
                     else if (_strTabName == "SUBSRDB") {
-                        //cmpsrNoRefRDB.Text1 = dbParam[2].Value.ToString();
+                        $("#srcNoRefRDB_text1").val(data.strRefID);       
                         //cmpsrNoRefRDB.ValidateField();
                     }
                     subRefresh();
@@ -1789,6 +2055,53 @@ var strBranch;
                                         Errorgrid.select("tr:eq(0)");
                                         $('#ErrorRedempModal').modal('toggle');
                                     }
+                                }
+                            });
+                    }
+                    else {
+                        swal("Warning", data.ErrMsg, "warning");
+                    }
+                }
+            }
+        });
+    }
+
+    function MaintainSwitching(model) {
+        $.ajax({
+            type: 'POST',
+            url: '/Transaksi/MaintainSwitching',
+            data: model,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.blnResult) {
+                    ResetForm();
+                    DisableAllForm(false);
+                    swal("Success", data.ErrMsg, "success");
+                    $("#srcNoRefSwc_text1").val(data.strRefID);
+                    subRefresh();
+                }
+                else {
+                    if (data.dtError.length > 0) {
+                        swal({
+                            title: "Failed",
+                            text: "Data Transaksi Gagal Disimpan",
+                            type: "error",
+                            confirmButtonClass: 'btn-danger',
+                            confirmButtonText: "OK",
+                            closeOnConfirm: true
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    var dataSource = new kendo.data.DataSource(
+                                        {
+                                            data: data.dtError
+                                        });
+                                    var Errorgrid = $('#GridErrorSwc').data('kendoGrid');
+                                    Errorgrid.setDataSource(dataSource);
+                                    Errorgrid.dataSource.pageSize(10);
+                                    Errorgrid.select("tr:eq(0)");
+                                    $('#ErrorSwcModal').modal('toggle');
                                 }
                             });
                     }
@@ -1924,18 +2237,34 @@ var strBranch;
     }
 
     function RefreshRDB(data) {
-        $("#textSIDRDB").val(data.CustomerIdentitas.CIFSID);
-        $("#txtUmurRDB").val(data.TransactionSubsDetail.Umur);
-        $("#textShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
-        $("#txtbRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
-        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-        $("#dtpRiskProfileRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-        $("#maskedRekeningRDB").val(data.CustomerIdentitas.AccountId);
-        $("#textNamaRekeningRDB").val(data.CustomerIdentitas.AccountName);
-        $("#maskedRekeningRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
-        $("#textNamaRekeningRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
-        $("#maskedRekeningRDBMC").val(data.CustomerIdentitas.AccountIdMC);
-        $("#textNamaRekeningRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+        if (data.CustomerIdentitas != null) {
+            $("#textSIDRDB").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurRDB").val(data.TransactionSubsDetail.Umur);
+            $("#textShareHolderIdRDB").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileRDB").val(data.RiskProfileModel.RiskProfile);
+            var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+            $("#maskedRekeningRDB").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningRDB").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningRDBMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+        }
+        
+
+        $("#txtbInputterRDB").val(data.TransactionSubsDetail.Inputter);
+        $("#srcSellerRDB_text1").val(data.TransactionSubsDetail.Seller);
+        $("#srcWaperdRDB_text1").val(data.TransactionSubsDetail.Waperd);
+        $("#srcReferentorRDB_text1").val(data.TransactionSubsDetail.Referentor);
+
+        ValidateReferentor($("#srcSellerRDB_text1").val(), function (output) {
+            $("#srcSellerRDB_text2").val(output);
+        });
+
+        ValidateReferentor($("#srcReferentorRDB_text1").val(), function (output) {
+            $("#srcReferentorRDB_text2").val(output);
+        });
 
         var dataSource = new kendo.data.DataSource(
             {
@@ -1943,22 +2272,9 @@ var strBranch;
             });
         var RDBgrid = $('#dataGridViewRDB').data('kendoGrid');
         RDBgrid.setDataSource(dataSource);
+        RDBgrid.dataSource.pageSize(15);
         RDBgrid.dataSource.page(1);
         RDBgrid.select("tr:eq(0)");
-
-        $("#txtbInputterRDB").val(data.TransactionSubsDetail.Inputter);
-        $("#srcSellerRDB_text1").val(data.TransactionSubsDetail.Seller);
-        $("#srcWaperdRDB_text1").val(data.TransactionSubsDetail.Waperd);
-        $("#ReferrantorIdRDB").val(data.TransactionSubsDetail.Referentor);
-
-        ValidateReferentor($("#srcSellerRDB_text1").val(), function (output) {
-            $("#srcSellerRDB_text2").val(output);
-        });
-
-        ValidateReferentor($("#ReferrantorIdRDB").val(), function (output) {
-            $("#ReferrantorNameRDB").val(output);
-        });
-
     }
 
     function RefreshNasabahRDB(data) {
@@ -2335,7 +2651,8 @@ function DisableFormTrxSubs(isEnabled) {
         $("#srcClientSubs").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
     }
 
-    $("#MoneyNomSubs").prop('disabled', !isEnabled);
+    //$("#MoneyNomSubs").prop('disabled', !isEnabled);
+    $("#MoneyNomSubs").data("kendoNumericTextBox").enable(isEnabled);
     $("#checkPhoneOrderSubs").prop('disabled', true);
 
     if ((isEnabled == true) && ($("#srcCIFSubs_text1").val() != "")) {
@@ -2432,7 +2749,7 @@ function DisableFormRDB(isEnabled) {
     $("#srcWaperdRDB_text1").prop('disabled', true);
     $("#srcWaperdRDB").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
 
-    $("#srcNorefRDB_text1").prop('disabled', isEnabled);
+    $("#srcNoRefRDB_text1").prop('disabled', isEnabled);
     $("#srcCIFRDB_text1").prop('disabled', isEnabled);
     $("#srcSellerRDB_text1").prop('disabled', isEnabled);
     $("#srcReferentorRDB_text1").prop('disabled', isEnabled);
@@ -2900,7 +3217,8 @@ function ResetFormTrxSubs() {
     $('#srcClientSubs_text2').val('');
     $('#srcCurrencySubs_text1').val('');
     $('#srcCurrencySubs_text2').val('');
-    $('#MoneyNomSubs').val(0);
+    //$('#MoneyNomSubs').val(0);
+    $("#MoneyNomSubs").data("kendoNumericTextBox").value(0);
     $('#checkPhoneOrderSubs').prop('checked', false);
     $('#checkFullAmtSubs').prop('checked', true);
     $('#checkFeeEditSubs').prop('checked', false);
@@ -3436,7 +3754,7 @@ function SetEnableOfficeId(strKodeKantor) {
     } 
 
     function toDate(dateStr) {
-        const [day, month, year] = dateStr.split("/")
+        var [day, month, year] = dateStr.split("/")
         return new Date(year, month - 1, day)
     }
 
@@ -3576,6 +3894,23 @@ function SetEnableOfficeId(strKodeKantor) {
                 }
             }
         });
+    }
+
+    function ValidateReferensi(Noref, Criteria, result) {
+        if (CurrCode != '') {
+            $.ajax({
+                type: 'GET',
+                url: '/Global/ValidateReferensi',
+                data: { Col1: Noref, Col2: '', Validate: 1, Criteria },
+                success: function (data) {
+                    if (data.length != 0) {
+                        result(data[0].TanggalTransaksi);
+                    } else {
+                        result('');
+                    }
+                }
+            });
+        }
     }
 
     $("#btnSave").click(function () {

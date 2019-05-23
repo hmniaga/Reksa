@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewData["Title"] = "Adjustment NAV Date";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Adjustment NAV Date</a>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="card-box">
+            <!-- Begin Button -->
+            <div class="input-group">
+                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+                <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-edit"></i>
+                    </span>
+                    Edit
+                </button>
+                <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>
+                    Save
+                </button>
+                <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-danger waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-remove"></i>
+                    </span>
+                    Cancel
+                </button>
+            </div>
+            <!-- End Button -->
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <!-- Begin Client Code Switch Out-->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Client Code Switch Out</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("textBox1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Client Code Switch Out -->
+                <!-- Begin Client Name Switch Out -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Client Name Switch Out</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("textBox2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Client Name Switch Out -->
+                <!-- Begin Tran Code -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Tran Code</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("textBox3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Tran Code -->
+            </div>
+            <div class="col-md-4">
+                <!-- Begin Client Code Switch In -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Client Code Switch In</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("Money1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Client Code Switch In -->
+                <!-- Begin Client Name Switch In -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Client Name Switch In</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("Money3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Client Name Switch In -->
+                <!-- Begin New NAV Value Date -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">New NAV Value Date</label>
+                    <div class="input-group col-sm-4">
+                        @(Html.Kendo().DatePicker().Name("dateTimePicker1").HtmlAttributes(new { style = "width: 150px;" }).Enable(false))
+                    </div>
+                </div>
+                <!-- End New NAV Value Date -->
+            </div>
+            <div class="col-md-4">
+                <!-- Begin Tran Amount -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Tran Amount</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("Money4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Tran Amount -->
+                <!-- Begin Tran Unit -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Tran Unit</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("Money4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                    </div>
+                </div>
+                <!-- End Tran Unit -->
+                <!-- Begin Old NAV Value Date -->
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">Old NAV Value Date</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("dateTimePicker2").HtmlAttributes(new { style = "width: 150px;" }).Enable(false))
+                    </div>
+                </div>
+                <!-- End Old NAV Value Date -->
+            </div>
+        </div>
+        <div class="col-md-12">
+            <!-- Begin dataGridView1 -->
+            <div class="form-group">
+                <div class="input-group">
+                    <div id="dataGridView1"></div>
+                </div>
+            </div>
+            <!-- End dataGridView1 -->
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var grid = {
+            height: 250
+        };
+        $("#dataGridView1").kendoGrid(grid);
+    });
+
+    function PopulateProducts() {
+
+    }
+</script>
+

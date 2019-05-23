@@ -102,6 +102,67 @@ namespace Reksa.Controllers
             return Json(result);
         }
 
+        public ActionResult SearchBank(string search, string criteria, int ProdId)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            ViewBag.ProdId = ProdId;
+            return View();
+        }
+        public ActionResult SearchBankData([DataSourceRequest]DataSourceRequest request, string search, int ProdId)
+        {
+            int total = 0;
+            List<BankModel> list = new List<BankModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBank?Col1=" + search + "&Col2=&Validate=0&ProdId=" + ProdId).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<BankModel>>(stringData);
+            }
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
+        }
+        public ActionResult SearchBankCode(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchBankCodeData([DataSourceRequest]DataSourceRequest request, string search)
+        {
+            int total = 0;
+            List<BankCodeModel> list = new List<BankCodeModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcBankCode?Col1=" + search + "&Col2=&Validate=0").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<BankCodeModel>>(stringData);
+            }
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
+        }
         public ActionResult SearchTrxClientSubs(string search, string criteria)
         {
             ViewBag.Search = search;
@@ -109,6 +170,12 @@ namespace Reksa.Controllers
             return View();
         }
         public ActionResult SearchTrxClientRedemp(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchTrxClientSwcOut(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -149,6 +216,49 @@ namespace Reksa.Controllers
                 result.Data = list;
             }
 
+            return Json(result);
+        }
+
+        public ActionResult SearchClientSwcIn(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+
+        public ActionResult SearchClientSwcInData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<ClientSwitchIn> list = new List<ClientSwitchIn>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcClientSwitchIn?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<ClientSwitchIn>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
             return Json(result);
         }
 
@@ -314,6 +424,7 @@ namespace Reksa.Controllers
         }
         public ActionResult SearchCalcDevData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
+            string ErrMsg;
             if (request.Filters.Count > 0)
             {
                 string type = request.Filters[0].GetType().ToString();
@@ -339,7 +450,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
 
             DataSourceResult result = null;
@@ -423,6 +534,7 @@ namespace Reksa.Controllers
 
         public ActionResult SearchCIFData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
+            string ErrMsg;
             if (request.Filters.Count > 0)
             {
                 string type = request.Filters[0].GetType().ToString();
@@ -448,7 +560,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
 
             DataSourceResult result = null;
@@ -468,6 +580,7 @@ namespace Reksa.Controllers
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
+            ViewBag.ProdId = ProdId;
             return View();
         }
         public ActionResult SearchClientSubs(string search, string criteria, int ProdId)
@@ -646,6 +759,7 @@ namespace Reksa.Controllers
         }
         public ActionResult SearchCustodyData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
+            string ErrMsg;
             if (request.Filters.Count > 0)
             {
                 string type = request.Filters[0].GetType().ToString();
@@ -671,7 +785,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
 
             DataSourceResult result = null;
@@ -748,7 +862,8 @@ namespace Reksa.Controllers
             return View();
         }
         public ActionResult SearchCustomerData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
-        {            
+        {
+            string ErrMsg;
             if (request.Filters.Count > 0)
             {
                 string type = request.Filters[0].GetType().ToString();
@@ -774,7 +889,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
 
             DataSourceResult result = null;
@@ -790,6 +905,7 @@ namespace Reksa.Controllers
         }
         public ActionResult ValidateCustomer(string Col1, string Col2, int Validate)
         {
+            string ErrMsg;
             List<CustomerModel> list = new List<CustomerModel>();
             try
             {
@@ -805,7 +921,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
             return Json(list);
         }
@@ -993,6 +1109,7 @@ namespace Reksa.Controllers
         }
         public JsonResult ValidateProduct(string Col1, string Col2, int Validate)
         {
+            string ErrMsg;
             List<ProductModel> list = new List<ProductModel>();
             try
             {
@@ -1008,7 +1125,7 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
-
+                ErrMsg = e.Message;
             }
             return Json(list);
         }
@@ -1582,6 +1699,29 @@ namespace Reksa.Controllers
                 HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcManInv?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
                 string stringData = response.Content.ReadAsStringAsync().Result;
                 list = JsonConvert.DeserializeObject<List<SearchManInv>>(stringData);
+            }
+            return Json(list);
+        }
+
+        public JsonResult ValidateReferensi(string Col1, string Col2, int Validate, string criteria)
+        {
+            string ErrMsg;
+            List<ReferensiModel> list = new List<ReferensiModel>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTransaksiRefID?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=1&Criteria=" + criteria).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<ReferensiModel>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
             }
             return Json(list);
         }

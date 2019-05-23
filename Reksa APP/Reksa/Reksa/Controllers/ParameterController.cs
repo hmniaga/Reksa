@@ -29,6 +29,21 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+        public ActionResult UploadWaperd()
+        {
+            ParameterListViewModel vModel = new ParameterListViewModel();           
+            return View(vModel);
+        }
+        public ActionResult ClientCodeControl()
+        {
+            ParameterListViewModel vModel = new ParameterListViewModel();
+            return View(vModel);
+        }
+        public ActionResult PindahCabang()
+        {
+            ParameterListViewModel vModel = new ParameterListViewModel();
+            return View(vModel);
+        }
         public ActionResult Index()
         {
             ViewData["label1"] = "Produk";

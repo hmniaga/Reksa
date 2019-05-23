@@ -111,7 +111,7 @@
                 </div>
                 <!-- End Input Rekening USD -->
                 <!-- Begin Input Rekening -->
-                <div class="form-group">
+                <div class="form-group" hidden="hidden">
                     <label class="col-sm-3 control-label">Rekening MC</label>
                     <div class="input-group">
                         @Html.Kendo().TextBox().Name("maskedRekeningSubsMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
@@ -180,9 +180,9 @@
                             <span class="input-group-btn">
                                 <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 70%;", @id = "srcCurrencySubs_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;font-size: 70%;", @id = "srcCurrencySubs_text2" }).Enable(false)
                             <span class="input-group-btn"></span>
-                            <input id="MoneyNomSubs" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 100%;">
+                            @Html.Kendo().NumericTextBox().Name("MoneyNomSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false).Min(0)
                         </div>
                     </div>
                     <!-- End Nominal -->
@@ -449,7 +449,8 @@
         $("#dateTglTransaksiSubs").val(dateTglTransaksiSubs.getDate() + '/' + (dateTglTransaksiSubs.getMonth() + 1) + '/' + dateTglTransaksiSubs.getFullYear());
         $("#srcClientSubs_text1").val(data.ClientCode);
         $("#srcCurrencySubs_text1").val(data.CCY);  
-        $("#MoneyNomSubs").val(data.Nominal);
+        //$("#MoneyNomSubs").val(data.Nominal);
+        $("#MoneyNomSubs").data("kendoNumericTextBox").value(data.Nominal);
         $('#checkFullAmtSubs').prop('checked', data.FullAmount);
         $('#checkFeeEditSubs').prop('checked', data.EditFee);
         $('#checkPhoneOrderSubs').prop('checked', data.PhoneOrder);

@@ -12,6 +12,7 @@ namespace Reksa.ViewModels
         public List<OtorisasiModel.AuthParamGlobal> AuthParamGlobal { get; set; }
         public List<OtorisasiModel.Detail> Detail{ get; set; }
         public List<OtorisasiModel.AuthTransaction> AuthTransaction { get; set; }
-        
+        public List<OtorisasiModel.NFSFilePendingOtorisasi> NFSFilePendingOtorisasi { get; set; }
+        public List<OtorisasiModel.NFSFilePendingDetailOtorisasi> NFSFilePendingDetailOtorisasi { get; set; }
     }
 }

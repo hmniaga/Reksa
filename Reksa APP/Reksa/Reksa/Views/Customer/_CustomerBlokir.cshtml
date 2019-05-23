@@ -4,79 +4,63 @@
 <div class="col-md-12">
     <div class="card-box">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <!-- Begin Search Client -->
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Client Code</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
+                        <label class="col-sm-4 control-label">Client Code</label>
+                        <div class="input-group col-md-8">
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @style = "font-size: 90%;", @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
                             <span class="input-group-btn">
-                                <a id="srcClient"  href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                <a id="srcClient" href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2", @style = "width: 200px;font-size: 70%;" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
                             @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
                         </div>
                     </div>
-                </div>
                 <!-- End Search Client -->
-            </div>
-            <div class="col-md-12">
                 <!-- Begin Unit Blokir -->
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Unit Blokir</label>
+                        <label class="col-sm-4 control-label">Unit Blokir</label>
                         <div class="input-group">
                             @Html.Kendo().TextBox().Name("MoneyBlokir").HtmlAttributes(new { @class = "form-control input-sm", @required = "required" }).Enable(false)
-                            
+
                         </div>
                     </div>
-                </div>
                 <!-- End Unit Blokir -->
-                <!-- Begin Tgl Blokir -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="col-sm-5 control-label">Tgl Blokir</label>
-                        <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("dtpTglTran").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
-                        </div>
-                    </div>
-                </div>
-                <!-- End Tgl Blokir -->
-            </div>
-            <div class="col-md-12">
                 <!-- Begin Outstanding Unit -->
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Outstanding Unit</label>
+                        <label class="col-sm-4 control-label">Outstanding Unit</label>
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.BlokirModel.decOutStanding).HtmlAttributes(new { @id = "OutsUnit", @class = "form-control input-sm" }).Enable(false)
                         </div>
                     </div>
-                </div>
                 <!-- End Outstanding Unit -->
-                <!-- Begin Tgl Expiry Blokir -->
-                <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <!-- Begin Tgl Blokir -->
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Tgl Expiry Blokir</label>
+                        <label class="col-sm-4 control-label">Tgl Blokir</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePicker().Name("dtpTglTran").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                        </div>
+                    </div>
+                <!-- End Tgl Blokir -->
+                <!-- Begin Tgl Expiry Blokir -->
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Tgl Expiry Blokir</label>
                         <div class="input-group">
                             @(Html.Kendo().DatePicker().Name("dtpExpiry").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
                         </div>
                     </div>
-                </div>
                 <!-- End Tgl Expiry Blokir -->
-            </div>
-            <div class="col-md-12">
                 <!-- Begin Jml Unit Blokir -->
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Jml Unit Blokir</label>
+                        <label class="col-sm-4 control-label">Jml Unit Blokir</label>
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.BlokirModel.decTotal).HtmlAttributes(new { @id = "MoneyTotal", @class = "form-control input-sm" }).Enable(false)
                         </div>
                     </div>
-                </div>
                 <!-- End Jml Unit Blokir -->
             </div>
         </div>

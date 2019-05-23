@@ -1,0 +1,444 @@
+﻿
+@model Reksa.ViewModels.IBMBListViewModel
+@{
+    ViewData["Title"] = "Maintain Kinerja Reksadana";
+}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="m-t-0 header-title">
+                <a>Maintain Kinerja Reksadana</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <!-- Begin Button -->
+                        <div>
+                            <div class="input-group">
+                                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-refresh"></i>
+                                    </span>
+                                    Refresh
+                                </button>
+                                <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-edit"></i>
+                                    </span>
+                                    Edit
+                                </button>
+                                <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-save"></i>
+                                    </span>
+                                    Save
+                                </button>
+                                <button id="btnCancel" class="btn btn-pink waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Button -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Kode Produk</label>
+                                <div class="input-group col-md-5">
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="_cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Mata Uang Produk</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("_matauang").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100px;" }).Enable(false)
+                                </div>
+                            </div>
+                            <div class="form-group" id="label2">
+                                <label class="col-sm-2 control-label">Tipe Reksadana</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("_tipeReksadana").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="padding-top:8px;" class="col-sm-2 control-label">Ditampilkan di IB/MB?</label>
+                                <div class="input-group">
+                                    <div class="checkbox checkbox-custom checkbox-circle">
+                                        @Html.Kendo().CheckBox().Name("_isVisible").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-box">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">NAV Value Date</label>
+                                        <div class="input-group">
+                                            @(Html.Kendo().DatePicker().Name("_NAVDate").HtmlAttributes(new { style = "width: 200px;" }).Enable(false))
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <h2>HASIL INVESTASI</h2>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Sehari</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().NumericTextBox().Name("_sehari").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                <label>&nbsp;&nbsp;&nbsp;%</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Seminggu</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().NumericTextBox().Name("_seminggu").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                <label>&nbsp;&nbsp;&nbsp;%</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Sebulan</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().NumericTextBox().Name("_sebulan").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                <label>&nbsp;&nbsp;&nbsp;%</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Setahun</label>
+                                            <div class="input-group">
+                                                @Html.Kendo().NumericTextBox().Name("_setahun").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                <label>&nbsp;&nbsp;&nbsp;%</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dataGridView1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<script>
+    var intMyType;
+    $(document).ready(function () {
+        intMyType = "B";
+        SetToolbar(intMyType);
+        SetControl(intMyType);
+        subRefresh();
+
+        var grid = {
+            height: 200
+        };
+        $("#dataGridView1").kendoGrid(grid);
+        //click
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+        $("#btnEdit").click(function () {
+            subUpdate();
+        });
+        $("#btnSave").click(function () {
+            subSave();
+        });
+        $("#btnCancel").click(function () {
+            subCancel();
+        });
+    });
+
+    function subRefresh() {
+        $.ajax({
+            type: 'GET',
+            url: '/IBMB/RefreshKinerjaProduk',
+            success: function (data) {
+                if (data.blnResult) {
+                    var gridView = $("#dataGridView1").data("kendoGrid");
+                    var gridData = populateGrid(data.listKinerjaProduk);
+
+                    gridView.setOptions(gridData);
+                    gridView.dataSource.page(1);
+                    gridView.select("tr:eq(0)");
+                    gridView.hideColumn('ProdId');
+                    gridView.hideColumn('NIK');
+                    gridView.hideColumn('Module');
+                    gridView.hideColumn('ProcessType');
+                    
+                    $("#dataGridView1 th[data-field=ProdCode]").html("Product Code")
+                    $("#dataGridView1 th[data-field=ProdName]").html("Product Name")
+                    $("#dataGridView1 th[data-field=ProdCCY]").html("Product Currency")
+                    $("#dataGridView1 th[data-field=TypeName]").html("Tipe Reksadana")
+                    $("#dataGridView1 th[data-field=ValueDate]").html("Date Value")
+                    intMyType = "R";
+                    SetToolbar(intMyType);
+                    SetControl(intMyType);
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    } 
+
+    function subSave() {
+        if ($("#_cmpsrProduct_text1").val() == "") {
+            swal("Warning", "Product belum dipilih!", "warning");
+            return;
+        }
+
+        if ($("#_sehari").val() > 100) {
+            swal("Warning", "Persentase Kinerja Sehari tidak boleh lebih besar dari 100%!", "warning");
+            return;
+        }
+        if ($("#_seminggu").val() > 100) {
+            swal("Warning", "Persentase Kinerja Seminggu tidak boleh lebih besar dari 100%!", "warning");
+            return;
+        }
+        if ($("#_sebulan").val() > 100) {
+            swal("Warning", "Persentase Kinerja Sebulan tidak boleh lebih besar dari 100%!", "warning");
+            return;
+        }
+        if ($("#_setahun").val() > 100) {
+            swal("Warning", "Persentase Kinerja Setahun tidak boleh lebih besar dari 100%!", "warning");
+            return;
+        }        
+
+        var res = subProcess();
+        res.success(function (data) {
+            if (data.blnResult) {
+                intMyType = "S";
+                SetToolbar(intMyType);
+                SetControl(intMyType);
+                subReset();
+                swal("Success", "Proses simpan data berhasil! Membutuhkan otorisasi oleh supervisor agar perubahan tersebut aktif.", "success");
+            }
+            else {
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        });
+    }
+
+    function subProcess() {
+        var ValueDate = toDate($("#_NAVDate").val());
+        var model = JSON.stringify({
+            'ProdId': $("#ProdId").val(),
+            'NIK': 0,
+            'Module': '',            
+            'IsVisible': $("#_isVisible").prop('checked'),
+            'Sehari': $("#_sehari").data("kendoNumericTextBox").value(),
+            'Seminggu': $("#_seminggu").data("kendoNumericTextBox").value(),
+            'Sebulan': $("#_sebulan").data("kendoNumericTextBox").value(),
+            'Setahun': $("#_setahun").data("kendoNumericTextBox").value(),
+            'ValueDate': ValueDate,
+            'ProcessType': intMyType
+        });
+
+        return $.ajax({
+            type: 'POST',
+            url: '/IBMB/MaintainKinerjaProduk',
+            data: model,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false
+        });
+    }
+
+    function subUpdate()
+    {
+        if ($("#_cmpsrProduct_text1").val() == "") {
+            swal("Warning", "Produk harap dipilih dulu!", "warning");
+            return;
+        }
+        intMyType = "U";
+        SetControl(intMyType);
+        SetToolbar(intMyType);
+    }
+
+    function subCancel()
+    {
+        intMyType = "B";
+        SetControl(intMyType);
+        SetToolbar(intMyType);
+        Reset();
+    }
+
+    function SetControl(intMyType) {
+        if (intMyType == "R" || intMyType == "B" || intMyType == "S") {
+            $("#_cmpsrProduct").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#_cmpsrProduct_text1").prop('disabled', true);
+       
+            $("#_isVisible").prop('disabled', true);
+            $("#_sehari").data("kendoNumericTextBox").enable(false);
+            $("#_seminggu").data("kendoNumericTextBox").enable(false);
+            $("#_setahun").data("kendoNumericTextBox").enable(false);
+            $("#_sebulan").data("kendoNumericTextBox").enable(false);
+        }
+
+        if (intMyType == "U") {
+            $("#_cmpsrProduct").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+            $("#_cmpsrProduct_text1").prop('disabled', true);
+
+            $("#_isVisible").prop('disabled', false);
+            $("#_sehari").data("kendoNumericTextBox").enable(true);
+            $("#_seminggu").data("kendoNumericTextBox").enable(true);
+            $("#_setahun").data("kendoNumericTextBox").enable(true);
+            $("#_sebulan").data("kendoNumericTextBox").enable(true);
+        }
+    }
+
+    function SetToolbar(intMyType) {
+        if (intMyType == "B" || intMyType == "S") {
+            $("#btnRefresh").show();
+            $("#btnEdit").show();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+        }
+        if (intMyType == "U") {
+            $("#btnRefresh").show();
+            $("#btnEdit").hide();
+            $("#btnSave").show();
+            $("#btnCancel").show();
+        }
+        if (intMyType == "R") {
+            $("#btnRefresh").show();
+            $("#btnEdit").show();
+            $("#btnSave").hide();
+            $("#btnCancel").hide();
+        }
+    }
+
+    function subReset() {
+        $("#_cmpsrProduct_text1").val('');
+        $("#_cmpsrProduct_text2").val('');
+
+        $("#_matauang").val('');
+        var Today = new Date();
+        $("#_NAVDate").val(Today.getDate() + '/' + (Today.getMonth() + 1) + '/' + Today.getFullYear());
+        $("#_tipeReksadana").val('');
+        $("#_isVisible").prop('checked', false);
+        $("#_sehari").data("kendoNumericTextBox").value(0);
+        $("#_seminggu").data("kendoNumericTextBox").value(0);
+        $("#_setahun").data("kendoNumericTextBox").value(0);
+        $("#_sebulan").data("kendoNumericTextBox").value(0);
+    }
+
+    function toDate(dateStr) {
+        var [day, month, year] = dateStr.split("/")
+        return new Date(Date.UTC(year, month - 1, day))
+    }
+
+    function populateGrid(response) {
+        if (response.length > 0) {
+            var columns = generateColumns(response);
+            return gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 6,
+                    page: 1
+                },
+                change: onRowKinerjaSelect,
+                columns: columns,
+                pageable: true,
+                selectable: true,
+                height: 300
+            };
+        } else {
+            $("#dataGridView1").empty();
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            var ProdCode = name.indexOf("ProdCode") > -1 || name.indexOf("ProdCode") > -1;
+            var ProdName = name.indexOf("ProdName") > -1 || name.indexOf("ProdName") > -1;
+            var ProdCCY = name.indexOf("ProdCCY") > -1 || name.indexOf("ProdCCY") > -1;
+            var TypeName = name.indexOf("TypeName") > -1 || name.indexOf("TypeName") > -1;
+            var ValueDate = name.indexOf("ValueDate") > -1 || name.indexOf("ValueDate") > -1;
+            var IsVisible = name.indexOf("IsVisible") > -1 || name.indexOf("IsVisible") > -1;
+            return {
+                field: name,
+                width: ProdCode ? 110 : ProdName ? 350 : ProdCCY ? 150 : TypeName ? 300 : ValueDate ? 180 : IsVisible ? 80 : 100,
+                title: name,
+                template:
+                    ValueDate ? "#= kendo.toString(kendo.parseDate(ValueDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
+                        IsVisible ? "<input disabled type='checkbox' " +
+                            "# if (IsVisible) { #" +
+                            "checked='checked'" +
+                            "# } #"                        
+                    : columnNames,
+            };
+        })
+    }
+
+    function onRowKinerjaSelect(e)
+    {
+        var data = this.dataItem(this.select());
+        $("#_cmpsrProduct_text1").val(data.ProdCode);
+        $("#_cmpsrProduct_text2").val(data.ProdName);
+        $("#ProdId").val(data.ProdId);
+        $("#_matauang").val(data.ProdCCY);
+        $("#_tipeReksadana").val(data.TypeName);
+        if (data.IsVisible)
+        {
+            $("#_isVisible").prop('checked', true);
+        }
+        else
+        {
+            $("#_isVisible").prop('checked', false);
+        }
+        var ValueDate = new Date(data.ValueDate);
+        $("#_NAVDate").val(ValueDate.getDate() + '/' + (ValueDate.getMonth() + 1) + '/' + ValueDate.getFullYear());
+        
+        $("#_sehari").data("kendoNumericTextBox").value(data.Sehari);
+        $("#_seminggu").data("kendoNumericTextBox").value(data.Seminggu);
+        $("#_sebulan").data("kendoNumericTextBox").value(data.Sebulan);
+        $("#_setahun").data("kendoNumericTextBox").value(data.Setahun);
+    }
+
+    function ValidateProduct(ProdCode, result) {
+        $.ajax({
+            type: 'GET',
+            url: '/Global/ValidateProduct',
+            data: { Col1: ProdCode, Col2: '', Validate: 1 },
+            success: function (data) {
+                if (data.length != 0) {
+                    result(data[0].ProdId);
+                }
+                else {
+                    result('');
+                }
+            }
+        });
+    } 
+</script>

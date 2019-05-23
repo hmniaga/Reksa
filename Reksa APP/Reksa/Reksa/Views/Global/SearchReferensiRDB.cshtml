@@ -32,18 +32,20 @@
     function onRowReferensiRDBSelect(e) {
         var data = this.dataItem(this.select());
         var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var TanggalTransaksi = $.trim(data.TanggalTransaksi);
 
         $("#ReferensiRDBSelectedRefID").val(RefID);
-        $("#ReferensiRDBSelectedtanggalTransaksi").val(tanggalTransaksi);
+        $("#ReferensiRDBSelectedtanggalTransaksi").val(TanggalTransaksi);
     };
 
     $("#ReferensiRDBSelectButton").on("click", function () {
         var selectedRefID = $("#ReferensiRDBSelectedRefID").val();
         var selectedtanggalTransaksi = $("#ReferensiRDBSelectedtanggalTransaksi").val();
 
+        var tgltransaksi = new Date(selectedtanggalTransaksi);
+
         $("input[id='srcNoRefRDB_text1']").val(selectedRefID).change();
-        $("input[id='srcNoRefRDB_text2']").val(selectedtanggalTransaksi);
+        $("input[id='srcNoRefRDB_text2']").val(tgltransaksi.getDate() + '/' + (tgltransaksi.getMonth() + 1) + '/' + tgltransaksi.getFullYear());
 
     });
 

@@ -32,11 +32,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">No Referensi</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNorefRDB_text1" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefRDB_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcNorefRDB" href="@Url.Action("SearchReferensiRDB", "Global", new { criteria = "SUBSRDB" })" data-toggle="modal" data-target="#ReferensiRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNorefRDB_text2" }).Format("{0:dd MMMM yyyy}").Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefRDB_text2" }).Format("{0:dd MMMM yyyy}").Enable(false)
                     </div>
                 </div>
                 <!-- End Search RefID -->
@@ -81,7 +81,7 @@
                 </div>
                 <!-- End Input SID -->
                 <!-- Begin Input Shareholder ID -->
-                <div class="form-group">
+                <div class="form-group" hidden="hidden">
                     <label class="col-sm-3 control-label">Shareholder ID</label>
                     <div class="input-group">
                         @Html.Kendo().TextBox().Name("textShareHolderIdRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
@@ -111,7 +111,7 @@
                     </div>
                 <!-- End Input Rekening USD -->
                 <!-- Begin Input Rekening -->
-                    <div class="form-group">
+                    <div class="form-group" hidden="hidden">
                         <label class="col-sm-3 control-label">Rekening</label>
                         <div class="input-group">
                             @Html.Kendo().TextBox().Name("maskedRekeningRDBMC").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)

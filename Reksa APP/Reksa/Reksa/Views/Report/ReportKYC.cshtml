@@ -1,1 +1,109 @@
-﻿
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.ReportListViewModel
+
+@{
+    ViewData["Title"] = "Generate Report KYC";
+}
+
+
+<!-- Begin Contents -->
+<div class="panel panel-default" id="contentCustomer">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Generate Report KYC</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+            <div class="col-md-6">
+                <!-- Begin DropDown Jenis Nasabah -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Jenis Nasabah</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DropDownList().Name("comboBox1").BindTo(new List<SelectListItem>() { new SelectListItem() {
+                                                                                        Text = "INDIVIDU", Value = "Individu" }, new SelectListItem() { Text = "INSTITUSI",Value = "Institusi"}}).DataTextField("Text").DataValueField("Value").Value("0")
+
+                        )
+                    </div>
+                </div>
+                <!-- End DropDown Jenis Nasabah -->
+                <!-- Begin DropDown Bulan -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Bulan</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DropDownList().Name("_bulancombo")
+        .BindTo(new List<SelectListItem>() {
+            new SelectListItem() { Text = "1", Value = "1" },
+            new SelectListItem() { Text = "2", Value = "2" },
+            new SelectListItem() { Text = "3", Value = "3" },
+            new SelectListItem() { Text = "4", Value = "4" },
+            new SelectListItem() { Text = "5", Value = "5" },
+            new SelectListItem() { Text = "6", Value = "6" },
+            new SelectListItem() { Text = "7", Value = "7" },
+            new SelectListItem() { Text = "8", Value = "8" },
+            new SelectListItem() { Text = "9", Value = "9" },
+            new SelectListItem() { Text = "10", Value = "10" },
+            new SelectListItem() { Text = "11", Value = "11" },
+            new SelectListItem() { Text = "12", Value = "12" },
+
+        })
+            .DataTextField("Text").DataValueField("Value").Value("1").
+        HtmlAttributes(new { @id = "_bulancombo", @style = "width: 80px;" })
+                        )
+                    </div>
+                </div>
+                <!-- End DropDown Bulan -->
+                <!-- Begin Input Tahun -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Tahun</label>
+                    <div class="input-group">
+                        @Html.Kendo().TextBox().Name("_tahuntxt").HtmlAttributes(new { @class = "form-control input-sm", @id = "_tahuntxt", @style = "width: 100px;" })
+                    </div>
+                </div>
+                <!-- End Input Tahun -->
+                <!-- Begin Button Generate -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <button id=btnGenerate type="button" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-cog"></i>
+                        </span>
+                        Generate
+                    </button>
+                </div>
+                <!-- End Button Generate -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btnGenerate").click(function () {
+        var file = '';
+        var jenis = '';
+
+        if ($("#comboBox1").val() == "Individu") {
+            file = "NSPIND";
+            jenis = "A";
+        }
+        else if (comboBox1.val == "Institusi") {
+            file = "NSPINS";
+            jenis = "B";
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Report/ReportKYCGenFile',
+            data: { File: file, Jenis: jenis, Bulan: $("#_bulancombo").val(), Tahun: $("#_tahuntxt").val() },
+            success: function (data) {
+                if (data.blnResult) {
+                    window.location = '/Report/Download?fileGuid=' + data.FileGuid
+                        + '&filename=' + data.FileName;
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    });
+</script>

@@ -152,9 +152,27 @@ namespace ReksaAPI.Models
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
     }
-
-
     //end Nico
-
-
+    public class ParamSinkronisasi
+    {
+        public int ParamId { get; set; }
+        public string ParamDesc { get; set; }
+    }
+    public class KinerjaProduk
+    {
+        public int ProdId { get; set; }
+        public string ProdCode { get; set; }
+        public string ProdName { get; set; }
+        public string ProdCCY { get; set; }
+        public string TypeName { get; set; }
+        public DateTime ValueDate { get; set; }
+        public bool IsVisible { get; set; }
+        public decimal Sehari { get; set; }
+        public decimal Seminggu { get; set; }
+        public decimal Sebulan { get; set; }
+        public decimal Setahun { get; set; }
+        public int NIK { get; set; }
+        public string Module { get; set; }
+        public string ProcessType { get; set; }
+    }
 }

@@ -60,6 +60,17 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaNFSGenerateFileDownload - Core .Net SqlClient Data Provider\n", "");
             return Json( new { blnResult, ErrMsg });
         }
+        [Route("api/Report/KYCGenerateText")]
+        [HttpGet("{id}")]
+        public JsonResult KYCGenerateText([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string Jenis, [FromQuery]int Bulan, [FromQuery]int Tahun)
+        {
+            bool blnResult;
+            string ErrMsg;
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaGenerateText(NIK, Module, Jenis, Bulan, Tahun, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaGenerateText - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }        
 
         [Route("api/Report/NFSInsertLogFile")]
         [HttpGet("{id}")]

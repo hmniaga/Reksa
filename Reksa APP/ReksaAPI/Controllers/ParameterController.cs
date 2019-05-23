@@ -313,9 +313,18 @@ namespace ReksaAPI.Controllers
             //return Json(dsOut);
             return Json(new { listReksaParamFee, listReksaListGL });
         }
-
-
         //Harja End
+        [Route("api/Parameter/GetDropDownList")]
+        [HttpGet("{id}")]
+        public JsonResult GetDropDownList([FromQuery]string ListName)
+        {
+            bool blnResult = false;
+            string ErrMsg;
+            List<ParamSinkronisasi> listParam = new List<ParamSinkronisasi>();
+            blnResult = cls.ReksaGetDropDownList(ListName, out listParam, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetDropDownList - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listParam });
+        }        
     }
 }
 

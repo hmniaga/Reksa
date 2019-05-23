@@ -1,7 +1,74 @@
 ﻿
+@using Kendo.Mvc.UI
+@model Reksa.ViewModels.POListViewModel
 @{
-    ViewData["Title"] = "CutRedemptionFee";
+    ViewData["Title"] = "Cut Redemption Fee";
 }
 
-<h2>CutRedemptionFee</h2>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Cut Redemption Fee</a>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <!-- Begin StartDate -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Start Period</label>
+                <div class="input-group">
+                    @(Html.Kendo().DatePicker().Name("StarDateAct").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" }).Format("{0:dd/MM/yyyy}"))
+                </div>
+            </div>
+            <!-- End StartDate -->
+            <!-- Begin EndDate -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">End Period</label>
+                <div class="input-group">
+                    @(Html.Kendo().DatePicker().Name("EndDateAct")
+                                                                                                                                                                        .HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                                                                                        .Format("{0:dd/MM/yyyy}")
+                    )
+                </div>
+            </div>
+            <!-- End EndDate -->
+            <!-- Begin Buttons -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
+                <div class="input-group">
+                    <button id="button1" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        Process
+                    </button>
+                </div>
+            </div>
+            <!-- End Buttons -->
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var grid1 = {
+            height: 200,
+            width: 200
+        };
+        var grid2 = {
+            height: 200,
+            width: 600
+        };
+        $("#dataGridViewProduct").kendoGrid(grid1);
+        $("#dataGridView1").kendoGrid(grid2);
+    });
+
+    function PopulateProducts() {
+
+    }
+</script>
+
 

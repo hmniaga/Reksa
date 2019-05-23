@@ -12,29 +12,28 @@
         </h4>
     </div>
     <div class="panel-body">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <!-- Begin Search CIF -->
             <div class="form-group">
                 <label class="col-sm-3 control-label">No CIF</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFNo" })
-
+                <div class="input-group col-md-5">
+                    @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCIF_text1" }).Enable(false)
                     <span class="input-group-btn">
-                        <a href="@Url.Action("SearchCustomer", "Global")" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        <a href="@Url.Action("SearchCIF", "Global")" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                     </span>
-                    @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CIFName" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcCIF_text2" }).Enable(false)
                 </div>
             </div>
             <!-- End Search CIF -->
             <!-- Begin Kode Product -->
             <div class="form-group">
                 <label class="col-sm-3 control-label">Product Code</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCode" })
+                <div class="input-group col-md-4">
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProduct_text1" }).Enable(false)
                     <span class="input-group-btn">
                         <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                     </span>
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdName" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 280px;", @id = "srcProduct_text2" }).Enable(false)
                 </div>
             </div>
             <!-- End Kode Product -->
@@ -42,19 +41,21 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">Sisa Unit Yang Dapat Ditawarkan</label>
                 <div class="input-group">
-                    @Html.Kendo().TextBox().Name("SisaUnit").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100px;" }).Enable(false)
-                       
+                    @Html.Kendo().NumericTextBox().Name("SisaUnit").HtmlAttributes(new { style = "width: 200px;" }).Enable(false)
                 </div>
+            </div>
+            <!-- End Input Sisa Unit -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label"></label>
                 <div class="input-group">
                     <button id="btnInquiry" class="btn btn-default waves-effect waves-light">
                         <span class="btn-label">
-                            <i class="fa fa-plus"></i>
+                            <i class="fa fa-inbox"></i>
                         </span>
                         Inquiry
                     </button>
                 </div>
             </div>
-            <!-- End Input Sisa Unit -->
         </div>
 
     </div>
@@ -69,3 +70,22 @@
         <div class="modal-content"></div>
     </div>
 </div>
+
+<script>
+    $("#btnInquiry").click(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Master/InqUnitNasabahDitwrkan',
+            data: { CIFNo: $("#srcCIF_text1").val(), ProdCode: $("#srcProduct_text1").val() },
+            success: function (data) {
+                if (data.blnResult) {
+                    $("#SisaUnit").data("kendoNumericTextBox").value(data.sisaUnit);
+                }
+                else {
+                    $("#SisaUnit").data("kendoNumericTextBox").value(0);
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    });
+</script>

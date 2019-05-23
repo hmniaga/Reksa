@@ -84,7 +84,7 @@ namespace Reksa.Controllers
                 CustomerIdentitasModel custModel = new CustomerIdentitasModel();
                 vModel.CustomerNPWPModel = new CustomerNPWPModel();
 
-                RefreshNasabah(strCIFNo, out listCust, out listRisk, out listCustNPWP);
+                blnResult = RefreshNasabah(strCIFNo, out listCust, out listRisk, out listCustNPWP, out ErrMsg);
 
                 if (listCust.Count > 0)
                 {
@@ -114,25 +114,6 @@ namespace Reksa.Controllers
                         vModel.CustomerNPWPModel.TglDokTanpaNPWP = listCust[0].TglDokTanpaNPWP;
                         vModel.CustomerNPWPModel.Opsi = listCust[0].Opsi;
                     }
-
-                    switch (listCust[0].ApprovalStatus.ToString().Trim())
-                    {
-                        case "A":
-                            {
-                                ViewData["Status"] = "Aktif";
-                                break;
-                            }
-                        case "N":
-                            {
-                                ViewData["Status"] = "Menunggu Otorisasi";
-                                break;
-                            }
-                        case "T":
-                            {
-                                ViewData["Status"] = "Tutup";
-                                break;
-                            }
-                    }
                 }
                 else
                 {
@@ -140,11 +121,11 @@ namespace Reksa.Controllers
                 }
                 bool blnDocTermCond = false, blnDocRiskProfile = false;
                 int intAddressType = 0;
-                GetDocStatus(strCIFNo, out blnDocTermCond, out blnDocRiskProfile, out ErrMsg);                
-                GetConfAddress(2, strCIFNo, _strBranch, _intId, out intAddressType, out listKonfAddrees, out listBranchAddress, out ErrMsg);
+                blnResult = GetDocStatus(strCIFNo, out blnDocTermCond, out blnDocRiskProfile, out ErrMsg);
+                blnResult = GetConfAddress(2, strCIFNo, _strBranch, _intId, out intAddressType, out listKonfAddrees, out listBranchAddress, out ErrMsg);
                 string strEmail; DateTime dtExp; DateTime dtRiskProfile;
                 dtRiskProfile = listRisk[0].LastUpdate;
-                CekExpRiskProfile(strCIFNo, dtRiskProfile, out strEmail, out dtExp, out ErrMsg);
+                blnResult = CekExpRiskProfile(strCIFNo, dtRiskProfile, out strEmail, out dtExp, out ErrMsg);
 
                 custModel.strAddressType = intAddressType.ToString();
                 custModel.Email = strEmail;
@@ -171,7 +152,7 @@ namespace Reksa.Controllers
                 List<BlokirModel> listCLientBlokir = new List<BlokirModel>();
                 
                 decimal decTotal = 0, decOutStanding = 0;
-                RefreshBlokir(intClientId, _intNIK, _strGuid, out listCLientBlokir, out decTotal, out decOutStanding);
+                blnResult = RefreshBlokir(intClientId, _intNIK, _strGuid, out listCLientBlokir, out decTotal, out decOutStanding, out ErrMsg);
                 vModel.BlokirModel = new BlokirModel();
                 vModel.BlokirModel.decTotal = decTotal;
                 vModel.BlokirModel.decOutStanding = decOutStanding;
@@ -491,18 +472,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dtError });
         }
-        [HttpPost]
-        public ActionResult MaintainBlokir(BlokirModel blokirModel)
-        {
-            string strError = "";
-            if (!ModelState.IsValid)
-            {
-                return View();              
-            }
-            MaintainBlokirData(blokirModel, out strError);
-            return View();
-        }
-
         private JsonResult Json(object p, object allowGet)
         {
             throw new NotImplementedException();
@@ -528,53 +497,80 @@ namespace Reksa.Controllers
                 }
             }
         }
-        private void RefreshNasabah(string strCIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listCustNPWP)
-        {           
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-
-                HttpResponseMessage response = client.GetAsync("/api/Customer/Refresh?CIFNO=" + strCIFNo + "&NIK="+ _intNIK +"&Guid="+ _strGuid).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
-
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenCust = strObject["listCust"];
-                JToken strTokenRisk = strObject["listRisk"];
-                JToken strTokenCustNPWP = strObject["listCustNPWP"];
-                string strJsonCust = JsonConvert.SerializeObject(strTokenCust);
-                string strJsonRisk = JsonConvert.SerializeObject(strTokenRisk);
-                string strJsonCustNPWP = JsonConvert.SerializeObject(strTokenCustNPWP);
-
-                listCust = JsonConvert.DeserializeObject<List<CustomerIdentitasModel>>(strJsonCust);
-                listRisk = JsonConvert.DeserializeObject<List<RiskProfileModel>>(strJsonRisk);
-                listCustNPWP = JsonConvert.DeserializeObject<List<CustomerNPWPModel>>(strJsonCustNPWP);
-            }
-        }
-        private void RefreshBlokir(int intClientId, int intNIK, string strGuid, out List<BlokirModel> listCLientBlokir, out decimal decTotal, out decimal decOutstandingUnit)
+        private bool RefreshNasabah(string strCIFNo, out List<CustomerIdentitasModel> listCust, out List<RiskProfileModel> listRisk, out List<CustomerNPWPModel> listCustNPWP, out string ErrMsg)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            ErrMsg = "";
+            listCust = new List<CustomerIdentitasModel>();
+            listRisk = new List<RiskProfileModel>();
+            listCustNPWP = new List<CustomerNPWPModel>();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                HttpResponseMessage response = client.GetAsync("/api/Customer/RefreshBlokir?intClientId=" + intClientId + "&intNIK=" + intNIK + "&strGuid=" + strGuid).Result;
-                string strJson = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Customer/Refresh?CIFNO=" + strCIFNo + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
 
-                JObject strObject = JObject.Parse(strJson);
-                JToken strTokenBlokir = strObject["listBlokir"];
-                JToken strTokendecTotal = strObject["decTotal"];
-                JToken strTokendecOutstandingUnit = strObject["decOutstandingUnit"];                
-                string strJsonBlokir = JsonConvert.SerializeObject(strTokenBlokir);
-                string strJsondecTotal = JsonConvert.SerializeObject(strTokendecTotal);
-                string strJsondecOutstandingUnit = JsonConvert.SerializeObject(strTokendecOutstandingUnit);
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken strTokenCust = strObject["listCust"];
+                    JToken strTokenRisk = strObject["listRisk"];
+                    JToken strTokenCustNPWP = strObject["listCustNPWP"];
+                    string strJsonCust = JsonConvert.SerializeObject(strTokenCust);
+                    string strJsonRisk = JsonConvert.SerializeObject(strTokenRisk);
+                    string strJsonCustNPWP = JsonConvert.SerializeObject(strTokenCustNPWP);
 
-                decTotal = JsonConvert.DeserializeObject<decimal>(strJsondecTotal);
-                decOutstandingUnit = JsonConvert.DeserializeObject<decimal>(strJsondecOutstandingUnit);
-                listCLientBlokir = JsonConvert.DeserializeObject<List<BlokirModel>>(strJsonBlokir);
+                    listCust = JsonConvert.DeserializeObject<List<CustomerIdentitasModel>>(strJsonCust);
+                    listRisk = JsonConvert.DeserializeObject<List<RiskProfileModel>>(strJsonRisk);
+                    listCustNPWP = JsonConvert.DeserializeObject<List<CustomerNPWPModel>>(strJsonCustNPWP);
+                }
             }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return blnResult;
+        }
+        private bool RefreshBlokir(int intClientId, int intNIK, string strGuid, out List<BlokirModel> listCLientBlokir, out decimal decTotal, out decimal decOutstandingUnit, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            listCLientBlokir = new List<BlokirModel>();
+            decTotal = 0; decOutstandingUnit = 0;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Customer/RefreshBlokir?intClientId=" + intClientId + "&intNIK=" + intNIK + "&strGuid=" + strGuid).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    JToken strTokenBlokir = strObject["listBlokir"];
+                    JToken strTokendecTotal = strObject["decTotal"];
+                    JToken strTokendecOutstandingUnit = strObject["decOutstandingUnit"];
+                    string strJsonBlokir = JsonConvert.SerializeObject(strTokenBlokir);
+                    string strJsondecTotal = JsonConvert.SerializeObject(strTokendecTotal);
+                    string strJsondecOutstandingUnit = JsonConvert.SerializeObject(strTokendecOutstandingUnit);
+
+                    decTotal = JsonConvert.DeserializeObject<decimal>(strJsondecTotal);
+                    decOutstandingUnit = JsonConvert.DeserializeObject<decimal>(strJsondecOutstandingUnit);
+                    listCLientBlokir = JsonConvert.DeserializeObject<List<BlokirModel>>(strJsonBlokir);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return blnResult;
         }
         private bool GetConfAddress(int Type, string CIFNO, string Branch, int intId, 
             out int intJsonAddressType, 
@@ -802,20 +798,30 @@ namespace Reksa.Controllers
 
             }
         }
-        private void MaintainBlokirData(BlokirModel blokir, out string strError)
+        public ActionResult MaintainBlokir([FromBody]BlokirModel model)
         {
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                var Content = new StringContent(JsonConvert.SerializeObject(blokir));
-                Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                var request = client.PostAsync("/api/Customer/MaintainBlokir", Content);
-                var response = request.Result.Content.ReadAsStringAsync().Result;
-                JObject strObject = JObject.Parse(response);
-                JToken strTokenClient = strObject["strErrMsg"];
-                string strJsonClient = JsonConvert.SerializeObject(strTokenClient);
-                strError = JsonConvert.DeserializeObject<string>(strJsonClient);
+                string BlockDesc = "";
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Customer/MaintainBlokir?BlockDesc="+ BlockDesc + "&isAccepted=false&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
             }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
         }
     }
 }

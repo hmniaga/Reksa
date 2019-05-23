@@ -1,20 +1,15 @@
 ﻿@{
-    ViewBag.Title = "Search Product";
+    ViewBag.Title = "Search Bank";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
-    string type = (string)ViewBag.Type;
-    int seq = (int)ViewBag.Seq;
-
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchProduct() {
-        var value = $("#ProductSearchComponentSearchTxt").val();
-        var grid = $("#ProductSearchComponentGrid").data("kendoGrid");
-
+    function onSearchBank() {
+        var value = $("#BankSearchComponentSearchTxt").val();
+        var grid = $("#BankSearchComponentGrid").data("kendoGrid");
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
-
         grid.dataSource.page(1);
         grid.dataSource.read();
         grid.refresh();
@@ -31,38 +26,36 @@
         }
     }
 
-    function onRowProductSelect(e) {
+    function onRowBankSelect(e) {
         var data = this.dataItem(this.select());
-        var dataId = $.trim(data.id);
-        var dataValue = $.trim(data.ProductName);
-        var dataCat = $.trim(data.GroupProduct);
+        var KodeBank = $.trim(data.KodeBank);
+        var NamaBank = $.trim(data.NamaBank);
+        var Branch = $.trim(data.Branch);
+        var Alamat = $.trim(data.Alamat);
 
-        $("#ProductSelectedId").val(dataId);
-        $("#ProductSelectedText").val(dataValue);
-        $("#ProductSelectedCat").val(dataCat);
+        $("#BankSelectedKodeBank").val(KodeBank);
+        $("#BankSelectedNamaBank").val(NamaBank);
+        $("#BankSelectedBranch").val(Branch);
+        $("#BankSelectedAlamat").val(Alamat);
     };
 
-    $("#ProductSelectButton").on("click", function () {
-        var selectedId = $("#ProductSelectedId").val();
-        var selectedText = $("#ProductSelectedText").val();
-        var selectedCat = $("#ProductSelectedCat").val();
-        var parameterSeq = $("#ProductParameterSeq").val();
-        var parameterType = $("#ProductParameterType").val();
+    $("#BankSelectButton").on("click", function () {
+        var selectedKodeBank = $("#BankSelectedKodeBank").val();
+        var selectedNamaBank = $("#BankSelectedNamaBank").val();
+        var selectedBranch = $("#BankSelectedBranch").val();
+        var selectedAlamat = $("#BankSelectedAlamat").val();
 
-        if (parameterSeq && parameterSeq > 0) {
-            $("#product-" + parameterType + "-" + parameterSeq + " .Parameter_ProdCode").val(selectedId).change();
-            $("#product-" + parameterType + "-" + parameterSeq + " .Parameter_ProdName").val(selectedText);
-        } else {
-            $("input[name='ProductModel.ProdCode']").val(selectedId).change();
-            $("input[name='ProductModel.ProductName']").val(selectedText);
-        }
+        $("input[name='BankCodeModel.KodeBank']").val(selectedKodeBank).change();
+        $("input[name='BankCodeModel.NamaBank']").val(selectedNamaBank);
+        $("input[name='BankCodeModel.Branch']").val(selectedBranch);
+        $("input[name='BankCodeModel.Alamat']").val(selectedAlamat);
     });
 
-    $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#BankSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ProductSearchComponentSearchBtn").click();
+            $("#BankSearchComponentSearchBtn").click();
             return false;
         }
     });
@@ -73,51 +66,50 @@
         <h4>@ViewBag.Title</h4>
     </div>
     <div class="modal-body">
-        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
-            .Name("ProductSearchComponentGrid")
-            .Columns(columns =>
-            {
-                columns.Bound(m => m.ProdCode);
-                columns.Bound(m => m.ProdName);
-                columns.Bound(m => m.ProdId);
-            })
-            @*.ToolBar(toolbar =>
-            {
-                toolbar.Template(@<text>
-                <div class="toolbar">
-                    @Html.Kendo().TextBox().Name("ProductSearchComponentSearchTxt").Value(search)
-                    @(Html.Kendo().Button()
-                            .HtmlAttributes(new { type = "button" })
-                            .Name("ProductSearchComponentSearchBtn")
-                            .Content("Search")
-                            .Events(ev => ev.Click("onSearchProduct"))
+        @(Html.Kendo().Grid<Reksa.Models.BankCodeModel>()
+                    .Name("BankSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.KodeBank).Width(100).Title("Kode Bank");
+                        columns.Bound(m => m.NamaBank).Width(300).Title("Nama Bank");
+                    })
+                    .ToolBar(toolbar =>
+                        {
+                            toolbar.ClientTemplateId("GridToolbarTemplate");
+                        })
+                    .Events(events => events.Change("onRowBankSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.KodeBank);
+                        })
+                        .Read(read => read.Action("SearchBankCodeData", "Global", new { search = search }))
                     )
-                </div>
-                </text>);
-            })*@
-            .Events(events => events.Change("onRowProductSelect"))
-            .Pageable()
-            .Scrollable()
-            .Selectable(selectable => selectable
-                .Mode(GridSelectionMode.Single))
-            .DataSource(dataSource => dataSource
-                .Ajax()
-                .PageSize(20)
-                .Model(model =>
-                {
-                    model.Id(m => m.ProdCode);
-                })
-                .Read(read => read.Action("SearchProductData", "Global", new { search = search, criteria = criteria }))
-            )
         )
-        <input type="hidden" id="ProductSelectedId" name="ProductSelectedId" value="" />
-        <input type="hidden" id="ProductSelectedText" name="ProductSelectedText" value="" />
-        <input type="hidden" id="ProductSelectedCat" name="ProductSelectedCat" value="" />
-        <input type="hidden" id="ProductParameterSeq" name="ProductParameterSeq" value="@seq" />
-        <input type="hidden" id="ProductParameterType" name="ProductParameterType" value="@type" />
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("BankSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("BankSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchBank")).ToClientTemplate()
+            )
+        </div>
+        </script>
+        <input type="hidden" id="BankSelectedKodeBank" name="BankSelectedKodeBank" value="" />
+        <input type="hidden" id="BankSelectedNamaBank" name="BankSelectedNamaBank" value="" />
+        <input type="hidden" id="BankSelectedBranch" name="BankSelectedBranch" value="" />
+        <input type="hidden" id="BankSelectedAlamat" name="BankSelectedAlamat" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ProductSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="BankSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

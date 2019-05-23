@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label id ="labelFileName" class="col-sm-3 control-label">File Name</label>
                     <div id="txtFilePath" style="">
-                        <input id="filename" type="file" accept=".csv, .txt" class="filestyle" data-iconname="fa fa-cloud-upload">
+                        <input id="filename" type="file" accept=".csv, .txt, .xls" class="filestyle" data-iconname="fa fa-cloud-upload">
                     </div>
                     
                     <div id="dateTrx" style="">
@@ -329,7 +329,7 @@ var do_file = (function() {
     }
 
     function toDate(dateStr) {
-        const [day, month, year] = dateStr.split("/")
+        var [day, month, year] = dateStr.split("/")
         return new Date(year, month - 1, day)
     }
 

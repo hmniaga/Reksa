@@ -45,6 +45,11 @@ namespace Reksa.Controllers
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("OutgoingTT", vModel);
         }
+        public IActionResult AuthOutgoingTT()
+        {
+            TransaksiListViewModel vModel = new TransaksiListViewModel();
+            return View("AuthOutgoingTT", vModel);
+        }
         public IActionResult Transaksi()
         {
             ViewBag.strBranch = _strBranch;
@@ -296,6 +301,40 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, strTrancode, strClientCode, strWarnMsg, strWarnMsg2 });
         }
+        public ActionResult MaintainSwitching([FromBody] TransactionModel.MaintainSwitching model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
+            DataTable dtError = new DataTable();
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/MaintainSwitching", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenError = strObject["dtError"];
+                    JToken TokenRefID = strObject["strRefID"];
+                    string JsonError = JsonConvert.SerializeObject(TokenError);
+                    string JsonRefID = JsonConvert.SerializeObject(TokenRefID);
+                    dtError = JsonConvert.DeserializeObject<DataTable>(JsonError);
+                    strRefID = JsonConvert.DeserializeObject<string>(JsonRefID);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, strRefID, dtError });
+            }
+            return Json(new { blnResult, ErrMsg, strRefID, dtError });
+        }
+
         public ActionResult MaintainAllTransaksi([FromBody] TransactionModel.MaintainTransaksi model)
         {
             bool blnResult = false;
@@ -654,7 +693,7 @@ namespace Reksa.Controllers
         public JsonResult GetImportantData(string CariApa, string InputData)
         {
             string value = "";
-            bool blnResult = false;
+            //bool blnResult = false;
             string ErrMsg = "";
             try
             {
@@ -683,6 +722,7 @@ namespace Reksa.Controllers
         }
         public JsonResult PopulateComboFrekDebet()
         {
+            string ErrMsg;
             List<TransactionModel.FrekuensiDebet> list = new List<TransactionModel.FrekuensiDebet>();
             try
             {
@@ -702,11 +742,121 @@ namespace Reksa.Controllers
             }
             catch (Exception e)
             {
+                ErrMsg = e.Message;
                 return Json(new { list });
             }
             return Json(new { list });
         }
+        public JsonResult GetRegulerSubscriptionTunggakan(int intClientId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<TransactionModel.Tunggakan> listTunggakan = new List<TransactionModel.Tunggakan>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/GetRegulerSubscriptionTunggakan?ClientId=" + intClientId).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenTunggakan = strObject["listTunggakan"];
+                    string JsonTunggakan = JsonConvert.SerializeObject(TokenTunggakan);
+                    listTunggakan = JsonConvert.DeserializeObject<List<TransactionModel.Tunggakan>>(JsonTunggakan);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listTunggakan });
+        }
+        public JsonResult PopulateTTCompletion(int intProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            TransactionModel.TransactionTT listTransactionTT = new TransactionModel.TransactionTT();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/PopulateTTCompletion?ProdId=" + intProdId).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenTunggakan = strObject["listTTCompletion"];
+                    string JsonTunggakan = JsonConvert.SerializeObject(TokenTunggakan);
+                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTunggakan);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listTransactionTT });
+        }
+        public ActionResult MaintainCompletion([FromBody] TransactionModel.TransactionTT model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
 
-
+            try
+            {
+                model.InputterNIK = _intNIK;
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/MaintainCompletion", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg });
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult InitializeDataTTCompletion(int intProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            TransactionModel.TransactionTT listTransactionTT = new TransactionModel.TransactionTT();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/InitializeDataTTCompletion?ProdId=" + intProdId).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenTunggakan = strObject["listTTCompletion"];
+                    string JsonTunggakan = JsonConvert.SerializeObject(TokenTunggakan);
+                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTunggakan);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listTransactionTT });
+        }
     }
 }

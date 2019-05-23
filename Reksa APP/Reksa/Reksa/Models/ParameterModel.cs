@@ -80,4 +80,9 @@ namespace Reksa.Models
         public string SII { get; set; }
         public string IFUA { get; set; }
     }
+    public class ParamSinkronisasi
+    {
+        public int ParamId { get; set; }
+        public string ParamDesc { get; set; }
+    }
 }

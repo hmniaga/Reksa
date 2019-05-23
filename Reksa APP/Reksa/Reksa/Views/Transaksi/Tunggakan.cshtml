@@ -13,58 +13,128 @@
         </h4>
     </div>
     <div class="panel-body">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <!-- Begin Kode Product -->
             <div class="form-group">
-                <label class="col-sm-3 control-label">Kode Produk</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCodeRedemp" }).Enable(false)
+                <label class="col-sm-2 control-label">Kode Produk</label>
+                <div class="input-group col-md-5">
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProduct_text1" }).Enable(false)
                     <span class="input-group-btn">
-                        <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        <a id="srcProduct" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                     </span>
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdNameRedemp" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 350px;", @id = "srcProduct_text2" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdId", @type = "hidden" })
                 </div>
             </div>
             <!-- End Kode Product -->
             <!-- Begin Client Code -->
             <div class="form-group">
-                <label class="col-sm-3 control-label">Client Code</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientCodeRedemp" }).Enable(false)
-
+                <label class="col-sm-2 control-label">Client Code</label>
+                <div class="input-group col-md-6">
+                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClient_text1" }).Enable(false)
                     <span class="input-group-btn">
-                        <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        <a id="srcClient" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                     </span>
-                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientNameRedemp" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 400px;", @id = "srcClient_text2" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientId", @type = "hidden" })
                 </div>
             </div>
             <!-- End Client Code -->
+            <!-- Begin Button Refresh -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="input-group">
+                    <button id=btnRefresh class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label">
+                            <i class="fa fa-refresh"></i>
+                        </span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <!-- End Button Refresh -->
         </div>
         <div class="col-md-12" style="padding-bottom:5%">
-            @(Html.Kendo().Grid(Model.ListSubscription)
-                    .Name("GridTunggakan")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(p => p.NoTrx).Width(100).Title("No Transaksi");
-                        columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
-                        columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
-                        columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
-                        columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
-                        columns.Bound(p => p.Nominal).Width(150).Title("Nominal");
-                        columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
-                        columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
-                        columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount");
-                        columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
-                        columns.Bound(p => p.JenisFee).Width(150).Title("JenisFee");
-                        columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
-                    })
-                    .Pageable()
-                    .Scrollable(s => s.Height(250))
-                    .Selectable(selectable => selectable
-                    .Mode(GridSelectionMode.Single))
-                    //.Events(events => events.Change("onRowTunggakanSelect"))
+            @(Html.Kendo().Grid(Model.ListTunggakan)
+                            .Name("dgvTunggakan")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.RekRelasi).Width(100).Title("Rekening Relasi");
+                                columns.Bound(p => p.Status).Width(150).Title("Status");
+                                columns.Bound(p => p.JumlahTunggakan).Format("{0:###,###.##}").Width(150).Title("Jumlah Tunggakan");
+                                columns.Bound(p => p.TglAngsuran).Width(150).Format("{0:dd MMMM yyyy}").Title("Tanggal Angsuran");
+                                columns.Bound(p => p.TglBayar).Width(150).Format("{0:dd MMMM yyyy}").Title("Tanggal Bayar");
+                            })
+                            .Pageable()
+                            .Scrollable(s => s.Height(250))
+                            .Selectable(selectable => selectable
+                            .Mode(GridSelectionMode.Single))
             )
-
         </div>
     </div>
 </div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+
+        $("#srcClient").click(function () {
+            var strCriteria = $('#ProdId').val();
+        var url = '@Html.Raw(Url.Action("SearchClient", "Global"))';
+            $('#srcClient').attr('href', url + '?ProdId=' + encodeURIComponent(strCriteria));
+        });
+
+        $("#srcClient").click(function (ev) {
+            var strCriteria = $('#ProdId').val();
+            var url = '@Html.Raw(Url.Action("SearchClient", "Global"))';
+            var target = $(this).attr('href', url + '?ProdId=' + encodeURIComponent(strCriteria));
+                $("#ClientModal .modal-content").load(target, function () {
+                    $("#ClientModal .modal-content").empty().append(this);
+        });
+        });
+
+
+
+    });
+
+    function subRefresh()
+    {
+        if ($("#srcClient_text1").val() == '')
+        {
+            swal("Warning", "Kode Nasabah Harus Diisi!", "warning");
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/GetRegulerSubscriptionTunggakan',
+            data: { intClientId: $("#ClientId").val() },
+            success: function (data) {
+                if (data.blnResult) {
+                    var dataSource = new kendo.data.DataSource(
+                        {
+                            data: data.listTunggakan
+                        });
+                    var grid = $('#dgvTunggakan').data('kendoGrid');
+                    grid.setDataSource(dataSource);
+                    grid.dataSource.pageSize(15);
+                    grid.dataSource.page(1);
+                    grid.select("tr:eq(0)");
+                } else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+
+</script>

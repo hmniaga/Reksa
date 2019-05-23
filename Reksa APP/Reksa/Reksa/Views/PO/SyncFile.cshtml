@@ -1,0 +1,121 @@
+﻿
+@model Reksa.ViewModels.POListViewModel
+@{
+    ViewData["Title"] = "Sinkronisasi OS Unit & Transaksi";
+}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="m-t-0 header-title">
+                <a>Sinkronisasi OS Unit & Transaksi</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Tipe</label>
+                                <div class="input-group">
+                                    @(Html.Kendo().DropDownListFor(model => model.TypeSinkronisasi).BindTo(Model.TypeSinkronisasi).DataTextField("ParamDesc").Value("ParamId").HtmlAttributes(new { @id = "cmbTipe", @style = "width: 280px;" }).Filter("contains"))
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Bank Custody</label>
+                                <div class="input-group col-md-8">
+                                    @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CustodyCode" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="cmpsrCustody" href="@Url.Action("SearchCustody", "Global")" data-toggle="modal" data-target="#CustodyModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "CustodyName" }).Enable(false)
+                                </div>
+                            </div>
+                            <div class="form-group" id="label2">
+                                <label class="col-sm-3 control-label">Tanggal</label>
+                                <div class="input-group">
+                                    @(Html.Kendo().DatePicker().Name("dtSyncDate").HtmlAttributes(new { @id = "dtSyncDate", style = "width: 100%;" }).Enable(false))
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group" id="label4">
+                                <label class="col-sm-3 control-label">Nama File</label>
+                                <div class="input-group" id="filename">
+                                    <input id="txtbPath" type="file" accept=".csv, .txt, .xls" class="filestyle" data-iconname="fa fa-upload">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Format</label>
+                                <div class="input-group">
+                                    @(Html.Kendo().DropDownListFor(model => model.FormatSinkronisasi).BindTo(Model.FormatSinkronisasi).DataTextField("ParamDesc").Value("ParamId").HtmlAttributes(new { @id = "cmbFormat", @style = "width: 150px;" }).Filter("contains"))
+                                </div>
+                            </div>
+                            <div class="form-group" id="label5">
+                                <label class="col-sm-3 control-label">Delimiter</label>
+                                <div class="input-group">
+                                    @Html.Kendo().TextBox().Name("txtbDelimiter").HtmlAttributes(new { @id = "txtbDelimiter", @class = "form-control input-sm", style = "width: 80px;" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-top:20px;padding-bottom:20px;">
+                            <button id=btnProses type="button" class="btn btn-default waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Preview
+                            </button>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dgvPreview"></div>
+                        </div>
+                        <div class="col-md-12" style="padding-top:20px;padding-bottom:20px;">
+                            <button id=btnGetXML type="button" class="btn btn-default waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-upload"></i>
+                                </span>
+                                Upload
+                            </button>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dgvUpload"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="CustodyModal" tabindex="-1" role="dialog" aria-labelledby="CustodyModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var grid = {
+            height: 200
+        };
+        $("#dgvPreview").kendoGrid(grid); 
+        $("#dgvUpload").kendoGrid(grid);        
+    });
+
+    $("#btnProses").click(function () {
+        if ($("#CustodyName").val() == "") {
+            swal("Warning", "Bank Custody tidak diisi", "warning");
+        }
+        else if ($("#txtbPath").val() == "") {
+            swal("Warning", "File belum dipilih", "warning");
+        }
+        else if ($("#txtbDelimiter").val() == "")
+        {
+            swal("Warning", "Delimiter tidak diisi", "warning");
+        }
+        else
+        {
+            var strFileExt = $("#txtbPath").val().substring($("#txtbPath").val().length - 3, $("#txtbPath").val().length).toUpperCase();
+            
+    
+        }
+    });
+</script>

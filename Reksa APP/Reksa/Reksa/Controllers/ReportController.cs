@@ -18,7 +18,7 @@ namespace Reksa.Controllers
     public class ReportController : Controller
     {
         #region "Default Var"
-        public string strModule;
+        public string strModule = "Pro Reksa 2";
         public int _intNIK = 10137;
         public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
@@ -30,9 +30,8 @@ namespace Reksa.Controllers
 
         private string sRealFileName;
         private string result;
-        private string skyWriter;
         private clsCSVFormat csv;
-        private string sSeparator = "", sFileName = "", sFormatFile = "", sFilterFile = "", sFieldKey = "", sFileCode = "";
+        private string sSeparator = "", sFileName = "", sFormatFile = "", sFilterFile = "", sFieldKey = "";
         string sXMLData;
 
         public ReportController(IConfiguration iconfig)
@@ -42,6 +41,11 @@ namespace Reksa.Controllers
         }
 
         public IActionResult NFSUpload()
+        {
+            ReportListViewModel vModel = new ReportListViewModel();
+            return View();
+        }
+        public IActionResult ReportKYC()
         {
             ReportListViewModel vModel = new ReportListViewModel();
             return View();
@@ -69,6 +73,59 @@ namespace Reksa.Controllers
             }
             return Json( new { ErrMsg, dsFile });
         }
+        public ActionResult ReportKYCGenFile(string File, string Jenis, int Bulan, int Tahun)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string handle = "";
+            DataSet dsKYC = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Report/KYCGenerateText?NIK=" + _intNIK + "&Module=" + strModule + "&Jenis=" + Jenis + "&Bulan=" + Bulan + "&Tahun=" + Tahun).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = strObject["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsKYC = JsonConvert.DeserializeObject<DataSet>(JsonData);
+
+                    if (dsKYC.Tables[0].Rows.Count <= 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Tidak ada data untuk bulan dan tahun tersebut. ";
+                        return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = File });
+                    }
+
+                    if (CreateTextFile(dsKYC, out handle, out ErrMsg))
+                    {
+                        blnResult = true;
+                        ErrMsg = "File berhasil dibuat. ";
+                    }
+                    else
+                    {
+                        blnResult = false;
+                        ErrMsg = "Gagal create file.";
+                        return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = File });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+
+            return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = File });
+        }
+
         public ActionResult NFSGenerateFileUpload(string FileCode, string TranDate)
         {
             bool blnResult = false;
@@ -196,7 +253,8 @@ namespace Reksa.Controllers
                 }
                 return Json(new { blnResult, ErrMsg, FileGuid = handle, FileName = sFileName });
             }
-        }
+        }       
+        
 
         [HttpGet]
         public virtual ActionResult Download(string fileGuid, string fileName)
@@ -392,6 +450,44 @@ namespace Reksa.Controllers
                 ErrMsg = "Error Get Data Upload : " + e.Message;
             }
             return bSuccess;
+        }
+        
+        private bool CreateTextFile(DataSet dsData,
+            out string handle, out string strError)
+        {
+            int row;
+            bool CreateTextFile = false;
+            strError = "";
+            handle = Guid.NewGuid().ToString();
+            try
+            {
+                if (dsData.Tables[0].Rows.Count > 0)
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (var streamWriter = new StreamWriter(memoryStream))
+                    {
+                        for (row = 0; row < dsData.Tables[0].Rows.Count; row++)
+                        {
+                            streamWriter.WriteLine(dsData.Tables[0].Rows[row][0].ToString());
+                        }
+                        streamWriter.Flush();
+                        TempData[handle] = memoryStream.ToArray();
+                    }
+                    CreateTextFile = true;
+                }
+                else
+                {
+                    strError = "Tidak ada data untuk bulan dan tahun tersebut. ";
+                    CreateTextFile = false;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                strError = ex.Message;
+                CreateTextFile = false;
+            }
+            return CreateTextFile;
         }
     }
 }

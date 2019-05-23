@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "Search Bank";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+    int ProdId = (int)ViewBag.ProdId;
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchBank() {
+        var value = $("#BankSearchComponentSearchTxt").val();
+        var grid = $("#BankSearchComponentGrid").data("kendoGrid");
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowBankSelect(e) {
+        var data = this.dataItem(this.select());
+        var BankCode = $.trim(data.BankCode);
+        var BankDesc = $.trim(data.BankDesc);
+        var BankId = $.trim(data.BankId);
+
+        $("#BankSelectedBankCode").val(BankCode);
+        $("#BankSelectedBankDesc").val(BankDesc);
+        $("#BankSelectedBankId").val(BankId);
+    };
+
+    $("#BankSelectButton").on("click", function () {
+        var selectedBankCode = $("#BankSelectedBankCode").val();
+        var selectedBankDesc = $("#BankSelectedBankDesc").val();
+        var selectedBankId = $("#BankSelectedBankId").val();
+
+        $("input[name='BankModel.BankCode']").val(selectedBankCode).change();
+        $("input[name='BankModel.BankDesc']").val(selectedBankDesc);
+        $("input[name='BankModel.BankId']").val(selectedBankId);
+    });
+
+    $("#BankSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#BankSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.BankModel>()
+                    .Name("BankSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.BankCode).Width(100).Title("Kode Bank");
+                        columns.Bound(m => m.BankDesc).Width(300).Title("Nama Bank");
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowBankSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.BankCode);
+                        })
+                        .Read(read => read.Action("SearchBankData", "Global", new { search = search, ProdId = ProdId }))
+                    )
+        )
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("BankSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("BankSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchBank")).ToClientTemplate()
+            )
+        </div>
+        </script>
+        <input type="hidden" id="BankSelectedBankCode" name="BankSelectedBankCode" value="" />
+        <input type="hidden" id="BankSelectedBankDesc" name="BankSelectedBankDesc" value="" />
+        <input type="hidden" id="BankSelectedBankId" name="BankSelectedBankId" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="BankSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

@@ -40,6 +40,16 @@ namespace Reksa.Controllers
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
             _httpContextAccessor = httpContextAccessor;
         }
+        public ActionResult AuthRejectBooking()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            return View("AuthRejectBooking", vModel);
+        }
+        public ActionResult AuthDeleteTransaksi()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            return View("AuthDeleteTransaksi", vModel);
+        }        
         public ActionResult ParameterFee()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -191,6 +201,52 @@ namespace Reksa.Controllers
             this.ViewBag.Tree = items;
             return View("AuthGeneral", vModel);
         }
+        public ActionResult WMSupervisor()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeWMSPV");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
+        public ActionResult POSupervisor()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizePOSPV");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
         public ActionResult Bill()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -214,6 +270,31 @@ namespace Reksa.Controllers
             this.ViewBag.Tree = items;
             return View("AuthGeneral", vModel);
         }
+        public ActionResult Sinkronisasi()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeBill");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthSync", vModel);
+        }
+
+        
         public JsonResult ApproveReject(string listId, string treeid, bool isApprove)
         {
             bool blnResult = false;
@@ -248,11 +329,19 @@ namespace Reksa.Controllers
                 var filter = string.Join(',', _SelectedId);
                 if (treeid == "REKWM1")
                 {
-                    dv1.RowFilter = " TranId in (" + filter + ")";
+                    dv1.RowFilter = " tranId in (" + filter + ")";
                 }
                 else if (treeid == "REKWM2")
                 {
-                    dv1.RowFilter = " ProdId in (" + filter + ")";
+                    dv1.RowFilter = " prodId in (" + filter + ")";
+                }
+                else if (treeid == "REKBI1" || treeid == "REKBI4" || treeid == "REKBI8")
+                {
+                    dv1.RowFilter = " billId in (" + filter + ")";
+                }
+                else if (treeid == "REKPO4" || treeid == "REKWS3")
+                {
+                    dv1.RowFilter = " id in (" + filter + ")";
                 }
                 DataTable dtNew = dv1.ToTable();
                 if (dtNew == null || dtNew.Columns.Count == 0)
@@ -714,7 +803,89 @@ namespace Reksa.Controllers
             }
             return list;
         }
+        public JsonResult NFSFileCekPendingOtorisasi(string TypeGet, int LogId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/NFSFileCekPendingOtorisasi?TypeGet=" + TypeGet + "&LogId=" + LogId).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
 
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = strObject["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult NFSCekPendingDetailOtorisasi(int CIFNo, int LogId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
 
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/NFSCekPendingDetailOtorisasi?CIFNo=" + CIFNo + "&LogId=" + LogId).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = strObject["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult UpdateFlagApprovalNFSGenerate(string Type, int LogId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/UpdateFlagApprovalNFSGenerate?Type=" + Type + "&LogId=" + LogId + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

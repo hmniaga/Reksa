@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json.Serialization;
 using Reksa.Data;
-
+using Reksa.Data.Entities;
+using Reksa.Models;
 
 namespace Reksa
 {
@@ -21,10 +25,20 @@ namespace Reksa
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUserStore<ApplicationUser>, StoreUser>();
+            services.AddIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
+
             // Add framework services.
             services
-                .AddMvc()
+                .AddMvc(
+                //opt =>
+                //{
+                //    opt.Filters.Add(new RequireHttpsAttribute());
+                //}
+                )
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add Kendo UI services to the services container
             services.AddKendo();
@@ -41,12 +55,13 @@ namespace Reksa
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Account/Error500");
             }
 
             app.UseStaticFiles();
             app.UseSession();
 
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

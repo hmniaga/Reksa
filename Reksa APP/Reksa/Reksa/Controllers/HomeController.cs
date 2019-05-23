@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -25,6 +26,7 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+        
         public IActionResult Index()
         {
             return View();
