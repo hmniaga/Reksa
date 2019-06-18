@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReksaAPI.Models;
@@ -85,7 +86,119 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaNFSInsertLogFile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
+        [Route("api/Report/ReksaReportRDN07")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN07([FromQuery]string PeriodStart, [FromQuery]string PeriodEnd, [FromQuery]int ProdId, [FromQuery]string CustCode)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
 
-       
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(PeriodStart, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(PeriodEnd, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaReportRDN07(dtStartDate, dtEndDate, ProdId, CustCode, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN07 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN08")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN08([FromQuery]string PeriodStart, [FromQuery]string PeriodEnd, [FromQuery]int  ProdCode, [FromQuery]string OfficeId)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(PeriodStart, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(PeriodEnd, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaReportRDN08(dtStartDate, dtEndDate, ProdCode, OfficeId, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN08 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN09")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN09([FromQuery]string TranDate, [FromQuery]int Region, [FromQuery]string ProdCode)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtTranDate = new DateTime();
+            DateTime.TryParseExact(TranDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtTranDate);
+
+            blnResult = cls.ReksaReportRDN09(dtTranDate, Region, ProdCode, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN09 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN10")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN10([FromQuery]string PeriodStart, [FromQuery]string PeriodEnd, [FromQuery]int ProdCode, [FromQuery]string OfficeId)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(PeriodStart, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(PeriodEnd, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaReportRDN10(dtStartDate, dtEndDate, ProdCode, OfficeId, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN10 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN11")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN11([FromQuery]string TranDate, [FromQuery]int Region, [FromQuery]string ProdCode)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtTranDate = new DateTime();
+            DateTime.TryParseExact(TranDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtTranDate);
+
+            blnResult = cls.ReksaReportRDN11(dtTranDate, Region, ProdCode, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN11 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN12")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN12([FromQuery]string Period, [FromQuery]int Region, [FromQuery]string ProdCode, [FromQuery]string CIFStatus)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtPeriod = new DateTime();
+            DateTime.TryParseExact(Period, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtPeriod);
+
+            blnResult = cls.ReksaReportRDN12(dtPeriod, Region, ProdCode, CIFStatus, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN12 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN13")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN13([FromQuery]string PeriodStart, [FromQuery]string PeriodEnd, [FromQuery]string ProdCode, [FromQuery]string Type)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(PeriodStart, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(PeriodEnd, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaReportRDN13(dtStartDate, dtEndDate, ProdCode, Type, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN13 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+
     }
 }

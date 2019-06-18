@@ -1,0 +1,54 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["ReportCode"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <script src="~/lib/assets/js/jquery.min.js"></script>
+    <script src="~/lib/assets/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div class="">
+        <h1 class="text-center" style="padding-bottom:50px">@ViewData["ReportName"]</h1>
+        <h6>Tran Date : @ViewData["TranDate"]</h6>
+        <h6>Product Code : @ViewData["ProductCode"]</h6>
+        <h6>Mata Uang : @ViewData["MataUang"]</h6>
+        <h6>Regional : @ViewData["RegionName"]</h6>
+        <br>
+        <table class="table table-striped m-0" style="font-size:9px">
+            <thead>
+                <tr>
+                    <th>Agent Code</th>
+                    <th>Agent Name</th>
+                    <th>Nominal</th>
+                    <th>NAV</th>
+                    <th>Jumlah Unit</th>
+                    <th>Jumlah Nasabah</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow item in Model.Tables[0].Rows)
+                {
+                <tr>
+                    <td>@item["AgentCode"]</td>
+                    <td>@item["AgentName"]</td>
+                    <td>@(item["Nominal"].ToString() != "" ? decimal.Parse(item["Nominal"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["NAV"].ToString() != "" ? decimal.Parse(item["NAV"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["JumlahUnit"].ToString() != "" ? decimal.Parse(item["JumlahUnit"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["JumlahNasabah"].ToString() != "" ? decimal.Parse(item["JumlahNasabah"].ToString()).ToString("###,###.##") : "0")</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html> 

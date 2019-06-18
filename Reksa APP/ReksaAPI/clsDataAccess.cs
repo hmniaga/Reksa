@@ -444,6 +444,29 @@ namespace ReksaAPI
         #endregion
 
         #region "GLOBAL"
+        public bool ReksaGetMenuReportRDN(out List<ReportMenuModel> list, out string ErrMsg)
+        {
+            DataSet dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            bool blnResult = false;
+            ErrMsg = "";
+            list = new List<ReportMenuModel>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                if (this.ExecProc(QueryReksa(), "ReksaGetMenuReportRDN", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    DataTable dtOut = dsOut.Tables[0];
+                    List<ReportMenuModel> result = this.MapListOfObject<ReportMenuModel>(dtOut);
+                    list.AddRange(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         public bool ReksaGetDataPeopleSoft(int intNIK, ref string ErrMessage, out string[] strData)
         {
             ErrMessage = "";
@@ -3233,7 +3256,7 @@ namespace ReksaAPI
             }
             catch (Exception ex)
             {
-                Result = "";
+                Result = ex.Message;
             }
             return Result;
         }
@@ -3330,6 +3353,62 @@ namespace ReksaAPI
              }
             catch (Exception ex)
             {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaCutSellingFee(DateTime dtStart, DateTime dtEnd, int intProdId, string strGUID, int intNIK, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdStartDate", SqlDbType = System.Data.SqlDbType.Date, Value = dtStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdEndDate", SqlDbType = System.Data.SqlDbType.Date, Value = dtEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGUID, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaCutSellingFee", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaGetLastFeeDate(int intType, int intManId, int intProdId, int intNIK, string strGUID, out DateTime dtStartDate, out string ErrMsg)
+        {
+            dtStartDate = new DateTime();
+            ErrMsg = "";
+            bool blnResult = false;
+            DataSet ds = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.Int, Value = intType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdStartDate", SqlDbType = System.Data.SqlDbType.Date, Direction = System.Data.ParameterDirection.Output},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGUID, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnManId", SqlDbType = System.Data.SqlDbType.Int, Value = intManId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaGetLastFeeDate", ref dbParam, out ds, out cmdOut, out ErrMsg))
+                {
+                    DateTime.TryParse(cmdOut.Parameters["@pdStartDate"].Value.ToString(), out dtStartDate);
+                    blnResult = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                blnResult = false;
                 ErrMsg = ex.Message;
             }
             return blnResult;
@@ -4288,7 +4367,73 @@ namespace ReksaAPI
                 ErrMsg = ex.Message;
             }
             return blnResult;
-        }        
+        }
+        public bool ReksaPopulateOutgoingTT(out string ErrMsg, out List<TransactionModel.OutgoingTT> listOutgoingTT)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            DataSet ds = new DataSet();
+            listOutgoingTT = new List<TransactionModel.OutgoingTT>();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                SqlCommand cmdOut = new SqlCommand();
+                if (this.ExecProc(QueryReksa(), "ReksaPopulateOutgoingTT", ref dbParam, out ds, out cmdOut, out ErrMsg))
+                {
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable dtOut = ds.Tables[0];
+                        List<TransactionModel.OutgoingTT> Process = this.MapListOfObject<TransactionModel.OutgoingTT>(dtOut);
+                        listOutgoingTT.AddRange(Process);
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaMaintainOutgoingTT(int intBillId, bool isProcess, string strAlasanDelete, int intNIK, out string IsCurrencyHoliday, out DateTime dtNewValueDate, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            DataSet ds = new DataSet();
+            IsCurrencyHoliday = "";
+            dtNewValueDate = new DateTime();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnBillId", Value = intBillId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                     new SqlParameter() { ParameterName = "@pbIsProcess", Value = isProcess, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                     new SqlParameter() { ParameterName = "@pcAlasanDelete", Value = strAlasanDelete, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                     new SqlParameter() { ParameterName = "@pbIsCurrencyHoliday", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 1 },
+                     new SqlParameter() { ParameterName = "@pdNewValueDate", SqlDbType = System.Data.SqlDbType.Date, Direction = System.Data.ParameterDirection.Output }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainOutgoingTT", ref dbParam, out ds, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    IsCurrencyHoliday = cmdOut.Parameters["@pbIsCurrencyHoliday"].Value.ToString();
+                    DateTime.TryParse(cmdOut.Parameters["@pdNewValueDate"].Value.ToString(), out dtNewValueDate);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
 
         #region "REPORT"
@@ -4465,6 +4610,488 @@ namespace ReksaAPI
                 };
 
                 blnResult = this.ExecProc(QueryReksa(), "ReksaNFSInsertLogFile", ref dbParam, out dsOut, out cmdOut, out ErrMsg);                
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN07(DateTime dtPeriodStart, DateTime dtPeriodEnd, int intProdId, string strCustodyCode, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStartDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEndDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcCustodyCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strCustodyCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN07", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN08(DateTime dtPeriodStart, DateTime dtPeriodEnd, int intProdCode, string strOfficeId, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStart", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEnd", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdCode", SqlDbType = System.Data.SqlDbType.Int, Value = intProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcOfficeId", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOfficeId, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN08", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN09(DateTime dtTranDate, int intRegion, string strProdCode, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdTranDate ", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtTranDate, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN09", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN10(DateTime dtPeriodStart, DateTime dtPeriodEnd, int intProdId, string strOfficeId, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStart", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEnd", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriodEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcOfficeId", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOfficeId, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN10", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN11(DateTime dtTranDate, int intRegion, string strProdCode, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                     new SqlParameter() { ParameterName = "@pdTranDate ", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtTranDate, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input},
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN11", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN12(DateTime dtPeriod, int intRegion, string strProdCode, string strCIFStatus, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                     new SqlParameter() { ParameterName = "@pdPeriodStartDate ", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtPeriod, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcCIFStatus", SqlDbType = System.Data.SqlDbType.Char, Value = intRegion, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN12", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN13(DateTime dtStart, DateTime dtEnd, string strProdCode, string strType, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStartDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEndDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strType, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN13", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN14(DateTime dtStart, DateTime dtEnd, string strProdCode, string strType, int intRegion, string strAgentCode, string strClientCode,  out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStartDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEndDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcAgentCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = strAgentCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcClientCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = strClientCode, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN14", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN15(int intRegion, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN15", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN16(int intRegion, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN16", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN17(DateTime dtStart, DateTime dtEnd, string strProdCode, int intRegion, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStartDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEndDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProdCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input},                    
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN17", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN18(string strCIFNO, string strShareholderID, string isTA, string strStatusClientCode, DateTime dtOutstandingDate, string strUserIDAD, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcCIFNo", SqlDbType = System.Data.SqlDbType.VarChar, Value = strCIFNO, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcShareholderID", SqlDbType = System.Data.SqlDbType.VarChar, Value = strShareholderID, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pbIsTA ", SqlDbType = System.Data.SqlDbType.VarChar, Value = isTA, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcStatusClientCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = strStatusClientCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdOutstandingDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtOutstandingDate, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cUserIDAD", SqlDbType = System.Data.SqlDbType.VarChar, Value = strUserIDAD, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN18", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN19(DateTime dtStart, DateTime dtEnd, string strClientCode, int intRegion, string strShareholderID, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriodStartDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtStart, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPeriodEndDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtEnd, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcClientCode ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strClientCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRegion", SqlDbType = System.Data.SqlDbType.Int, Value = intRegion, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcShareholderID ", SqlDbType = System.Data.SqlDbType.VarChar, Value = strShareholderID, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN19", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN20(out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN20", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
             }
             catch (Exception ex)
             {

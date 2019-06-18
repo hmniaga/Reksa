@@ -9,5 +9,8 @@ namespace Reksa.ViewModels
     public class ReportListViewModel
     {
         public List<FileModel.NFSFileListType> NFSFileListType { get; set; }
+        public ProductModel ProductModel { get; set; }
+        public OfficeModel OfficeModel { get; set; }
+        public SearchCustody CustodyModel { get; set; }
     }
 }

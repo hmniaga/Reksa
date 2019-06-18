@@ -1,0 +1,203 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.ReportListViewModel
+@{
+    ViewData["Title"] = ViewData["ReportCode"] + " - " + ViewData["ReportName"];
+}
+
+<div class="col-md-12">
+    <div class="card-box table-responsive">
+        <h2><b>@ViewData["ReportCode"]</b></h2>
+        <p class="text-muted font-13 m-b-30">
+            @ViewData["ReportName"]
+        </p>
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <!-- Begin StartDate -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Periode Awal</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("StarDate").Format("{0:dd/MM/yyyy}")
+                        )
+                    </div>
+                </div>
+                <!-- End StartDate -->
+                <!-- Begin EndDate -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Periode Akhir</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("EndDate").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
+                                                                                                                                                                                                                        .Format("{0:dd/MM/yyyy}")
+                        )
+                    </div>
+                </div>
+                <!-- End EndDate -->
+            </div>
+            <div class="col-md-6">
+                <!-- Begin Kode Product -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Nama Produk</label>
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProduct_text1" }).Enable(false)
+                        <span class="input-group-btn">
+                            <a id="srcProduct" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        </span>
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px", @id = "srcProduct_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdId", @type = "hidden" })
+                    </div>
+                </div>
+                <!-- End Kode Product -->
+                <!-- Begin >Tipe Produk -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Tipe Produk</label>
+                    <div class="input-group col-md-8">
+                        @(Html.Kendo().DropDownList().Name("TypeProduct").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "NAV", Value = "NAV" }, new SelectListItem() { Text = "KURS", Value = "KURS" }, new SelectListItem() { Text = "DEVIDEN", Value = "DEVIDEN" } }).DataTextField("Text").DataValueField("Value"))
+                    </div>
+                </div>
+                <!-- End >Tipe Produk -->
+            </div>
+        </div>
+        <div class="col-md-12" style="margin-top:30px;margin-bottom:10px">
+            <div class="form-group">
+                <a href="@Url.Action("ReportReksaDana", "Report")" class="btn btn-info" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-arrow-left"></i>
+                    </span>
+                    Back
+                </a>
+                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+                <a id="ExportPDF" href="@Url.Action("ExportPDF", "Report", new { ReportCode = @ViewData["ReportCode"], ReportName = @ViewData["ReportName"] })" class="btn btn-danger waves-effect waves-light" style="margin-right:10px;">
+                    <span class="btn-label">
+                        <i class="fa fa-file-pdf-o m-r-5"></i>
+                    </span>
+                    PDF
+                </a>
+                <a id="ExportExcel" href="@Url.Action("ExportExcel", "Report", new { ReportCode = @ViewData["ReportCode"], ReportName = @ViewData["ReportName"] })" class="btn btn-success waves-effect waves-light" style="margin-right:10px;">
+                    <span class="btn-label">
+                        <i class="fa fa-file-excel-o m-r-5"></i>
+                    </span>
+                    Excel
+                </a>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="dataGridView1"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var grid = { height: 200 };
+        $("#dataGridView1").kendoGrid(grid);
+        $("#ExportPDF").attr('class', 'btn btn-danger disabled');
+        $("#ExportExcel").attr('class', 'btn btn-success disabled');
+    });
+
+    $("#btnRefresh").click(function () {
+        var PeriodStart = $("#StarDate").val();
+        var PeriodEnd = $("#EndDate").val();
+        var ProdCode = $("#srcProduct_text1").val();
+        var ProdId = $("#ProdId").val();
+        var Type = $("#TypeProduct").val();
+
+        if (PeriodStart == "") {
+            swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
+            return;
+        }
+        if (PeriodEnd == "") {
+            swal("Warning", "Periode Akhir tidak boleh kosong!", "warning");
+            return;
+        }
+        if (ProdId == "") {
+            swal("Warning", "Produk tidak boleh kosong!", "warning");
+            return;
+        }
+        if (Type == "") {
+            swal("Warning", "Tipe Produk tidak boleh kosong!", "warning");
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Report/ReksaReportRDN13',
+            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, Type: Type },
+            success: function (data) {
+                if (data.blnResult) {
+                    var gridView = $("#dataGridView1").data("kendoGrid");
+                    var gridData = populateGrid(data.dsReport.table);
+
+                    gridView.setOptions(gridData);
+                    gridView.dataSource.page(1);
+                    gridView.select("tr:eq(0)");
+
+                    $("#ExportPDF").attr('class', 'btn btn-danger enabled');
+                    $("#ExportExcel").attr('class', 'btn btn-success enabled');
+                    $("#dataGridView1 th[data-field=jointDate]").html("Joint Date")
+                }
+                else {
+                    $("#ExportPDF").attr('class', 'btn btn-danger disabled');
+                    $("#ExportExcel").attr('class', 'btn btn-success disabled');
+                    $("#dataGridView1").empty();
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    });
+
+    function populateGrid(response) {
+        if (response.length > 0) {
+            var columns = generateColumns(response);
+            return gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 10,
+                    page: 1
+                },
+                columns: columns,
+                pageable: true,
+                selectable: true,
+                height: 300
+            };
+        } else {
+            $("#dataGridView1").empty();
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            var jointDate = name.indexOf("jointDate") > -1 || name.indexOf("jointDate") > -1;
+            var agentName = name.indexOf("agentName") > -1 || name.indexOf("agentName") > -1;
+            var clientCode = name.indexOf("clientCode") > -1 || name.indexOf("clientCode") > -1;
+            var namaNasabah = name.indexOf("namaNasabah") > -1 || name.indexOf("namaNasabah") > -1;
+            var tranDate = name.indexOf("tranDate") > -1 || name.indexOf("tranDate") > -1;
+            var valueDate = name.indexOf("valueDate") > -1 || name.indexOf("valueDate") > -1;
+            return {
+                field: name,
+                width: jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah ? 300 : 100,
+                title: name,
+                template:
+                    jointDate ? "#= kendo.toString(kendo.parseDate(jointDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
+                        tranDate ? "#= kendo.toString(kendo.parseDate(tranDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
+                            valueDate ? "#= kendo.toString(kendo.parseDate(valueDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                                : columnNames
+            };
+        })
+    }
+
+</script>
+

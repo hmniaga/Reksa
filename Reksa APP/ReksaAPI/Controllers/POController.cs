@@ -138,6 +138,31 @@ namespace ReksaAPI.Controllers
             }
 
             return Json(new { blnResult, ErrMsg });
-        }        
+        }
+        [Route("api/PO/CutSellingFee")]
+        [HttpGet("{id}")]
+        public JsonResult CutSellingFee([FromQuery]DateTime StartDate, [FromQuery]DateTime EndDate, [FromQuery]int ProdId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaCutSellingFee(StartDate, EndDate, ProdId, GUID, NIK, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCutSellingFee - Core .Net SqlClient Data Provider\n", "");           
+
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/GetLastFeeDate")]
+        [HttpGet("{id}")]
+        public JsonResult GetLastFeeDate([FromQuery]int Type, [FromQuery]int ManId, [FromQuery]int ProdId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime dtStartDate = new DateTime();
+
+            blnResult = cls.ReksaGetLastFeeDate(Type, ManId, ProdId, NIK, GUID, out dtStartDate , out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetLastFeeDate - Core .Net SqlClient Data Provider\n", "");
+
+            return Json(new { blnResult, ErrMsg, dtStartDate });
+        }
     }
 }

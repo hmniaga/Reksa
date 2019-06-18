@@ -1,0 +1,178 @@
+﻿@using Kendo.Mvc.UI
+@model Reksa.ViewModels.ReportListViewModel
+@{
+    ViewData["Title"] = ViewData["ReportCode"] + " - " + ViewData["ReportName"];
+}
+
+<div class="col-md-12">
+    <div class="card-box table-responsive">
+        <h2><b>@ViewData["ReportCode"]</b></h2>
+        <p class="text-muted font-13 m-b-30">
+            @ViewData["ReportName"]
+        </p>
+        <div class="col-md-12">
+            <!-- Begin TranDate -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Tanggal Transaksi</label>
+                <div class="input-group">
+                    @(Html.Kendo().DatePicker().Name("TranDate").Format("{0:dd/MM/yyyy}")
+                    )
+                </div>
+            </div>
+            <!-- End TranDate -->
+            <!-- Begin Kode Product -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nama Produk</label>
+                <div class="input-group col-md-5">
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProduct_text1" }).Enable(false)
+                    <span class="input-group-btn">
+                        <a id="srcProduct" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 350px", @id = "srcProduct_text2" }).Enable(false)
+                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdId", @type = "hidden" })
+                </div>
+            </div>
+            <!-- End Kode Product -->
+            <!-- Begin Search Regional -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Regional</label>
+                <div class="input-group col-md-5">
+                    @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CustodyCode" }).Enable(false)
+                    <span class="input-group-btn">
+                        <a id="srcCustody" href="@Url.Action("SearchCustody", "Global")" data-toggle="modal" data-target="#CustodyModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                    </span>
+                    @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 350px;", @id = "RegionName" }).Enable(false)
+                </div>
+            </div>
+            <!-- End Search Regional -->
+        </div>
+        <div class="col-md-12" style="margin-top:30px;margin-bottom:10px">
+            <div class="form-group">
+                <a href="@Url.Action("ReportReksaDana", "Report")" class="btn btn-info" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-arrow-left"></i>
+                    </span>
+                    Back
+                </a>
+                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+                <a id="ExportPDF" href="@Url.Action("ExportPDF", "Report", new { ReportCode = @ViewData["ReportCode"], ReportName = @ViewData["ReportName"] })" class="btn btn-danger waves-effect waves-light" style="margin-right:10px;">
+                    <span class="btn-label">
+                        <i class="fa fa-file-pdf-o m-r-5"></i>
+                    </span>
+                    PDF
+                </a>
+                <a id="ExportExcel" href="@Url.Action("ExportExcel", "Report", new { ReportCode = @ViewData["ReportCode"], ReportName = @ViewData["ReportName"] })" class="btn btn-success waves-effect waves-light" style="margin-right:10px;">
+                    <span class="btn-label">
+                        <i class="fa fa-file-excel-o m-r-5"></i>
+                    </span>
+                    Excel
+                </a>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="dataGridView1"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" id="CustodyModal" tabindex="-1" role="dialog" aria-labelledby="CustodyModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var grid = { height: 200 };
+        $("#dataGridView1").kendoGrid(grid);
+        $("#ExportPDF").attr('class', 'btn btn-danger disabled');
+        $("#ExportExcel").attr('class', 'btn btn-success disabled'); 
+    });
+
+    $("#btnRefresh").click(function () {
+        var TranDate = $("#TranDate").val();
+        var ProdCode = $("#srcProduct_text1").val();
+        var Region = 0;
+        var RegionName = $("#RegionName").val();
+
+        if (TranDate == "") {
+            swal("Warning", "Tanggal transaksi tidak boleh kosong!", "warning");
+            return;
+        }
+        if (ProdId == "") {
+            swal("Warning", "Produk tidak boleh kosong!", "warning");
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Report/ReksaReportRDN11',
+            data: { TranDate: TranDate, ProdCode: ProdCode, Region: Region, RegionName: RegionName },
+            success: function (data) {
+                if (data.blnResult) {
+                    var gridView = $("#dataGridView1").data("kendoGrid");
+                    var gridData = populateGrid(data.dsReport.table);
+
+                    gridView.setOptions(gridData);
+                    gridView.dataSource.page(1);
+                    gridView.select("tr:eq(0)");
+
+                    $("#ExportPDF").attr('class', 'btn btn-danger enabled');
+                    $("#ExportExcel").attr('class', 'btn btn-success enabled');
+                    $("#dataGridView1 th[data-field=agentCode]").html("Agent Code")
+                }
+                else {
+                    $("#ExportPDF").attr('class', 'btn btn-danger disabled');
+                    $("#ExportExcel").attr('class', 'btn btn-success disabled'); 
+                    $("#dataGridView1").empty();
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    });
+
+    function populateGrid(response) {
+        if (response.length > 0) {
+            var columns = generateColumns(response);
+            return gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 10,
+                    page: 1
+                },
+                columns: columns,
+                pageable: true,
+                selectable: true,
+                height: 300
+            };
+        } else {
+            $("#dataGridView1").empty();
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            return {
+                field: name,
+                width: tradeDate ? 110 : 100,
+                title: name
+            };
+        })
+    }
+
+</script>
+

@@ -292,9 +292,7 @@ namespace Reksa.Controllers
             }
             this.ViewBag.Tree = items;
             return View("AuthSync", vModel);
-        }
-
-        
+        }      
         public JsonResult ApproveReject(string listId, string treeid, bool isApprove)
         {
             bool blnResult = false;

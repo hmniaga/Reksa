@@ -253,6 +253,30 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaInitializeDataTTCompletion - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, listTTCompletion });
         }
+        [Route("api/Transaction/PopulateOutgoingTT")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateOutgoingTT([FromQuery]int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<TransactionModel.OutgoingTT> listOutgoingTT = new List<TransactionModel.OutgoingTT>();
+            blnResult = cls.ReksaPopulateOutgoingTT(out ErrMsg, out listOutgoingTT);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateOutgoingTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listOutgoingTT });
+        }
+        [Route("api/Transaction/MaintainOutgoingTT")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainOutgoingTT([FromQuery]int BillId, [FromQuery]bool isProcess, [FromQuery]string AlasanDelete, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string IsCurrencyHoliday;
+            DateTime dtNewValueDate;
+
+            blnResult = cls.ReksaMaintainOutgoingTT(BillId, isProcess, AlasanDelete, NIK, out IsCurrencyHoliday, out dtNewValueDate, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainOutgoingTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }        
         private JsonResult Json(object p, object allowGet)
         {
             throw new NotImplementedException();

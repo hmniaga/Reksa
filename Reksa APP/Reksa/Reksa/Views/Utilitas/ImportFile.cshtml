@@ -10,23 +10,52 @@
             </h4>
         </div>
         <div class="panel-body">
-
-            <div class="card-box">
-                <!-- Begin Button -->
-                <div>
-                    <div class="input-group">
-                        <button id=btnProcess class="btn btn-default waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-check"></i>
-                            </span>
-                            Process
-                        </button>
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <!-- Begin Button -->
+                        <div>
+                            <div class="input-group">
+                                <button id=btnProcess class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-cogs"></i>
+                                    </span>
+                                    Process
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Button -->
                     </div>
                 </div>
-                <!-- End Button -->
             </div>
-
-            Import File
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nama File</label>
+                                <div class="input-group col-md-6" id="filename">
+                                    <input id="txtbPath" type="file" accept=".csv, .txt, .xls" class="filestyle" data-iconname="fa fa-upload">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dataGridView1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+
+        var grid = {
+            height: 200
+        };
+        $("#dataGridView1").kendoGrid(grid);
+    
+    });
+
+</script>

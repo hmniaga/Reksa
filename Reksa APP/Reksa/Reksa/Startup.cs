@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using Reksa.Data;
 using Reksa.Data.Entities;
 using Reksa.Models;
+using Rotativa.AspNetCore;
 
 namespace Reksa
 {
@@ -71,6 +72,7 @@ namespace Reksa
 
             // Configure Kendo UI
             app.UseKendo(env);
+            RotativaConfiguration.Setup(env);
         }
     }
 }

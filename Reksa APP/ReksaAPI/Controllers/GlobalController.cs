@@ -55,8 +55,6 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaGlobalQuery(true, strCommand, listParam, out dsResult, out ErrMsg);
             return Json(new { blnResult, ErrMsg, dsResult });
         }
-
-
         [Route("api/Global/PopulateCombo")]
         [HttpGet]
         public JsonResult PopulateCombo()
@@ -344,6 +342,16 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcWaperd(Col1, Col2, Validate);
             return Json(list);
         }
-
+        [Route("api/Global/GetMenuReportRDN")]
+        [HttpGet("{id}")]
+        public JsonResult GetMenuReportRDN()
+        {
+            bool blnResult;
+            string ErrMsg;
+            List<ReportMenuModel> listMenu = new List<ReportMenuModel>();
+            blnResult = cls.ReksaGetMenuReportRDN(out listMenu, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetMenuReportRDN - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listMenu });
+        }
     }
 }

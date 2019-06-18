@@ -792,9 +792,9 @@ namespace Reksa.Controllers
                     JObject strObject = JObject.Parse(strJson);
                     blnResult = strObject.SelectToken("blnResult").Value<bool>();
                     ErrMsg = strObject.SelectToken("errMsg").Value<string>();
-                    JToken TokenTunggakan = strObject["listTTCompletion"];
-                    string JsonTunggakan = JsonConvert.SerializeObject(TokenTunggakan);
-                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTunggakan);
+                    JToken TokenTTCompletion = strObject["listTTCompletion"];
+                    string JsonTTCompletion = JsonConvert.SerializeObject(TokenTTCompletion);
+                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTTCompletion);
                 }
             }
             catch (Exception ex)
@@ -847,9 +847,9 @@ namespace Reksa.Controllers
                     JObject strObject = JObject.Parse(strJson);
                     blnResult = strObject.SelectToken("blnResult").Value<bool>();
                     ErrMsg = strObject.SelectToken("errMsg").Value<string>();
-                    JToken TokenTunggakan = strObject["listTTCompletion"];
-                    string JsonTunggakan = JsonConvert.SerializeObject(TokenTunggakan);
-                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTunggakan);
+                    JToken TokenTTCompletion = strObject["listTTCompletion"];
+                    string JsonTTCompletion = JsonConvert.SerializeObject(TokenTTCompletion);
+                    listTransactionTT = JsonConvert.DeserializeObject<TransactionModel.TransactionTT>(JsonTTCompletion);
                 }
             }
             catch (Exception ex)
@@ -857,6 +857,34 @@ namespace Reksa.Controllers
                 ErrMsg = ex.Message;
             }
             return Json(new { blnResult, ErrMsg, listTransactionTT });
+        }
+        public JsonResult PopulateOutgoingTT()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List < TransactionModel.OutgoingTT> listOutgoingTT = new List<TransactionModel.OutgoingTT>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/PopulateOutgoingTT").Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenOutgoingTT = strObject["listOutgoingTT"];
+                    string JsonOutgoingTT = JsonConvert.SerializeObject(TokenOutgoingTT);
+                    listOutgoingTT = JsonConvert.DeserializeObject< List<TransactionModel.OutgoingTT>>(JsonOutgoingTT);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listOutgoingTT });
         }
     }
 }

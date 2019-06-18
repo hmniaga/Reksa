@@ -22,6 +22,12 @@ namespace Reksa.Controllers
             _strAPIUrl =  _config.GetValue<string>("APIServices:url");
         }
 
+        public ActionResult AlasanDelete()
+        {
+   
+            return View();
+        }
+
         public ActionResult Document(bool IsEdit, int TranId, bool IsSwitching, bool IsBooking, string RefID)
         {
             ViewBag.IsEdit = IsEdit;

@@ -13,58 +13,233 @@
         </h4>
     </div>
     <div class="panel-body">
-        <div class="col-md-6">
-            <!-- Begin Kode Product -->
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Kode Produk</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCodeRedemp" }).Enable(false)
-                    <span class="input-group-btn">
-                        <a href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                    </span>
-                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdNameRedemp" }).Enable(false)
+        <div class="col-md-12">
+            <div class="card-box">
+                <div class="row">
+                    <!-- Begin Button -->
+                    <div>
+                        <div class="input-group">
+                            <button id="btnDocumentSubs" href="@Url.Action("AlasanDelete", "Global" ) " data-toggle="modal" data-target="#AlasanModal" class="btn btn-default waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Cek Dokumen
+                            </button>
+                            <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-refresh"></i>
+                                </span>
+                                Refresh
+                            </button>
+                            <button id=btnProcess class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-cogs"></i>
+                                </span>
+                                Process
+                            </button>
+                            <button id="btnReject" class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-times"></i>
+                                </span>
+                                Reject
+                            </button>
+                        </div>
+                    </div>
+                    <!-- End Button -->
                 </div>
             </div>
-            <!-- End Kode Product -->
-            <!-- Begin Client Code -->
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Client Code</label>
-                <div class="input-group">
-                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientCodeRedemp" }).Enable(false)
-
-                    <span class="input-group-btn">
-                        <a href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                    </span>
-                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientNameRedemp" }).Enable(false)
-                </div>
-            </div>
-            <!-- End Client Code -->
         </div>
-        <div class="col-md-12" style="padding-bottom:5%">
-            @(Html.Kendo().Grid(Model.ListSubscription)
-                    .Name("GridTunggakan")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(p => p.NoTrx).Width(100).Title("No Transaksi");
-                        columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
-                        columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
-                        columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
-                        columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
-                        columns.Bound(p => p.Nominal).Width(150).Title("Nominal");
-                        columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
-                        columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
-                        columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount");
-                        columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
-                        columns.Bound(p => p.JenisFee).Width(150).Title("JenisFee");
-                        columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
-                    })
-                    .Pageable()
-                    .Scrollable(s => s.Height(250))
-                    .Selectable(selectable => selectable
-                    .Mode(GridSelectionMode.Single))
-                    //.Events(events => events.Change("onRowTunggakanSelect"))
-            )
+        <div class="col-md-12">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="dataGridView1"></div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AlasanModal" tabindex="-1" role="dialog" aria-labelledby="AlasanModalLabel">
+    <div class="modal-dialog" style="width:65%;">
+        <div class="modal-content">
 
         </div>
     </div>
 </div>
+<script>
+     $(document).ready(function () {
+         var grid = {
+             height: 200
+         };
+         $("#dataGridView1").kendoGrid(grid);
+         subPopulate();
+
+         $("#btnRefresh").click(function () {
+             subPopulate();
+         });
+         $("#btnProcess").click(function () {
+             subProcess(true);
+         });
+         $("#btnReject").click(function () {
+             subProcess(false);
+         });
+    });
+
+    function subPopulate()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/PopulateOutgoingTT',
+            success: function (data) {
+                if (data.blnResult) {
+                    var gridView = $("#dataGridView1").data("kendoGrid");
+                    var gridData = populateGrid(data.listOutgoingTT);
+
+                    gridView.setOptions(gridData);
+                    gridView.dataSource.page(1);
+                    gridView.select("tr:eq(0)");
+
+                    $("#dataGridView1 th[data-field=BillId]").html("Bill Id")
+                    $("#dataGridView1 th[data-field=ProdName]").html("Product Name")
+                    $("#dataGridView1 th[data-field=NamaPemohon]").html("Nama Pemohon")
+                    $("#dataGridView1 th[data-field=AlamatPemohon1]").html("Alamat Pemohon 1")
+                    $("#dataGridView1 th[data-field=AlamatPemohon2]").html("Alamat Pemohon 2")
+                    $("#dataGridView1 th[data-field=RemittanceNo]").html("Remittance No")
+                    $("#dataGridView1 th[data-field=TglPembelianReksadana]").html("Tgl Pembelian Reksadana")
+                    $("#dataGridView1 th[data-field=BillId]").html("Bill Id")
+                    $("#dataGridView1 th[data-field=BillId]").html("Bill Id")
+                    $("#dataGridView1 th[data-field=BillId]").html("Bill Id")
+                    $("#dataGridView1 th[data-field=BillId]").html("Bill Id")
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+
+    function populateGrid(response) {
+        if (response.length > 0) {
+            var columns = generateColumns(response);
+            return gridOptions = {
+                dataSource: {
+                    transport: {
+                        read: function (options) {
+                            options.success(response);
+                        }
+                    },
+                    pageSize: 6,
+                    page: 1
+                },
+                //change: onRowKinerjaSelect,
+                columns: columns,
+                pageable: true,
+                selectable: true,
+                height: 300
+            };
+        } else {
+            $("#dataGridView1").empty();
+        }
+    }
+
+    function generateColumns(response) {
+        var columnNames = Object.keys(response[0]);
+        return columnNames.map(function (name) {
+            var CheckB = name.indexOf("CheckB") > -1 || name.indexOf("CheckB") > -1;
+            var NamaPemohon = name.indexOf("NamaPemohon") > -1 || name.indexOf("NamaPemohon") > -1;
+            var ProdName = name.indexOf("ProdName") > -1 || name.indexOf("ProdName") > -1;
+            var AlamatPemohon1 = name.indexOf("AlamatPemohon1") > -1 || name.indexOf("AlamatPemohon1") > -1;
+            var AlamatPemohon2 = name.indexOf("AlamatPemohon2") > -1 || name.indexOf("AlamatPemohon2") > -1;
+            var PaymentRemarks = name.indexOf("PaymentRemarks") > -1 || name.indexOf("PaymentRemarks") > -1;
+            var AlamatPenerima = name.indexOf("AlamatPenerima") > -1 || name.indexOf("AlamatPenerima") > -1;
+            var TglPembelianReksadana = name.indexOf("TglPembelianReksadana") > -1 || name.indexOf("TglPembelianReksadana") > -1;
+            var TanggalValuta = name.indexOf("TanggalValuta") > -1 || name.indexOf("TanggalValuta") > -1;
+            var RemittanceNo = name.indexOf("RemittanceNo") > -1 || name.indexOf("RemittanceNo") > -1;
+            var NominalTransfer = name.indexOf("NominalTransfer") > -1 || name.indexOf("NominalTransfer") > -1;
+            var NamaPenerima = name.indexOf("NamaPenerima") > -1 || name.indexOf("NamaPenerima") > -1;
+            
+            value = 'BillId';
+            return {
+                headerTemplate: CheckB ? "<input type='checkbox'  id='chkSelectAll' onclick='checkAll(this)' />" : name,
+                template: CheckB ? "<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= " + value + " #'" +
+                    "# if (CheckB) { #" +
+                    "checked='checked'" +
+                    "# } #" +
+                    "/>"
+                    : TglPembelianReksadana ? "#= kendo.toString(kendo.parseDate(TglPembelianReksadana, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                        : TanggalValuta ? "#= kendo.toString(kendo.parseDate(TanggalValuta, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                            : columnNames, 
+                field: name,
+                width:
+                    CheckB ? 50 :
+                        NamaPemohon ? 200 :
+                            ProdName ? 300 :
+                                AlamatPemohon1 ? 300 :
+                                    AlamatPemohon2 ? 300 :
+                                        PaymentRemarks ? 380 :
+                                            AlamatPenerima ? 300 :
+                                                RemittanceNo ? 150 :
+                                                    NominalTransfer ? 200 :
+                                                        NamaPenerima ? 200 :
+                                                            TglPembelianReksadana ? 200 :
+                                                                TanggalValuta ? 150 
+                                                            : 100,
+                title: CheckB ? "CheckBox" : name
+            };
+        })
+    }
+
+    function checkAll(e) {
+        var state = $(e).is(':checked');
+        var grid = $('#dataGridView1').data('kendoGrid');
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] != state)
+                this.dirty = true;
+
+            this['CheckB'] = state;
+        });
+        grid.refresh();
+    }
+
+    function onCheckBoxClick(e) {
+        var state = $(e).is(':checked');
+        var value = e.value;
+        var grid = $('#dataGridView1').data('kendoGrid');
+        grid.refresh();
+        grid.tbody.find("tr[role='row']").each(function () {
+            var dataItem = grid.dataItem(this);
+            if (dataItem.BillId == value) {
+                dataItem.CheckB = state;
+            }           
+        })
+        var chkAll = $('#chkSelectAll').is(':checked');
+        var isCheckedAll = true;
+        var countTrue = 0;
+        var countFalse = 0;
+        var countAll = 0;
+        $.each(grid.dataSource.view(), function () {
+            if (this['CheckB'] == true) {
+                countTrue = countTrue + 1;
+            }
+            else {
+                countFalse = countFalse + 1;
+                isCheckedAll = false;
+            }
+            countAll = countAll + 1;
+        });
+        if (countFalse == 0 || (countFalse == 1 && !state)) {
+            $('#chkSelectAll').prop("checked", state);
+        }
+        grid.refresh();
+    }
+
+    function subProcess(isProcess)
+    {
+        if (isProcess == false)
+        {
+            //Get alasan
+        }
+
+    }
+</script>

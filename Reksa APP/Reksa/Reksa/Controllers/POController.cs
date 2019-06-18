@@ -312,7 +312,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsResult });
         }
-
         public JsonResult subCancelTransaction(string listTranId)
         {
             bool blnResult = false;
@@ -337,7 +336,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
-
         private bool PopulateDropDownList(string ListName, out List<ParamSinkronisasi> listParam)
         {
             bool blnResult = false;
@@ -369,6 +367,67 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }            
             return blnResult;
+        }
+        public JsonResult ProcessCutSellingFee(string StartDate, string EndDate, int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                DateTime dtStartDate = new DateTime();
+                DateTime dtEndDate = new DateTime();
+                DateTime.TryParse(StartDate, out dtStartDate);
+                DateTime.TryParse(EndDate, out dtEndDate);
+
+                string strStartDate = dtStartDate.ToLongDateString();
+                string strEndDate = dtEndDate.ToLongDateString();
+                var Content = new StringContent(JsonConvert.SerializeObject(""));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/PO/CutSellingFee?StartDate=" + strStartDate + "&EndDate=" + strEndDate + "&ProdId=" + ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult GetLastFeeDate(int Type, int ManId, int ProdId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime dtStartDate = new DateTime();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/GetLastFeeDate?Type=" + Type + "&ManId=" + ManId + "&ProdId=" + ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = strObject["dtStartDate"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dtStartDate = JsonConvert.DeserializeObject<DateTime>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dtStartDate });
         }
     }
 }

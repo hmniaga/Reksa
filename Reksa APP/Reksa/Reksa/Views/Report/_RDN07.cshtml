@@ -1,0 +1,64 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["ReportCode"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <script src="~/lib/assets/js/jquery.min.js"></script>
+    <script src="~/lib/assets/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div class="">
+        <h1 class="text-center" style="padding-bottom:50px">@ViewData["ReportName"]</h1>
+        <h6>Periode : @ViewData["PeriodStart"] - @ViewData["PeriodEnd"]</h6>
+        <h6>Custody Name : @ViewData["CustodyName"]</h6>
+        <br>
+        <table class="table table-striped m-0" style="font-size:9px">
+            <thead>
+                <tr>
+                    <th>Trade Date</th>
+                    <th>SHDID</th>
+                    <th>Exchange Out - Currency</th>
+                    <th>Exchange Out - Shares</th>
+                    <th>Liquidation</th>
+                    <th>
+                        Dealer Commision
+                        (CCY)
+                    </th>
+                    <th>Dealer Commision Pct</th>
+                    <th>Exchange IN FUND ID</th>
+                    <th>Reference No 1</th>
+                    <th>Reference No 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow item in Model.Tables[0].Rows)
+                {
+                <tr>
+                    <td>@(item["TradeDate"].ToString() != "" ? DateTime.Parse(@item["TradeDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
+                    <td>@item["SHDID"]</td>
+                    <td>@(item["ExchangeOutAmt"].ToString() != "" ? decimal.Parse(item["ExchangeOutAmt"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["ExchangeOutUnit"].ToString() != "" ? decimal.Parse(item["ExchangeOutUnit"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Liquidate"].ToString() != "" ? decimal.Parse(item["Liquidate"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["DealerCommision"].ToString() != "" ? decimal.Parse(item["DealerCommision"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["DealerCommisionPct"].ToString() != "" ? decimal.Parse(item["DealerCommisionPct"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["ExchangeInFundId"].ToString() != "" ? decimal.Parse(item["ExchangeInFundId"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["ClientCodeSwitchOut"]</td>
+                    <td>@item["ClientCodeSwitchIn"]</td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html> 

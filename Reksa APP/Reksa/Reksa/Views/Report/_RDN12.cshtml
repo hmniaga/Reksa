@@ -1,0 +1,99 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["ReportCode"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <script src="~/lib/assets/js/jquery.min.js"></script>
+    <script src="~/lib/assets/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div class="">
+        <h1 class="text-center" style="padding-bottom:50px">@ViewData["ReportName"]</h1>
+        <h6>Period : @ViewData["Period"]</h6>
+        <h6>Product Code : @ViewData["ProductCode"]</h6>
+        <h6>Mata Uang : @ViewData["MataUang"]</h6>
+        <h6>Regional : @ViewData["RegionName"]</h6>
+        <br>
+        <table class="table table-striped m-0" style="font-size:9px">
+            <thead>
+                <tr>
+                    <th>CIF No</th>
+                    <th>Shareholder ID</th>
+                    <th>Client Code</th>
+                    <th>Join Date</th>
+                    <th>Client Name</th>
+                    <th>Client Address</th>
+                    <th>Client Phone</th>
+                    <th>NPWP</th>
+                    <th>Institution</th>
+                    <th>Agent Code</th>
+                    <th>Agent Name</th>
+                    <th>Regional Code</th>
+                    <th>Account No</th>
+                    <th>Account Name</th>
+                    <th>NAV</th>
+                    <th>Deviden (Nominal)</th>
+                    <th>Kurs</th>
+                    <th>Subcription (Nominal)</th>
+                    <th>Redemption (Nominal)</th>
+                    <th>Oustanding (Unit)</th>
+                    <th>Subc Fee (Nominal)</th>
+                    <th>Mntc Fee (Nominal)</th>
+                    <th>Redemp Fee (Nominal)</th>
+                    <th>User Name</th>
+                    <th>Referral Name</th>
+                    <th>Status Client Code</th>
+                    <th>Flag</th>
+                    <th>Flag RDB</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow item in Model.Tables[0].Rows)
+                {
+                <tr>
+                    <td>@item["CIFNo"]</td>
+                    <td>@item["ShareholderID"]</td>
+                    <td>@item["ClientCode"]</td>
+                    <td>@(item["JointDate"].ToString() != "" ? DateTime.Parse(@item["JointDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
+                    <td>@item["ClientName"]</td>
+                    <td>@item["ClientAddress"]</td>
+                    <td>@item["ClientPhone"]</td>
+                    <td>@item["CIFNPWP"]</td>
+                    <td>@item["CIFType"]</td>
+                    <td>@item["AgentCode"]</td>
+                    <td>@item["AgentName"]</td>
+                    <td>@item["RegionalCode"]</td>
+                    <td>@item["AccountNo"]</td>
+                    <td>@item["AccountName"]</td>
+                    <td>@(item["NAV"].ToString() != "" ? decimal.Parse(item["NAV"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Deviden"].ToString() != "" ? decimal.Parse(item["Deviden"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Kurs"].ToString() != "" ? decimal.Parse(item["Kurs"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Subscription"].ToString() != "" ? decimal.Parse(item["Subscription"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Redemption"].ToString() != "" ? decimal.Parse(item["Redemption"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Outstanding"].ToString() != "" ? decimal.Parse(item["Outstanding"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["SubcFee"].ToString() != "" ? decimal.Parse(item["SubcFee"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["MntcFee"].ToString() != "" ? decimal.Parse(item["MntcFee"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["RedempFee"].ToString() != "" ? decimal.Parse(item["RedempFee"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["UserName"]</td>
+                    <td>@item["ReferralName"]</td>
+                    <td>@item["StatusClientCode"]</td>
+                    <td>@item["Flag"]</td>
+                    <td>@item["FlagRDB"]</td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html> 

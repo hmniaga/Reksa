@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Report Reksa Dana";
+}
+@model IEnumerable<Reksa.Models.ReportMenuModel>
+
+<!-- Begin Contents -->
+<div class="panel panel-default" id="contentCustomer">
+    <div class="panel-heading">
+        <h4 class="m-t-0 header-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Report Reksadana</a>
+        </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
+        <div class="panel-body">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card-box">
+                        <div class="form-group">
+                            <a href="@Url.Action(item.ReportAction, item.ReportController, new { ReportCode = item.ReportCode, ReportName = item.ReportName})" class="btn btn-default">
+                                <span class="btn-label">
+                                    <i class="fa fa-file"></i>
+                                </span>
+                                @item.ReportCode
+                            </a>
+                        </div>
+                        <h5>@item.ReportName</h5>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>

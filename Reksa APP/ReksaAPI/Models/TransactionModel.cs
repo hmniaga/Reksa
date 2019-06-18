@@ -330,5 +330,28 @@ namespace ReksaAPI.Models
             public int InputterNIK { get; set; }
             public string ActionType { get; set; }
         }
+        public class OutgoingTT
+        {
+            public bool CheckB { get; set; }
+            public int BillId { get; set; }
+            public string ProdName { get; set; }
+            public string NamaPemohon { get; set; }
+            public string AlamatPemohon1 { get; set; }
+            public string AlamatPemohon2 { get; set; }
+            public string RemittanceNo { get; set; }
+            public DateTime TglPembelianReksadana { get; set; }
+            public DateTime TanggalValuta { get; set; }
+            public decimal NominalTransfer { get; set; }
+            public string Currency { get; set; }
+            public string NamaPenerima { get; set; }
+            public string AlamatPenerima { get; set; }
+            public string PaymentRemarks { get; set; }
+            public string BeneficiaryBankCode { get; set; }
+            public string BeneficiaryBankName { get; set; }
+            public string BeneficiaryBankAddress { get; set; }
+            public string BeneficiaryAccNo { get; set; }
+            public string NoRekProduk { get; set; }
+            public string GLBiayaFullAmt { get; set; }
+        }
     }
 }
