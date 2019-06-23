@@ -26,7 +26,7 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
-        
+        [Authorize]
         public IActionResult Index()
         {
             return View();

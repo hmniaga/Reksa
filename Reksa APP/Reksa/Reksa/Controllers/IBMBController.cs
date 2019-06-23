@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,15 +33,17 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
-
+        [Authorize]
         public IActionResult SettingLimitFee()
         {
             return View();
         }
+        [Authorize]
         public IActionResult MaintainKinerja()
         {
             return View();
         }
+        [Authorize]
         public IActionResult UploadPDFFundFactProspectus()
         {
             return View();

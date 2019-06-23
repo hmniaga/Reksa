@@ -37,6 +37,7 @@ namespace Reksa.Controllers
             INDIVIDUAL = 1,
             CORPORATE = 4
         }
+        [Authorize]
         public IActionResult Client()
         {
             IList<ActivityModel> IlistCLientActivity = new List<ActivityModel>();
@@ -47,8 +48,28 @@ namespace Reksa.Controllers
             vModel.ClientBlokir = IlistCLientBlokir;
             return View(vModel);
         }
-        //[Authorize]
+        [Authorize]
         public IActionResult InfoProduk()
+        {
+            return View();
+        }
+        [Authorize]
+        public IActionResult UnitNasabah()
+        {
+            return View("UnitNasabahDitawarkan");
+        }
+        [Authorize]
+        public IActionResult UnitDitawarkan()
+        {
+            return View("UnitDitawarkan");
+        }
+        [Authorize]
+        public IActionResult Booking()
+        {
+            return View();
+        }
+        [Authorize]
+        public IActionResult Event()
         {
             return View();
         }
@@ -193,23 +214,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
-        public IActionResult UnitNasabah()
-        {
-            return View("UnitNasabahDitawarkan");
-        }
-
-        public IActionResult UnitDitawarkan()
-        {
-            return View("UnitDitawarkan");
-        }
-        public IActionResult Booking()
-        {
-            return View();
-        }
-
-        public IActionResult Event()
-        {
-            return View();
-        }
+        
     }
 }

@@ -20,24 +20,51 @@
 <body>
     <div class="">
         <h1 class="text-center" style="padding-bottom:50px">@ViewData["ReportName"]</h1>
-        <h6>Periode : @ViewData["PeriodStart"] - @ViewData["PeriodEnd"]</h6>
-        <h6>Product Code : @ViewData["ProdCode"]</h6>
-        <h6>Mata Uang : @ViewData["MataUang"]</h6>
-        <h6>Tipe Produk : @ViewData["TipeProduk"]</h6>
+        <h6>Tanggal : @ViewData["PeriodStart"] - @ViewData["PeriodEnd"]</h6>
         <br>
-        <table class="table table-striped m-0" style="font-size:9px">
+        <table class="table table-striped m-0" style="font-size:5px">
             <thead>
                 <tr>
-                    <th>Value Date</th>
-                    <th>Value</th>
+                    <th>Bill Id</th>
+                    <th>TranCode</th>
+                    <th>Client Code</th>
+                    <th>CIFName</th>
+                    <th>Jenis Transaksi</th>
+                    <th>TranDate</th>
+                    <th>NAV Value Date</th>
+                    <th>Office Debit</th>
+                    <th>Debit Currency</th>
+                    <th>Account ID Debit</th>
+                    <th>Debit Mutation</th>
+                    <th>Office Kredit</th>
+                    <th>Credit Currency</th>
+                    <th>Account ID Credit</th>
+                    <th>Credit Mututation</th>
+                    <th>Status</th>
+                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (DataRow item in Model.Tables[0].Rows)
                 {
                 <tr>
-                    <td>@(item["ValueDate"].ToString() != "" ? DateTime.Parse(@item["ValueDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
-                    <td>@(item["Value"].ToString() != "" ? decimal.Parse(item["Value"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["BillId"]</td>
+                    <td>@item["TranCode"]</td>
+                    <td>@item["ClientCode"]</td>
+                    <td>@item["CIFName"]</td>
+                    <td>@item["JenisTransaksi"]</td>
+                    <td>@(item["TranDate"].ToString() != "" ? DateTime.Parse(@item["TranDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
+                    <td>@(item["NAVValueDate"].ToString() != "" ? DateTime.Parse(@item["NAVValueDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
+                    <td>@item["OfficeDebit"]</td>
+                    <td>@item["DebitCurrency"]</td>
+                    <td>@item["AccountIDDebit"]</td>
+                    <td>@(item["DebitMutation"].ToString() != "" ? decimal.Parse(item["DebitMutation"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["OfficeKredit"]</td>
+                    <td>@item["CreditCurrency"]</td>
+                    <td>@item["AccountIDCredit"]</td>
+                    <td>@(item["CreditMutation"].ToString() != "" ? decimal.Parse(item["CreditMutation"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["Status"]</td>
+                    <td>@item["Description"]</td>
                 </tr>
                 }
 

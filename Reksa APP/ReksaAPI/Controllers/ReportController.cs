@@ -199,6 +199,46 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaReportRDN13 - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsReport });
         }
+        [Route("api/Report/ReksaReportRDN14")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN14([FromQuery]string PeriodStart, [FromQuery]string PeriodEnd, [FromQuery]int Region, [FromQuery]string ProdCode, [FromQuery]string Type)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
 
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(PeriodStart, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(PeriodEnd, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaReportRDN14(dtStartDate, dtEndDate, ProdCode, Type, Region, "", "", out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN14 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN24")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN24()
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            blnResult = cls.ReksaReportRDN24(out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN24 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        [Route("api/Report/ReksaReportRDN26")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN26()
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+
+            blnResult = cls.ReksaReportRDN26(out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN26 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
     }
 }

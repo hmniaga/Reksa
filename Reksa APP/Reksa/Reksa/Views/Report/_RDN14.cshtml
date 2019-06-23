@@ -23,21 +23,31 @@
         <h6>Periode : @ViewData["PeriodStart"] - @ViewData["PeriodEnd"]</h6>
         <h6>Product Code : @ViewData["ProdCode"]</h6>
         <h6>Mata Uang : @ViewData["MataUang"]</h6>
-        <h6>Tipe Produk : @ViewData["TipeProduk"]</h6>
+        <h6>Regional : @ViewData["RegionalName"]</h6>
         <br>
         <table class="table table-striped m-0" style="font-size:9px">
             <thead>
                 <tr>
-                    <th>Value Date</th>
-                    <th>Value</th>
+                    <th>City</th>
+                    <th>Agent Description</th>
+                    <th>Agent Code</th>
+                    <th>Total Trans</th>
+                    <th>Total Unit</th>
+                    <th>Total Nominal</th>
+                    <th>Fee</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (DataRow item in Model.Tables[0].Rows)
                 {
                 <tr>
-                    <td>@(item["ValueDate"].ToString() != "" ? DateTime.Parse(@item["ValueDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
-                    <td>@(item["Value"].ToString() != "" ? decimal.Parse(item["Value"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["City"]</td>
+                    <td>@item["AgentDesc"]</td>
+                    <td>@item["AgentCode"]</td>
+                    <td>@(item["TotalTrans"].ToString() != "" ? decimal.Parse(item["TotalTrans"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["TotalUnit"].ToString() != "" ? decimal.Parse(item["TotalUnit"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["TotalNom"].ToString() != "" ? decimal.Parse(item["TotalNom"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@(item["Fee"].ToString() != "" ? decimal.Parse(item["Fee"].ToString()).ToString("###,###.##") : "0")</td>
                 </tr>
                 }
 

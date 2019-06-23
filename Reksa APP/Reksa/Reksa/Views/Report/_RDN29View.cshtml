@@ -12,30 +12,22 @@
         </p>
         <div class="col-md-12">
             <div class="col-md-6">
-                <!-- Begin StartDate -->
+                <!-- Begin Manager Investasi -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Periode Awal</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("StarDate").Format("{0:dd/MM/yyyy}")
-                        )
+                    <label class="col-sm-4 control-label">Manager Investasi</label>
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ManInvestasiModel.ManInvCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ManInvCode" }).Enable(false)
+                        <span class="input-group-btn">
+                            <a id="cmpsrSearch3" href="@Url.Action("SearchManInvestasi", "Global")" data-toggle="modal" data-target="#ManInvModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        </span>
+                        @Html.Kendo().TextBoxFor(model => model.ManInvestasiModel.ManInvName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "ManInvName" }).Enable(false)
+
                     </div>
                 </div>
-                <!-- End StartDate -->
-                <!-- Begin EndDate -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Periode Akhir</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("EndDate").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
-                                                                                                                                                                                                                        .Format("{0:dd/MM/yyyy}")
-                        )
-                    </div>
-                </div>
-                <!-- End EndDate -->
-            </div>
-            <div class="col-md-6">
+                <!-- End Manager Investasi -->
                 <!-- Begin Kode Product -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Nama Produk</label>
+                    <label class="col-sm-4 control-label">Kode Produk</label>
                     <div class="input-group col-md-8">
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProduct_text1" }).Enable(false)
                         <span class="input-group-btn">
@@ -46,14 +38,17 @@
                     </div>
                 </div>
                 <!-- End Kode Product -->
-                <!-- Begin >Tipe Produk -->
+            </div>
+            <div class="col-md-6">
+                <!-- Begin TranDate -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Tipe Produk</label>
-                    <div class="input-group col-md-8">
-                        @(Html.Kendo().DropDownList().Name("TypeProduct").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "NAV", Value = "NAV" }, new SelectListItem() { Text = "KURS", Value = "KURS" }, new SelectListItem() { Text = "DEVIDEN", Value = "DEVIDEN" } }).DataTextField("Text").DataValueField("Value"))
+                    <label class="col-sm-2 control-label">Tanggal Transaksi</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("TranDate").Format("{0:dd/MM/yyyy}")
+                        )
                     </div>
                 </div>
-                <!-- End >Tipe Produk -->
+                <!-- End TranDate -->
             </div>
         </div>
         <div class="col-md-12" style="margin-top:30px;margin-bottom:10px">
@@ -94,6 +89,12 @@
         <div class="modal-content"></div>
     </div>
 </div>
+<div class="modal fade" id="ManInvModal" tabindex="-1" role="dialog" aria-labelledby="ManInvModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
 
 <script>
     $(document).ready(function () {
@@ -104,33 +105,25 @@
     });
 
     $("#btnRefresh").click(function () {
-        var PeriodStart = $("#StarDate").val();
-        var PeriodEnd = $("#EndDate").val();
+        var ManInvId = $("#StarDate").val();
+        var ManInvCode = $("#StarDate").val();
         var ProdCode = $("#srcProduct_text1").val();
         var ProdId = $("#ProdId").val();
-        var Type = $("#TypeProduct").val();
+        var TranDate = $("#ProdId").val();
 
-        if (PeriodStart == "") {
-            swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
-            return;
-        }
-        if (PeriodEnd == "") {
-            swal("Warning", "Periode Akhir tidak boleh kosong!", "warning");
+        if (ManInvId == "") {
+            swal("Warning", "Manager Investasi tidak boleh kosong!", "warning");
             return;
         }
         if (ProdId == "") {
             swal("Warning", "Produk tidak boleh kosong!", "warning");
             return;
         }
-        if (Type == "") {
-            swal("Warning", "Tipe Produk tidak boleh kosong!", "warning");
-            return;
-        }
 
         $.ajax({
             type: 'GET',
-            url: '/Report/ReksaReportRDN13',
-            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, Type: Type },
+            url: '/Report/ReksaReportRDN29',
+            data: { ManInvId: ManInvId, ProdId: ProdId, TranDate: TranDate, ProdCode: ProdCode, ManInvCode: ManInvCode},
             success: function (data) {
                 if (data.blnResult) {
                     var gridView = $("#dataGridView1").data("kendoGrid");

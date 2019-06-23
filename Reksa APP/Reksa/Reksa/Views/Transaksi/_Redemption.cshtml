@@ -56,7 +56,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Last Update Risk Profile</label>
                                 <div class="input-group">
-                                    @(Html.Kendo().DatePicker().Name("dtpRiskProfileRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false))
+                                    @(Html.Kendo().DatePicker().Name("dtpRiskProfileRedemp").HtmlAttributes(new { style = "width: 200px;" }).Enable(false))
                                 </div>
                             </div>
                         <!-- End Last Update Risk Profile -->
@@ -140,19 +140,19 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Tgl Transaksi</label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePicker().Name("dateTglTransaksiRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false))
+                            @(Html.Kendo().DatePicker().Name("dateTglTransaksiRedemp").HtmlAttributes(new { style = "width: 150px;" }).Enable(false))
                         </div>
                     </div>
                     <!-- End Tgl Transaksi -->
                     <!-- Begin Kode Product -->
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Kode Produk</label>
-                        <div class="input-group">
+                        <div class="input-group col-md-9">
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductRedemp_text1" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcProductRedemp" href="@Url.Action("SearchTrxProductRedemp", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductRedemp_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcProductRedemp_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdRedemp", @type = "hidden" })
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdCCY).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdCCYRedemp", @type = "hidden" })
                         </div>
@@ -161,33 +161,51 @@
                     <!-- Begin Client Code -->
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Client Code</label>
-                            <div class="input-group">
+                            <div class="input-group col-md-9">
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientRedemp_text1" }).Enable(false)
                                 <span class="input-group-btn">
                                     <a id="srcClientRedemp" href="@Url.Action("SearchTrxClientRedemp", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
-                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientRedemp_text2" }).Enable(false)
+                                @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcClientRedemp_text2" }).Enable(false)
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdRedemp",  @type = "hidden" })
                             </div>
                         </div>
                     <!-- End Client Code -->
                     <!-- Begin OutStanding Unit -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">OutStanding Unit</label>
-                            <div class="input-group col-md-8">
-                                <input id="OutstandingUnitRedemp" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 30%;">
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">OutStanding Unit</label>
+                        <div class="input-group">
+                            @Html.Kendo().NumericTextBox().Name("OutstandingUnitRedemp").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                            @*<input id="OutstandingUnitRedemp" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 30%;">*@
                         </div>
+                    </div>
                     <!-- End OutStanding Unit -->
                     <!-- Begin Jumlah Unit -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Jumlah Unit</label>
-                        <div class="input-group col-md-8">
-                            <input id="RedempUnit" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style = "width: 30%;">
+                        <label class="col-sm-4 control-label">Jumlah Unit</label>
+                        <div class="input-group">
+                            @Html.Kendo().NumericTextBox().Name("RedempUnit").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                            @*<input id="RedempUnit" type="text" placeholder="" class="form-control input-sm autonumber" data-a-sep="." data-a-dec="," style="width: 30%;">*@
                         </div>
                     </div>
                     <!-- End Jumlah Unit -->
-                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="input-group">
+                            <button id="btnAddRedemp" class="btn btn-default waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                Add
+                            </button>
+                            <button id="btnEditRedemp" class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="col-md-6">
@@ -200,30 +218,34 @@
                             @Html.Kendo().CheckBox().Name("checkAll").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("All").Enable(false)
                         </div>
                     </div>
-                    <label class="col-sm-4 control-label">Redemption Fee</label>
                     <div class="col-md-12">
-                        <div class="card-box">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="col-md-5">
-                                        <div class="checkbox checkbox-custom checkbox-circle">
-                                            @Html.Kendo().CheckBox().Name("checkFeeEditRedemp").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit").Enable(false)
+                        <div class="portlet">
+                            <div class="portlet-heading bg-custom">Redemption Fee</div>
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-5">
+                                            <div class="checkbox checkbox-custom checkbox-circle">
+                                                @Html.Kendo().CheckBox().Name("checkFeeEditRedemp").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit").Enable(false)
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-5">
-                                        @(Html.Kendo().DropDownList().Name("_ComboJenisRedemp").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value"))
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="input-group">
-                                            @Html.Kendo().TextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)
-                                            <span class="input-group-btn"></span>
-                                            <label id="labelFeeCurrencyRedemp" class="col-sm-3 control-label">CURR</label>
-                                            <span class="input-group-btn"></span>
-                                            @Html.Kendo().TextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)
-                                            <span class="input-group-btn"></span>
-                                            <label id="_KeteranganFeeRedemp" class="col-sm-3 control-label">%</label>
+                                    <div class="col-md-12">
+                                        <div class="col-md-5">
+                                            @(Html.Kendo().DropDownList().Name("_ComboJenisRedemp").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value"))
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                @*@Html.Kendo().TextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)*@
+                                                @Html.Kendo().NumericTextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { style = "width: 120px;" }).Enable(false).Min(0)
+                                                <span class="input-group-btn"></span>
+                                                <label id="labelFeeCurrencyRedemp">&nbsp;&nbsp;&nbsp;CURR</label>
+                                                <span class="input-group-btn"></span>
+                                                @*@Html.Kendo().TextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)*@
+                                                @Html.Kendo().NumericTextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { style = "width: 70px;" }).Enable(false).Min(0)
+                                                <span class="input-group-btn"></span>
+                                                <label id="_KeteranganFeeRedemp">&nbsp;&nbsp;&nbsp;%</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -232,40 +254,31 @@
                     </div>
                 </div>
                 </div>
-            <div class="col-md-12" style="padding-bottom:5%">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="input-group">
-                        <button id="btnAddRedemp" class="btn btn-default waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                            Add
-                        </button>
-                        <button id="btnEditRedemp" class="btn btn-info waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            Edit
-                        </button>
-                    </div>
-                </div>
+            <div class="col-md-12" style="padding-bottom:5%">                
                 @(Html.Kendo().Grid(Model.ListRedemption)
                                 .Name("dataGridViewRedemp")
                                 .Columns(columns =>
                                 {
-                                    columns.Bound(p => p.NoTrx).Width(100).Title("No Transaksi");
+                                    columns.Bound(p => p.NoTrx).Width(150).Title("No Transaksi");
                                     columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
                                     columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
-                                    columns.Bound(p => p.NamaProduk).Width(150).Title("Nama Produk");
+                                    columns.Bound(p => p.NamaProduk).Width(250).Title("Nama Produk");
                                     columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
-                                    columns.Bound(p => p.OutstandingUnit).Width(150).Title("Outstanding Unit");
-                                    columns.Bound(p => p.RedempUnit).Width(150).Title("Redemp Unit");
-                                    columns.Bound(p => p.IsRedempAll).Width(150).Title("RedempAll");
+                                    columns.Bound(p => p.OutstandingUnit).Width(150).Title("Outstanding Unit").Format("{0:###,###.##}");
+                                    columns.Bound(p => p.RedempUnit).Width(150).Title("Redemp Unit").Format("{0:###,###.##}");
+                                    columns.Bound(p => p.IsRedempAll).Width(150).Title("Redemp All").ClientTemplate("<input type='checkbox' disabled='disabled' " +
+                                "# if (IsRedempAll) { #" +
+                                "checked='checked'" +
+                                "# } #" +
+                                "/>");
                                     columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
-                                    columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee");
-                                    columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder");
-                                    columns.Bound(p => p.PctFee).Width(150).Title("PctFee");
+                                    columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee").Format("{0:###,###.##}");
+                                    columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder").ClientTemplate("<input type='checkbox' disabled='disabled' " +
+                                         "# if (PhoneOrder) { #" +
+                                        "checked='checked'" +
+                                        "# } #" +
+                                        "/>");
+                                    columns.Bound(p => p.PctFee).Width(150).Title("Percent Fee").Format("{0:###,###.##}");
                                 })
                                 .Pageable()
                                 .Scrollable(s => s.Height(250))
@@ -306,22 +319,22 @@
                     </script>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Seller</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcSellerRedemp_text1", @class = "form-control input-sm" }).Enable(false)
+                        <div class="input-group col-md-6">
+                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcSellerRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcSellerRedemp" href="@Url.Action("SearchSellerRedemp", "Global")" data-toggle="modal" data-target="#SellerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcSellerRedemp_text2", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcSellerRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Kode WAPERD</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text1", @class = "form-control input-sm" }).Enable(false)
+                        <div class="input-group col-md-6">
+                            @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcWaperdRedemp" href="@Url.Action("SearchWaperdRedemp", "Global")" data-toggle="modal" data-target="#WaperdRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text2", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
                     </div>
                     <div class="form-group">
@@ -332,12 +345,12 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">NIK Referrantor</label>
-                        <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcReferentorRedemp_text1", @class = "form-control input-sm" }).Enable(false)
+                        <div class="input-group col-md-6">
+                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcReferentorRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
                                 <a id="srcReferentorRedemp" href="@Url.Action("SearchReferentorRedemp", "Global")" data-toggle="modal" data-target="#NIKRefRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcReferentorRedemp_text2", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcReferentorRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
                     </div>
                 </div>
@@ -439,8 +452,10 @@
         $("#dateTglTransaksiRedemp").val(dateTglTransaksiRedemp.getDate() + '/' + (dateTglTransaksiRedemp.getMonth() + 1) + '/' + dateTglTransaksiRedemp.getFullYear());
         $("#srcClientRedemp_text1").val(data.ClientCode);
         $("#CurrCodeRedemp").val(data.CCY);
-        $("#OutstandingUnitRedemp").val(data.OutstandingUnit);
-        $("#RedempUnit").val(data.RedempUnit);
+        //$("#OutstandingUnitRedemp").val(data.OutstandingUnit);
+        $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value(data.OutstandingUnit);        
+        //$("#RedempUnit").val(data.RedempUnit);
+        $("#RedempUnit").data("kendoNumericTextBox").value(data.RedempUnit);
         if (data.OutstandingUnit == data.RedempUnit) {
             $('#checkAll').prop('checked', true);
         } else
@@ -513,7 +528,5 @@
             }
         });
     }
-
-
-
+    
 </script>

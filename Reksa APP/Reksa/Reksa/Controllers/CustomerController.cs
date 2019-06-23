@@ -13,6 +13,7 @@ using Kendo.Mvc.UI;
 using Kendo.Mvc.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -50,6 +51,7 @@ namespace Reksa.Controllers
             INDIVIDUAL = 1,
             CORPORATE = 4
         }
+        [Authorize]
         public ActionResult Customer()
         {
             CustomerListViewModel vModel = new CustomerListViewModel();

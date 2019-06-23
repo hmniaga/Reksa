@@ -1,29 +1,25 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Reksa.Data.Entities;
 using Reksa.ViewModels;
+using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Reksa.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ILogger<AccountController> _logger;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountController(ILogger<AccountController> logger, SignInManager<ApplicationUser> signInManager)
-        //public AccountController(ILogger<AccountController> logger)
-        {
-            _logger = logger;
-            _signInManager = signInManager;
-        }
         public IActionResult Login()
         {
-           // if (this.User.Identity.IsAuthenticated)
-            //{
-                //return RedirectToAction("Index", "Home");
-            //}
+            return View();
+        }
+        public IActionResult RecoverPW()
+        {
             return View();
         }
         [HttpPost]
@@ -31,8 +27,42 @@ namespace Reksa.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
+                bool Succeeded = false;
+                if (model.Username == "usertest01" && model.Password == "B@ndung123")
+                {
+                    Succeeded = true;
+                    var identity = new ClaimsIdentity(new[] 
+                    {
+                        new Claim(ClaimTypes.Name, model.Username),
+                        new Claim(ClaimTypes.Role, "admin")
+                    }
+                    , CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                }
+                if (model.Username == "usertest02" && model.Password == "B@ndung123")
+                {
+                    Succeeded = true;
+                    var identity = new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.Name, model.Username),
+                        new Claim(ClaimTypes.Role, "SPV"),
+                    }
+                    , CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+                    var principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+                        new AuthenticationProperties
+                        {
+                            ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                            IsPersistent = false,
+                            AllowRefresh = false
+                        });
+                }
+
+
+                if (Succeeded)
                 {
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
@@ -40,15 +70,43 @@ namespace Reksa.Controllers
                     }
                     else
                     {
-                        RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home");
                     }
                 }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to login");
+                }
             }
-
-            ModelState.AddModelError("", "Failed to login");
             return View();
         }
+       
+        
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
+        }
 
-     
+        public IActionResult Error400 ()
+        {
+            return View();
+        }
+        public IActionResult Error403()
+        {
+            return View();
+        }
+        public IActionResult Error404()
+        {
+            return View();
+        }
+        public IActionResult Error500()
+        {
+            return View();
+        }
+        public IActionResult Error503()
+        {
+            return View();
+        }
     }
 }

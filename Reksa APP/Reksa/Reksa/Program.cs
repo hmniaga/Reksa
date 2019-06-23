@@ -28,6 +28,10 @@ namespace Reksa
             return WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(configuration)
                 .UseStartup<Startup>()
+                .UseKestrel(options => 
+                {
+                    options.AddServerHeader = false;
+                })
                 .Build();
         }
     }

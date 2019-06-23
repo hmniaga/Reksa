@@ -14,6 +14,7 @@ using System.Data;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -40,16 +41,19 @@ namespace Reksa.Controllers
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
             _httpContextAccessor = httpContextAccessor;
         }
+        [Authorize(Policy = "SPV")]
         public ActionResult AuthRejectBooking()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             return View("AuthRejectBooking", vModel);
         }
+        [Authorize(Policy = "SPV")]
         public ActionResult AuthDeleteTransaksi()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             return View("AuthDeleteTransaksi", vModel);
-        }        
+        }
+        [Authorize(Policy = "SPV")]
         public ActionResult ParameterFee()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -72,11 +76,13 @@ namespace Reksa.Controllers
             this.ViewBag.Tree = items;
             return View("AuthParamFee", vModel);
         }
+        [Authorize(Policy = "SPV")]
         public ActionResult ParameterFeeDetail()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             return View("AuthParamFeeDetail", vModel);
         }
+        [Authorize(Policy = "SPV")]
         public ActionResult ParameterReksaDana()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
@@ -98,6 +104,139 @@ namespace Reksa.Controllers
             }
             this.ViewBag.Tree = items;
             return View("AuthGlobalParam", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult Transaksi()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            return View("AuthGeneralNew", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult WM()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeWM");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult WMSupervisor()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeWMSPV");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult POSupervisor()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizePOSPV");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult Bill()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeBill");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthGeneral", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult Sinkronisasi()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
+            listTree = GetCommonTreeView("mnuAuthorizeBill");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
+            var items = new List<CommonTreeViewModel>();
+            var root = listTree[0];
+            for (int i = 0; i < listTree.Count; i++)
+            {
+                if (listTree[i].parent_tree == "")
+                {
+                    root = listTree[i];
+                    items.Add(root);
+                }
+                else
+                {
+                    root.Children.Add(listTree[i]);
+                }
+            }
+            this.ViewBag.Tree = items;
+            return View("AuthSync", vModel);
+        }
+        [Authorize(Policy = "SPV")]
+        public ActionResult NFS()
+        {
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+
+            return View("AuthNFSGenerateFileUpload", vModel);
         }
         public JsonResult PopulateVerifyGlobalParam(string InterfaceId)
         {
@@ -173,126 +312,7 @@ namespace Reksa.Controllers
             }
             return blnResult;
         }
-        public ActionResult Transaksi()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            return View("AuthGeneralNew", vModel);
-        }
-        public ActionResult WM()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizeWM");
-            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
-            var items = new List<CommonTreeViewModel>();
-            var root = listTree[0];
-            for (int i = 0; i < listTree.Count; i++)
-            {
-                if (listTree[i].parent_tree == "")
-                {
-                    root = listTree[i];
-                    items.Add(root);
-                }
-                else
-                {
-                    root.Children.Add(listTree[i]);
-                }
-            }
-            this.ViewBag.Tree = items;
-            return View("AuthGeneral", vModel);
-        }
-        public ActionResult WMSupervisor()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizeWMSPV");
-            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
-            var items = new List<CommonTreeViewModel>();
-            var root = listTree[0];
-            for (int i = 0; i < listTree.Count; i++)
-            {
-                if (listTree[i].parent_tree == "")
-                {
-                    root = listTree[i];
-                    items.Add(root);
-                }
-                else
-                {
-                    root.Children.Add(listTree[i]);
-                }
-            }
-            this.ViewBag.Tree = items;
-            return View("AuthGeneral", vModel);
-        }
-        public ActionResult POSupervisor()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizePOSPV");
-            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
-            var items = new List<CommonTreeViewModel>();
-            var root = listTree[0];
-            for (int i = 0; i < listTree.Count; i++)
-            {
-                if (listTree[i].parent_tree == "")
-                {
-                    root = listTree[i];
-                    items.Add(root);
-                }
-                else
-                {
-                    root.Children.Add(listTree[i]);
-                }
-            }
-            this.ViewBag.Tree = items;
-            return View("AuthGeneral", vModel);
-        }
-        public ActionResult Bill()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizeBill");
-            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
-            var items = new List<CommonTreeViewModel>();
-            var root = listTree[0];
-            for (int i = 0; i < listTree.Count; i++)
-            {
-                if (listTree[i].parent_tree == "")
-                {
-                    root = listTree[i];
-                    items.Add(root);
-                }
-                else
-                {
-                    root.Children.Add(listTree[i]);
-                }
-            }
-            this.ViewBag.Tree = items;
-            return View("AuthGeneral", vModel);
-        }
-        public ActionResult Sinkronisasi()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizeBill");
-            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
-            var items = new List<CommonTreeViewModel>();
-            var root = listTree[0];
-            for (int i = 0; i < listTree.Count; i++)
-            {
-                if (listTree[i].parent_tree == "")
-                {
-                    root = listTree[i];
-                    items.Add(root);
-                }
-                else
-                {
-                    root.Children.Add(listTree[i]);
-                }
-            }
-            this.ViewBag.Tree = items;
-            return View("AuthSync", vModel);
-        }      
+        
         public JsonResult ApproveReject(string listId, string treeid, bool isApprove)
         {
             bool blnResult = false;
@@ -700,12 +720,6 @@ namespace Reksa.Controllers
                 return Json(new { blnResult, ErrMsg });
             }
             return Json(new { blnResult, ErrMsg });
-        }
-        public ActionResult NFS()
-        {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            
-            return View("AuthNFSGenerateFileUpload", vModel);
         }
         private List<TreeViewModel> GetTreeView(string strMenuName)
         {

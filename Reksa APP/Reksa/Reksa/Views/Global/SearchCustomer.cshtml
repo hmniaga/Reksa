@@ -70,8 +70,8 @@
                     .Name("CustomerSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.CIFNo);
-                        columns.Bound(m => m.CIFName);
+                        columns.Bound(m => m.CIFNo).Width(100).Title("CIF Number");
+                        columns.Bound(m => m.CIFName).Width(150).Title("CIF Name");
                     })
                     .ToolBar(toolbar =>
                     {

@@ -72,8 +72,8 @@
             .Name("ClientSubsSearchComponentGrid")
             .Columns(columns =>
             {
-                columns.Bound(m => m.ClientCode);
-                columns.Bound(m => m.ClientName);
+                columns.Bound(m => m.ClientCode).Width(150).Title("Client Code");
+                columns.Bound(m => m.ClientName).Width(500).Title("Client Name");
             })
             @*.ToolBar(toolbar =>
             {

@@ -32,7 +32,7 @@
     function onRowReferensiRedempSelect(e) {
         var data = this.dataItem(this.select());
         var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var tanggalTransaksi = $.trim(data.TanggalTransaksi);
 
         $("#ReferensiRedempSelectedRefID").val(RefID);
         $("#ReferensiRedempSelectedtanggalTransaksi").val(tanggalTransaksi);
@@ -67,7 +67,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.RefID).Title("No Referensi");
-                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd/MM/yyyy}").Title("Tanggal Transaksi");
                     })
                     .ToolBar(toolbar =>
                     {

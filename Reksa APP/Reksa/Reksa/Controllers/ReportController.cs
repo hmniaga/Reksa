@@ -19,6 +19,7 @@ using NPOI.XSSF.UserModel;
 using System.Threading.Tasks;
 using NPOI.HSSF.UserModel;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -46,7 +47,7 @@ namespace Reksa.Controllers
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private IHostingEnvironment _hostingEnvironment;
         IFont font;
-
+        
         public ReportController(IConfiguration iconfig, IHttpContextAccessor httpContextAccessor, IHostingEnvironment hostingEnvironment)
         {
             _config = iconfig;
@@ -54,6 +55,7 @@ namespace Reksa.Controllers
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
         }
+        [Authorize]
         public IActionResult ReportReksaDana()
         {
             bool blnResult = false;
@@ -438,7 +440,36 @@ namespace Reksa.Controllers
                     {
                         break;
                     }
-
+                case "RDN19":
+                    {
+                        break;
+                    }
+                case "RDN20":
+                    {
+                        break;
+                    }
+                case "RDN21":
+                    {
+                        break;
+                    }
+                case "RDN22":
+                    {
+                        break;
+                    }
+                case "RDN23":
+                    {
+                        break;
+                    }
+                case "RDN24":
+                    {
+                        orientation = Rotativa.AspNetCore.Options.Orientation.Landscape;
+                        break;
+                    }
+                case "RDN26":
+                    {
+                        orientation = Rotativa.AspNetCore.Options.Orientation.Landscape;
+                        break;
+                    }
             }
             ViewData["ReportCode"] = ReportCode;
             ViewData["ReportName"] = ReportName;
@@ -759,6 +790,96 @@ namespace Reksa.Controllers
                             }
                             break;
                         }
+                    case "RDN14":
+                        {
+                            //HEADER
+                            RDN14Header RDN14Header = new RDN14Header();
+                            var sessionHeader = _session.GetString("RDN14Header");
+                            RDN14Header = JsonConvert.DeserializeObject<RDN14Header>(sessionHeader);
+                            row = excelSheet.CreateRow(3);
+                            row.CreateCell(0).SetCellValue("Periode  : " + RDN14Header.PeriodStart + " - " + RDN14Header.PeriodEnd);
+                            row = excelSheet.CreateRow(4);
+                            row.CreateCell(0).SetCellValue("Product Code : " + RDN14Header.ProdCode);
+                            row = excelSheet.CreateRow(5);
+                            row.CreateCell(0).SetCellValue("Mata Uang : " + RDN14Header.MataUang);
+                            row = excelSheet.CreateRow(6);
+                            row.CreateCell(0).SetCellValue("Regional : " + RDN14Header.RegionName);
+
+                            //COLUMNS HEADER
+                            var sessionDataset = _session.GetString("RDN14");
+                            dsReport = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                            rowheader = 9;
+                            row = excelSheet.CreateRow(rowheader);
+                            row.CreateCell(0).SetCellValue("City");
+                            row.CreateCell(1).SetCellValue("Agent Description");
+                            row.CreateCell(2).SetCellValue("Agent Code");
+                            row.CreateCell(3).SetCellValue("Total Trans");
+                            row.CreateCell(4).SetCellValue("Total Unit");
+                            row.CreateCell(5).SetCellValue("Total Nominal");
+                            row.CreateCell(6).SetCellValue("Fee");
+                            colheader = 7;
+                            for (int i = 0; i < colheader; i++)
+                            {
+                                row.Cells[i].CellStyle = colHeaderStyle;
+                            }
+                            break;
+                        }
+                    case "RDN24":
+                        {
+                            //HEADER
+                            row = excelSheet.CreateRow(3);
+                            row.CreateCell(0).SetCellValue("Tanggal  : " + DateTime.Now.ToString("dd/MM/yyyy"));
+
+                            //COLUMNS HEADER
+                            var sessionDataset = _session.GetString("RDN24");
+                            dsReport = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                            rowheader = 3;
+                            row = excelSheet.CreateRow(rowheader);
+                            row.CreateCell(0).SetCellValue("Bill Id");
+                            row.CreateCell(1).SetCellValue("TranCode");
+                            row.CreateCell(2).SetCellValue("Client Code");
+                            row.CreateCell(3).SetCellValue("CIFName");
+                            row.CreateCell(4).SetCellValue("Jenis Transaksi");
+                            row.CreateCell(5).SetCellValue("TranDate");
+                            row.CreateCell(6).SetCellValue("NAV Value Date");
+                            row.CreateCell(7).SetCellValue("Office Debit");
+                            row.CreateCell(8).SetCellValue("Debit Currency");
+                            row.CreateCell(9).SetCellValue("Account ID Debit");
+                            row.CreateCell(10).SetCellValue("Debit Mutation");
+                            row.CreateCell(11).SetCellValue("Office Kredit");
+                            row.CreateCell(12).SetCellValue("Credit Currency");
+                            row.CreateCell(13).SetCellValue("Account ID Credit");
+                            row.CreateCell(14).SetCellValue("Credit Mutation");
+                            row.CreateCell(15).SetCellValue("Status");
+                            row.CreateCell(16).SetCellValue("Description");
+                            colheader = 17;
+                            for (int i = 0; i < colheader; i++)
+                            {
+                                row.Cells[i].CellStyle = colHeaderStyle;
+                            }
+                            break;
+                        }
+                    case "RDN26":
+                        {
+                            //COLUMNS HEADER
+                            var sessionDataset = _session.GetString("RDN26");
+                            dsReport = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                            rowheader = 2;
+                            row = excelSheet.CreateRow(rowheader);
+                            row.CreateCell(0).SetCellValue("DataType");
+                            row.CreateCell(1).SetCellValue("ClCode");
+                            row.CreateCell(2).SetCellValue("ClName");
+                            row.CreateCell(3).SetCellValue("EmployeeFlag");
+                            row.CreateCell(4).SetCellValue("AcNo");
+                            row.CreateCell(5).SetCellValue("AcName");
+                            row.CreateCell(6).SetCellValue("BkCode");
+                            colheader = 7;
+                            for (int i = 0; i < colheader; i++)
+                            {
+                                row.Cells[i].CellStyle = colHeaderStyle;
+                            }
+                            break;
+                        }
                 }
 
                 //ROWS
@@ -881,6 +1002,49 @@ namespace Reksa.Controllers
                                 row.CreateCell(1).SetCellValue(dsReport.Tables[0].Rows[i]["value"].ToString());
                                 break;
                             }
+                        case "RDN14":
+                            {
+                                row.CreateCell(0).SetCellValue(dsReport.Tables[0].Rows[i]["City"].ToString());
+                                row.CreateCell(1).SetCellValue(dsReport.Tables[0].Rows[i]["AgentDesc"].ToString());
+                                row.CreateCell(2).SetCellValue(dsReport.Tables[0].Rows[i]["AgentCode"].ToString());
+                                row.CreateCell(3).SetCellValue(dsReport.Tables[0].Rows[i]["TotalTrans"].ToString());
+                                row.CreateCell(4).SetCellValue(dsReport.Tables[0].Rows[i]["TotalUnit"].ToString());
+                                row.CreateCell(5).SetCellValue(dsReport.Tables[0].Rows[i]["TotalNom"].ToString());
+                                row.CreateCell(6).SetCellValue(dsReport.Tables[0].Rows[i]["Fee"].ToString());
+                                break;
+                            }
+                        case "RDN24":
+                            {
+                                row.CreateCell(0).SetCellValue(dsReport.Tables[0].Rows[i]["BillId"].ToString());
+                                row.CreateCell(1).SetCellValue(dsReport.Tables[0].Rows[i]["TranCode"].ToString());
+                                row.CreateCell(2).SetCellValue(dsReport.Tables[0].Rows[i]["ClientCode"].ToString());
+                                row.CreateCell(3).SetCellValue(dsReport.Tables[0].Rows[i]["CIFName"].ToString());
+                                row.CreateCell(4).SetCellValue(dsReport.Tables[0].Rows[i]["JenisTransaksi"].ToString());
+                                row.CreateCell(5).SetCellValue(dsReport.Tables[0].Rows[i]["TranDate"].ToString());
+                                row.CreateCell(6).SetCellValue(dsReport.Tables[0].Rows[i]["NAVValueDate"].ToString());
+                                row.CreateCell(7).SetCellValue(dsReport.Tables[0].Rows[i]["OfficeDebit"].ToString());
+                                row.CreateCell(8).SetCellValue(dsReport.Tables[0].Rows[i]["DebitCurrency"].ToString());
+                                row.CreateCell(9).SetCellValue(dsReport.Tables[0].Rows[i]["AccountIDDebit"].ToString());
+                                row.CreateCell(10).SetCellValue(dsReport.Tables[0].Rows[i]["DebitMutation"].ToString());
+                                row.CreateCell(11).SetCellValue(dsReport.Tables[0].Rows[i]["OfficeKredit"].ToString());
+                                row.CreateCell(12).SetCellValue(dsReport.Tables[0].Rows[i]["CreditCurrency"].ToString());
+                                row.CreateCell(13).SetCellValue(dsReport.Tables[0].Rows[i]["AccountIDCredit"].ToString());
+                                row.CreateCell(14).SetCellValue(dsReport.Tables[0].Rows[i]["CreditMutation"].ToString());
+                                row.CreateCell(15).SetCellValue(dsReport.Tables[0].Rows[i]["Status"].ToString());
+                                row.CreateCell(16).SetCellValue(dsReport.Tables[0].Rows[i]["Description"].ToString());
+                                break;
+                            }
+                        case "RDN26":
+                            {
+                                row.CreateCell(0).SetCellValue(dsReport.Tables[0].Rows[i]["DataType"].ToString());
+                                row.CreateCell(1).SetCellValue(dsReport.Tables[0].Rows[i]["ClCode"].ToString());
+                                row.CreateCell(2).SetCellValue(dsReport.Tables[0].Rows[i]["ClName"].ToString());
+                                row.CreateCell(3).SetCellValue(dsReport.Tables[0].Rows[i]["EmployeeFlag"].ToString());
+                                row.CreateCell(4).SetCellValue(dsReport.Tables[0].Rows[i]["AcNo"].ToString());
+                                row.CreateCell(5).SetCellValue(dsReport.Tables[0].Rows[i]["AcName"].ToString());
+                                row.CreateCell(6).SetCellValue(dsReport.Tables[0].Rows[i]["BkCode"].ToString());
+                                break;
+                            }
                     }
                 }
                 for (int i = 0; i < colheader; i++)
@@ -897,12 +1061,13 @@ namespace Reksa.Controllers
             memory.Position = 0;
             return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
-
+        [Authorize]
         public IActionResult NFSUpload()
         {
             ReportListViewModel vModel = new ReportListViewModel();
             return View();
         }
+        [Authorize]
         public IActionResult ReportKYC()
         {
             ReportListViewModel vModel = new ReportListViewModel();
@@ -1621,7 +1786,101 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsReport });
         }
+        public JsonResult ReksaReportRDN14(string PeriodStart, string PeriodEnd, string ProdCode, string Type, int Region, string RegionName)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+            try
+            {
+                RDN14Header RDN14Header = new RDN14Header();
+                RDN14Header.PeriodStart = PeriodStart;
+                RDN14Header.PeriodEnd = PeriodEnd;
+                RDN14Header.ProdCode = ProdCode;
+                RDN14Header.RegionName = RegionName;
+                _session.SetString("RDN14Header", JsonConvert.SerializeObject(RDN14Header));
 
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Report/ReksaReportRDN14?PeriodStart=" + PeriodStart + "PeriodEnd=" + PeriodEnd + "&Region=" + Region
+                        + "&ProdCode=" + ProdCode + "&Type=" + Type).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken Token = strObject["dsReport"];
+                    string Json = JsonConvert.SerializeObject(Token);
+                    dsReport = JsonConvert.DeserializeObject<DataSet>(Json);
+                    _session.SetString("RDN14", JsonConvert.SerializeObject(dsReport));
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        public JsonResult ReksaReportRDN24()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Report/ReksaReportRDN24").Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken Token = strObject["dsReport"];
+                    string Json = JsonConvert.SerializeObject(Token);
+                    dsReport = JsonConvert.DeserializeObject<DataSet>(Json);
+                    _session.SetString("RDN24", JsonConvert.SerializeObject(dsReport));
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
+        public JsonResult ReksaReportRDN26()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Report/ReksaReportRDN26").Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken Token = strObject["dsReport"];
+                    string Json = JsonConvert.SerializeObject(Token);
+                    dsReport = JsonConvert.DeserializeObject<DataSet>(Json);
+                    _session.SetString("RDN26", JsonConvert.SerializeObject(dsReport));
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsReport });
+        }
         public List<T> MapListOfObject<T>(DataTable dt)
         {
             List<T> list = new List<T>();

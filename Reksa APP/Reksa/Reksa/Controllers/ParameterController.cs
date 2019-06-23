@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using Newtonsoft.Json.Linq;
 using Kendo.Mvc.UI;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -29,21 +30,25 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+        [Authorize]
         public ActionResult UploadWaperd()
         {
             ParameterListViewModel vModel = new ParameterListViewModel();           
             return View(vModel);
         }
+        [Authorize]
         public ActionResult ClientCodeControl()
         {
             ParameterListViewModel vModel = new ParameterListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public ActionResult PindahCabang()
         {
             ParameterListViewModel vModel = new ParameterListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public ActionResult Index()
         {
             ViewData["label1"] = "Produk";
@@ -92,6 +97,7 @@ namespace Reksa.Controllers
             vModel.Parameter = list;
             return Json(vModel);
         }
+        [Authorize]
         public ActionResult Global()
         {
             ViewData["label1"] = "Produk";
@@ -232,8 +238,9 @@ namespace Reksa.Controllers
                 return Json(new { blnResult, strErrMsg });
             }
             return Json(new { blnResult, strErrMsg });
-        }        
+        }
         //Alvin, begin
+        [Authorize]
         public IActionResult SubscriptionFee()
         {
             ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
@@ -332,11 +339,13 @@ namespace Reksa.Controllers
         }
         //Alvin, end
         //Nico
+        [Authorize]
         public IActionResult MaintenanceFee()
         {
             ParameterMFeeListViewModel vModel = new ParameterMFeeListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult RefreshMaintenanceFee(int ProdukId)
         {
             List<ParamMFeeModel> listReksaParamMFee = new List<ParamMFeeModel>();
@@ -390,12 +399,13 @@ namespace Reksa.Controllers
 
         // Nico end
         //Indra Start
+        [Authorize]
         public IActionResult RedemptionFee(int ProdukId)
         {
             ParameterRedempFeeViewModel vModel = new ParameterRedempFeeViewModel();
             return View(vModel);
         }
-
+        [Authorize]
         public IActionResult RefreshRedemptionFee(int ProdukId)
         {
             ParameterRedempFeeViewModel vModel = new ParameterRedempFeeViewModel();
@@ -459,12 +469,13 @@ namespace Reksa.Controllers
         //}
 
         //Harja
+        [Authorize]
         public IActionResult UpFrontSellingFee()
         {
             ParameterUpFrontSellFeeListViewModel vModel = new ParameterUpFrontSellFeeListViewModel();
             return View(vModel);
         } //RefreshMaintenanceUpFrontSelling
-
+        [Authorize]
         public IActionResult RefreshMaintenanceUpFrontSelling(int ProdukId, string FeeType)
         {
             List<ParamUpFrontSellingModel> listReksaParamUpFrontSelling = new List<ParamUpFrontSellingModel>();
@@ -514,7 +525,7 @@ namespace Reksa.Controllers
 
             return View("UpFrontSellingFee", vModel);
         }
-
+        [Authorize]
         //Harja End
         public IActionResult SwitchingFee()
         {

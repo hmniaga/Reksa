@@ -70,9 +70,9 @@
                     .Name("CustomerSwcRDBSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.CIFNo);
-                        columns.Bound(m => m.CIFName);
-                        columns.Bound(m => m.NasabahId);
+                        columns.Bound(m => m.CIFNo).Width(100).Title("CIF Number");
+                        columns.Bound(m => m.CIFName).Width(150).Title("CIF Name");
+                        columns.Bound(m => m.NasabahId).Hidden();
                     })
                     .ToolBar(toolbar =>
                     {

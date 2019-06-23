@@ -68,7 +68,7 @@
                     {
                         columns.Bound(m => m.RefID).Title("No Switching");
                         columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
-                        columns.Bound(m => m.BookingId);
+                        columns.Bound(m => m.BookingId).Hidden();
                     })
                     .ToolBar(toolbar =>
                     {

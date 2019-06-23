@@ -44,15 +44,14 @@
     </div>
     <!-- End Button -->
 </div>
-
         <!-- Begin Tab -->
         <div id="tabs" class="col-md-12" style="margin-top:20px">
             <ul class="nav nav-tabs" style="background-color:#efefef">
                 <li class="active"><a data-toggle="tab" href="#tab-subscription" id="SUBS"><i class="fa fa-shopping-cart"></i> Subscription</a></li>
                 <li><a data-toggle="tab" href="#collapse-redemption" id="REDEMP"><i class="fa fa-tags"></i> Redemption</a></li>
                 <li><a data-toggle="tab" href="#collapse-reksaberjangka" id="SUBSRDB"><i class="fa fa-hourglass-1"></i>  Reksadana Berjangka</a></li>
-                <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB"><i class="fa fa-exchange"></i>  Switching Non RDB</a></li>
-                <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB"><i class="fa fa-exchange"></i> <i class="fa fa-hourglass-1"></i>  Switching RDB</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingnonrdb" id="SWCNONRDB"><i class="fa fa-exchange"></i>  Switching</a></li>
+                <li><a data-toggle="tab" href="#collapse-switchingrdb" id="SWCRDB"><i class="fa fa-recycle"></i>  Switching ReksaDana Berjangka</a></li>
                 <li><a data-toggle="tab" href="#collapse-booking" id="BOOK"><i class="fa fa-thumb-tack"></i> Booking</a></li>
             </ul>
 
@@ -333,8 +332,10 @@ var strBranch;
 
             if ($('#srcProductSubs_text1').val() != '') {
                 $("#_ComboJenisSubs").data('kendoDropDownList').enable(false);
-                $('#MoneyFeeSubs').prop('disabled', true);
-                $('#PercentageFeeSubs').prop('disabled', true);
+                //$('#MoneyFeeSubs').prop('disabled', true);
+                $("#MoneyFeeSubs").data("kendoNumericTextBox").enable(false);
+                //$('#PercentageFeeSubs').prop('disabled', true);
+                $("#PercentageFeeSubs").data("kendoNumericTextBox").enable(false);
 
                 var intProdId = $('#ProdIdSubs').val();
                 var intClientid
@@ -352,16 +353,18 @@ var strBranch;
 
                 HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
                     , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
-                    , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
+                    , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), 1, $('#srcCIFSubs_text1').val()
                     , function (FeeCurr) {
                         $("#labelFeeCurrencySubs").text("%");
                         $("#_KeteranganFeeSubs").text(FeeCurr);
                     },
                     function (NominalFee) {
-                        $("#MoneyFeeSubs").val(NominalFee);
+                        //$("#MoneyFeeSubs").val(NominalFee);
+                        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(NominalFee);
                     },
                     function (PctFee) {
-                        $("#PercentageFeeSubs").val(PctFee);
+                        //$("#PercentageFeeSubs").val(PctFee);
+                        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(PctFee);
                     }
                 );
             }
@@ -375,16 +378,20 @@ var strBranch;
             if ($("#checkFeeEditSubs").prop('checked') == true) {
                 if (_intType != 0) {
                     $("#_ComboJenisSubs").data('kendoDropDownList').enable(true);
-                    $("#MoneyFeeSubs").prop('disabled', false);
-                    $("#PercentageFeeSubs").prop('disabled', true);
+                    //$("#MoneyFeeSubs").prop('disabled', false);
+                    $("#MoneyFeeSubs").data("kendoNumericTextBox").enable(true);
+                    //$("#PercentageFeeSubs").prop('disabled', true);
+                    $("#PercentageFeeSubs").data("kendoNumericTextBox").enable(false);
                 }
             } else
             {
                 if ($("#srcProductSubs_text1").val() != '')
                 {
                     $("#_ComboJenisSubs").data('kendoDropDownList').enable(false);
-                    $("#MoneyFeeSubs").prop('disabled', true);
-                    $("#PercentageFeeSubs").prop('disabled', true);
+                    //$("#MoneyFeeSubs").prop('disabled', true);
+                    $("#MoneyFeeSubs").data("kendoNumericTextBox").enable(false);
+                    //$("#PercentageFeeSubs").prop('disabled', true);
+                    $("#PercentageFeeSubs").data("kendoNumericTextBox").enable(false);
 
                     var strPrdId = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
                     intProdId = parseInt(strPrdId);
@@ -401,7 +408,7 @@ var strBranch;
 
                     HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
                         , $('#checkFullAmtSubs').val(), $('#checkFeeEditSubs').val()
-                        , $('#PercentageFeeSubs').val(), 1, $('#srcCIFSubs_text1').val()
+                        , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), 1, $('#srcCIFSubs_text1').val()
                         , function (FeeCurr) {
                             $("#labelFeeCurrencySubs").text("%");
                             $("#_KeteranganFeeSubs").text(FeeCurr);
@@ -484,7 +491,7 @@ var strBranch;
 
     $("#srcClientRedemp_text1").change(function () {
             
-            GetLatestBalance($("#ClientIdRedemp").val(), function (res) { $("#OutstandingUnitRedemp").val(res) });
+        GetLatestBalance($("#ClientIdRedemp").val(), function (res) { $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value(res) });
             //nanti ini dihapus
             //swal("Warning", "nanti syntax ini dihapus, ini cm buat debug karena oustanding nya masih 0", "warning");
             //$("#OutstandingUnitRedemp").val('10000')
@@ -494,7 +501,7 @@ var strBranch;
         var strCriteria = $('#ProdIdSwcIn').val() + "#" + $('#srcCIFSwc_text1').val() + "#0";
         var url = '@Html.Raw(Url.Action("SearchClientSwcIn", "Global"))';
         $('#srcClientSwcIn').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
-        GetLatestBalance($("#ClientIdSwcOut").val(), function (res) { $("#OutstandingUnitSwc").val(res) });
+        GetLatestBalance($("#ClientIdSwcOut").val(), function (res) { $("#OutstandingUnitSwc").data("kendoNumericTextBox").value(res) });
     });  
 
     $("#srcCurrencySubs_text1").change(function () {
@@ -793,7 +800,7 @@ var strBranch;
                         obj["FeeCurr"] = $("#_KeteranganFeeSubs").val();
 
                         obj["NominalFee"] = $("#PercentageFeeSubs").val();
-                        obj["PctFee"] = $("#MoneyFeeSubs").val(); n
+                        obj["PctFee"] = $("#MoneyFeeSubs").val(); 
                     }
                     else {
                         obj["FeeKet"] = $("#_KeteranganFeeSubs").val();
@@ -1331,6 +1338,7 @@ var strBranch;
                 url: '/Transaksi/RefreshTransaction',
                 data: { RefID: RefID, CIFNo: CIFNo, _strTabName: _strTabName },
                 success: function (data) {
+                    console.log(data);
                     RefreshRedemption(data);
                 }
             });
@@ -2200,18 +2208,20 @@ var strBranch;
     } 
 
     function RefreshRedemption(data) {
-        $("#textSIDRedemp").val(data.CustomerIdentitas.CIFSID);
-        $("#txtUmurRedemp").val(data.TransactionSubsDetail.Umur);
-        $("#textShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
-        $("#txtbRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
-        var dtpRiskProfileRedemp = new Date(data.RiskProfileModel.LastUpdate);
-        $("#dtpRiskProfileRedemp").val(dtpRiskProfileRedemp.getDate() + '/' + (dtpRiskProfileRedemp.getMonth() + 1) + '/' + dtpRiskProfileRedemp.getFullYear());
-        $("#maskedRekeningRedemp").val(data.CustomerIdentitas.AccountId);
-        $("#textNamaRekeningRedemp").val(data.CustomerIdentitas.AccountName);
-        $("#maskedRekeningRedempUSD").val(data.CustomerIdentitas.AccountIdUSD);
-        $("#textNamaRekeningRedempUSD").val(data.CustomerIdentitas.AccountNameUSD);
-        $("#maskedRekeningRedempMC").val(data.CustomerIdentitas.AccountIdMC);
-        $("#textNamaRekeningRedempMC").val(data.CustomerIdentitas.AccountNameMC);
+        if (data.CustomerIdentitas != null) {
+            $("#textSIDRedemp").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurRedemp").val(data.TransactionSubsDetail.Umur);
+            $("#textShareHolderIdRedemp").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileRedemp").val(data.RiskProfileModel.RiskProfile);
+            var dtpRiskProfileRedemp = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileRedemp").val(dtpRiskProfileRedemp.getDate() + '/' + (dtpRiskProfileRedemp.getMonth() + 1) + '/' + dtpRiskProfileRedemp.getFullYear());
+            $("#maskedRekeningRedemp").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningRedemp").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningRedempUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningRedempUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningRedempMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningRedempMC").val(data.CustomerIdentitas.AccountNameMC);
+        }
 
         var dataSource = new kendo.data.DataSource(
             {
@@ -2293,18 +2303,20 @@ var strBranch;
     } 
 
     function RefreshSwc(data) {
-        $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
-        $("#txtUmurSwc").val(data.CustomerIdentitas.Umur);
-        $("#textShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
-        $("#txtbRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
-        var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-        $("#dtpRiskProfileSwc").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-        $("#maskedRekeningSwc").val(data.CustomerIdentitas.AccountId);
-        $("#textNamaRekeningSwc").val(data.CustomerIdentitas.AccountName);
-        $("#maskedRekeningSwcUSD").val(data.CustomerIdentitas.AccountIdUSD);
-        $("#textNamaRekeningSwcUSD").val(data.CustomerIdentitas.AccountNameUSD);
-        $("#maskedRekeningSwcMC").val(data.CustomerIdentitas.AccountIdMC);
-        $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
+        if (data.CustomerIdentitas != null) {
+            $("#textSIDSwc").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurSwc").val(data.CustomerIdentitas.Umur);
+            $("#textShareHolderIdSwc").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileSwc").val(data.RiskProfileModel.RiskProfile);
+            var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileSwc").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+            $("#maskedRekeningSwc").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningSwc").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningSwcUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningSwcUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningSwcMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
+        }
         $("#textNoTransaksiSwc").val(data.TransactionSwitching.TranCode);
         var dateTglTransaksiSwc = new Date(data.TransactionSwitching.TranDate);
         $("#dateTglTransaksiSwc").val(dateTglTransaksiSwc.getDate() + '/' + (dateTglTransaksiSwc.getMonth() + 1) + '/' + dateTglTransaksiSwc.getFullYear());
@@ -2321,7 +2333,8 @@ var strBranch;
         $("#srcClientSwcIn_text1").val(data.TransactionSwitching.srcClientSwcIn_text1);
         $('#checkPhoneOrderSwc').prop('checked', data.PhoneOrder);
         $('#checkFeeEditSwc').prop('checked', data.IsFeeEdit);
-        $("#RedempSwc").val(data.TransactionSwitching.TranUnit);
+        //$("#RedempSwc").val(data.TransactionSwitching.TranUnit);
+        $("#RedempSwc").data("kendoNumericTextBox").value(data.TransactionSwitching.TranUnit);
         $("#MoneyFeeSwc").val(data.TransactionSwitching.SwitchingFee);
         $("#PercentageFeeSwc").val(data.TransactionSwitching.Percentage);
         $("#currFeeSwc").text(data.TransactionSwitching.TranCCY);
@@ -2355,19 +2368,21 @@ var strBranch;
         $("#textNamaRekeningSwcMC").val(data.CustomerIdentitas.AccountNameMC);
     } 
 
-function RefreshSwcRDB(data) {
-    $("#textSIDSwcRDB").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurSwcRDB").val(data.CustomerIdentitas.Umur);
-    $("#textShareHolderIdSwcRDB").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileSwcRDB").val(data.RiskProfileModel.RiskProfile);
-    var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileSwcRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-    $("#maskedRekeningSwcRDB").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningSwcRDB").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningSwcRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningSwcRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningSwcRDBMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningSwcRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+    function RefreshSwcRDB(data) {
+        if (data.CustomerIdentitas != null) {
+            $("#textSIDSwcRDB").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurSwcRDB").val(data.CustomerIdentitas.Umur);
+            $("#textShareHolderIdSwcRDB").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileSwcRDB").val(data.RiskProfileModel.RiskProfile);
+            var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileSwcRDB").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+            $("#maskedRekeningSwcRDB").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningSwcRDB").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningSwcRDBUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningSwcRDBUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningSwcRDBMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningSwcRDBMC").val(data.CustomerIdentitas.AccountNameMC);
+        }
 
     $("#textNoTransaksiSwcRDB").val(data.TransactionSwitchingRDB.TranCode);
     var dateTglTransaksiSwcRDB = new Date(data.TransactionSwitchingRDB.TranDate);
@@ -2419,19 +2434,21 @@ function RefreshSwcRDB(data) {
     });
 }
 
-function RefreshBooking(data) {
-    $("#textSIDBooking").val(data.CustomerIdentitas.CIFSID);
-    $("#txtUmurBooking").val(data.CustomerIdentitas.Umur);
-    $("#textShareHolderIdBooking").val(data.CustomerIdentitas.ShareholderID);
-    $("#txtbRiskProfileBooking").val(data.RiskProfileModel.RiskProfile);
-    var dateLast = new Date(data.RiskProfileModel.LastUpdate);
-    $("#dtpRiskProfileBooking").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
-    $("#maskedRekeningBooking").val(data.CustomerIdentitas.AccountId);
-    $("#textNamaRekeningBooking").val(data.CustomerIdentitas.AccountName);
-    $("#maskedRekeningBookingUSD").val(data.CustomerIdentitas.AccountIdUSD);
-    $("#textNamaRekeningBookingUSD").val(data.CustomerIdentitas.AccountNameUSD);
-    $("#maskedRekeningBookingMC").val(data.CustomerIdentitas.AccountIdMC);
-    $("#textNamaRekeningBookingMC").val(data.CustomerIdentitas.AccountNameMC);
+    function RefreshBooking(data) {
+        if (data.CustomerIdentitas != null) {
+            $("#textSIDBooking").val(data.CustomerIdentitas.CIFSID);
+            $("#txtUmurBooking").val(data.CustomerIdentitas.Umur);
+            $("#textShareHolderIdBooking").val(data.CustomerIdentitas.ShareholderID);
+            $("#txtbRiskProfileBooking").val(data.RiskProfileModel.RiskProfile);
+            var dateLast = new Date(data.RiskProfileModel.LastUpdate);
+            $("#dtpRiskProfileBooking").val(dateLast.getDate() + '/' + (dateLast.getMonth() + 1) + '/' + dateLast.getFullYear());
+            $("#maskedRekeningBooking").val(data.CustomerIdentitas.AccountId);
+            $("#textNamaRekeningBooking").val(data.CustomerIdentitas.AccountName);
+            $("#maskedRekeningBookingUSD").val(data.CustomerIdentitas.AccountIdUSD);
+            $("#textNamaRekeningBookingUSD").val(data.CustomerIdentitas.AccountNameUSD);
+            $("#maskedRekeningBookingMC").val(data.CustomerIdentitas.AccountIdMC);
+            $("#textNamaRekeningBookingMC").val(data.CustomerIdentitas.AccountNameMC);
+        }
 
     $("#textNoTransaksiBooking").val(data.TransactionBooking.BookingCode);
     var dateTglTransaksiBooking = new Date(data.TransactionBooking.BookingDate);
@@ -2667,7 +2684,8 @@ function DisableFormTrxSubs(isEnabled) {
     document.getElementById("btnEditSubs").disabled = !isEnabled;
     $("#_ComboJenisSubs").data('kendoDropDownList').enable(false);
     $("#MoneyFeeSub").prop('disabled', true);
-    $("#PercentageFeeSubs").prop('disabled', true);
+    //$("#PercentageFeeSubs").prop('disabled', true);
+    $("#PercentageFeeSubs").data("kendoNumericTextBox").enable(false);
 }
 
 function DisableFormRedemp(isEnabled) {
@@ -2723,8 +2741,10 @@ function DisableFormTrxRedemp(isEnabled) {
         $("#srcProductRedemp").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
         $("#srcClientRedemp").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
     }
-    $("#OutstandingUnitRedemp").prop('disabled', true);
-    $("#RedempUnit").prop('disabled', !isEnabled);
+    //$("#OutstandingUnitRedemp").prop('disabled', true);
+    $("#OutstandingUnitRedemp").data("kendoNumericTextBox").enable(false);
+    //$("#RedempUnit").prop('disabled', !isEnabled);
+    $("#RedempUnit").data("kendoNumericTextBox").enable(isEnabled);
     $("#checkPhoneOrderRedemp").prop('disabled', true);
 
     if ((isEnabled == true) && ($("#srcCIFRedemp_text1").val() != "")) {
@@ -2847,8 +2867,10 @@ function DisableFormSwc(isEnabled) {
     $("#checkSwcAll").prop('disabled', !isEnabled);
     $("#checkPhoneOrderSwc").prop('disabled', !isEnabled);
     $("#checkFeeEditSwc").prop('disabled', !isEnabled);
-    $("#RedempSwc").prop('disabled', !isEnabled);
-    $("#PercentageFeeSwc").prop('disabled', true);
+    //$("#RedempSwc").prop('disabled', !isEnabled);
+    $("#RedempSwc").data("kendoNumericTextBox").enable(isEnabled);
+    //$("#PercentageFeeSwc").prop('disabled', true);
+    $("#PercentageFeeSwc").data("kendoNumericTextBox").enable(false);
 
     if (_intType == 2) {
         $("#srcNoRefSwc_text1").prop('disabled', true);
@@ -2857,7 +2879,8 @@ function DisableFormSwc(isEnabled) {
         $("#srcCIFSwc").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
         $("#checkPhoneOrderSwc").prop('disabled', false);
         $("#checkFeeEditSwc").prop('disabled', false);
-        $("#RedempSwc").prop('disabled', true);
+        //$("#RedempSwc").prop('disabled', true);
+        $("#RedempSwc").data("kendoNumericTextBox").enable(false);
         $("#checkSwcAll").prop('disabled', true);
         if ($('#checkFeeEditSwc').prop('checked') == true) {
             $("#PercentageFeeSwc").prop('disabled', false);
@@ -3223,9 +3246,11 @@ function ResetFormTrxSubs() {
     $('#checkFullAmtSubs').prop('checked', true);
     $('#checkFeeEditSubs').prop('checked', false);
     $('#_ComboJenisSubs').val('');
-    $('#MoneyFeeSubs').val(0);
+    //$('#MoneyFeeSubs').val(0);
+    $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
     $('#labelFeeCurrencySubs').val('');
-    $('#PercentageFeeSubs').val(0);
+    //$('#PercentageFeeSubs').val(0);
+    $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
 }
 
 function ResetFormRedemp() {
@@ -3269,8 +3294,10 @@ function ResetFormTrxRedemp() {
     $('#srcCurrenyRedemp_text1').val('');
     $('#srcCurrenyRedemp_text2').val('');
 
-    $('#OutstandingUnitRedemp').val(0);
-    $('#RedempUnit').val(0);
+    //$('#OutstandingUnitRedemp').val(0);
+    $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value(0);
+    //$('#RedempUnit').val(0);
+    $("#RedempUnit").data("kendoNumericTextBox").value(0);
 
     $('#checkPhoneOrderRedemp').prop('checked', false);
     $('#checkFeeEditRedemp').prop('checked', false);
@@ -3363,8 +3390,10 @@ function ResetFormSwc() {
     $('#srcClientSwcOut_text1').val('');
     $('#srcClientSwcOut_text2').val('');
 
-    $('#OutstandingUnitSwc').val('');
-    $('#RedempSwc').val('');
+    //$('#OutstandingUnitSwc').val('');
+    $("#OutstandingUnitSwc").data("kendoNumericTextBox").value(0);
+    //$('#RedempSwc').val('');
+    $("#RedempSwc").data("kendoNumericTextBox").value(0);
 
     $('#srcProductSwcIn_text1').val('');
     $('#srcProductSwcIn_text2').val('');
@@ -3591,6 +3620,10 @@ function SetEnableOfficeId(strKodeKantor) {
             var dataGridViewSubs = $('#dataGridViewSubs').data('kendoGrid');
             dataGridViewSubs.hideColumn('TglTrx');
         }      
+        else if (_strTabName == "REDEMP") {
+            var dataGridViewRedemp = $('#dataGridViewRedemp').data('kendoGrid');
+            dataGridViewRedemp.hideColumn('TglTrx');
+        }
     }
 
     function CheckIsSubsNew(CIFNo, ProductId, IsRDB, IsSubsNew, ClientCodeSubsAdd)
@@ -3725,7 +3758,9 @@ function SetEnableOfficeId(strKodeKantor) {
         var Text = dropdownlist.text();
 
         $("#MoneyFeeSubs").val(0);
+        //$('#MoneyFeeSub').data("kendoNumericTextBox").value(0);
         $("#PercentageFeeSubs").val(0);
+        //$("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
 
         if (Text == "By %") {
             $("#_KeteranganFeeSubs").text($("#srcCurrSubs_text1").val());

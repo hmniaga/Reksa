@@ -5099,6 +5099,64 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaReportRDN24(out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN24", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaReportRDN26(out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                if (this.ExecProc(QueryReksa(), "ReksaReportRDN26", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
+                    {
+                        blnResult = true;
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
 
         #region "OTORISASI"

@@ -72,8 +72,8 @@
                     .Name("ProductSearchComponentGrid")
                     .Columns(columns =>
                     {
-                        columns.Bound(m => m.ProdCode);
-                        columns.Bound(m => m.ProdName);
+                        columns.Bound(m => m.ProdCode).Width(100).Title("Product Code");
+                        columns.Bound(m => m.ProdName).Width(300).Title("Product Name");
                     })
                     .ToolBar(toolbar =>
                     {

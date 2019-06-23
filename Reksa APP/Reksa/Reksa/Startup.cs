@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -26,23 +28,29 @@ namespace Reksa
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IUserStore<ApplicationUser>, StoreUser>();
-            services.AddIdentity<ApplicationUser, ApplicationRole>().AddDefaultTokenProviders();
-
-            // Add framework services.
             services
                 .AddMvc(
-                //opt =>
-                //{
-                //    opt.Filters.Add(new RequireHttpsAttribute());
-                //}
+                options =>
+                {
+                    //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                    //options.Filters.Add(new RequireHttpsAttribute());
+                }
                 )
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // Add Kendo UI services to the services container
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.AccessDeniedPath = "/Account/Error403";
+                    options.LoginPath = "/Account/Login";
+                });
+
+            services.AddAuthorization(options => options.AddPolicy("SPV", p => p.RequireAuthenticatedUser().RequireRole("SPV")));
+            
             services.AddKendo();
+
             services.AddSession();
         }
 
@@ -59,10 +67,23 @@ namespace Reksa
                 app.UseExceptionHandler("/Account/Error500");
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
+            app.UseHsts(options => options.MaxAge(days:365).IncludeSubdomains());
+
             app.UseStaticFiles();
+
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+
+            app.UseXContentTypeOptions();
+
             app.UseSession();
 
             app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

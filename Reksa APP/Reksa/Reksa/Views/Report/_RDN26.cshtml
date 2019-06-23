@@ -20,24 +20,30 @@
 <body>
     <div class="">
         <h1 class="text-center" style="padding-bottom:50px">@ViewData["ReportName"]</h1>
-        <h6>Periode : @ViewData["PeriodStart"] - @ViewData["PeriodEnd"]</h6>
-        <h6>Product Code : @ViewData["ProdCode"]</h6>
-        <h6>Mata Uang : @ViewData["MataUang"]</h6>
-        <h6>Tipe Produk : @ViewData["TipeProduk"]</h6>
         <br>
         <table class="table table-striped m-0" style="font-size:9px">
             <thead>
                 <tr>
-                    <th>Value Date</th>
-                    <th>Value</th>
+                    <th>Data Type</th>
+                    <th>ClCode</th>
+                    <th>ClName</th>
+                    <th>EmployeeFlag</th>
+                    <th>AcNo</th>
+                    <th>AcName</th>
+                    <th>BkCode</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (DataRow item in Model.Tables[0].Rows)
                 {
                 <tr>
-                    <td>@(item["ValueDate"].ToString() != "" ? DateTime.Parse(@item["ValueDate"].ToString()).ToString("dd/MM/yyyy") : "")</td>
-                    <td>@(item["Value"].ToString() != "" ? decimal.Parse(item["Value"].ToString()).ToString("###,###.##") : "0")</td>
+                    <td>@item["DataType"]</td>
+                    <td>@item["ClCode"]</td>
+                    <td>@item["ClName"]</td>
+                    <td>@item["EmployeeFlag"]</td>
+                    <td>@item["AcNo"]</td>
+                    <td>@item["AcName"]</td>
+                    <td>@item["BkCode"]</td>
                 </tr>
                 }
 

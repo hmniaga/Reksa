@@ -10,52 +10,6 @@
         <p class="text-muted font-13 m-b-30">
             @ViewData["ReportName"]
         </p>
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <!-- Begin StartDate -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Periode Awal</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("StarDate").Format("{0:dd/MM/yyyy}")
-                        )
-                    </div>
-                </div>
-                <!-- End StartDate -->
-                <!-- Begin EndDate -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Periode Akhir</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePicker().Name("EndDate").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
-                                                                                                                                                                                                                        .Format("{0:dd/MM/yyyy}")
-                        )
-                    </div>
-                </div>
-                <!-- End EndDate -->
-            </div>
-            <div class="col-md-6">
-                <!-- Begin Kode Product -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Nama Produk</label>
-                    <div class="input-group col-md-8">
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProduct_text1" }).Enable(false)
-                        <span class="input-group-btn">
-                            <a id="srcProduct" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                        </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px", @id = "srcProduct_text2" }).Enable(false)
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdId", @type = "hidden" })
-                    </div>
-                </div>
-                <!-- End Kode Product -->
-                <!-- Begin >Tipe Produk -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Tipe Produk</label>
-                    <div class="input-group col-md-8">
-                        @(Html.Kendo().DropDownList().Name("TypeProduct").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "NAV", Value = "NAV" }, new SelectListItem() { Text = "KURS", Value = "KURS" }, new SelectListItem() { Text = "DEVIDEN", Value = "DEVIDEN" } }).DataTextField("Text").DataValueField("Value"))
-                    </div>
-                </div>
-                <!-- End >Tipe Produk -->
-            </div>
-        </div>
         <div class="col-md-12" style="margin-top:30px;margin-bottom:10px">
             <div class="form-group">
                 <a href="@Url.Action("ReportReksaDana", "Report")" class="btn btn-info" style="margin-right:10px">
@@ -104,33 +58,9 @@
     });
 
     $("#btnRefresh").click(function () {
-        var PeriodStart = $("#StarDate").val();
-        var PeriodEnd = $("#EndDate").val();
-        var ProdCode = $("#srcProduct_text1").val();
-        var ProdId = $("#ProdId").val();
-        var Type = $("#TypeProduct").val();
-
-        if (PeriodStart == "") {
-            swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
-            return;
-        }
-        if (PeriodEnd == "") {
-            swal("Warning", "Periode Akhir tidak boleh kosong!", "warning");
-            return;
-        }
-        if (ProdId == "") {
-            swal("Warning", "Produk tidak boleh kosong!", "warning");
-            return;
-        }
-        if (Type == "") {
-            swal("Warning", "Tipe Produk tidak boleh kosong!", "warning");
-            return;
-        }
-
         $.ajax({
             type: 'GET',
-            url: '/Report/ReksaReportRDN13',
-            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, Type: Type },
+            url: '/Report/ReksaReportRDN26',
             success: function (data) {
                 if (data.blnResult) {
                     var gridView = $("#dataGridView1").data("kendoGrid");
@@ -142,7 +72,7 @@
 
                     $("#ExportPDF").attr('class', 'btn btn-danger enabled');
                     $("#ExportExcel").attr('class', 'btn btn-success enabled');
-                    $("#dataGridView1 th[data-field=jointDate]").html("Joint Date")
+                    $("#dataGridView1 th[data-field=dataType]").html("Data Type")
                 }
                 else {
                     $("#ExportPDF").attr('class', 'btn btn-danger disabled');
@@ -180,21 +110,10 @@
     function generateColumns(response) {
         var columnNames = Object.keys(response[0]);
         return columnNames.map(function (name) {
-            var jointDate = name.indexOf("jointDate") > -1 || name.indexOf("jointDate") > -1;
-            var agentName = name.indexOf("agentName") > -1 || name.indexOf("agentName") > -1;
-            var clientCode = name.indexOf("clientCode") > -1 || name.indexOf("clientCode") > -1;
-            var namaNasabah = name.indexOf("namaNasabah") > -1 || name.indexOf("namaNasabah") > -1;
-            var tranDate = name.indexOf("tranDate") > -1 || name.indexOf("tranDate") > -1;
-            var valueDate = name.indexOf("valueDate") > -1 || name.indexOf("valueDate") > -1;
-            return {
+             return {
                 field: name,
-                width: jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah ? 300 : 100,
-                title: name,
-                template:
-                    jointDate ? "#= kendo.toString(kendo.parseDate(jointDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
-                        tranDate ? "#= kendo.toString(kendo.parseDate(tranDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
-                            valueDate ? "#= kendo.toString(kendo.parseDate(valueDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
-                                : columnNames
+                width: 100,
+                title: name
             };
         })
     }

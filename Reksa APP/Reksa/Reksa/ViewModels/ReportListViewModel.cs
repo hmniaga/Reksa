@@ -12,5 +12,6 @@ namespace Reksa.ViewModels
         public ProductModel ProductModel { get; set; }
         public OfficeModel OfficeModel { get; set; }
         public SearchCustody CustodyModel { get; set; }
+        public SearchManInv ManInvestasiModel { get; set; }
     }
 }

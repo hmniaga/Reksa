@@ -105,4 +105,12 @@ namespace Reksa.Models
         public string MataUang { get; set; }
         public string TipeProduk { get; set; }
     }
+    public class RDN14Header
+    {
+        public string PeriodStart { get; set; }
+        public string PeriodEnd { get; set; }
+        public string ProdCode { get; set; }
+        public string MataUang { get; set; }
+        public string RegionName { get; set; }
+    }
 }

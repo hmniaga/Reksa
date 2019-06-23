@@ -150,6 +150,18 @@
                     $("#ExportExcel").attr('class', 'btn btn-success enabled');
 
                     $("#dataGridView1 th[data-field=jointDate]").html("Joint Date")
+                    $("#dataGridView1 th[data-field=agentCode]").html("Agent Code")
+                    $("#dataGridView1 th[data-field=agentName]").html("Agent Name")
+                    $("#dataGridView1 th[data-field=clientCode]").html("Client Code")
+                    $("#dataGridView1 th[data-field=namaNasabah]").html("Nama Nasabah")
+                    $("#dataGridView1 th[data-field=jenisTransaksi]").html("Jenis Transaksi")
+                    $("#dataGridView1 th[data-field=jumlahUnit]").html("Jumlah Unit")
+                    $("#dataGridView1 th[data-field=ccy]").html("Currency")
+                    $("#dataGridView1 th[data-field=nominal]").html("Nominal")
+                    $("#dataGridView1 th[data-field=tranDate]").html("Tran Date")
+                    $("#dataGridView1 th[data-field=valueDate]").html("Value Date")
+                    
+                    gridView.hideColumn('instruksiTransaksi');
                 }
                 else {
                     $("#dataGridView1").empty();
@@ -193,9 +205,10 @@
             var namaNasabah = name.indexOf("namaNasabah") > -1 || name.indexOf("namaNasabah") > -1;   
             var tranDate = name.indexOf("tranDate") > -1 || name.indexOf("tranDate") > -1; 
             var valueDate = name.indexOf("valueDate") > -1 || name.indexOf("valueDate") > -1;   
+            var jenisTransaksi = name.indexOf("jenisTransaksi") > -1 || name.indexOf("jenisTransaksi") > -1;   
             return {
                 field: name,
-                width: jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah? 300 : 100,
+                width: jenisTransaksi ? 130 : jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah? 300 : 100,
                 title: name,
                 template:
                     jointDate ? "#= kendo.toString(kendo.parseDate(jointDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :

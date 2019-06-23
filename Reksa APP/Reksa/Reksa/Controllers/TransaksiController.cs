@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -30,26 +31,31 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+        [Authorize]
         public IActionResult Tunggakan()
         {
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("Tunggakan", vModel);
         }
+        [Authorize]
         public IActionResult ParameterTT()
         {
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("ParameterTT", vModel);
         }
+        [Authorize]
         public IActionResult OutgoingTT()
         {
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("OutgoingTT", vModel);
         }
+        [Authorize]
         public IActionResult AuthOutgoingTT()
         {
             TransaksiListViewModel vModel = new TransaksiListViewModel();
             return View("AuthOutgoingTT", vModel);
         }
+        [Authorize]
         public IActionResult Transaksi()
         {
             ViewBag.strBranch = _strBranch;

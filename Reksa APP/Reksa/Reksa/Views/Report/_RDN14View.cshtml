@@ -124,8 +124,9 @@
         var PeriodStart = $("#StarDate").val();
         var PeriodEnd = $("#EndDate").val();
         var ProdCode = $("#srcProduct_text1").val();
-        var ProdId = $("#ProdId").val();
         var Type = $("#TypeProduct").val();
+        var Region = $("#Region").val();
+        var RegionName = $("#RegionName").val();
 
         if (PeriodStart == "") {
             swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
@@ -147,7 +148,7 @@
         $.ajax({
             type: 'GET',
             url: '/Report/ReksaReportRDN14',
-            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, Type: Type },
+            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, Type: Type, Region: Region, RegionName: RegionName },
             success: function (data) {
                 if (data.blnResult) {
                     var gridView = $("#dataGridView1").data("kendoGrid");

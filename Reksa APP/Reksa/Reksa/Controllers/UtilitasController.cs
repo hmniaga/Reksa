@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reksa.Controllers
 {
@@ -31,18 +32,21 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
+        [Authorize]
         public ActionResult Process()
         {
             ViewBag.strBranch = _strBranch;
             UtilitasListViewModel vModel = new UtilitasListViewModel();
             return View("Process", vModel);
         }
+        [Authorize]
         public ActionResult ImportFile()
         {
             ViewBag.strBranch = _strBranch;
             UtilitasListViewModel vModel = new UtilitasListViewModel();
             return View("ImportFile", vModel);
         }
+        [Authorize]
         public ActionResult SinkronisasiOutstanding()
         {
             ViewBag.strBranch = _strBranch;

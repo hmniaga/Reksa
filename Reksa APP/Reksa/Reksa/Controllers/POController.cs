@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,37 +33,44 @@ namespace Reksa.Controllers
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
         }
-
+        [Authorize]
         public IActionResult CutMaintenanceFee()
         {
             return View();
         }
+        [Authorize]
         public IActionResult CutRedemptionFee()
         {
             return View();
         }
+        [Authorize]
         public IActionResult DiscountRedempFee()
         {
             return View();
         }
+        [Authorize]
         public IActionResult AdjustRedempDate()
         {
             return View();
         }
+        [Authorize]
         public IActionResult AdjustNAVDate()
         {
             return View();
         }
+        [Authorize]
         public IActionResult JurnalRTGS()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult SyncNAV()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult SyncFile()
         {
             POListViewModel vModel = new POListViewModel();
@@ -73,54 +81,65 @@ namespace Reksa.Controllers
             vModel.FormatSinkronisasi = listParam;
             return View(vModel);
         }
+        [Authorize]
         public IActionResult CancelTransaction()
         {
             return View();
         }
+        [Authorize]
         public IActionResult CancelTransactionIBMB()
         {
             return View();
         }
+        [Authorize]
         public IActionResult SubsLimitAlert()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult JurnalSKN()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult RejectBooking()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult OverrideMaintenanceFee()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult RecalculateMaintenanceFee()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult RevisiPencadanganFee()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult CutSellingFee()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult Transaction()
         {
             POListViewModel vModel = new POListViewModel();
             return View(vModel);
         }
+        [Authorize]
         public IActionResult CutOffPremiAsuransi()
         {
             POListViewModel vModel = new POListViewModel();
