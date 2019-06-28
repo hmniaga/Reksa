@@ -1,90 +1,87 @@
 ﻿@model Reksa.ViewModels.CustomerListViewModel
 
-<div class="col-md-12">
-    <div class="card-box">
-        <h3 class="panel-title">NPWP Milik Sendiri/ Suami</h3>
-        <div class="row">
-            <div class="col-md-8">
-                <!-- Begin Nomor NPWP -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Nomor NPWP</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPProCIF).HtmlAttributes(new { @id = "tbNoNPWPSendiri", @class = "form-control input-sm", style = "width: 120%" }).Enable(false)
+<div class="col-md-6">
+    <div class="portlet">
+        <div class="portlet-heading bg-custom">NPWP Milik Sendiri/ Suami</div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Begin Nomor NPWP -->
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Nomor NPWP</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPProCIF).HtmlAttributes(new { @id = "tbNoNPWPSendiri", @class = "form-control input-sm", style = "width: 120%" }).Enable(false)
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- End Nomor NPWP -->
-            <!-- Begin Nama NPWP -->
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Nama NPWP</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPProCIF).HtmlAttributes(new { @id = "tbNamaNPWPSendiri", @class = "form-control input-sm", style = "width: 200%" }).Enable(false)
+                <!-- End Nomor NPWP -->
+                <!-- Begin Nama NPWP -->
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Nama NPWP</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPProCIF).HtmlAttributes(new { @id = "tbNamaNPWPSendiri", @class = "form-control input-sm", style = "width: 200%" }).Enable(false)
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- End Nama NPWP -->
-            <!-- Begin Tanggal Dikeluarkan -->
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWP).HtmlAttributes(new { @id = "dtpTglNPWPSendiri", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                <!-- End Nama NPWP -->
+                <!-- Begin Tanggal Dikeluarkan -->
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Tanggal Dikeluarkan</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWP).HtmlAttributes(new { @id = "dtpTglNPWPSendiri", style = "width: 100%;" }).Enable(false))
+                        </div>
                     </div>
                 </div>
+                <!-- End Tanggal Dikeluarkan -->
             </div>
-            <!-- End Tanggal Dikeluarkan -->
         </div>
     </div>
 </div>
-<div class="col-md-12">
-    <div class="card-box">
-        <h3 class="panel-title">NPWP Masih 1 Kartu Keluarga</h3>
-        <div class="row">
-            <div class="col-md-8">
+<div class="col-md-6">
+    <div class="portlet">
+        <div class="portlet-heading bg-custom">NPWP Masih 1 Kartu Keluarga</div>
+        <div class="portlet-body">
+            <div class="row">
                     <!-- Begin Nomor NPWP -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Nomor NPWP</label>
+                        <label class="col-sm-5 control-label">Nomor NPWP</label>
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoNPWPKK).HtmlAttributes(new { @id = "tbNoNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Nomor NPWP -->
-            </div>
-            <div class="col-md-8">
                     <!-- Begin Nama NPWP -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Nama NPWP</label>
+                        <label class="col-sm-5 control-label">Nama NPWP</label>
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NamaNPWPKK).HtmlAttributes(new { @id = "tbNamaNPWPKK", @class = "form-control input-sm", @style = "width: 200%" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Nama NPWP -->
-            </div>
-            <div class="col-md-8">
                     <!-- Begin Kepemilikan -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Kepemilikan</label>
+                        <label class="col-sm-5 control-label">Kepemilikan</label>
                         <div class="input-group">
-                                @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.KepemilikanNPWPKK)
-                                                        .BindTo(Model.KepemilikanNPWPKK)
-                                                        .DataTextField("Deskripsi")
-                                                        .Value("Kode")
-                                                        .HtmlAttributes(new { @id = "cbKepemilikanNPWPKK", @style = "width: 150px;" })
-                                                        .Filter("contains")
-                                )
                             <span class="input-group-btn"></span>
-                                @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.KepemilikanNPWPKKLainnya).HtmlAttributes(new { @id = "tbKepemilikanLainnya", @class = "form-control input-sm", @style = "width: 300%" }).Enable(false)
+                            @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.KepemilikanNPWPKK)
+                                                                            .BindTo(Model.KepemilikanNPWPKK)
+                                                                            .DataTextField("Deskripsi")
+                                                                            .Value("Kode")
+                                                                            .HtmlAttributes(new { @id = "cbKepemilikanNPWPKK", @style = "width: 150px;"  })
+                                                                            .Filter("contains")
+                            )
+                            <span class="input-group-btn"></span>
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.KepemilikanNPWPKKLainnya).HtmlAttributes(new { @id = "tbKepemilikanLainnya", @style = "width: 120px" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Kepemilikan -->
-            </div>
-            <div class="col-md-8">
                     <!-- Begin Tanggal Dikeluarkan -->
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Tanggal Dikeluarkan</label>
+                        <label class="col-sm-5 control-label">Tanggal Dikeluarkan</label>
                         <div class="input-group">
-                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWPKK).HtmlAttributes(new { @id= "dtpTglNPWPKK", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglNPWPKK).HtmlAttributes(new { @id = "dtpTglNPWPKK", style = "width: 100%;" }).Enable(false))
                         </div>
                     </div>
                     <!-- End Tanggal Dikeluarkan -->
@@ -93,66 +90,68 @@
     </div>
 </div>
 <div class="col-md-12">
-    <div class="card-box">
-        <h3 class="panel-title">Surat Pernyataan Tidak Memiliki NPWP</h3>
-        <div class="row">
-            <div class="col-md-8">
-                <!-- Begin Alasan -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Alasan</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.AlasanTanpaNPWP)
-                                                .BindTo(Model.AlasanTanpaNPWP)
-                                                .DataTextField("Deskripsi")
-                                                .Value("Kode")
-                                                .HtmlAttributes(new { @id = "cbAlasanTanpaNPWP", @style = "width: 200px" })
-                                                .Filter("contains")
-                        )
+    <div class="portlet">
+        <div class="portlet-heading bg-custom">Surat Pernyataan Tidak Memiliki NPWP</div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Begin Alasan -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Alasan</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.AlasanTanpaNPWP)
+                                                                    .BindTo(Model.AlasanTanpaNPWP)
+                                                                    .DataTextField("Deskripsi")
+                                                                    .Value("Kode")
+                                                                    .HtmlAttributes(new { @id = "cbAlasanTanpaNPWP", @style = "width: 200px" })
+                                                                    .Filter("contains")
+                            )
+                        </div>
                     </div>
+                    <!-- End Alasan -->
                 </div>
-                <!-- End Alasan -->
-            </div>
-            <div class="col-md-8">
-                <!-- Begin Nomor Dokumen -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Nomor Dokumen</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoDokTanpaNPWP).HtmlAttributes(new { @id = "tbNoDokTanpaNPWP", @class = "form-control input-sm", @style = "width: 200px" }).Enable(false)
-                        <span class="input-group-btn"></span>
-                        <button id="btnGenerateNoDokTanpaNPWP" class="btn btn-info waves-effect waves-light" disabled="disabled">
-                            <span class="btn-label">
-                                <i class="fa fa-plus"></i>
-                            </span>
-                            Generate No Dok
-                        </button>
+                <div class="col-md-8">
+                    <!-- Begin Nomor Dokumen -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Nomor Dokumen</label>
+                        <div class="input-group">
+                            @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoDokTanpaNPWP).HtmlAttributes(new { @id = "tbNoDokTanpaNPWP", @style = "width: 200px" }).Enable(false)
+                            <span class="input-group-btn"></span>
+                            <button id="btnGenerateNoDokTanpaNPWP" class="btn btn-info btn-rounded waves-effect waves-light" disabled="disabled">
+                                <span class="btn-label">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                Generate No Dok
+                            </button>
+                        </div>
                     </div>
+                    <!-- End Nomor Dokumen -->
                 </div>
-                <!-- End Nomor Dokumen -->
-            </div>
-            <div class="col-md-8">
-                <!-- Begin Tanggal Dokumen -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Tanggal Dokumen</label>
-                    <div class="input-group">
-                        @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglDokTanpaNPWP).HtmlAttributes(new { @id = "dtpTglDokTanpaNPWP", @class = "form-control input-sm", style = "width: 100%;" }).Enable(false))
+                <div class="col-md-8">
+                    <!-- Begin Tanggal Dokumen -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Tanggal Dokumen</label>
+                        <div class="input-group">
+                            @(Html.Kendo().DatePickerFor(model => model.CustomerNPWPModel.TglDokTanpaNPWP).HtmlAttributes(new { @id = "dtpTglDokTanpaNPWP", style = "width: 100%;" }).Enable(false))
+                        </div>
                     </div>
+                    <!-- End Tanggal Dokumen -->
                 </div>
-                <!-- End Tanggal Dokumen -->
-            </div>
-            <div class="col-md-8">
-                <!-- Begin Nomor Dokumen -->
-                <div class="form-group">
-                    <div class="col-sm-3 control-label"></div>
-                    <div class="input-group">
-                        <button id="btnGantiOpsiNPWP" class="btn btn-info waves-effect waves-light">
-                            <span class="btn-label">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            Ganti Opsi
-                        </button>
+                <div class="col-md-8">
+                    <!-- Begin Nomor Dokumen -->
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label"></div>
+                        <div class="input-group">
+                            <button id="btnGantiOpsiNPWP" class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                Ganti Opsi
+                            </button>
+                        </div>
                     </div>
+                    <!-- End Nomor Dokumen -->
                 </div>
-                <!-- End Nomor Dokumen -->
             </div>
         </div>
     </div>

@@ -105,42 +105,7 @@ namespace ReksaAPI
 
             return result;
         }
-        //private bool ExecProc(ClsQuery clsQuery, string strProc, ref List<SqlParameter> dbParam, out DataSet dsResult)
-        //{
-        //    dsResult = null;
-        //    _errorMessage = "";
-        //    bool result = true;
-
-        //    try
-        //    {
-        //        clsQuery.ExecProc(strProc, ref dbParam, out dsResult);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _errorMessage = ex.Message;
-        //        result = false;
-        //    }
-
-        //    if (ClsQuery.queError.Count > 0)
-        //    {
-        //        string[] sErr = (string[])ClsQuery.queError.Dequeue();
-        //        if (sErr.Length > 0)
-        //            _errorMessage = "";
-        //        for (int i = 0; i < sErr.Length; i++)
-        //        {
-        //            if (!sErr[i].Contains("Microsoft"))
-        //                _errorMessage = _errorMessage + sErr[i].ToString() + "\n";
-        //        }
-        //        ClsQuery.queError.Clear();
-        //        result = false;
-        //    }
-        //    if (!_errorMessage.Equals(""))
-        //    {
-        //        throw new Exception(strProc + " - " + _errorMessage);
-        //    }
-
-        //    return result;
-        //}
+        
         private bool ExecProc(ClsQuery clsQuery, string strProc, ref List<SqlParameter> dbParam, out DataSet dsResult, out SqlCommand cmdOut, out string ErrMsg)
         {
             dsResult = null;

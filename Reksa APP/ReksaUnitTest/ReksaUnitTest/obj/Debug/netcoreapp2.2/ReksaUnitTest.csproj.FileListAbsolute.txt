@@ -1,0 +1,13 @@
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\ReksaUnitTest.deps.json
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\ReksaUnitTest.runtimeconfig.json
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\ReksaUnitTest.runtimeconfig.dev.json
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\ReksaUnitTest.dll
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\bin\Debug\netcoreapp2.2\ReksaUnitTest.pdb
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\obj\Debug\netcoreapp2.2\ReksaUnitTest.csproj.CoreCompileInputs.cache
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\obj\Debug\netcoreapp2.2\ReksaUnitTest.AssemblyInfoInputs.cache
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\obj\Debug\netcoreapp2.2\ReksaUnitTest.AssemblyInfo.cs
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\obj\Debug\netcoreapp2.2\ReksaUnitTest.dll
+C:\Users\Hp\Documents\- PROJECTS -\REKSA UNIT TEST\ReksaUnitTest\ReksaUnitTest\obj\Debug\netcoreapp2.2\ReksaUnitTest.pdb

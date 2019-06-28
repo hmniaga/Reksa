@@ -36,14 +36,17 @@
                 <!-- End Input Nama Pemilik -->
                 <!-- Begin Input Tempat/Tanggal Lahir -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Tempat/Tanggal Lahir</label>
+                    <label class="col-sm-4 control-label">Tempat Lahir</label>
                     <div class="input-group">
-                        <div class="col-md-7">
-                            @(Html.Kendo().TextBox().Name("tbTmptLahir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;" }).Enable(false))
-                        </div>
-                        <div class="col-md-5">
-                            @(Html.Kendo().DatePicker().Name("dtpTglLahir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false))
-                        </div>
+                        @(Html.Kendo().TextBox().Name("tbTmptLahir").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;" }).Enable(false))
+                     </div>
+                </div>
+                <!-- End Input Tempat/Tanggal Lahir -->
+                <!-- Begin Input Tempat/Tanggal Lahir -->
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Tanggal Lahir</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("dtpTglLahir").HtmlAttributes(new { style = "width: 150px;" }).Enable(false))
                     </div>
                 </div>
                 <!-- End Input Tempat/Tanggal Lahir -->
@@ -59,7 +62,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Tanggal Bergabung</label>
                     <div class="input-group col-sm-7">
-                        @(Html.Kendo().DatePicker().Name("dtpJoinDate").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false))
+                        @(Html.Kendo().DatePicker().Name("dtpJoinDate").Enable(false))
                     </div>
                 </div>
                 <!-- End Input Tanggal Bergabung -->
@@ -67,7 +70,7 @@
             <div class="col-md-6">
                 <!-- Begin Input No. HP -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">No. HP</label>
+                    <label class="col-sm-5 control-label">No. HP</label>
                     <div class="input-group col-sm-7">
                         @Html.Kendo().TextBox().Name("tbHP").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
                     </div>
@@ -75,7 +78,7 @@
                 <!-- End Input No. HP -->
                 <!-- Begin Input Email -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Email</label>
+                    <label class="col-sm-5 control-label">Email</label>
                     <div class="input-group col-sm-7">
                         @Html.Kendo().TextBox().Name("txtEmail").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
                     </div>
@@ -83,7 +86,7 @@
                 <!-- End Input Email -->
                 <!-- Begin Input Jenis Risk Profile -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Jenis Risk Profile</label>
+                    <label class="col-sm-5 control-label">Jenis Risk Profile</label>
                     <div class="input-group col-sm-7">
                         @(Html.Kendo().TextBox().Name("txtbRiskProfile").HtmlAttributes(new { @class = "form-control input-sm col-sm-9" }).Enable(false))
                     </div>
@@ -91,23 +94,23 @@
                 <!-- End Input Jenis Risk Profile -->
                 <!-- Begin Date Last Update Risk Profile -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Last Update Risk Profile</label>
+                    <label class="col-sm-5 control-label">Last Update Risk Profile</label>
                     <div class="input-group col-sm-7">
-                        @(Html.Kendo().DatePicker().Name("dtpRiskProfile").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false).Events(e => { e.Change("onChangedtpRiskProfile"); }))
+                        @(Html.Kendo().DatePicker().Name("dtpRiskProfile").Enable(false).Events(e => { e.Change("onChangedtpRiskProfile"); }))
                     </div>
                 </div>
                 <!-- End Date Last Update Risk Profile -->
                 <!-- Begin Date Expired Date Risk Profile -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Expired Date Risk Profile</label>
+                    <label class="col-sm-5 control-label">Expired Date Risk Profile</label>
                     <div class="input-group col-sm-7">
-                        @(Html.Kendo().DatePicker().Name("dtExpiredRiskProfile").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200%;" }).Enable(false))
+                        @(Html.Kendo().DatePicker().Name("dtExpiredRiskProfile").Enable(false))
                     </div>
                 </div>
                 <!-- End Date Expired Date Risk Profile -->
                 <!-- Begin Transaksi melalui Telepon -->
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"></label>
+                    <label class="col-sm-5 control-label"></label>
                     <div class="input-group">
                         <div class="checkbox checkbox-custom checkbox-circle">
                             @(Html.Kendo().CheckBox().Name("checkPhoneOrder").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Transaksi melalui Telepon"))
@@ -235,10 +238,10 @@
                             columns.Bound(p => p.Pilih).ClientTemplate("<input type='checkbox' onclick='onCheckBoxKonfAddressClick(this)' value= '#= Sequence #' " + "# if (Pilih) { #" + "checked='checked'" + "# } #" + "/>").ClientHeaderTemplate("<input type='checkbox' id='chkKonfAddressSelectAll' onclick='checkKonfAddressAll(this)'/>").Width(30).Title("Pilih").Sortable(false);
                             columns.Bound(p => p.Sequence).Hidden();
                             columns.Bound(p => p.KodePos).Width(85).Title("Kode Pos");
-                            columns.Bound(p => p.AddressLine1).Width(200).Title("AddressLine 1");
-                            columns.Bound(p => p.AddressLine2).Width(200).Title("AddressLine 2");
-                            columns.Bound(p => p.AddressLine3).Width(200).Title("AddressLine 3");
-                            columns.Bound(p => p.AddressLine4).Width(200).Title("AddressLine 4");
+                            columns.Bound(p => p.AddressLine1).Width(250).Title("AddressLine 1");
+                            columns.Bound(p => p.AddressLine2).Width(250).Title("AddressLine 2");
+                            columns.Bound(p => p.AddressLine3).Width(250).Title("AddressLine 3");
+                            columns.Bound(p => p.AddressLine4).Width(250).Title("AddressLine 4");
                             columns.Bound(p => p.AlamatUtama).Width(120).Title("Alamat Utama");
                             columns.Bound(p => p.KodeAlamat).Width(120).Title("Kode Alamat");
                             columns.Bound(p => p.AlamatSID).Width(120).Title("Alamat SID");

@@ -350,6 +350,7 @@ namespace Reksa.Controllers
             try
             {
                 var Content = new StringContent(JsonConvert.SerializeObject(model));
+                var EncodedContent = System.Net.WebUtility.UrlEncode(Content.ToString());
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_strAPIUrl);

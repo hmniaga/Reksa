@@ -126,7 +126,6 @@
 <div class="col-md-12">
     <div class="card-box">
         <div class="row">
-            <h3 class="panel-title">Booking</h3>
             <div class="col-md-6">
                 <!-- Begin Kode Booking -->
                 <div class="form-group">
@@ -147,24 +146,24 @@
                 <!-- Begin Kode Product -->
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Produk</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductBooking_text1" }).Enable(false)
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProductBooking_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcProductBooking" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductBooking_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 220px;font-size: 90%;", @id = "srcProductBooking_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Product -->
                 <!-- Begin Client Code -->
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Client Code</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientBooking_text1" }).Enable(false)
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcClientBooking_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcClientBooking" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientBookModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientBooking_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;font-size: 90%;", @id = "srcClientBooking_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Code -->
@@ -176,7 +175,7 @@
                         <span class="input-group-btn">
                             <a id="srcCurrencyBooking" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCurrencyBooking_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcCurrencyBooking_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Currency -->
@@ -184,8 +183,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Nominal</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().NumericTextBox().Name("MoneyNomBooking").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
-
+                        @Html.Kendo().NumericTextBox().Name("MoneyNomBooking").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0).Events(e => { e.Change("onChangeMoneyNomBooking").Spin("onSpinMoneyNomBooking"); })
                         @*@Html.Kendo().TextBox().Name("MoneyNomBooking").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)*@
                     </div>
                 </div>
@@ -198,7 +196,7 @@
                 <!-- End Transaksi melalui Telepon -->
                 <!-- Begin Sisa Unit -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Sisa Unit yang ditawarkan</label>
+                    <label class="col-sm-3 control-label">Sisa Unit yang dapat ditawarkan</label>
                     <div class="input-group">
                         @*@Html.Kendo().TextBox().Name("_sisaunit").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%;padding - top:200%;" }).Enable(false)*@
                         @Html.Kendo().NumericTextBox().Name("_sisaunit").HtmlAttributes(new { style = "width:220px;margin-right:10px;" }).Enable(false).Min(0)
@@ -230,7 +228,6 @@
                                     @(Html.Kendo().DropDownList().Name("_ComboJenisBooking").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value"))
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label"></label>
                                     <div class="input-group">
                                         @*@Html.Kendo().TextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)*@
                                         @Html.Kendo().NumericTextBox().Name("MoneyFeeBooking").HtmlAttributes(new { style = "width: 120px;" }).Enable(false).Min(0)
@@ -435,6 +432,92 @@
         });
     }
 
+    function onChangeMoneyNomBooking()
+    {
+        $("#MoneyFeeBooking").data("kendoNumericTextBox").value(0);
+        $("#labelFeeCurrencyBooking").text('');        
+        $("#PercentageFeeBooking").data("kendoNumericTextBox").value(0);
+        $("#_KeteranganFeeBooking").text('');
+        $("#checkFeeEditBooking").prop('checked', false);
 
+        if ($("#checkFeeEditBooking").prop('checked') == false)
+        {
+            $("#_ComboJenisBooking").data('kendoDropDownList').enable(false);
+            $("#MoneyFeeBooking").data("kendoNumericTextBox").enable(false);
+        }
+
+        if ((this.value() != 0) && ($("#srcCIFBooking_text1").val() != "") && ($("#srcProductBooking_text1").val() != ""))
+        {
+            var resFee = HitungBookingFee($("#srcCIFBooking_text1").val(), this.value(), $("#srcProductBooking_text1").val(), ByPercent,
+                $("#checkFeeEditBooking").prop('checked'), $("#MoneyFeeBooking").data("kendoNumericTextBox").value());
+            resFee.success(function (data)
+            {
+                if (data.blnResult)
+                {
+                    if ($("#checkFeeEditBooking").prop('checked') == false)
+                    {
+                        $("#MoneyFeeBooking").data("kendoNumericTextBox").value(data.NominalFee);
+                        $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.PctFee);
+                        $("#labelFeeCurrencyBooking").text(data.FeeCurr);
+                        $("#_KeteranganFeeBooking").text('%');
+                    }
+                    else 
+                    {
+                        if (ByPercent == true)
+                        {
+                            $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.NominalFee);
+                            $("#labelFeeCurrencyBooking").text('%');
+                            $("#_KeteranganFeeBooking").text(data.FeeCurr);
+                        }
+                        else
+                        {
+                            $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.PctFee);
+                            $("#labelFeeCurrencyBooking").text(data.FeeCurr);
+                            $("#_KeteranganFeeBooking").text('%');
+                        }
+                    }                    
+                }
+            });
+        }
+    }
+    function onSpinMoneyNomBooking() {
+        $("#MoneyFeeBooking").data("kendoNumericTextBox").value(0);
+        $("#labelFeeCurrencyBooking").text('');
+        $("#PercentageFeeBooking").data("kendoNumericTextBox").value(0);
+        $("#_KeteranganFeeBooking").text('');
+        $("#checkFeeEditBooking").prop('checked', false);
+
+        if ($("#checkFeeEditBooking").prop('checked') == false) {
+            $("#_ComboJenisBooking").data('kendoDropDownList').enable(false);
+            $("#MoneyFeeBooking").data("kendoNumericTextBox").enable(false);
+        }
+
+        if ((this.value() != 0) && ($("#srcCIFBooking_text1").val() != "") && ($("#srcProductBooking_text1").val() != "")) {
+            var resFee = HitungBookingFee($("#srcCIFBooking_text1").val(), this.value(), $("#srcProductBooking_text1").val(), ByPercent,
+                $("#checkFeeEditBooking").prop('checked'), $("#MoneyFeeBooking").data("kendoNumericTextBox").value());
+            resFee.success(function (data) {
+                if (data.blnResult) {
+                    if ($("#checkFeeEditBooking").prop('checked') == false) {
+                        $("#MoneyFeeBooking").data("kendoNumericTextBox").value(data.NominalFee);
+                        $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.PctFee);
+                        $("#labelFeeCurrencyBooking").text(data.FeeCurr);
+                        $("#_KeteranganFeeBooking").text('%');
+                    }
+                    else {
+                        if (ByPercent == true) {
+                            $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.NominalFee);
+                            $("#labelFeeCurrencyBooking").text('%');
+                            $("#_KeteranganFeeBooking").text(data.FeeCurr);
+                        }
+                        else {
+                            $("#PercentageFeeBooking").data("kendoNumericTextBox").value(data.PctFee);
+                            $("#labelFeeCurrencyBooking").text(data.FeeCurr);
+                            $("#_KeteranganFeeBooking").text('%');
+                        }
+                    }
+                }
+            });
+        }
+    }
 
 </script>

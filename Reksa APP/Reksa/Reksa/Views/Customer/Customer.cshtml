@@ -127,50 +127,51 @@
                     <!-- End Label Status -->
                 </div>
                 <div class="col-md-12">
-                    <ul class="nav nav-tabs" style="background-color:#efefef">
+                    <ul class="nav nav-tabs" style="background-color:#efefef;border-style:double;">
                         <li class="active"><a data-toggle="tab" href="#tab-identitas" id="MCI"><i class="fa fa-info-circle"></i>  Identitas</a></li>
                         <li><a data-toggle="tab" href="#tab-aktifitas" id="MCA"><i class="fa fa-history"></i>  Aktifitas</a></li>
                         <li><a data-toggle="tab" href="#tab-blokir" id="MCB"><i class="fa fa-lock"></i>  Blokir</a></li>
                         <li><a data-toggle="tab" href="#tab-npwp" id="MCN"><i class="fa fa-user-md"></i> NPWP</a></li>
                     </ul>
+                    <div class="tab-content" style="border-style:double">
+                            <div id="tab-identitas" class="tab-pane fade in active">
 
-                    <div class="tab-content">
-                        <div id="tab-identitas" class="tab-pane fade in active">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_CustomerIdentitas.cshtml", Model);
-                                    }
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @{
+                                            Html.RenderPartial("_CustomerIdentitas.cshtml", Model);
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="tab-aktifitas" class="tab-pane fade">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @{
+                                            Html.RenderPartial("_CustomerAktifitas.cshtml", Model);
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="tab-aktifitas" class="tab-pane fade">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_CustomerAktifitas.cshtml", Model);
-                                    }
+                            <div id="tab-blokir" class="tab-pane fade">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @{
+                                            Html.RenderPartial("_CustomerBlokir.cshtml", Model);
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="tab-blokir" class="tab-pane fade">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_CustomerBlokir.cshtml", Model);
-                                    }
+                            <div id="tab-npwp" class="tab-pane fade">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @{
+                                            Html.RenderPartial("_CustomerNPWP.cshtml", Model);
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="tab-npwp" class="tab-pane fade">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @{
-                                        Html.RenderPartial("_CustomerNPWP.cshtml", Model);
-                                    }
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <!-- End tabs -->

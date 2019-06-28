@@ -186,7 +186,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Nominal</label>
                         <div class="input-group col-md-9">
-                            @Html.Kendo().NumericTextBox().Name("MoneyNomSubs").HtmlAttributes(new { style = "width: 250px;" }).Enable(false).Min(0)
+                            @Html.Kendo().NumericTextBox().Name("MoneyNomSubs").HtmlAttributes(new { style = "width: 250px;" }).Enable(false).Min(0).Events(e => { e.Change("onChangeMoneyNomSubs").Spin("onSpinMoneyNomSubs"); })
                         </div>
                     </div>
                     <!-- End Nominal -->
@@ -241,7 +241,7 @@
                                                 @Html.Kendo().NumericTextBox().Name("MoneyFeeSubs").HtmlAttributes(new { style = "width: 120px;" }).Enable(false).Min(0)
                                                 @*@Html.Kendo().TextBox().Name("MoneyFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)*@
                                                 <span class="input-group-btn"></span>
-                                                <label id="labelFeeCurrencySubs">&nbsp;&nbsp;&nbsp;CURR</label>
+                                                <label id="labelFeeCurrencySubs">&nbsp;&nbsp;&nbsp;IDR</label>
                                                 <span class="input-group-btn"></span>
                                                 @Html.Kendo().NumericTextBox().Name("PercentageFeeSubs").HtmlAttributes(new { style = "width:70px;" }).Enable(false).Min(0)
                                                 @*@Html.Kendo().TextBox().Name("PercentageFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)*@
@@ -549,4 +549,140 @@
             });
         }
     }  
+    function onChangeMoneyNomSubs()
+    {
+        if ($("#srcProductSubs_text1").val() != '') {
+            var res = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
+            res.success(function (data) {
+                intProdId = data.value;
+            });
+
+            if ($("#_ComboJenisSubs").text() == "By %") {
+                ByPercent = true;
+            }
+            else {
+                ByPercent = false;
+            }
+
+            if (IsSubsNew) {
+                intTranType = 1;
+                intClientid = 0;
+            }
+            else {
+                intTranType = 2;
+                var res = GetImportantData("CLIENTID", $("#srcProductSubs_text1").val());
+                res.success(function (data) {
+                    intClientid = data.value;
+                });
+            }
+
+            var Jenis = 1;
+            var resFee = HitungFee(intProdId, intClientid, intTranType, this.value(), 0
+                , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
+                , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFSubs_text1').val());
+            resFee.success(function (data) {
+                $("#labelFeeCurrencySubs").text("%");
+                if (data.blnResult) {
+                    $("#_KeteranganFeeSubs").text(data.resultFee.FeeCCY);
+                    intPeriod = data.resultFee.Period;
+
+                    if (Jenis == 1) //hitung fee tanpa edit fee
+                    {
+                        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        if (ByPercent == true) {
+                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        }
+                        else if (ByPercent == false) {
+                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        }
+                    }
+                    else if (Jenis == 2) //hitung fee dengan edit fee 
+                    {
+                        if (ByPercent == true) {
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        }
+                        else if (ByPercent == false) {
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        }
+                    }
+                }
+                else {
+                    $("#_KeteranganFeeSubs").text('');
+                    $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
+                    $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
+                }
+            });
+        }
+    }
+    function onSpinMoneyNomSubs() {
+        if ($("#srcProductSubs_text1").val() != '') {
+            var res = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
+            res.success(function (data) {
+                intProdId = data.value;
+            });
+
+            if ($("#_ComboJenisSubs").text() == "By %") {
+                ByPercent = true;
+            }
+            else {
+                ByPercent = false;
+            }
+
+            if (IsSubsNew) {
+                intTranType = 1;
+                intClientid = 0;
+            }
+            else {
+                intTranType = 2;
+                var res = GetImportantData("CLIENTID", $("#srcProductSubs_text1").val());
+                res.success(function (data) {
+                    intClientid = data.value;
+                });
+            }
+
+            var Jenis = 1;
+            var resFee = HitungFee(intProdId, intClientid, intTranType, this.value(), 0
+                , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
+                , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFSubs_text1').val());
+            resFee.success(function (data) {
+                $("#labelFeeCurrencySubs").text("%");
+                if (data.blnResult) {
+                    $("#_KeteranganFeeSubs").text(data.resultFee.FeeCCY);
+                    intPeriod = data.resultFee.Period;
+
+                    if (Jenis == 1) //hitung fee tanpa edit fee
+                    {
+                        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        if (ByPercent == true) {
+                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        }
+                        else if (ByPercent == false) {
+                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        }
+                    }
+                    else if (Jenis == 2) //hitung fee dengan edit fee 
+                    {
+                        if (ByPercent == true) {
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
+                        }
+                        else if (ByPercent == false) {
+                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
+                        }
+                    }
+                }
+                else {
+                    $("#_KeteranganFeeSubs").text('');
+                    $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
+                    $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
+                }
+            });
+        }
+    }
+
 </script>

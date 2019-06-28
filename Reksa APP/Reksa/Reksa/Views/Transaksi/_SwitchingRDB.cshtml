@@ -148,24 +148,24 @@
                 <!-- Begin Kode Product -->
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Kode Produk</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "srcProductSwcRDBOut_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                    <div class="input-group  col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "srcProductSwcRDBOut_text1", @class = "form-control input-sm", style = "width: 150%;font-size: 90%;" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcProductSwcRDBOut" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "srcProductSwcRDBOut_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "srcProductSwcRDBOut_text2", @class = "form-control input-sm", style = "width: 220px;font-size: 90%;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Product -->
                 <!-- Begin Client Code -->
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Client Code</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @id = "srcClientSwcRDBOut_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @id = "srcClientSwcRDBOut_text1", @class = "form-control input-sm", style = "width: 150%;font-size: 90%;" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcClientSwcRDBOut" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @id = "srcClientSwcRDBOut_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @id = "srcClientSwcRDBOut_text2", @class = "form-control input-sm", style = "width: 200px;font-size: 90%;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Code -->
@@ -173,7 +173,9 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">OutStanding Unit</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().TextBox().Name("OutstandingUnitSwcRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)
+                        @*@Html.Kendo().TextBox().Name("OutstandingUnitSwcRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)*@
+                        @Html.Kendo().NumericTextBox().Name("OutstandingUnitSwcRDB").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                        <span></span><label>&nbsp;Unit</label>
                     </div>
                 </div>
                 <!-- End OutStanding Unit -->
@@ -181,7 +183,9 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Jumlah Unit</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().TextBox().Name("RedempSwcRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)
+                        @*@Html.Kendo().TextBox().Name("RedempSwcRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)*@
+                        @Html.Kendo().NumericTextBox().Name("RedempSwcRDB").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                        <span></span><label>&nbsp;Unit</label>
                     </div>
                 </div>
                 <!-- End Jumlah Unit -->
@@ -190,7 +194,7 @@
                     @(Html.Kendo().CheckBox().Name("checkPhoneOrderSwcRDB").Label("Transaksi melalui Telepon").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Enable(false))
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Jangka Waktu</label>
+                    <label class="col-sm-4 control-label">Sisa Jangka Waktu</label>
                     <div class="input-group">
                         @Html.Kendo().TextBox().Name("JangkaWktSwcRDB").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80px;" }).Enable(false)
                         <label>&nbsp;&nbsp;&nbsp;Bulan</label>
@@ -203,37 +207,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Auto Redemp</label>
+                    <label class="col-sm-4 control-label">Frek Pendebetan</label>
                     <div class="input-group">
-                        @(Html.Kendo().DropDownList().Name("cmbAutoRedempSwcRDB")
-                                                        .BindTo(new List<SelectListItem>() {
-                                                                                                    new SelectListItem() {
-                                                                                                    Text = "Tidak",
-                                                                                                    Value = "false"
-                                                                                                    },
-                                                                                                    new SelectListItem() {
-                                                                                                    Text = "Ya",
-                                                                                                    Value = "true"
-                                                                                                    }
-                                                        })
-                                                        .DataTextField("Text")
-                                                        .DataValueField("Value")
-                        )
+                        @(Html.Kendo().DropDownList().Name("cmbFrekPendebetanSwcRDB")
+                                                        .HtmlAttributes(new { @style = "width: 90px;" })
+                        )<label>&nbsp;&nbsp;&nbsp;Bulan</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Asuransi</label>
+                    <label class="col-sm-4 control-label">Auto Redemp</label>
                     <div class="input-group">
-                        @(Html.Kendo().DropDownList().Name("cmbAsuransiSwcRDB")
+                        @(Html.Kendo().DropDownList().Name("cmbAutoRedempSwcRDB")
                                                                 .BindTo(new List<SelectListItem>() {
-                                                                                                                        new SelectListItem() {
-                                                                                                                        Text = "Tidak",
-                                                                                                                        Value = "false"
-                                                                                                                        },
-                                                                                                                        new SelectListItem() {
-                                                                                                                        Text = "Ya",
-                                                                                                                        Value = "true"
-                                                                                                                        }
+                                                                                                                    new SelectListItem() {
+                                                                                                                    Text = "Tidak",
+                                                                                                                    Value = "false"
+                                                                                                                    },
+                                                                                                                    new SelectListItem() {
+                                                                                                                    Text = "Ya",
+                                                                                                                    Value = "true"
+                                                                                                                    }
                                                                 })
                                                                 .DataTextField("Text")
                                                                 .DataValueField("Value")
@@ -241,11 +234,22 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">Frek Pendebetan</label>
+                    <label class="col-sm-4 control-label">Asuransi</label>
                     <div class="input-group">
-                        @(Html.Kendo().DropDownList().Name("cmbFrekPendebetanSwcRDB")
-                                                .HtmlAttributes(new { @style = "width: 90px;" })
-                        )<label>&nbsp;&nbsp;&nbsp;Bulan</label>
+                        @(Html.Kendo().DropDownList().Name("cmbAsuransiSwcRDB")
+                                                                        .BindTo(new List<SelectListItem>() {
+                                                                                                                                        new SelectListItem() {
+                                                                                                                                        Text = "Tidak",
+                                                                                                                                        Value = "false"
+                                                                                                                                        },
+                                                                                                                                        new SelectListItem() {
+                                                                                                                                        Text = "Ya",
+                                                                                                                                        Value = "true"
+                                                                                                                                        }
+                                                                        })
+                                                                        .DataTextField("Text")
+                                                                        .DataValueField("Value")
+                        )
                     </div>
                 </div>
             </div>
@@ -260,24 +264,24 @@
                 <!-- Begin Kode Product -->
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Kode Produk</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "srcProductSwcRDBIn_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "srcProductSwcRDBIn_text1", @class = "form-control input-sm", style = "width: 150%;font-size: 90%;" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcProductSwcRDBIn" href="@Url.Action("SearchProduct", "Global")" data-toggle="modal" data-target="#ProductSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "srcProductSwcRDBIn_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "srcProductSwcRDBIn_text2", @class = "form-control input-sm", style = "width: 220px;font-size: 90%;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Product -->
                 <!-- Begin Client Code -->
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Client Code</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @id = "srcClientSwcRDBIn_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                    <div class="input-group col-md-8">
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @id = "srcClientSwcRDBIn_text1", @class = "form-control input-sm", style = "width: 150%;font-size: 90%;" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcClientSwcRDBIn" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientSwcRDBModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @id = "srcClientSwcRDBIn_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @id = "srcClientSwcRDBIn_text2", @class = "form-control input-sm", style = "width: 200px;font-size: 90%;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Code -->

@@ -162,7 +162,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Client Code</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;;font-size: 90%;", @id = "srcClientSwcOut_text1" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcClientSwcOut_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcClientSwcOut" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientSwcOutModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
@@ -185,7 +185,7 @@
                     <label class="col-sm-4 control-label">Jumlah Unit</label>
                     <div class="input-group col-md-8">
                         @*@Html.Kendo().TextBox().Name("RedempSwc").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 80%;" }).Enable(false)*@
-                        @Html.Kendo().NumericTextBox().Name("RedempSwc").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                        @Html.Kendo().NumericTextBox().Name("RedempSwc").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0).Events(e => { e.Change("onChangeRedempSwc").Spin("onSpinRedempSwc"); })
                     </div>
                 </div>
                 <!-- End Jumlah Unit -->
@@ -395,5 +395,99 @@
 <!-- End Modal -->
 
 <script>
+    function HitungSwitchingFee(ProdCodeSwitchOut, ProdCodeSwitchIn, Jenis, TranAmt,
+        Unit, IsEdit, PercentageInput, IsEmployee) {
+        var model = JSON.stringify({
+            'ProdSwitchOut': ProdCodeSwitchOut,
+            'ProdSwitchIn': ProdCodeSwitchIn,
+            'Jenis': Jenis,
+            'TranAmt': TranAmt,
+            'Unit': Unit,
+            'NAV': 0,
+            'IsEdit': IsEdit,
+            'PercentageInput': PercentageInput,
+            'IsEmployee': IsEmployee
+        });
 
+        return $.ajax({
+            type: 'POST',
+            data: model,
+            url: '/Transaksi/HitungSwitchingFee',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false
+        });
+    }
+    function onChangeRedempSwc() {
+        $("#MoneyFeeSwc").data("kendoNumericTextBox").value(0);
+        $("#PercentageFeeSwc").data("kendoNumericTextBox").value(0);
+        $("#checkFeeEditSwc").prop('checked', false);
+
+        if ($("#checkFeeEditSwc").prop('checked') == false) {
+            $("#MoneyFeeSwc").data("kendoNumericTextBox").enable(false);
+        }
+
+        $("#labelFeeCurrencySwc").text('');
+
+        if ((this.value() != 0) && ($("#srcProductSwcOut_text1").val() != "") &&
+            ($("#srcProductSwcIn_text1").val() != "") && ($("#srcClientSwcOut_text1").val() != ""))
+        {
+            if ($("#RedempSwc").data("kendoNumericTextBox").value() == $("#OutstandingUnitSwc").data("kendoNumericTextBox").value()) {
+                IsSwitchingAll = true;
+                $("#checkSwcAll").prop('checked', true);
+            }
+            else {
+                IsSwitchingAll = false;
+                $("#checkSwcAll").prop('checked', false);
+            }
+            
+            var resFee = HitungSwitchingFee($("#srcProductSwcOut_text1").val(), $("#srcProductSwcIn_text1").val()
+                , true, 0, this.value()
+                , $("#checkFeeEditSwc").prop('checked')
+                , $("#PercentageFeeSwc").data("kendoNumericTextBox").value(), $('#ClientIdSwcOut').val());
+            resFee.success(function (data) {
+                if (data.blnResult) {
+                    $("#MoneyFeeSwc").data("kendoNumericTextBox").value(data.calcFeeResult.Fee);
+                    $("#PercentageFeeSwc").data("kendoNumericTextBox").value(data.calcFeeResult.PercentageOutput);
+                    $("#labelFeeCurrencySwc").text(data.calcFeeResult.FeeCCY);
+                }
+            });
+        }
+    }
+    function onSpinRedempSwc()
+    {
+        $("#MoneyFeeSwc").data("kendoNumericTextBox").value(0);
+        $("#PercentageFeeSwc").data("kendoNumericTextBox").value(0);
+        $("#checkFeeEditSwc").prop('checked', false);
+
+        if ($("#checkFeeEditSwc").prop('checked') == false) {
+            $("#MoneyFeeSwc").data("kendoNumericTextBox").enable(false);
+        }
+
+        $("#labelFeeCurrencySwc").text('');
+
+        if ((this.value() != 0) && ($("#srcProductSwcOut_text1").val() != "") &&
+            ($("#srcProductSwcIn_text1").val() != "") && ($("#srcClientSwcOut_text1").val() != "")) {
+            if ($("#RedempSwc").data("kendoNumericTextBox").value() == $("#OutstandingUnitSwc").data("kendoNumericTextBox").value()) {
+                IsSwitchingAll = true;
+                $("#checkSwcAll").prop('checked', true);
+            }
+            else {
+                IsSwitchingAll = false;
+                $("#checkSwcAll").prop('checked', false);
+            }
+            
+            var resFee = HitungSwitchingFee($("#srcProductSwcOut_text1").val(), $("#srcProductSwcIn_text1").val()
+                , true, 0, this.value()
+                , $("#checkFeeEditSwc").prop('checked')
+                , $("#PercentageFeeSwc").data("kendoNumericTextBox").value(), $('#ClientIdSwcOut').val());
+            resFee.success(function (data) {
+                if (data.blnResult) {
+                    $("#MoneyFeeSwc").data("kendoNumericTextBox").value(data.calcFeeResult.Fee);
+                    $("#PercentageFeeSwc").data("kendoNumericTextBox").value(data.calcFeeResult.PercentageOutput);
+                    $("#labelFeeCurrencySwc").text(data.calcFeeResult.FeeCCY);
+                }
+            });
+        }
+    }
 </script>
