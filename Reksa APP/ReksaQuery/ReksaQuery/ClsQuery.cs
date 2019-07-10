@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
-using System.Data.OleDb;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace ReksaQuery
 {
@@ -27,8 +25,6 @@ namespace ReksaQuery
             SSLOff = 0
         }
 
-        private frmDebug frDebug;
-
         int m_intTimeout = 30;
         SSL m_UseSSL = 0;
         bool blnAlreadyLogin = false,
@@ -40,12 +36,6 @@ namespace ReksaQuery
         {
             get { return _ReplaceUser; }
             set { _ReplaceUser = value; }
-        }
-
-        public System.Windows.Forms.Form OwnerForm
-        {
-            get { if (frDebug != null) return frDebug.Owner; else return null; }
-            set { if (frDebug != null) frDebug.Owner = value; }
         }
 
         public string InitializeDate
@@ -116,54 +106,12 @@ namespace ReksaQuery
             get { return _ErrorExtHandled; }
             set { _ErrorExtHandled = value; }
         }
-
-        public bool ShowDebug
-        {
-            get { return _ShowDebug; }
-            set
-            {
-                if (value != _ShowDebug)
-                {
-                    _ShowDebug = value;
-                    if (_ShowDebug)
-                        ShowDebugForm();
-                    else
-                        CloseDebugForm();
-                }
-            }
-        }
-        private void ShowDebugForm()
-        {
-            frDebug = new frmDebug();
-            frDebug.onFormClose += new EventHandler(frDebug_onFormClose);
-            frDebug.Show();
-        }
-
-        void frDebug_onFormClose(object sender, EventArgs e)
-        {
-            _ShowDebug = false;
-            frDebug.Dispose();
-            frDebug = null;
-        }
-        private void CloseDebugForm()
-        {
-            if (frDebug != null)
-                frDebug.Close();
-        }
-        public void ShowDebugForm(System.Windows.Forms.Form frmParent)
-        {
-            if (frDebug == null)
-            {
-                _ShowDebug = true;
-                ShowDebugForm();
-                frDebug.Owner = frmParent;
-            }
-        }
+        
         public ClsQuery()
         {
             return;
         }
-        
+
         public ClsQuery(string strServer, string strUserName, string strPassword, string strDatabase)
         {
             m_strServer = strServer;
@@ -251,10 +199,6 @@ namespace ReksaQuery
             object[] obj = new object[2];
             obj[0] = strSource;
             obj[1] = strMessage;
-            FrmMessage frmMessage = new FrmMessage();
-            frmMessage.ShowMessage(obj);
-            frmMessage.ShowDialog();
-            frmMessage = null;
         }
 
         public static void SetDebugCon(string Guid, string Provider, string Server,
@@ -354,7 +298,7 @@ namespace ReksaQuery
         private static bool ExecDebugCommand(string strDBName, string strParam, out int DebugNo,
             string Guid)
         {
-            DebugNo = -1;            
+            DebugNo = -1;
             bool blnConFound = false;
             string ConDefDebug = "";
             if (ConDebug.ContainsKey(Guid))
@@ -434,7 +378,7 @@ namespace ReksaQuery
                 new SqlParameter() { ParameterName = "@cDb", SqlDbType = System.Data.SqlDbType.NVarChar, Value = con.Database, Direction = System.Data.ParameterDirection.Input },
                 new SqlParameter() { ParameterName = "@bDebugNo", SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output }
                 };
-                
+
                 cmd.Parameters.Add(dbPrm[0]);
                 cmd.Parameters.Add(dbPrm[1]);
                 cmd.Parameters.Add(dbPrm[2]);
@@ -587,7 +531,7 @@ namespace ReksaQuery
             //}
             return iRet;
         }
-        public bool ExecProc(string strProc, ref List<SqlParameter> dbParam, 
+        public bool ExecProc(string strProc, ref List<SqlParameter> dbParam,
             out System.Data.DataSet dsResult, out SqlCommand cmdOut, out string ErrMsg)
         {
             dsResult = null;
@@ -604,7 +548,7 @@ namespace ReksaQuery
 
         public static bool fnExecProc(string _strGuid, string strProc, string strCon, int intTimeout,
             bool ExtError, ref List<SqlParameter> dbParam,
-            bool ReplaceError, string strUser, string strUserReplace, bool UseDebug, 
+            bool ReplaceError, string strUser, string strUserReplace, bool UseDebug,
             out SqlCommand cmdOut, out string ErrMsg)
         {
             bool iRet = true;
@@ -625,7 +569,7 @@ namespace ReksaQuery
                 for (int i = 0; i < dbParam.Count; i++)
                 {
                     cmd.Parameters.Add(dbParam[i]);
-                }                   
+                }
             }
             try
             {
@@ -638,7 +582,7 @@ namespace ReksaQuery
                 if (iRet)
                 {
                     con.Open();
-                    cmd.ExecuteNonQuery();              
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (SqlException oleEx)
@@ -711,7 +655,7 @@ namespace ReksaQuery
             {
                 string ConnString = "Server = " + m_strServer + ";Initial Catalog=" + m_strDatabase + ";" + "Persist Security Info=False" +
                     ";User ID=" + m_strUserName + ";Password=" + m_strPassword + ";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                
+
                 myConn.ConnectionString = ConnString;
                 myConn.Open();
                 myComm.Connection = myConn;

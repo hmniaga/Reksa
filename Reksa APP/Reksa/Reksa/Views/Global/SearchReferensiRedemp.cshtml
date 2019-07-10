@@ -41,9 +41,8 @@
     $("#ReferensiRedempSelectButton").on("click", function () {
         var selectedRefID = $("#ReferensiRedempSelectedRefID").val();
         var selectedtanggalTransaksi = $("#ReferensiRedempSelectedtanggalTransaksi").val();
-        var tgltransaksi = new Date(selectedtanggalTransaksi);
         $("input[id='srcNoRefRedemp_text1']").val(selectedRefID).change();
-        $("input[id='srcNoRefRedemp_text2']").val(tgltransaksi.getDate() + '/' + (tgltransaksi.getMonth() + 1) + '/' + tgltransaksi.getFullYear());
+        $("input[id='srcNoRefRedemp_text2']").val(selectedtanggalTransaksi);
 
     });
 
@@ -67,7 +66,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.RefID).Title("No Referensi");
-                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd/MM/yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.TanggalTransaksi).Title("Tanggal Transaksi");
                     })
                     .ToolBar(toolbar =>
                     {

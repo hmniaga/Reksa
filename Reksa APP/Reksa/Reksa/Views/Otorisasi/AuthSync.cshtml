@@ -96,12 +96,6 @@
 
     function onSelect(e) {
         SelectedTree = this.dataItem(e.node);
-        if ((SelectedTree.id == "REKSA8") || (SelectedTree.id == "REKSA6")) {
-            $("#btnReject").hide();
-        }
-        else {
-            $("#btnReject").show();
-        }
         subPopulateGridMain();        
     }
 
@@ -378,8 +372,6 @@
                 url: '/Otorisasi/PopulateGridMain',
                 data: { treename: treename, strPopulate: strPopulate, SelectedId: SelectedId },
                 success: function (data) {
-                    console.log(treeid);
-                    console.log(data);
                     if (data.blnResult) {
                         $("#GridOtorisasiDetail").empty();
                         populateGrid(data.dsResult.table);
@@ -443,7 +435,9 @@
                         }
 
                     }
-                    else {
+                    else
+                    {
+                            swal("Warning", data.ErrMsg, "warning");
                             $("#GridOtorisasi").empty();
                             $("#GridOtorisasiDetail").empty();            
                     }

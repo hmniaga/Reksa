@@ -41,11 +41,8 @@
     $("#ReferensiRDBSelectButton").on("click", function () {
         var selectedRefID = $("#ReferensiRDBSelectedRefID").val();
         var selectedtanggalTransaksi = $("#ReferensiRDBSelectedtanggalTransaksi").val();
-
-        var tgltransaksi = new Date(selectedtanggalTransaksi);
-
         $("input[id='srcNoRefRDB_text1']").val(selectedRefID).change();
-        $("input[id='srcNoRefRDB_text2']").val(tgltransaksi.getDate() + '/' + (tgltransaksi.getMonth() + 1) + '/' + tgltransaksi.getFullYear());
+        $("input[id='srcNoRefRDB_text2']").val(selectedtanggalTransaksi);
 
     });
 

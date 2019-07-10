@@ -84,7 +84,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, listProcess });
         }
-
         public JsonResult subProcess(string SPName, int ProcessId)
         {
             bool blnResult = false;
@@ -101,6 +100,31 @@ namespace Reksa.Controllers
                     string stringData = response.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, listProcess });
+        }
+        public ActionResult PopulateNAVParameter([FromBody] UploadNAV model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<ProcessModel> listProcess = new List<ProcessModel>();
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Utilitas/PopulateNAVParameter?NIK=" + _intNIK + "&Guid=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
                     blnResult = strObject.SelectToken("blnResult").Value<bool>();
                     ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                 }

@@ -10,7 +10,6 @@
             </h4>
         </div>
         <div class="panel-body">
-
             <div class="card-box">
                 <!-- Begin Button -->
                 <div>
@@ -21,11 +20,126 @@
                             </span>
                             Process
                         </button>
+                        <button id="button1" class="btn btn-primary waves-effect waves-light" style="margin-right:10px">
+                            <span class="btn-label">
+                                <i class="fa fa-refresh"></i>
+                            </span>
+                            Retrieve Data
+                        </button>
                     </div>
                 </div>
                 <!-- End Button -->
             </div>
-            Cut Off Premi Asuransi
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Period</label>
+                    <div class="input-group">
+                        @(Html.Kendo().DatePicker().Name("datePeriod").HtmlAttributes(new { style = "width: 200px;" }))
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="portlet">
+                        <div class="portlet-heading bg-custom">Data Premi Asuransi</div>
+                        <div class="portlet-body">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Period</label>
+                                    <div class="input-group">
+                                        <label id="lblPeriod"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Total Row</label>
+                                    <div class="input-group">
+                                        <label id="lblTotalRow"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Total Nominal Premi</label>
+                                    <div class="input-group">
+                                        <label id="lblTotalPremi" hidden="hidden"></label>
+                                        @Html.Kendo().NumericTextBox().Name("_premiTotal").HtmlAttributes(new { @id = "_premiTotal", @style = "width:150px;" }).Min(0).Decimals(0).Enable(false)
+                                        <span class="input-group-btn"></span>
+                                        <label>&nbsp;&nbsp;&nbsp;IDR</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        Reset();
+        $("#button1").click(function () {
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var datePeriod = toDate($("#datePeriod").val());
+            $("#lblPeriod").text(months[datePeriod.getMonth()] + " - " + datePeriod.getFullYear());            
+
+            $.ajax({
+                type: 'GET',
+                url: '/Report/ReksaReportRDN63',
+                data: { Period: $("#datePeriod").val() },
+                success: function (data)
+                {
+                    if (data.blnResult)
+                    {
+                        $("#lblTotalRow").text(data.dsReport.Table.Rows.length);
+                        $("#_premiTotal").data("kendoNumericTextBox").value(data.TotalPremi);
+                        $("#btnProcess").prop('disabled', false);
+                    }
+                    else
+                    {
+                        swal("Warning", data.ErrMsg, "warning");
+                        $("#btnProcess").prop('disabled', true);
+                    }
+                }
+            });
+        });
+    });
+
+    function toDate(dateStr) {
+        var [day, month, year] = dateStr.split("/")
+        return new Date(year, month - 1, day)
+    }
+
+    function Reset()
+    {
+        $("#btnProcess").prop('disabled', true);
+        var today = new Date();
+        var datePeriod = new Date(today.getFullYear(), today.getMonth(), '0');
+
+        $("#datePeriod").val(datePeriod.getDate() + '/' + pad((datePeriod.getMonth() + 1), 2) + '/' + datePeriod.getFullYear());
+        $("#lblTotalRow").text('');
+        $("#_premiTotal").data("kendoNumericTextBox").value(0);
+    }
+
+    function pad(num, size) {
+        var s = "000000000" + num;
+        return s.substr(s.length - size);
+    }
+
+    function subProcess()
+    {
+        $.ajax({
+            type: 'POST',
+            url: '/PO/CutPremiAsuransi',
+            data: { Period: $("#datePeriod").val(), TotalPremi: $("#_premiTotal").val() },
+            success: function (data) {
+                if (data.blnResult)
+                {
+                    swal("Success", "Bill premi asuransi berhasil terbentuk, Bill Id = " + data.BillID, "success");
+                    Reset();
+                }
+                else
+                {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+
+</script>

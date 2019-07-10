@@ -191,8 +191,6 @@ namespace ReksaAPI
             }
             return list;
         }
-
-
         public string fnCreateCommand1(string strCmd, DataTable SelectedTable, int intNIK, string strGuid, 
             out List<SqlParameter> parameters, out string selectedId, Int32 intDSMainRow)
         {
@@ -240,6 +238,78 @@ namespace ReksaAPI
                     param.Direction = System.Data.ParameterDirection.InputOutput;
 
                 if ((strParams[3] == "@cNik") || (strParams[3] == "@pnNIK"))
+                {
+                    param.Value = intNIK;
+                }
+                else if (strParams[3] == "@pcGuid")
+                {
+                    param.Value = strGuid;
+                }
+                else if (strParams[4].Substring(0, 1) == "!")
+                {
+                    string strColName = strParams[4].Replace("!", "");
+                    param.Value = SelectedTable.Rows[intDSMainRow][strColName].ToString();
+                    selectedId = SelectedTable.Rows[intDSMainRow][strColName].ToString();
+                }
+                else if (strParams[4].Substring(0, 1) != "")
+                    param.Value = strParams[4];
+
+                parameters.Add(param);
+            }
+            strCmd = strArCmd[0];
+            return strCmd;
+        }
+        public string fnCreateCommand2(string strNodeKey, string strCmd, DataTable SelectedTable, int intNIK, string strGuid,
+            out List<SqlParameter> parameters, out string selectedId, Int32 intDSMainRow)
+        {
+            selectedId = "";
+            string[] strArCmd = strCmd.Split('&');
+            string[] strParams;
+
+            parameters = new List<SqlParameter>();
+
+            Int32 intCounter = 0;
+
+            for (intCounter = 1; intCounter < strArCmd.Length; intCounter++)
+            {
+                SqlParameter param = new SqlParameter();
+                strParams = strArCmd[intCounter].Split('|');
+
+                if (strParams[0] == "I")
+                {
+                    param.ParameterName = strParams[3];
+                    param.SqlDbType = System.Data.SqlDbType.Int;
+                }
+
+                else if (strParams[0] == "V")
+                {
+                    param.ParameterName = strParams[3];
+                    param.SqlDbType = System.Data.SqlDbType.VarChar;
+                    param.Size = System.Convert.ToInt32(strParams[1]);
+                }
+                else if (strParams[0] == "M")
+                {
+                    param.ParameterName = strParams[3];
+                    param.SqlDbType = System.Data.SqlDbType.Decimal;
+                }
+                else if (strParams[0] == "B")
+                {
+                    param.ParameterName = strParams[3];
+                    param.SqlDbType = System.Data.SqlDbType.TinyInt;
+                }
+
+                if (strParams[2] == "I")
+                    param.Direction = System.Data.ParameterDirection.Input;
+                else if (strParams[2] == "O")
+                    param.Direction = System.Data.ParameterDirection.Output;
+                else if (strParams[2] == "IO")
+                    param.Direction = System.Data.ParameterDirection.InputOutput;
+
+                if ((strParams[3] == "@cJenis"))
+                {
+                    param.Value = strNodeKey;
+                }
+                else if ((strParams[3] == "@cNik"))
                 {
                     param.Value = intNIK;
                 }
@@ -2660,11 +2730,16 @@ namespace ReksaAPI
             return blnResult;
         }
         //Nico
-        public void ReksaPopulateMFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ReksaParamMFee> listReksaParamMFee, ref List<ReksaProductMFee> listReksaProductMFee, ref List<ReksaListGLMFee> listReksaListGLMFee)
+        public bool ReksaPopulateMFee(int intNIK, string strModule, int intProdId, string strTrxType, 
+            ref List<ReksaParamMFee> listReksaParamMFee, 
+            ref List<PercentTieringMFee> listReksaProductMFee, 
+            ref List<SettingGLMFee> listReksaListGLMFee,
+            out string ErrMsg)
         {
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
+            bool blnResult = false;
+            ErrMsg = "";
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -2675,7 +2750,9 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+
+                if(blnResult)
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
@@ -2684,8 +2761,8 @@ namespace ReksaAPI
                         DataTable dtOut3 = dsOut.Tables[2];
 
                         List<ReksaParamMFee> resultReksaParamMFee = this.MapListOfObject<ReksaParamMFee>(dtOut1);
-                        List<ReksaProductMFee> resultReksaProductMFee = this.MapListOfObject<ReksaProductMFee>(dtOut2);
-                        List<ReksaListGLMFee> resultReksaListGLMFee = this.MapListOfObject<ReksaListGLMFee>(dtOut3);
+                        List<PercentTieringMFee> resultReksaProductMFee = this.MapListOfObject<PercentTieringMFee>(dtOut2);
+                        List<SettingGLMFee> resultReksaListGLMFee = this.MapListOfObject<SettingGLMFee>(dtOut3);
 
                         listReksaParamMFee.AddRange(resultReksaParamMFee);
                         listReksaProductMFee.AddRange(resultReksaProductMFee);
@@ -2695,19 +2772,22 @@ namespace ReksaAPI
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
+            return blnResult;
         }
         //End Nico
 
         //Harja
-        public void ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType,
+        public bool ReksaPopulateUpFrontSellFee(int intNIK, string strModule, int intProdId, string strTrxType,
             ref List<ReksaParamUpFrontSelling> listReksaParamFee,
-            ref List<ReksaListGLUpFrontSelling> listReksaListGL)
+            ref List<ReksaListGLUpFrontSelling> listReksaListGL, out string ErrMsg)
         {
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
+
+            bool blnResult = false;
+            ErrMsg = "";
             try
             {
                 strTrxType = strTrxType.ToUpper().Replace("FEE", "").Trim();
@@ -2719,7 +2799,8 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if(blnResult)
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
@@ -2736,17 +2817,24 @@ namespace ReksaAPI
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
+            return blnResult;
         }
 
         //Harja End
         //Indra
-        public void ReksaPopulateRedempFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ParameterRedempFee> listRedempFee, ref List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif, ref List<ParameterRedempFeeGL> listRedempFeeGL, ref List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering)
+        public bool ReksaPopulateRedempFee(int intNIK, string strModule, int intProdId, string strTrxType, 
+            ref List<ParameterRedempFee> listRedempFee, 
+            ref List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif, 
+            ref List<ParameterRedempFeeGL> listRedempFeeGL, 
+            ref List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering,
+            out string ErrMsg)
         {
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
+            bool blnResult = false;
+            ErrMsg = "";
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -2757,7 +2845,9 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+
+                if(blnResult)
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
@@ -2769,7 +2859,7 @@ namespace ReksaAPI
                         List<ParameterRedempFee> resultRedempFee = this.MapListOfObject<ParameterRedempFee>(dtOut1);
                         List<ParameterRedempFeeTieringNotif> resultRedempFeeTieringNotif = this.MapListOfObject<ParameterRedempFeeTieringNotif>(dtOut2);
                         List<ParameterRedempFeeGL> resultRedempFeeGL = this.MapListOfObject<ParameterRedempFeeGL>(dtOut3);
-                        List<ParameterRedempFeePercentageTiering> resultRedempFeePercentageTiering = this.MapListOfObject<ParameterRedempFeePercentageTiering>(dtOut3);
+                        List<ParameterRedempFeePercentageTiering> resultRedempFeePercentageTiering = this.MapListOfObject<ParameterRedempFeePercentageTiering>(dtOut4);
 
                         listRedempFee.AddRange(resultRedempFee);
                         listRedempFeeTieringNotif.AddRange(resultRedempFeeTieringNotif);
@@ -2780,15 +2870,59 @@ namespace ReksaAPI
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
+            return blnResult;
         }
         //Indra end
-        public bool ReksaMaintainSubsFee(int intNIK, string strModule, int intProdId,
-            decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
-            decimal decMaxPctFeeNonEmployee, System.IO.StringWriter XMLTieringNotif, System.IO.StringWriter XMLSettingGL, 
-            string strProcessType,
+        public bool ReksaPopulateSwcFee(int intNIK, string strModule, int intProdId, string strTrxType,
+            ref List<ReksaParamFeeSwc> ParamSwcFee,
+            ref List<ParameterSwcFeeTieringNotif> listSwcFeeTieringNotif,
+            ref List<SettingGLSwcFee> listSwcFeeGL,
             out string ErrMsg)
+        {
+            DataSet dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@nProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cTrxType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strTrxType, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateParamFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+
+                if (blnResult)
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut1 = dsOut.Tables[0];
+                        DataTable dtOut2 = dsOut.Tables[1];
+                        DataTable dtOut3 = dsOut.Tables[2];
+
+                        List<ReksaParamFeeSwc> resultRedempFee = this.MapListOfObject<ReksaParamFeeSwc>(dtOut1);
+                        List<ParameterSwcFeeTieringNotif> resultRedempFeeTieringNotif = this.MapListOfObject<ParameterSwcFeeTieringNotif>(dtOut2);
+                        List<SettingGLSwcFee> resultRedempFeeGL = this.MapListOfObject<SettingGLSwcFee>(dtOut3);
+
+                        ParamSwcFee.AddRange(resultRedempFee);
+                        listSwcFeeTieringNotif.AddRange(resultRedempFeeTieringNotif);
+                        listSwcFeeGL.AddRange(resultRedempFeeGL);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
+        public bool ReksaMaintainSubsFee(MaintainFeeSubs model, out string ErrMsg)
         {
             bool blnResult = false;
             DataSet dsOut = new DataSet();
@@ -2796,18 +2930,37 @@ namespace ReksaAPI
             ErrMsg = "";
             try
             {
+                string XMLTieringNotif = "";
+                string XMLSettingGL = "";
+
+                DataTable dttTieringNotif = new DataTable();
+                DataTable dttSettingGL = new DataTable();
+
+                dttTieringNotif = ListConverter.ToDataTable<listTieringSubsFee>(model.dtTieringSubsFee);
+                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.dtSettingGL);
+
+                System.IO.StringWriter writer = new System.IO.StringWriter();
+                dttTieringNotif.TableName = "TieringNotif";
+                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLTieringNotif = writer.ToString();
+
+                writer = new System.IO.StringWriter();
+                dttSettingGL.TableName = "SettingGL";
+                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLSettingGL = writer.ToString();
+
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.ProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.minPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.maxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.minPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.maxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLTieringNotif", SqlDbType = System.Data.SqlDbType.NVarChar, Value = XMLTieringNotif.ToString(), Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLSettingGL", SqlDbType = System.Data.SqlDbType.NVarChar, Value = XMLSettingGL.ToString(), Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = strProcessType, Direction = System.Data.ParameterDirection.Input}
+                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = model.TrxType, Direction = System.Data.ParameterDirection.Input}
                 };
 
                 blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainSubsFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
@@ -2818,89 +2971,142 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        public void ReksaMaintainMFee(int intNIK, string strModule, int intProdId,
-            int intPeriodEfektif, string XMLTieringMFee, string XMLSettingGL, string strProcessType,
-            out string ErrMsg)
+        public bool ReksaMaintainMFee(MaintainMaitencanceFee model, out string ErrMsg)
         {
             bool blnResult = false;
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
             ErrMsg = "";
+
+            string XMLTieringNotif = "";
+            string XMLSettingGL = "";
+
+            DataTable dttTieringNotif = new DataTable();
+            DataTable dttSettingGL = new DataTable();
+
+            dttTieringNotif = ListConverter.ToDataTable<PercentTieringMFee>(model.listPercentTiering);
+            dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+
+            System.IO.StringWriter writer = new System.IO.StringWriter();
+            dttTieringNotif.TableName = "TieringMFee";
+            dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            XMLTieringNotif = writer.ToString();
+
+            writer = new System.IO.StringWriter();
+            dttSettingGL.TableName = "SettingGL";
+            dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+            XMLSettingGL = writer.ToString();
+            
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnPeriodEfektif", SqlDbType = System.Data.SqlDbType.Int, Value = intPeriodEfektif, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pvcXMLTieringMFee", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLTieringMFee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.intProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnPeriodEfektif", SqlDbType = System.Data.SqlDbType.Int, Value = model.intPeriodEfektif, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pvcXMLTieringMFee", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLTieringNotif, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLSettingGL", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLSettingGL, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = strProcessType, Direction = System.Data.ParameterDirection.Input}
+                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = model.strProcessType, Direction = System.Data.ParameterDirection.Input}
                 };
 
-                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainMFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainMFee", ref dbParam, out cmdOut, out ErrMsg);
             }
             catch (Exception ex)
             {
                 ErrMsg = ex.Message.ToString();
             }
+            return blnResult;
         }
-        public void ReksaMaintainRedempFee(int intNIK, string strModule, int intProdId,
-            decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
-            decimal decMaxPctFeeNonEmployee, string XMLTieringNotif, string XMLSettingGL, string strProcessType,
-            bool IsFlat, int intNonFlatPeriod, bool RedempIncFeeout, string XMLTieringPctRedemp, string ErrMsg)
+        public bool ReksaMaintainRedempFee(MaintainRedempFee model, out string ErrMsg)
         {
             bool blnResult = false;
+            ErrMsg = "";
+
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            ErrMsg = "";
             try
             {
+                string XMLTieringNotif = "";
+                string XMLSettingGL = "";
+                string XMLTieringPctRedemp = "";
+
+                DataTable dttTieringNotif = new DataTable();
+                DataTable dttSettingGL = new DataTable();
+                DataTable dttTieringPctRedemp = new DataTable();
+
+                dttTieringNotif = ListConverter.ToDataTable<ParameterRedempFeeTieringNotif>(model.listTieringNotif);
+                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+                dttTieringPctRedemp = ListConverter.ToDataTable<ParameterRedempFeePercentageTiering>(model.listTieringPct);
+
+                System.IO.StringWriter writer = new System.IO.StringWriter();
+                dttTieringNotif.TableName = "TieringNotif";
+                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLTieringNotif = writer.ToString();
+
+                writer = new System.IO.StringWriter();
+                dttSettingGL.TableName = "SettingGL";
+                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLSettingGL = writer.ToString();
+
+                writer = new System.IO.StringWriter();
+                dttTieringPctRedemp.TableName = "RedemPeriod";
+                dttTieringPctRedemp.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLTieringPctRedemp = writer.ToString();
+
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.intProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMinPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMaxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMinPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMaxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLTieringNotif", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLTieringNotif, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLSettingGL", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLSettingGL, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = strProcessType, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pbIsFlat", SqlDbType = System.Data.SqlDbType.Bit, Value = IsFlat, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnNonFlatPeriod", SqlDbType = System.Data.SqlDbType.Int, Value = intNonFlatPeriod, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pbRedempIncFee", SqlDbType = System.Data.SqlDbType.Bit, Value = RedempIncFeeout, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = model.strProcessType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pbIsFlat", SqlDbType = System.Data.SqlDbType.Bit, Value = model.IsFlat, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNonFlatPeriod", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNonFlatPeriod, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pbRedempIncFee", SqlDbType = System.Data.SqlDbType.Bit, Value = model.RedempIncFeeout, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLTieringPctRedemp", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLTieringPctRedemp, Direction = System.Data.ParameterDirection.Input}
                  };
 
-                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainRedempFee", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
-
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainRedempFee", ref dbParam, out cmdOut, out ErrMsg);
             }
             catch (Exception ex)
             {
                 ErrMsg = ex.Message;
             }
+            return blnResult;
         }
-        public void ReksaMaintainUpfrontSellingFee(int intNIK, string strModule, int intProdId,
-          string XMLSettingGL, string strProcessType, string strJenisFee, decimal decPercentageDefault,
-          out string ErrMsg)
+        public bool ReksaMaintainUpfrontSellingFee(MaintainUpfrontSellingFee model, out string ErrMsg)
         {
             bool blnResult = false;
             SqlCommand cmdOut = new SqlCommand();
             ErrMsg = "";
             try
             {
+                string XMLSettingGL = "";
+                DataTable dttSettingGL = new DataTable();
+                
+                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+
+                System.IO.StringWriter writer = new System.IO.StringWriter();
+                writer = new System.IO.StringWriter();
+                dttSettingGL.TableName = "SettingGL";
+                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLSettingGL = writer.ToString();
+                
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.intProdId, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLSettingGL", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLSettingGL, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = strProcessType, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcJenisFee", SqlDbType = System.Data.SqlDbType.VarChar, Value = strJenisFee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pdPercentageDefault", SqlDbType = System.Data.SqlDbType.Decimal, Value = decPercentageDefault, Direction = System.Data.ParameterDirection.Input}
+                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = model.strProcessType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcJenisFee", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strJenisFee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdPercentageDefault", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decPercentageDefault, Direction = System.Data.ParameterDirection.Input}
                };
 
                 blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainUpfrontSellingFee", ref dbParam, out cmdOut, out ErrMsg);
@@ -2909,41 +3115,56 @@ namespace ReksaAPI
             {
                 ErrMsg = ex.Message;
             }
+            return blnResult;
         }
-        public void ReksaMaintainSwcFee(int intNIK, string strModule, int intProdId,
-            decimal decMinPctFeeEmployee, decimal decMaxPctFeeEmployee, decimal decMinPctFeeNonEmployee,
-            decimal decMaxPctFeeNonEmployee, string XMLTieringNotif, string XMLSettingGL, string strProcessType,
-            decimal decSwitchingFeeout, string ErrMsg)
+        public bool ReksaMaintainSwcFee(MaintainSwcFee model, out string ErrMsg)
         {
             bool blnResult = false;
             SqlCommand cmdOut = new SqlCommand();
             ErrMsg = "";
             try
             {
+                string XMLTieringNotif = "";
+                string XMLSettingGL = "";
+
+                DataTable dttTieringNotif = new DataTable();
+                DataTable dttSettingGL = new DataTable();
+
+                dttTieringNotif = ListConverter.ToDataTable<ParameterSwcFeeTieringNotif>(model.listTieringNotif);
+                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+
+                System.IO.StringWriter writer = new System.IO.StringWriter();
+                dttTieringNotif.TableName = "TieringNotif";
+                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLTieringNotif = writer.ToString();
+
+                writer = new System.IO.StringWriter();
+                dttSettingGL.TableName = "SettingGL";
+                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLSettingGL = writer.ToString();
+
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMinPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decMaxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.intProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMinPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMaxPctFeeEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMinPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMinPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnMaxPctFeeNonEmployee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decMaxPctFeeNonEmployee, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLTieringNotif", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLTieringNotif, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pvcXMLSettingGL", SqlDbType = System.Data.SqlDbType.Xml, Value = XMLSettingGL, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = strProcessType, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pdSwitchingFee", SqlDbType = System.Data.SqlDbType.Decimal, Value = decSwitchingFeeout, Direction = System.Data.ParameterDirection.Input}
+                    new SqlParameter() { ParameterName = "@pcProcessType", SqlDbType = System.Data.SqlDbType.Char, Value = model.strProcessType, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdSwitchingFee", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.decSwitchingFeeout, Direction = System.Data.ParameterDirection.Input}
                 };
 
-                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainSwcFee", ref dbParam, out cmdOut, out ErrMsg);
-                {
-                    ErrMsg = _errorMessage;
-                }
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainSwcFee", ref dbParam, out cmdOut, out ErrMsg);                
             }
             catch (Exception ex)
             {
                 ErrMsg = ex.Message;
             }
+            return blnResult;
         }
         public void ReksaGetPercentTax(out decimal decPercentTax)
         {
@@ -3374,6 +3595,62 @@ namespace ReksaAPI
             catch (Exception ex)
             {
                 blnResult = false;
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaCutPremiAsuransi(DateTime Period, int intNIK, decimal TotalPremi, out int BillId, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            BillId = 0;
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriod", SqlDbType = System.Data.SqlDbType.DateTime, Value = Period, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdTotalNominal", SqlDbType = System.Data.SqlDbType.Decimal, Value = TotalPremi, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnBillId", SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaCutPremiAsuransi", ref dbParam, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    int.TryParse(cmdOut.Parameters["@pnBillId"].Value.ToString(), out BillId);
+                }
+                else
+                {
+                    ErrMsg = "Proses pembentukan bill gagal !";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaPopulateSubscriptionLimitAlert(int intNIK, string strModule, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateSubscriptionLimitAlert", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
                 ErrMsg = ex.Message;
             }
             return blnResult;
@@ -4077,7 +4354,7 @@ namespace ReksaAPI
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
                     new SqlParameter() { ParameterName = "@pnType", Value = model.intType, SqlDbType = System.Data.SqlDbType.TinyInt, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcTranType", Value = model.strTranType, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnTranType", Value = model.strTranType, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pcTranCode", Value = model.strTranCode, SqlDbType = System.Data.SqlDbType.Char, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pnTranId", Value = model.intTranId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output},
                     new SqlParameter() { ParameterName = "@pdTranDate", Value = model.dtTranDate, SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Input},
@@ -5122,6 +5399,42 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaReportRDN63(DateTime Period, out decimal TotalPremi, out DataSet dsResult, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            TotalPremi = 0;
+            dsResult = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pdPeriod", SqlDbType = System.Data.SqlDbType.DateTime, Value = Period, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pdTotalPremi", SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Output}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaReportRDN63", ref dbParam, out dsResult, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    if (dsResult.Tables[0].Rows.Count > 0)
+                    {
+                        decimal.TryParse(cmdOut.Parameters["@pdTotalPremi"].Value.ToString(), out TotalPremi);
+                    }
+                    else
+                    {
+                        ErrMsg = "Data tidak ditemukan!";
+                        blnResult = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
 
         #region "OTORISASI"
@@ -5490,8 +5803,86 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaViewApprovalReject(out string ErrMsg, out DataSet dsResult)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            dsResult = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaViewApprovalReject", ref dbParam, out dsResult, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaRejectBooking(out string ErrMsg, out DataSet dsResult)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            dsResult = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRejectBooking", ref dbParam, out dsResult, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaRejectBookingApproval(out string ErrMsg, out DataSet dsResult)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            dsResult = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRejectBookingApproval", ref dbParam, out dsResult, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaPopulateVerifyParamFeeDetail(int intNIK, string strModule, int intSubsId, string strJenisFee, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnSubsID", SqlDbType = System.Data.SqlDbType.Int, Value = intSubsId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cJenisFee", SqlDbType = System.Data.SqlDbType.VarChar, Value = strJenisFee, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateVerifyParamFeeDetail", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
-        
+
         #region "UTILITAS"
         public bool ReksaPopulateProcess(int intNIK, string strGuid, ref List<ProcessModel> listProcess, out string ErrMsg)
         {
@@ -5529,7 +5920,6 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-
         public bool SPProcess(string SPName, int ProcessId, int intNIK, string strGuid, out string ErrMsg)
         {
             bool blnResult = false;
@@ -5551,6 +5941,51 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaPopulateNAVParameter(UploadNAV model, int intNIK, string strGuid, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+
+            string XMLString = "";
+            DataTable dttXML = new DataTable();
+
+            dttXML = ListConverter.ToDataTable<listNAV>(model.listNAV);
+
+
+            XMLString += "<ROOT>";
+            for (int i = 0; i < dttXML.Rows.Count; i++)
+            {
+                if (dttXML.Rows[i][0].ToString() != null)
+                {
+                    XMLString += "<RS ";
+
+                    for (int j = 0; j < dttXML.Columns.Count; j++)
+                    {
+                        XMLString += dttXML.Columns[j].ColumnName + "=\"" + dttXML.Rows[i][j].ToString() + "\" ";
+                    }
+
+                    XMLString += "></RS>";
+                }
+            }
+            XMLString += "</ROOT>";
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcInput", SqlDbType = System.Data.SqlDbType.VarChar, Value = XMLString, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input }
+                };
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateNAVParameter", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }        
         #endregion
     }
 }

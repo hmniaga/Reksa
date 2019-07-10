@@ -484,7 +484,7 @@
                     EnableFieldNPWP(1);                    
                 }
                 else {
-                    //swal("Warning", data.ErrMsg, "warning");
+                    swal("Warning", data.ErrMsg, "warning");
                     subClearAll();
                 }
             }
@@ -613,7 +613,7 @@
             });   
 
         _intType = 0;
-        subResetToolBar();
+        subResetToolbar();
     }
 
     function subSave()
@@ -1017,7 +1017,7 @@
                         _intType = 0;
                         subDisableAll(_intType);
                         subRefresh();
-                        subResetToolBar();
+                        subResetToolbar();
                     }
                     else {
                         swal("Error MaintainBlokir", data.strErrMsg, "error");
@@ -1314,6 +1314,18 @@
 
     $('a[data-toggle=tab]').click(function () {
         _strTabName = this.id;
+        if ((_intType != 1) || (_intType != 2)) {
+
+            //_dvAkses.RowFilter = "InterfaceTypeId = '" + _strTabName + "'";
+            subResetToolbar();
+        }
+
+        //if ((_strTabName == "MCA") || (_strTabName == "MCB")) {
+        //    cmpsrCIF.Enabled = false;
+        //}
+        //else {
+        //    cmpsrCIF.Enabled = true;
+        //}
     });
 
     //$(function () {
@@ -1369,7 +1381,14 @@
         $("#maskedRekeningMC").val(data.CustomerIdentitas.AccountIdMC);
         $("#tbNamaRekeningMC").val(data.CustomerIdentitas.AccountNameMC);
         $("#cbStatus").data('kendoDropDownList').value(data.CustomerIdentitas.IsEmployee);
-        $("#srcEmployee_text1").val(data.CustomerIdentitas.CIFNik);
+        if (data.CustomerIdentitas.IsEmployee == "0") {
+            $("#srcEmployee_text1").val('');
+            $("#srcEmployee_text2").val('');
+        }
+        else
+        {
+            $("#srcEmployee_text1").val(data.CustomerIdentitas.CIFNik);
+        }       
 
         ValidateReferentor($("#srcEmployee_text1").val(), function (output) {
             $("#srcEmployee_text2").val(output);
@@ -1447,7 +1466,7 @@
         }
         $("#OutsUnit").val(data.BlokirModel.decOutStanding);
         $("#MoneyTotal").val(data.BlokirModel.decTotal);
-        subResetToolBar();
+        subResetToolbar();
     }
 
     function RefreshNPWP(data) {

@@ -32,23 +32,23 @@
 
     function onRowClientSelect(e) {
         var data = this.dataItem(this.select());
-        var dataId = $.trim(data.id);
-        var dataValue = $.trim(data.ClientName);
+        var dataClientCode = $.trim(data.ClientCode);
+        var dataClientName = $.trim(data.ClientName);
         var dataClientId = $.trim(data.ClientId);
 
-        $("#ClientSelectedId").val(dataId);
-        $("#ClientSelectedText").val(dataValue);
+        $("#ClientSelectedClientCode").val(dataClientCode);
+        $("#ClientSelectedClientName").val(dataClientName);
         $("#ClientSelectedClientId").val(dataClientId);
     };
 
     $("#ClientSelectButton").on("click", function () {
-        var selectedId = $("#ClientSelectedId").val();
-        var selectedText = $("#ClientSelectedText").val();
+        var selectedClientCode = $("#ClientSelectedClientCode").val();
+        var selectedClientName = $("#ClientSelectedClientName").val();
         var selectedClientId = $("#ClientSelectedClientId").val();
 
-        $("input[name='ClientModel.ClientCode']").val(selectedId).change();
-        $("input[name='ClientModel.ClientName']").val(selectedText);
-        $("input[name='ClientModel.ClientId']").val(selectedClientId);
+        $("input[name='ClientModel.ClientCode']").val(selectedClientCode).change();
+        $("input[name='ClientModel.ClientName']").val(selectedClientName);
+        $("input[name='ClientModel.ClientId']").val(selectedClientId).change();
     });
 
     $("#ClientSearchComponentSearchTxt").on("keypress", function (e) {
@@ -67,44 +67,48 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.ClientModel>()
-            .Name("ClientSearchComponentGrid")
-            .Columns(columns =>
-            {
-                columns.Bound(m => m.ClientCode).Width(150).Title("Client Code");
-                columns.Bound(m => m.ClientName).Width(500).Title("Client Name");
-            })
-            @*.ToolBar(toolbar =>
-            {
-                toolbar.Template(@<text>
-                <div class="toolbar">
-                    @Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search)
-                    @(Html.Kendo().Button()
-                            .HtmlAttributes(new { type = "button" })
-                            .Name("ClientSearchComponentSearchBtn")
-                            .Content("Search")
-                            .Events(ev => ev.Click("onSearchClient"))
-                    )
-                </div>
-                </text>);
-            })*@
-            .Events(events => events.Change("onRowClientSelect"))
-            .Pageable()
-            .Scrollable()
-            .Selectable(selectable => selectable
-                .Mode(GridSelectionMode.Single))
-            .DataSource(dataSource => dataSource
-                .Ajax()
-                .PageSize(20)
-                .Model(model =>
-                {
-                    model.Id(m => m.ClientCode);
-                })
-                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria, ProdId = ProdId }))
-            )
+                            .Name("ClientSearchComponentGrid")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(m => m.ClientCode).Width(150).Title("Client Code");
+                                columns.Bound(m => m.ClientName).Width(500).Title("Client Name");
+                            })
+                            /**/
+                            /**/
+                            @*.ToolBar(toolbar =>
+                            {
+                                toolbar.Template(@<text>
+                                <div class="toolbar">
+                                    @Html.Kendo().TextBox().Name("ClientSearchComponentSearchTxt").Value(search)
+                                    @(Html.Kendo().Button()
+                                            .HtmlAttributes(new { type = "button" })
+                                            .Name("ClientSearchComponentSearchBtn")
+                                            .Content("Search")
+                                            .Events(ev => ev.Click("onSearchClient"))
+                                    )
+                                </div>
+                                </text>);
+                            })*@
+                            /**/
+                            /**/
+                            .Events(events => events.Change("onRowClientSelect"))
+                            .Pageable()
+                            .Scrollable()
+                            .Selectable(selectable => selectable
+                                .Mode(GridSelectionMode.Single))
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(20)
+                                .Model(model =>
+                                {
+                                    model.Id(m => m.ClientCode);
+                                })
+                                .Read(read => read.Action("SearchClientData", "Global", new { search = search, criteria = criteria, ProdId = ProdId }))
+                            )
         )
 
-        <input type="hidden" id="ClientSelectedId" name="ClientSelectedId" value="" />
-        <input type="hidden" id="ClientSelectedText" name="ClientSelectedText" value="" />
+        <input type="hidden" id="ClientSelectedClientCode" name="ClientSelectedClientCode" value="" />
+        <input type="hidden" id="ClientSelectedClientName" name="ClientSelectedClientName" value="" />
         <input type="hidden" id="ClientSelectedClientId" name="ClientSelectedClientId" value="" />
     </div>
     <div class="modal-footer">

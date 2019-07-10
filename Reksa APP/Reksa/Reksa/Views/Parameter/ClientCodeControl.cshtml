@@ -5,11 +5,82 @@
     ViewData["Title"] = "Tutup Client Code";
 }
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="m-t-0 header-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Tutup Client Code</a>
-        </h4>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="m-t-0 header-title">
+                <a>Non-Aktivasi Client Code</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <!-- Begin Button -->
+                        <div>
+                            <div class="input-group">
+                                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-refresh"></i>
+                                    </span>
+                                    Refresh
+                                </button>
+                                <button id="btnTutup" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-plus"></i>
+                                    </span>
+                                    Tutup
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Button -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Client Code</label>
+                                <div class="input-group col-md-4">
+                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @style = "width: 100px;", @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
+                                    <span class="input-group-btn">
+                                        <a id="srcClient" href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2", @style = "width: 300px;" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
+                                    @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Outstanding</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("MoneyNom").HtmlAttributes(new { style = "width: 220px;" }).Enable(false).Min(0)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    Tutup Client Code
 </div>
+<div class="modal fade" id="ClientModal" tabindex="-1" role="dialog" aria-labelledby="ClientModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        //click
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+        $("#btnTutup").click(function () {
+            subUpdate();
+        });
+    });
+
+</script>

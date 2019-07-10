@@ -79,7 +79,7 @@ namespace Reksa.Models
         public string ClientId { get; set; }
         public string CIFNo { get; set; }
         public DateTime JoinDate { get; set; }
-        public bool IsEmployee { get; set; }
+        public string IsEmployee { get; set; }
         public string IsRDB { get; set; }
     }
     public class ClientSwitchIn

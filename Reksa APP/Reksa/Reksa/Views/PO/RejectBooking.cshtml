@@ -15,17 +15,59 @@
                 <!-- Begin Button -->
                 <div>
                     <div class="input-group">
-                        <button id=btnProcess class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                        <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                            <span class="btn-label">
+                                <i class="fa fa-refresh"></i>
+                            </span>
+                            Refresh
+                        </button>
+                        <button id=btnProcess class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
                             <span class="btn-label">
                                 <i class="fa fa-cogs"></i>
                             </span>
-                            Process
+                            Reject
                         </button>
                     </div>
                 </div>
                 <!-- End Button -->
             </div>
-            Reject Booking & Cancel Transaction
+
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" style="background-color:#efefef;border-style:double;">
+                    <li class="active"><a data-toggle="tab" href="#tab-reject" id="MCI"><i class="fa fa-info-circle"></i>  Reject Booking</a></li>
+                    <li><a data-toggle="tab" href="#tab-aktifitas" id="MCA"><i class="fa fa-history"></i>  Delete Transaction</a></li>
+                </ul>
+                <div class="tab-content" style="border-style:double">
+                    <div id="tab-reject" class="tab-pane fade in active">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dataGridView1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="tab-delete" class="tab-pane fade">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dataGridView2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        var grid = {
+            height: 400
+        };
+        $("#dataGridView1").kendoGrid(grid);
+        $("#dataGridView2").kendoGrid(grid);
+    });
+
+</script>

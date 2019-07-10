@@ -139,7 +139,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Karyawan</label>
                         <div class="input-group col-sm-6">
-                            @(Html.Kendo().DropDownList().Name("cbStatus").BindTo(new List<SelectListItem>() {new SelectListItem() {Text = "Karyawan",Value = "0"},new SelectListItem() {Text = "Non Karyawan",Value = "1"}}).DataTextField("Text").DataValueField("Value").Value("0"))
+                            @(Html.Kendo().DropDownList().Name("cbStatus").BindTo(new List<SelectListItem>() {new SelectListItem() {Text = "Karyawan",Value = "1"},new SelectListItem() {Text = "Non Karyawan",Value = "0"}}).DataTextField("Text").DataValueField("Value").Value("1"))
                         </div>
                     </div>
                     <!-- End DropDown Status Karyawan -->
@@ -151,7 +151,7 @@
                             <span class="input-group-btn">
                                 <a id="srcEmployee" href="@Url.Action("SearchEmployee", "Global")" data-toggle="modal" data-target="#NIKModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.Referentor.NAME).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcEmployee_text2" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.Referentor.NAME).HtmlAttributes(new { @style = "width:200px", @class = "form-control input-sm col-md-3", @id = "srcEmployee_text2" }).Enable(false)
                         </div>
                     </div>
                     <!-- End Search NIK -->

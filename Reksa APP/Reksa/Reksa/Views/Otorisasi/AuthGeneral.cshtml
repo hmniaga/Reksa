@@ -372,14 +372,15 @@
         treename = SelectedTree.text;
         var strPopulate = SelectedTree.spriteCssClass;
         var SelectedId = '';
+        console.log(strPopulate);
+        console.log(treename);
+        console.log(treeid);
         if (treename != 'Authorization') {
             $.ajax({
                 type: 'GET',
                 url: '/Otorisasi/PopulateGridMain',
                 data: { treename: treename, strPopulate: strPopulate, SelectedId: SelectedId },
                 success: function (data) {
-                    console.log(treeid);
-                    console.log(data);
                     if (data.blnResult) {
                         $("#GridOtorisasiDetail").empty();
                         populateGrid(data.dsResult.table);

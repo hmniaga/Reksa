@@ -57,7 +57,6 @@ namespace ReksaAPI.Models
         public decimal minPctFeeNonEmployee { get; set; }
         public decimal maxPctFeeNonEmployee { get; set; }
     }
-
     public class ReksaTieringNotificationSubs
     {
         public string TrxType { get; set; }
@@ -80,6 +79,8 @@ namespace ReksaAPI.Models
 
     public class MaintainFeeSubs
     {
+        public int intNIK { get; set; }
+        public string strModule { get; set; }
         public string TrxType { get; set; }
         public int ProdId { get; set; }
         public decimal minPctFeeEmployee { get; set; }
@@ -133,7 +134,7 @@ namespace ReksaAPI.Models
         public int PeriodEfektif { get; set; }
     }
     
-    public class ReksaProductMFee
+    public class PercentTieringMFee
     {
         public decimal AUMMin { get; set; }
         public decimal AUMMax { get; set; }
@@ -142,7 +143,7 @@ namespace ReksaAPI.Models
         public decimal MaintenanceFee { get; set; }
     }
 
-    public class ReksaListGLMFee
+    public class SettingGLMFee
     {
         public string TrxType { get; set; }
         public int ProdId { get; set; }
@@ -174,5 +175,124 @@ namespace ReksaAPI.Models
         public int NIK { get; set; }
         public string Module { get; set; }
         public string ProcessType { get; set; }
+    }
+    public class ParameterRedempFee
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public double MinPctFeeNonEmployee { get; set; }
+        public double MaxPctFeeNonEmployee { get; set; }
+        public double MinPctFeeEmployee { get; set; }
+        public double MaxPctFeeEmployee { get; set; }
+        public bool IsFlat { get; set; }
+        public int NonFlatPeriod { get; set; }
+        public int RedempIncFee { get; set; }
+        public bool IsRedempIncFeeTrue { get { return RedempIncFee == 1; } set { this.RedempIncFee = 1; } }
+        public bool IsRedempIncFeeFalse { get { return RedempIncFee != 1; } set { this.RedempIncFee = 0; } }
+    }
+    public class ParameterRedempFeeGL
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public int Sequence { get; set; }
+        public string GLName { get; set; }
+        public string GLNumber { get; set; }
+        public decimal Percentage { get; set; }
+        public string OfficeId { get; set; }
+    }
+    public class ParameterRedempFeePercentageTiering
+    {
+        public int ProductId { get; set; }
+        public string Status { get; set; }
+        public decimal PercentageFee { get; set; }
+        public int Period { get; set; }
+        public double Nominal { get; set; }
+
+    }
+    public class ParameterRedempFeeTieringNotif
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public decimal PercentFrom { get; set; }
+        public decimal PercentTo { get; set; }
+        public string MustApproveBy { get; set; }
+    }
+    public class MaintainRedempFee
+    {
+        public int intNIK { get; set; }
+        public string strModule { get; set; }
+        public int intProdId { get; set; }
+        public decimal decMinPctFeeEmployee { get; set; }
+        public decimal decMaxPctFeeEmployee { get; set; }
+        public decimal decMinPctFeeNonEmployee { get; set; }
+        public decimal decMaxPctFeeNonEmployee { get; set; }
+        public List<ParameterRedempFeeTieringNotif> listTieringNotif { get; set; }
+        public List<ListSettingGL> listSettingGL { get; set; }
+        public List<ParameterRedempFeePercentageTiering> listTieringPct { get; set; }
+        public string strProcessType { get; set; }
+        public bool IsFlat { get; set; }
+        public int intNonFlatPeriod { get; set; }
+        public bool RedempIncFeeout { get; set; }
+    }
+    public class MaintainMaitencanceFee
+    {
+        public int intNIK { get; set; }
+        public string strModule { get; set; }
+        public int intProdId { get; set; }
+        public int intPeriodEfektif { get; set; }
+        public List<PercentTieringMFee> listPercentTiering { get; set; }
+        public List<ListSettingGL> listSettingGL { get; set; }
+        public string strProcessType { get; set; }
+    }
+    public class MaintainUpfrontSellingFee
+    {
+        public int intNIK { get; set; }
+        public string strModule { get; set; }
+        public int intProdId { get; set; }
+        public List<ListSettingGL> listSettingGL { get; set; }
+        public string strProcessType { get; set; }
+        public string strJenisFee { get; set; }
+        public decimal decPercentageDefault { get; set; }
+    }
+    public class MaintainSwcFee
+    {
+        public int intNIK { get; set; }
+        public string strModule { get; set; }
+        public int intProdId { get; set; }
+        public decimal decMinPctFeeEmployee { get; set; }
+        public decimal decMaxPctFeeEmployee { get; set; }
+        public decimal decMinPctFeeNonEmployee { get; set; }
+        public decimal decMaxPctFeeNonEmployee { get; set; }
+        public List<ParameterSwcFeeTieringNotif> listTieringNotif { get; set; }
+        public List<ListSettingGL> listSettingGL { get; set; }
+        public string strProcessType { get; set; }
+        public decimal decSwitchingFeeout { get; set; }
+    }
+    public class SettingGLSwcFee
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public int Sequence { get; set; }
+        public string GLName { get; set; }
+        public int GLNumber { get; set; }
+        public decimal Percentage { get; set; }
+        public string OfficeId { get; set; }
+    }
+    public class ParameterSwcFeeTieringNotif
+    {
+        public string TrxType { get; set; }
+        public int ProdId { get; set; }
+        public decimal PercentFrom { get; set; }
+        public decimal PercentTo { get; set; }
+        public string MustApproveBy { get; set; }
+    }
+    public class ReksaParamFeeSwc
+    {
+        public string trxType { get; set; }
+        public int prodId { get; set; }
+        public decimal minPctFeeEmployee { get; set; }
+        public decimal maxPctFeeEmployee { get; set; }
+        public decimal minPctFeeNonEmployee { get; set; }
+        public decimal maxPctFeeNonEmployee { get; set; }
     }
 }

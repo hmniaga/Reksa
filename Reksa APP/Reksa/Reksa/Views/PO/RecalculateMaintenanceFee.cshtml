@@ -10,22 +10,108 @@
             </h4>
         </div>
         <div class="panel-body">
-
-            <div class="card-box">
-                <!-- Begin Button -->
-                <div>
-                    <div class="input-group">
-                        <button id=btnProcess class="btn btn-default waves-effect waves-light" style="margin-right:10px">
-                            <span class="btn-label">
-                                <i class="fa fa-cogs"></i>
-                            </span>
-                            Process
-                        </button>
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <!-- Begin Button -->
+                        <div>
+                            <div class="input-group">
+                                <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                    Preview
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Button -->
                     </div>
                 </div>
-                <!-- End Button -->
             </div>
-            Recalculate Maintenance Fee
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nama File</label>
+                                <div class="input-group col-md-6" id="filename">
+                                    <input id="txtbPath" type="file" accept=".csv, .txt, .xls" class="filestyle" data-iconname="fa fa-upload">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Bank Custody</label>
+                                <div class="input-group col-md-5">
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="_cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#CustodyModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Produk</label>
+                                <div class="input-group col-md-5">
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="_cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dgvPreview"></div>
+                        </div>
+                        <div class="col-md-12 text-center" style="padding-bottom:20px;padding-top:20px;">
+                            <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                <span class="btn-label">
+                                    <i class="fa fa-upload"></i>
+                                </span>
+                                Upload
+                            </button>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dgvUpload"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" id="CustodyModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        var grid = {
+            height: 200
+        };
+        $("#dgvPreview").kendoGrid(grid);
+        $("#dgvUpload").kendoGrid(grid);
+        //click
+        $("#btnRefresh").click(function () {
+            subRefresh();
+        });
+        $("#btnEdit").click(function () {
+            subUpdate();
+        });
+        $("#btnSave").click(function () {
+            subSave();
+        });
+        $("#btnCancel").click(function () {
+            subCancel();
+        });
+    });
+
+</script>

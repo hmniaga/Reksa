@@ -5,11 +5,63 @@
     ViewData["Title"] = "Upload Waperd";
 }
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="m-t-0 header-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true">Upload Waperd</a>
-        </h4>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="m-t-0 header-title">
+                <a>Upload Waperd</a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <!-- Begin Button -->
+                        <div>
+                            <div class="input-group">
+                                <button id=btnProcess class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-cogs"></i>
+                                    </span>
+                                    Process
+                                </button>
+                            </div>
+                        </div>
+                        <!-- End Button -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">File Name</label>
+                                <div class="input-group col-md-6" id="filename">
+                                    <input id="txtbPath" type="file" accept=".csv, .txt, .xls" class="filestyle" data-iconname="fa fa-upload">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="dataGridView1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    Upload Waperd
 </div>
+<script>
+    $(document).ready(function () {
+
+        var grid = {
+            height: 200
+        };
+        $("#dataGridView1").kendoGrid(grid);
+        //click
+        $("#btnSave").click(function () {
+            subSave();
+        });
+    });
+
+</script>

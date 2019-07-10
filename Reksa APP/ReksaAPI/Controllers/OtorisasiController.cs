@@ -290,6 +290,17 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaCekTieringNotification - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
-        
+        [Route("api/Otorisasi/PopulateVerifyParamFeeDetail")]
+        [HttpPost("{id}")]
+        public JsonResult PopulateVerifyParamFeeDetail([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]int SubsId, [FromQuery]string JenisFee)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateVerifyParamFeeDetail(NIK, Module, SubsId, JenisFee, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyParamFeeDetail - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
     }
 }

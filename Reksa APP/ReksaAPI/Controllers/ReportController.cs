@@ -240,5 +240,21 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaReportRDN26 - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsReport });
         }
+        [Route("api/Report/ReksaReportRDN63")]
+        [HttpGet("{id}")]
+        public JsonResult ReksaReportRDN63([FromQuery]string Period)
+        {
+            bool blnResult;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+            decimal TotalPremi = 0;
+
+            DateTime dtPeriod = new DateTime();
+            DateTime.TryParseExact(Period, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtPeriod);
+
+            blnResult = cls.ReksaReportRDN63(dtPeriod, out TotalPremi, out dsReport, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaReportRDN63 - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsReport, TotalPremi });
+        }
     }
 }

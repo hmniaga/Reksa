@@ -563,7 +563,7 @@ namespace Reksa.Controllers
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                    HttpResponseMessage response = client.GetAsync("api/Transaction/GetLatestNAV?ProdId=" + ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/GetLatestNAV?ProdId=" + ProdId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
                     string strJson = response.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(strJson);
@@ -597,7 +597,7 @@ namespace Reksa.Controllers
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
 
-                    HttpResponseMessage response = client.GetAsync("api/Transaction/CalculateBookingFee?CIFNo=" + CIFNo + "&Amount=" + BookingAmount + "&ProductCode=" + ProductCode + "&IsByPercent=" + ByPercent + "&IsFeeEdit=" + IsFeeEdit + "&PercentageFeeInput=" + PercentageFeeInput).Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/CalculateBookingFee?CIFNo=" + CIFNo + "&Amount=" + BookingAmount + "&ProductCode=" + ProductCode + "&IsByPercent=" + ByPercent + "&IsFeeEdit=" + IsFeeEdit + "&PercentageFeeInput=" + PercentageFeeInput).Result;
                     string strJson = response.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(strJson);
@@ -641,7 +641,7 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
 
-                    var request = client.PostAsync("api/Transaction/CalculateSwitchingFee", Content);
+                    var request = client.PostAsync("/api/Transaction/CalculateSwitchingFee", Content);
                     var response = request.Result.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(response);
@@ -678,7 +678,7 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
 
-                    var request = client.PostAsync("api/Transaction/CalculateSwitchingRDBFee", Content);
+                    var request = client.PostAsync("/api/Transaction/CalculateSwitchingRDBFee", Content);
                     var response = request.Result.Content.ReadAsStringAsync().Result;
 
                     JObject strObject = JObject.Parse(response);

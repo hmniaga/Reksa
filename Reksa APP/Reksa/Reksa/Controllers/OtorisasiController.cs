@@ -53,12 +53,20 @@ namespace Reksa.Controllers
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             return View("AuthDeleteTransaksi", vModel);
         }
+        public ActionResult AuthParamFeeDetail(string JenisFee, string SubsId, string Product)
+        {
+            ViewBag.JenisFee = JenisFee;
+            ViewBag.SubsId = SubsId;
+            ViewBag.Product = Product;
+            return View();
+        }
         [Authorize(Policy = "SPV")]
         public ActionResult ParameterFee()
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
             listTree = GetCommonTreeView("mnuAuthorizeParamFee");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
             var items = new List<CommonTreeViewModel>();
             var root = listTree[0];
             for (int i = 0; i < listTree.Count; i++)
@@ -88,6 +96,7 @@ namespace Reksa.Controllers
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             List<TreeViewModel> listTree = new List<TreeViewModel>();
             listTree = GetTreeView("mnuAuthorizeParamGlobal");
+            _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
             var items = new List<TreeViewModel>();
             var root = listTree[0];
             for (int i = 0; i < listTree.Count; i++)
@@ -212,7 +221,7 @@ namespace Reksa.Controllers
         {
             OtorisasiListViewModel vModel = new OtorisasiListViewModel();
             List<CommonTreeViewModel> listTree = new List<CommonTreeViewModel>();
-            listTree = GetCommonTreeView("mnuAuthorizeBill");
+            listTree = GetCommonTreeView("mnuAuthorizeSync");
             _session.SetString("listTreeJson", JsonConvert.SerializeObject(listTree));
             var items = new List<CommonTreeViewModel>();
             var root = listTree[0];
@@ -360,6 +369,10 @@ namespace Reksa.Controllers
                 else if (treeid == "REKPO4" || treeid == "REKWS3")
                 {
                     dv1.RowFilter = " id in (" + filter + ")";
+                }
+                else if (treeid == "RKPF01" || treeid == "RKPF02" || treeid == "RKPF03" || treeid == "RKPF04" || treeid == "RKPF05" || treeid == "RKPF06")
+                {
+                    dv1.RowFilter = " subsId in (" + filter + ")";
                 }
                 DataTable dtNew = dv1.ToTable();
                 if (dtNew == null || dtNew.Columns.Count == 0)
@@ -898,6 +911,81 @@ namespace Reksa.Controllers
                 ErrMsg = ex.Message;
             }
             return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PopulateGridMainParamFee(string treename, string strPopulate, string SelectedId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            var EncodedstrPopulate = System.Net.WebUtility.UrlEncode(strPopulate);
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GlobalQuery2?strPopulate=" + EncodedstrPopulate + "&SelectedId=" + SelectedId + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    if (dsResult.Tables.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, dsResult });
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult PopulateVerifyParamFeeDetail(int SubsId, string JenisFee)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/PopulateVerifyParamFeeDetail?NIK=" + _intNIK + "&Module=" + strModule + "&SubsId=" + SubsId + "&JenisFee=" + JenisFee).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult.Tables.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, dsResult });
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
     }
 }

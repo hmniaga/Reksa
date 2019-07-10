@@ -19,7 +19,6 @@ namespace ReksaAPI.Controllers
             _config = iconfig;
             cls = new clsDataAccess(_config);
         }
-
         [Route("api/Parameter/Refresh")]
         [HttpGet("{id}")]
         public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface, [FromQuery]int NIK, [FromQuery]string Guid)
@@ -29,7 +28,6 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaRefreshParameter(ProdId, TreeInterface, NIK, Guid);
             return Json(list);
         }
-
         [Route("api/Parameter/RefreshWARPED")]
         [HttpGet("{id}")]
         public JsonResult RefreshWARPED([FromQuery]int NIK)
@@ -40,7 +38,6 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaGetDataPeopleSoft(NIK, ref strErrMsg, out strData);
             return Json(new { blnResult, strErrMsg, strData });
         }        
-
         [Route("api/Parameter/PopulateParamFee")]
         [HttpGet("{id}")]
         public JsonResult PopulateParamFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
@@ -55,71 +52,20 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, listReksaParamFeeSubs, listReksaTieringNotificationSubs, listReksaListGLFeeSubs });
         }
-
         [Route("api/Parameter/MaintainSubsFee")]
         [HttpGet("{id}")]
         public JsonResult MaintainSubsFee([FromQuery]int NIK, [FromQuery]string Module, [FromBody]MaintainFeeSubs model)
         {
             bool blnResult = false ;
             string ErrMsg = "";
-            DataTable dtTieringSubsFee = new DataTable();
-            dtTieringSubsFee.Columns.Add("PercentFrom");
-            dtTieringSubsFee.Columns.Add("PercentTo");
-            dtTieringSubsFee.Columns.Add("Persetujuan");
-            dtTieringSubsFee.Columns["PercentFrom"].DataType = System.Type.GetType("System.Decimal");
-            dtTieringSubsFee.Columns["PercentTo"].DataType = System.Type.GetType("System.Decimal");
 
-            DataTable dtSettingGL = new DataTable();
-            dtSettingGL.Columns.Add("Seq");
-            dtSettingGL.Columns.Add("NamaGL");
-            dtSettingGL.Columns.Add("NomorGL");
-            dtSettingGL.Columns.Add("OfficeId");
-            dtSettingGL.Columns.Add("Persentase");
-            dtSettingGL.Columns["Persentase"].DataType = System.Type.GetType("System.Decimal");
-            if (model.dtSettingGL != null)
-            {
-                for (int i = 0; i < model.dtSettingGL.Count; i++)
-                {
-                    DataRow dtrGL = dtSettingGL.NewRow();
-                    dtrGL["Seq"] = model.dtSettingGL[i].Seq;
-                    dtrGL["NamaGL"] = model.dtSettingGL[i].NamaGL;
-                    dtrGL["NomorGL"] = model.dtSettingGL[i].NomorGL;
-                    dtrGL["OfficeId"] = model.dtSettingGL[i].OfficeId;
-                    dtrGL["Persentase"] = model.dtSettingGL[i].Persentase;
-                    dtSettingGL.Rows.Add(dtrGL);
-                }
-            }
-            if (model.dtTieringSubsFee != null)
-            {
-                for (int i = 0; i < model.dtTieringSubsFee.Count; i++)
-                {
-                    DataRow dtrGL = dtTieringSubsFee.NewRow();
-                    dtrGL["PercentFrom"] = model.dtTieringSubsFee[i].PercentFrom;
-                    dtrGL["PercentTo"] = model.dtTieringSubsFee[i].PercentTo;
-                    dtrGL["Persetujuan"] = model.dtTieringSubsFee[i].Persetujuan;
-                    dtTieringSubsFee.Rows.Add(dtrGL);
-                }
-            }
+            model.intNIK = NIK;
+            model.strModule = Module;
 
-            System.IO.StringWriter strXMLSettingGL = new System.IO.StringWriter();
-            dtSettingGL.TableName = "SettingGL";
-            dtSettingGL.WriteXml(strXMLSettingGL, System.Data.XmlWriteMode.IgnoreSchema, false);
-
-            System.IO.StringWriter strXMLTieringNotif = new System.IO.StringWriter();
-            dtTieringSubsFee.TableName = "TieringNotif";
-            dtTieringSubsFee.WriteXml(strXMLTieringNotif, System.Data.XmlWriteMode.IgnoreSchema, false);
-
-            blnResult = cls.ReksaMaintainSubsFee(NIK, Module, 
-                model.ProdId, 
-                model.minPctFeeEmployee, 
-                model.maxPctFeeEmployee, 
-                model.minPctFeeNonEmployee, 
-                model.maxPctFeeNonEmployee, strXMLTieringNotif, strXMLSettingGL, model.TrxType, out ErrMsg);
-
+            blnResult = cls.ReksaMaintainSubsFee(model, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaMaintainSubsFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
-
         [Route("api/Parameter/ValidateGL")]
         [HttpGet("{id}")]
         public JsonResult ValidateGL([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string NomorGL)
@@ -131,8 +77,7 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaValidateGL(NIK, Module, NomorGL, out strNamaGL, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaValidateGL - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, strNamaGL });
-        }
-        
+        }        
         [Route("api/Parameter/PopulateVerifyGlobalParam")]
         [HttpGet("{id}")]
         public JsonResult PopulateVerifyGlobalParam([FromQuery]string ProdId, [FromQuery]string InterfaceId, [FromQuery]int NIK)
@@ -141,7 +86,6 @@ namespace ReksaAPI.Controllers
             dsOut = cls.ReksaPopulateVerifyGlobalParam("", InterfaceId, NIK);
             return Json(dsOut);
         }
-
         [Route("api/Parameter/MaintainParameterGlobal")]
         [HttpGet("{id}")]
         public JsonResult MaintainParameterGlobal([FromBody] MaintainParamGlobal MaintParamGlobal, [FromQuery]int NIK, [FromQuery] string GUID)
@@ -266,21 +210,21 @@ namespace ReksaAPI.Controllers
 
             return Json(new { blnResult, strErrMsg });
         }
-        
-
         //Nico
         [Route("api/Parameter/PopulateMFee")]
         [HttpGet("{id}")]
         public JsonResult PopulateParamMFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
         {
             List<ReksaParamMFee> listReksaParamMFee = new List<ReksaParamMFee>();
-            List<ReksaProductMFee> listReksaProductMFees = new List<ReksaProductMFee>();
-            List<ReksaListGLMFee> listReksaListGLMFee = new List<ReksaListGLMFee>();
+            List<PercentTieringMFee> listReksaProductMFees = new List<PercentTieringMFee>();
+            List<SettingGLMFee> listReksaListGLMFee = new List<SettingGLMFee>();
 
-            DataSet dsOut = new DataSet();
-            cls.ReksaPopulateMFee(NIK, strModule, ProdId, TrxType, ref listReksaParamMFee, ref listReksaProductMFees, ref listReksaListGLMFee);
-            //return Json(dsOut);
-            return Json(new { listReksaParamMFee, listReksaProductMFees, listReksaListGLMFee });
+            bool blnResult = false;
+            string ErrMsg = "";
+            
+            blnResult = cls.ReksaPopulateMFee(NIK, strModule, ProdId, TrxType, ref listReksaParamMFee, ref listReksaProductMFees, ref listReksaListGLMFee, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listReksaParamMFee, listReksaProductMFees, listReksaListGLMFee });
         }
         //Nico End
         //indra start
@@ -288,32 +232,48 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult PopulateParamRedempFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             List<ParameterRedempFee> listRedempFee = new List<ParameterRedempFee>();
             List<ParameterRedempFeeTieringNotif> listRedempFeeTieringNotif = new List<ParameterRedempFeeTieringNotif>();
             List<ParameterRedempFeeGL> listRedempFeeGL = new List<ParameterRedempFeeGL>();
             List<ParameterRedempFeePercentageTiering> listRedempFeePercentageTiering = new List<ParameterRedempFeePercentageTiering>();
 
-            DataSet dsOut = new DataSet();
-            cls.ReksaPopulateRedempFee(NIK, strModule, ProdId, TrxType, ref listRedempFee, ref listRedempFeeTieringNotif, ref listRedempFeeGL, ref listRedempFeePercentageTiering);
-            //return Json(dsOut);
-            return Json(new { listRedempFee, listRedempFeeTieringNotif, listRedempFeeGL, listRedempFeePercentageTiering });
+            blnResult = cls.ReksaPopulateRedempFee(NIK, strModule, ProdId, TrxType, ref listRedempFee, ref listRedempFeeTieringNotif, ref listRedempFeeGL, ref listRedempFeePercentageTiering, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listRedempFee, listRedempFeeTieringNotif, listRedempFeeGL, listRedempFeePercentageTiering });
         }
         //indra end
-
         //Harja
         [Route("api/Parameter/PopulateUpFrontSellingFee")]
         [HttpGet("{id}")]
         public JsonResult PopulateParamUpFrontSelling([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             List<ReksaParamUpFrontSelling> listReksaParamFee = new List<ReksaParamUpFrontSelling>();
             List<ReksaListGLUpFrontSelling> listReksaListGL = new List<ReksaListGLUpFrontSelling>();
 
             DataSet dsOut = new DataSet();
-            cls.ReksaPopulateUpFrontSellFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFee, ref listReksaListGL);
-            //return Json(dsOut);
-            return Json(new { listReksaParamFee, listReksaListGL });
+            blnResult = cls.ReksaPopulateUpFrontSellFee(NIK, strModule, ProdId, TrxType, ref listReksaParamFee, ref listReksaListGL, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listReksaParamFee, listReksaListGL });
         }
         //Harja End
+        [Route("api/Parameter/PopulateSwcFee")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateSwcFee([FromQuery]int NIK, [FromQuery]string strModule, [FromQuery]int ProdId, [FromQuery]string TrxType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            List<ReksaParamFeeSwc> listSwcFee = new List<ReksaParamFeeSwc>();
+            List<ParameterSwcFeeTieringNotif> listSwcFeeTieringNotif = new List<ParameterSwcFeeTieringNotif>();
+            List<SettingGLSwcFee> listSwcFeeGL = new List<SettingGLSwcFee>();
+
+            blnResult = cls.ReksaPopulateSwcFee(NIK, strModule, ProdId, TrxType, ref listSwcFee, ref listSwcFeeTieringNotif, ref listSwcFeeGL, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateParamFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listSwcFee, listSwcFeeTieringNotif, listSwcFeeGL });
+        }
         [Route("api/Parameter/GetDropDownList")]
         [HttpGet("{id}")]
         public JsonResult GetDropDownList([FromQuery]string ListName)
@@ -324,6 +284,50 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaGetDropDownList(ListName, out listParam, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaGetDropDownList - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, listParam });
+        }
+        [Route("api/Parameter/MaintainRedempFee")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainRedempFee([FromBody]MaintainRedempFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainRedempFee(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainRedempFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Parameter/MaintainMFee")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainMFee([FromBody]MaintainMaitencanceFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainMFee(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainMFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Parameter/MaintainUpfrontSellingFee")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainUpfrontSellingFee([FromBody]MaintainUpfrontSellingFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainUpfrontSellingFee(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainUpfrontSellingFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Parameter/MaintainSwcFee")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainSwcFee([FromBody]MaintainSwcFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainSwcFee(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainUpfrontSellingFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
         }        
     }
 }

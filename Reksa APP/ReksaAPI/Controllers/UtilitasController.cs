@@ -38,5 +38,15 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace(SPName+ " - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
+        [Route("api/Utilitas/PopulateNAVParameter")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateNAVParameter([FromBody]UploadNAV model, [FromQuery]int NIK, [FromQuery]string Guid)
+        {
+            bool blnResult;
+            string ErrMsg;
+            blnResult = cls.ReksaPopulateNAVParameter(model, NIK, Guid, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateNAVParameter - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

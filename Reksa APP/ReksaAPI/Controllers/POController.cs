@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReksaAPI.Models;
@@ -163,6 +164,33 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaGetLastFeeDate - Core .Net SqlClient Data Provider\n", "");
 
             return Json(new { blnResult, ErrMsg, dtStartDate });
+        }
+        [Route("api/PO/CutPremiAsuransi")]
+        [HttpGet("{id}")]
+        public JsonResult CutPremiAsuransi([FromQuery]string Period, [FromQuery]int NIK, [FromQuery]decimal TotalPremi)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int BillID = 0;
+            DateTime dtPeriod = new DateTime();
+            DateTime.TryParseExact(Period, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtPeriod);
+
+            blnResult = cls.ReksaCutPremiAsuransi(dtPeriod, NIK, TotalPremi, out BillID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCutPremiAsuransi - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, BillID });
+        }
+
+        [Route("api/PO/ReksaPopulateSubscriptionLimitAlert")]
+        [HttpPost("{id}")]
+        public JsonResult ReksaPopulateSubscriptionLimitAlert([FromQuery]int NIK, [FromQuery]string Module)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateSubscriptionLimitAlert(NIK, Module, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateSubscriptionLimitAlert - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
     }
 }

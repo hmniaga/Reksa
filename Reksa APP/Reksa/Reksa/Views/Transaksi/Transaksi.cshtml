@@ -119,7 +119,11 @@ var _strTabName;
 var _intType;
 var IsSubsNew;
 var _StatusTransaksiSubs;
-var strBranch;
+    var strBranch;
+    var _NAVSwcOutNonRDB = 0;
+    var _NAVSwcInNonRDB = 0;
+    var OutstandingUnitSwcIn = 0;
+
     var Today = new Date();
     var strBranch = '@Html.Raw(ViewBag.strBranch)';
     var ByPercent = false;
@@ -127,8 +131,7 @@ var strBranch;
     var IsRedempAll;
     var IsSwitchingAll;
     var globalJatuhTempoRDB;
-    var _NAVSwcOutNonRDB;
-    var _NAVSwcInNonRDB;
+    
 
     $(document).ready(function () {
         $('#tabs a[href="#tab-subscription"]').trigger('click');
@@ -543,6 +546,71 @@ var strBranch;
         $('#srcClientRedemp').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
         });  
 
+    $("#srcProductSwcOut_text1").change(function () {
+        var strCriteria = $('#srcCIFSwc_text1').val() + "#" + $('#srcProductSwcOut_text1').val() + "#" + _strTabName + "#0";
+        var url = '@Html.Raw(Url.Action("SearchTrxClientSwcOut", "Global"))';
+        $('#srcClientSwcOut').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
+
+        var strCriteria = $('#srcProductSwcOut_text1').val();
+        var url = '@Html.Raw(Url.Action("SearchClientSwcIn", "Global"))';
+        $('#srcClientSwcIn').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
+
+        var res = GetLatestNAV($("#ProdIdSwcOut").val());
+        res.success(function (data) {
+            if (data.blnResult)
+            {                
+                _NAVSwcOutNonRDB = data.NAV;
+                console.log(_NAVSwcOutNonRDB);
+            }
+        });
+    });  
+
+    $("#srcProductSwcIn_text1").change(function () {
+        if ($("#srcProductSwcIn_text1").val() != "")
+        {
+            var strCriteria = $('#ProdIdSwcIn').val() + "#" + $('#srcCIFSwc_text1').val() + "#0";
+            var url = '@Html.Raw(Url.Action("SearchClientSwcIn", "Global"))';
+            $('#srcClientSwcIn').attr('href', url + '?criteria=' + encodeURIComponent(strCriteria)); 
+
+            var res = GetLatestNAV($("#ProdIdSwcIn").val());
+            res.success(function (data) {
+                if (data.blnResult)
+                {
+                    _NAVSwcInNonRDB = data.NAV;
+                }
+            });
+            if (_intType == 1)
+            {
+                var ClientCodeSwcIn = "";
+
+                var res = CheckIsSubsNew($("#srcCIFSwc_text1").val(), $("#ProdIdSwcIn").val(), false);
+                res.success(function (data) {
+                    if (data.blnResult) {
+                        IsSubsNew = data.IsSubsNew;
+                        ClientCodeSwcIn = data.strClientCode;
+                        console.log(IsSubsNew);
+                    }
+                    else {
+                        IsSubsNew = false;
+                        ClientCodeSwcIn = "";
+                        swal("Warning", data.ErrMsg, "warning");
+                    }
+                });
+
+                if (IsSubsNew) {
+                    $("#srcClientSwcIn_text1").prop('disabled', true);
+                    $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                }
+                else 
+                {
+                    $("#srcClientSwcIn_text1").prop('disabled', true);
+                    $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                    $("#srcClientSwcIn_text1").val(ClientCodeSwcIn);
+                    //cmpsrClientSwcIn.ValidateField();
+                }
+            }
+        }        
+    });  
 
     $("#srcClientRedemp_text1").change(function ()
     {
@@ -566,7 +634,24 @@ var strBranch;
                 $("#OutstandingUnitSwc").data("kendoNumericTextBox").value(data.unitBalance);
             }
         });
-    });  
+    }); 
+
+        $("#srcClientSwcIn_text1").change(function () {
+            if (!IsSubsNew) {
+                var res = GetLatestBalance($("#ClientIdSwcIn").val());
+                res.success(function (data) {
+                    console.log(data);
+                    if (data.blnResult) {
+                        OutstandingUnitSwcIn = data.unitBalance;
+                    }
+                });
+            }
+            else
+            {
+                OutstandingUnitSwcIn = 0;
+            }
+    }); 
+
 
     $("#srcCurrencySubs_text1").change(function () {
             $("#labelFeeCurrencySubs").val($("#srcCurrencySubs_text1").val());
@@ -761,20 +846,22 @@ var strBranch;
             //    return;
             //}
             
-            intProductId = $("#ProdIdSubs").val();
+        intProductId = $("#ProdIdSubs").val();
 
-            var ClientCodeSubsAdd;
-            ClientCodeSubsAdd = "";
-
-            CheckIsSubsNew($("#srcCIFSubs_text1").val(), intProductId, false,
-                function (IsSubsNew) {
-                    IsSubsNew = IsSubsNew;
-                },
-                function (ClientCodeSubsAdd) {
-                    strNewClientCode = ClientCodeSubsAdd;
-                    return strNewClientCode;
-                }
-            );
+        var ClientCodeSubsAdd = "";
+           
+        var res = CheckIsSubsNew($("#srcCIFSubs_text1").val(), intProductId, false);
+        res.success(function (data) {
+            if (data.blnResult) {
+                IsSubsNew = data.IsSubsNew;
+                ClientCodeSubsAdd = data.strClientCode;
+            }
+            else {
+                IsSubsNew = false;
+                ClientCodeSubsAdd = "";
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        });
 
         if ($("#_ComboJenisSubs").text() == "By %") {
             _PercentageFee = $("#MoneyFeeSubs").val();
@@ -2010,6 +2097,7 @@ var strBranch;
             {
                 intSwcType = 5;
             }
+            console.log(IsSubsNew);
             if (IsSubsNew) {
                 intClientIdSwcIn = 0;
             }
@@ -2019,7 +2107,11 @@ var strBranch;
 
             var decUnitBalanceNomSwcOut, decUnitBalanceNomSwcIn;
 
-            decUnitBalanceNomSwcOut = nispOutstandingUnitSwc.Value * _NAVSwcOutNonRDB;
+            console.log("_NAVSwcOutNonRDB :" + _NAVSwcOutNonRDB);
+            console.log("_NAVSwcInNonRDB :" + _NAVSwcInNonRDB);
+            console.log("OutstandingUnitSwcIn :" + OutstandingUnitSwcIn);
+
+            decUnitBalanceNomSwcOut = $("#OutstandingUnitSwc").val() * _NAVSwcOutNonRDB;
             decUnitBalanceNomSwcIn = OutstandingUnitSwcIn * _NAVSwcInNonRDB;
 
             var intReferentor;
@@ -2058,7 +2150,7 @@ var strBranch;
                 'decUnitBalanceNomSwcOut': decUnitBalanceNomSwcOut,
                 'decUnitBalanceSwcIn': OutstandingUnitSwcIn,
                 'decUnitBalanceNomSwcIn': decUnitBalanceNomSwcIn,
-                'intUserSuid': '',
+                'intUserSuid': 0,
                 'isByUnit': true,
                 'intSalesId': 0,
                 'strGuid': '',
@@ -2088,6 +2180,7 @@ var strBranch;
                 'intReferentor': intReferentor,
                 'isTrxTaxAmnesty': false
             });
+            console.log(model);
             MaintainSwitching(model);
         }
     }
@@ -3725,23 +3818,13 @@ function SetEnableOfficeId(strKodeKantor) {
         }
     }
 
-    function CheckIsSubsNew(CIFNo, ProductId, IsRDB, IsSubsNew, ClientCodeSubsAdd)
+    function CheckIsSubsNew(CIFNo, ProductId, IsRDB)
     {
-        $.ajax({
+        return $.ajax({
             type: 'GET',
             url: '/Transaksi/CheckSubsType',
             data: { CIFNo: CIFNo, ProductId: ProductId, IsRDB: IsRDB },
-            success: function (data) {
-                if (data.blnResult) {
-                    IsSubsNew = data.IsSubsNew;
-                    ClientCodeSubsAdd(data.strClientCode);
-                }
-                else {
-                    IsSubsNew(false);
-                    ClientCodeSubsAdd("");
-                    swal("Warning", data.ErrMsg, "warning");
-                }
-            }
+            async: false
         });
     }
 
@@ -3926,18 +4009,11 @@ function SetEnableOfficeId(strKodeKantor) {
     }
 
     function GetLatestNAV(ProdId) {
-        $.ajax({
+       return  $.ajax({
             type: 'GET',
             url: '/Transaksi/GetLatestNAV',
             data: { ProdId: ProdId },
-            success: function (data) {
-                if (data.blnResult == true) {
-
-                }
-                else {
-
-                }
-            }
+            async: false
         });
     }
 
@@ -3979,5 +4055,28 @@ function SetEnableOfficeId(strKodeKantor) {
             }
         });
     });
+    function HitungSwitchingFee(ProdCodeSwitchOut, ProdCodeSwitchIn, Jenis, TranAmt,
+        Unit, IsEdit, PercentageInput, IsEmployee) {
+        var model = JSON.stringify({
+            'ProdSwitchOut': ProdCodeSwitchOut,
+            'ProdSwitchIn': ProdCodeSwitchIn,
+            'Jenis': Jenis,
+            'TranAmt': TranAmt,
+            'Unit': Unit,
+            'NAV': 0,
+            'IsEdit': IsEdit,
+            'PercentageInput': PercentageInput,
+            'IsEmployee': IsEmployee
+        });
+
+        return $.ajax({
+            type: 'POST',
+            data: model,
+            url: '/Transaksi/HitungSwitchingFee',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false
+        });
+    }
 </script>
 

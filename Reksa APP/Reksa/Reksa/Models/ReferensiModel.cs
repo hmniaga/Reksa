@@ -9,7 +9,6 @@ namespace Reksa.Models
     public class ReferensiModel
     {
         public string RefID { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TanggalTransaksi { get; set; }
+        public string TanggalTransaksi { get; set; }
     }
 }

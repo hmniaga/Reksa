@@ -55,6 +55,19 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaGlobalQuery(true, strCommand, listParam, out dsResult, out ErrMsg);
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/Global/GlobalQuery2")]
+        [HttpGet("{id}")]
+        public JsonResult GlobalQuery2(string strPopulate, [FromQuery]string SelectedId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult;
+            string ErrMsg;
+            DataSet dsResult = new DataSet();
+            DataTable dt = new DataTable();
+            List<SqlParameter> listParam = new List<SqlParameter>();
+            string strCommand = cls.fnCreateCommand2(SelectedId, strPopulate, dt, NIK, GUID, out listParam, out string selectedId, 0);
+            blnResult = cls.ReksaGlobalQuery(true, strCommand, listParam, out dsResult, out ErrMsg);
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
         [Route("api/Global/PopulateCombo")]
         [HttpGet]
         public JsonResult PopulateCombo()

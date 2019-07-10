@@ -448,5 +448,32 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dtStartDate });
         }
+        public JsonResult CutPremiAsuransi(string Period, decimal TotalPremi)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int BillID = 0;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/CutPremiAsuransi?Period=" + Period + "&NIK=" + _intNIK + "&TotalPremi=" + TotalPremi).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    BillID = strObject.SelectToken("BillID").Value<int>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, BillID });
+        }
     }
 }

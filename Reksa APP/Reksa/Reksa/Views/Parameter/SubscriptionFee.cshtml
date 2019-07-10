@@ -10,27 +10,33 @@
         <!-- Begin Buttons -->
         <div class="col-md-12">
             <div class="input-group">
-                <button id="btnNew" class="btn btn-default waves-effect waves-light">
+                <button id="btnRefresh" class="btn btn-primary waves-effect waves-light" style="margin-right:10px">
+                    <span class="btn-label">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    Refresh
+                </button>
+                <button id="btnNew" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                     <span class="btn-label">
                         <i class="fa fa-plus"></i>
                     </span>
                     New
                 </button>
 
-                <button id="btnEdit" class="btn btn-info waves-effect waves-light">
+                <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                     <span class="btn-label">
                         <i class="fa fa-edit"></i>
                     </span>
                     Edit
                 </button>
 
-                <button id="btnSave" style="display:none;" class="btn btn-warning waves-effect waves-light">
+                <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
                     <span class="btn-label">
                         <i class="fa fa-save"></i>
                     </span>
                     Save
                 </button>
-                <button id="btnCancel" type="button" style="display:none;" class="btn btn-pink waves-effect waves-light">
+                <button id="btnCancel" type="button" style="display:none;margin-right:10px;" class="btn btn-pink waves-effect waves-light">
                     <span class="btn-label">
                         <i class="fa fa-remove"></i>
                     </span>
@@ -50,75 +56,81 @@
     </div>
     <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
         <div class="panel-body">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Produk</label>
-                    <div class="input-group">
+                    <label class="col-sm-1 control-label">Produk</label>
+                    <div class="input-group col-md-6">
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id ="ProdCode", @class = "form-control input-sm" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "ProdName", @class = "form-control input-sm col-md-3", style = "width: 200%;" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "ProdName", @class = "form-control input-sm col-md-3", style = "width: 450px;" }).Enable(false)
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm",  @type = "Hidden" })
-
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <button id="btnRefresh" class="btn btn-default waves-effect waves-light" >
-                    <span class="btn-label">
-                        <i class="fa fa-refresh"></i>
-                    </span>
-                    Refresh
-                </button>
-            </div>
             <!-- Begin Tabs -->
             <div class="col-md-12" style="padding-top:20px">
-                <ul class="nav nav-tabs" style="background-color:#efefef">
+                <ul class="nav nav-tabs" style="background-color:#efefef;border-style:double;">
                     <li class="active"><a data-toggle="tab" href="#tab-subsfee" id="tabPage1">Subs Fee</a></li>
                     <li><a data-toggle="tab" href="#tab-tiering" id="tabPage2">Tiering Notification</a></li>
                     <li><a data-toggle="tab" href="#tab-settingGL" id="tabPage3">Setting GL</a></li>
                 </ul>
-                <div class="tab-content">
+                <div class="tab-content" style="border-style:double">
                     <!-- Begin Subs Fee -->
                     <div id="tab-subsfee" class="tab-pane fade in active">
-             
-                                <div class="col-md-6">
-                                    <div class="card-box">
-                                        <h3 class="panel-title">Percentage Non Karyawan</h3>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Minimum % Fee</label>
-                                            <div class="input-group">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMinPctNonKary", @class = "form-control input-sm" })
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-heading bg-custom">Percentage Non Karyawan</div>
+                                    <div class="portlet-body">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Minimum % Fee</label>
+                                                <div class="input-group">
+                                                    @Html.Kendo().NumericTextBox().Name("_txtMinPctNonKary").HtmlAttributes(new { @id = "_txtMinPctNonKary" }).Min(0).Decimals(2).Enable(false).Events(e => { e.Change("onChange_txtMinPctNonKary").Spin("onSpin_txtMinPctNonKary"); })
+                                                    <span class="input-group-btn"></span>
+                                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Maksimum % Fee</label>
-                                            <div class="input-group">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeNonEmployee).HtmlAttributes(new { @id = "_txtMaxPctNonKary", @class = "form-control input-sm" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card-box">
-                                        <h3 class="panel-title">Percentage Karyawan</h3>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Minimum % Fee</label>
-                                            <div class="input-group">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.minPctFeeEmployee).HtmlAttributes(new { @id = "_txtMinPctKary", @class = "form-control input-sm" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Maksimum % Fee</label>
-                                            <div class="input-group">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaParamFeeSubs.maxPctFeeEmployee).HtmlAttributes(new { @id = "_txtMaxPctKary", @class = "form-control input-sm" })
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Maksimum % Fee</label>
+                                                <div class="input-group">
+                                                    @Html.Kendo().NumericTextBox().Name("_txtMaxPctNonKary").HtmlAttributes(new { @id = "_txtMaxPctNonKary" }).Min(0).Decimals(2).Enable(false).Events(e => { e.Change("onChange_txtMaxPctNonKary").Spin("onSpin_txtMaxPctNonKary"); })
+                                                    <span class="input-group-btn"></span>
+                                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                   
+                            </div>
+                            <div class="col-md-6">
+                                <div class="portlet">
+                                    <div class="portlet-heading bg-custom">Percentage Karyawan</div>
+                                    <div class="portlet-body">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Minimum % Fee</label>
+                                                <div class="input-group">
+                                                    @Html.Kendo().NumericTextBox().Name("_txtMinPctKary").HtmlAttributes(new { @id = "_txtMinPctKary" }).Min(0).Decimals(2).Enable(false).Events(e => { e.Change("onChange_txtMinPctKary").Spin("onSpin_txtMinPctKary"); })
+                                                    <span class="input-group-btn"></span>
+                                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Maksimum % Fee</label>
+                                                <div class="input-group">
+                                                    @Html.Kendo().NumericTextBox().Name("_txtMaxPctKary").HtmlAttributes(new { @id = "_txtMaxPctKary" }).Min(0).Decimals(2).Enable(false).Events(e => { e.Change("onChange_txtMaxPctKary").Spin("onSpin_txtMaxPctKary"); })
+                                                    <span class="input-group-btn"></span>
+                                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- End Subs Fee -->
                     <!-- Begin Tiering Notification -->
@@ -202,212 +214,214 @@
                     </div>
                     <!-- End Tiering Notification -->
                     <div id="tab-settingGL" class="tab-pane fade">
-                        <div class="col-md-12">
-                            <div class="card-box">
-                                <div class="row">
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <label>Nama GL</label>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <label>Nomor GL</label>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <label>&nbsp;</label>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:120px">
-                                            <label>Office Id</label>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:30px">
-                                            <label>Persentase</label>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10">
-                                            <label for="NoGL1">Nomor GL 1</label>
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @id = "_namaGL1", @class = "form-control input-sm", @style = "width:200px" }).Value("PENDAPATAN CABANG")
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-box">
+                                    <div class="row">
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <label>Nama GL</label>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLNumber).HtmlAttributes(new { @id = "_noGL1", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <label>Nomor GL</label>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @id = "_descGL1", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <label>&nbsp;</label>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                            <div class="form-group m-r-10" style="padding-left:120px">
+                                                <label>Office Id</label>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].Percentage).HtmlAttributes(new { @id = "_percentGL1", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10" style="padding-left:30px">
+                                                <label>Persentase</label>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10">
-                                            <label for="NoGL1">Nomor GL 2</label>
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @id = "_namaGL2", @class = "form-control input-sm", @style = "width:200px" }).Value("PAJAK")
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10">
+                                                <label for="NoGL1">Nomor GL 1</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @id = "_namaGL1", @class = "form-control input-sm", @style = "width:200px" }).Value("PENDAPATAN CABANG")
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLNumber).HtmlAttributes(new { @id = "_noGL2", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLNumber).HtmlAttributes(new { @id = "_noGL1", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @id = "_descGL2", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].GLName).HtmlAttributes(new { @id = "_descGL1", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL2", @class = "form-control input-sm", @style = "width:100px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @style = "width:100px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].Percentage).HtmlAttributes(new { @id = "_percentGL2", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[0].Percentage).HtmlAttributes(new { @id = "_percentGL1", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10">
-                                            <label for="NoGL1">Nomor GL 3</label>
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @id = "_namaGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10">
+                                                <label for="NoGL1">Nomor GL 2</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @id = "_namaGL2", @class = "form-control input-sm", @style = "width:200px" }).Value("PAJAK")
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLNumber).HtmlAttributes(new { @id = "_noGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLNumber).HtmlAttributes(new { @id = "_noGL2", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @id = "_descGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].GLName).HtmlAttributes(new { @id = "_descGL2", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL3", @class = "form-control input-sm", @style = "width:100px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL2", @class = "form-control input-sm", @style = "width:100px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].Percentage).HtmlAttributes(new { @id = "_percentGL3", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[1].Percentage).HtmlAttributes(new { @id = "_percentGL2", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10">
-                                            <label for="NoGL1">Nomor GL 4</label>
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @id = "_namaGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10">
+                                                <label for="NoGL1">Nomor GL 3</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @id = "_namaGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLNumber).HtmlAttributes(new { @id = "_noGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLNumber).HtmlAttributes(new { @id = "_noGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @id = "_descGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].GLName).HtmlAttributes(new { @id = "_descGL3", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL4", @class = "form-control input-sm", @style = "width:100px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL3", @class = "form-control input-sm", @style = "width:100px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].Percentage).HtmlAttributes(new { @id = "_percentGL4", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[2].Percentage).HtmlAttributes(new { @id = "_percentGL3", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10">
-                                            <label for="NoGL1">Nomor GL 5</label>
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @id = "_namaGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10">
+                                                <label for="NoGL1">Nomor GL 4</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @id = "_namaGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLNumber).HtmlAttributes(new { @id = "_noGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLNumber).HtmlAttributes(new { @id = "_noGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @id = "_descGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].GLName).HtmlAttributes(new { @id = "_descGL4", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL5", @class = "form-control input-sm", @style = "width:100px" })
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL4", @class = "form-control input-sm", @style = "width:100px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].Percentage).HtmlAttributes(new { @id = "_percentGL5", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[3].Percentage).HtmlAttributes(new { @id = "_percentGL4", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <form class="form-inline">
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <label></label>
-                                            <div class="input-group m-t-10">
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10">
+                                                <label for="NoGL1">Nomor GL 5</label>
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @id = "_namaGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <div class="input-group m-t-10">
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLNumber).HtmlAttributes(new { @id = "_noGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <div class="input-group m-t-10">
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].GLName).HtmlAttributes(new { @id = "_descGL5", @class = "form-control input-sm", @style = "width:200px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:150px">
-                                            <div class="input-group m-t-10">
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].OfficeId).HtmlAttributes(new { @id = "_officeIdNoGL5", @class = "form-control input-sm", @style = "width:100px" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group m-r-10" style="padding-left:180px">
-                                            <div class="input-group m-t-10">
-                                                @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @id = "_TotalPercentGL", @class = "form-control input-sm", @style = "width:50px" })
-                                                <span class="input-group-addon">
-                                                    %
-                                                </span>
+                                            <div class="form-group m-r-10">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBoxFor(model => model.ReksaListGLFeeSubs[4].Percentage).HtmlAttributes(new { @id = "_percentGL5", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                        <form class="form-inline">
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <label></label>
+                                                <div class="input-group m-t-10">
+                                                </div>
+                                            </div>
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <div class="input-group m-t-10">
+                                                </div>
+                                            </div>
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <div class="input-group m-t-10">
+                                                </div>
+                                            </div>
+                                            <div class="form-group m-r-10" style="padding-left:150px">
+                                                <div class="input-group m-t-10">
+                                                </div>
+                                            </div>
+                                            <div class="form-group m-r-10" style="padding-left:180px">
+                                                <div class="input-group m-t-10">
+                                                    @Html.Kendo().TextBox().Name("NoGL1").HtmlAttributes(new { @id = "_TotalPercentGL", @class = "form-control input-sm", @style = "width:50px" })
+                                                    <span class="input-group-addon">
+                                                        %
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
         </div>
         <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
             <div class="modal-dialog" role="document">
@@ -453,28 +467,43 @@
 
         //change
         $("#_noGL1").change(function () {
-            ValidateGL($("#_noGL1").val(), function (res) {
-                $("#_descGL1").val(res);
+            var res = ValidateGL($("#_noGL1").val());
+            res.success(function (data) {
+                if (data.blnResult) {
+                    $("#_descGL1").val(data.strNamaGL);
+                }
             });
         });
         $("#_noGL2").change(function () {
-            ValidateGL($("#_noGL2").val(), function (res) {
-                $("#_descGL2").val(res);
+            var res = ValidateGL($("#_noGL2").val());
+            res.success(function (data) {
+                if (data.blnResult) {
+                    $("#_descGL2").val(data.strNamaGL);
+                }
             });
         });
         $("#_noGL3").change(function () {
-            ValidateGL($("#_noGL3").val(), function (res) {
-                $("#_descGL3").val(res);
+            var res = ValidateGL($("#_noGL3").val());
+            res.success(function (data) {
+                if (data.blnResult) {
+                    $("#_descGL3").val(data.strNamaGL);
+                }
             });
         });
         $("#_noGL4").change(function () {
-            ValidateGL($("#_noGL4").val(), function (res) {
-                $("#_descGL4").val(res);
+            var res = ValidateGL($("#_noGL4").val());
+            res.success(function (data) {
+                if (data.blnResult) {
+                    $("#_descGL4").val(data.strNamaGL);
+                }
             });
         });
         $("#_noGL5").change(function () {
-            ValidateGL($("#_noGL5").val(), function (res) {
-                $("#_descGL5").val(res);
+            var res = ValidateGL($("#_noGL5").val());
+            res.success(function (data) {
+                if (data.blnResult) {
+                    $("#_descGL5").val(data.strNamaGL);
+                }
             });
         });
 
@@ -524,44 +553,16 @@
                 $("#_percentGL5").val(0);
             }
             $("#_TotalPercentGL").val(+$("#_percentGL1").val() + +$("#_percentGL2").val() + +$("#_percentGL3").val() + +$("#_percentGL4").val() + +$("#_percentGL5").val());
-        });
-
-        $("#_txtMinPctNonKary").change(function () {
-            if ($("#_txtMinPctNonKary").val() > 100) {
-                $("#_txtMinPctNonKary").val(0);
-            }
-        });
-
-        $("#_txtMaxPctNonKary").change(function () {
-            if ($("#_txtMaxPctNonKary").val() > 100) {
-                $("#_txtMaxPctNonKary").val(0);
-            }
-        });
-        $("#_txtMinPctKary").change(function () {
-            if ($("#_txtMinPctKary").val() > 100) {
-                $("#_txtMinPctKary").val(0);
-            }
-        });
-        $("#_txtMaxPctKary").change(function () {
-            if ($("#_txtMaxPctKary").val() > 100) {
-                $("#_txtMaxPctKary").val(0);
-            }
-        });
+        });       
+        
     });
 
-    function ValidateGL(NomorGL, result) {
-        $.ajax({
+    function ValidateGL(NomorGL) {
+        return $.ajax({
             type: 'GET',
             url: '/Parameter/ValidateGL',
-            data: { NomorGL: NomorGL},
-            success: function (data) {
-                if (data.blnResult)
-                {
-                    result(data.strNamaGL);
-                } else {
-                    result("");
-                }
-            }
+            data: { NomorGL: NomorGL },
+            async: false
         });
     }
 
@@ -574,10 +575,14 @@
             success: function (data) {
                 if (data.blnResult)
                 {
-                    $("#_txtMinPctKary").val(data.listFee.minPctFeeEmployee);
-                    $("#_txtMinPctNonKary").val(data.listFee.minPctFeeNonEmployee);
-                    $("#_txtMaxPctKary").val(data.listFee.maxPctFeeEmployee);
-                    $("#_txtMaxPctNonKary").val(data.listFee.maxPctFeeNonEmployee);
+                    //$("#_txtMinPctKary").val(data.listFee.minPctFeeEmployee);
+                    //$("#_txtMinPctNonKary").val(data.listFee.minPctFeeNonEmployee);
+                    //$("#_txtMaxPctKary").val(data.listFee.maxPctFeeEmployee);
+                    //$("#_txtMaxPctNonKary").val(data.listFee.maxPctFeeNonEmployee);
+                    $("#_txtMinPctKary").data("kendoNumericTextBox").value(data.listFee.minPctFeeEmployee);
+                    $("#_txtMinPctNonKary").data("kendoNumericTextBox").value(data.listFee.minPctFeeNonEmployee);
+                    $("#_txtMaxPctKary").data("kendoNumericTextBox").value(data.listFee.maxPctFeeEmployee);
+                    $("#_txtMaxPctNonKary").data("kendoNumericTextBox").value(data.listFee.maxPctFeeNonEmployee);
 
                     $("#_namaGL1").val(data.listReksaListGLFeeSubs[0].GLName);
                     $("#_namaGL2").val(data.listReksaListGLFeeSubs[1].GLName);
@@ -669,7 +674,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/Parameter/SaveFeeSubs',
+            url: '/Parameter/MaintainSubsFee',
             data: model,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -847,7 +852,7 @@
         totalPercent = 100 + +_percentGL2;
         if ($("#_TotalPercentGL").val() != totalPercent)
         {
-            swal("Warning", "Total dari persen GL harus ", "warning");
+            swal("Warning", "Total dari persen GL harus " + totalPercent + "persen!", "warning");
             return;
         }
         if (+$("#_percentGL1").val() + +$("#_percentGL3").val() + +$("#_percentGL4").val() + +$("#_percentGL5").val() != 100)
@@ -921,7 +926,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/Parameter/SaveFeeSubs',
+            url: '/Parameter/MaintainSubsFee',
             data: model,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -944,16 +949,17 @@
     {
         $("#ProdCode").val('');
         $("#ProdName").val('');
+        
 
-        $("#_txtMinPctKary").val('');
-        $("#_txtMinPctNonKary").val('');
-        $("#_txtMaxPctKary").val('');
-        $("#_txtMaxPctNonKary").val('');
+        //$("#_txtMinPctKary").val(0);
+        //$("#_txtMinPctNonKary").val(0);
+        //$("#_txtMaxPctKary").val(0);
+        //$("#_txtMaxPctNonKary").val(0);
 
-        $("#_txtMinPctKary").val(0);
-        $("#_txtMinPctNonKary").val(0);
-        $("#_txtMaxPctKary").val(0);
-        $("#_txtMaxPctNonKary").val(0);
+        $("#_txtMinPctKary").data("kendoNumericTextBox").value(0);
+        $("#_txtMinPctNonKary").data("kendoNumericTextBox").value(0);
+        $("#_txtMaxPctKary").data("kendoNumericTextBox").value(0);
+        $("#_txtMaxPctNonKary").data("kendoNumericTextBox").value(0);
 
         $("#_namaGL3").val('');
         $("#_namaGL4").val('');
@@ -992,10 +998,14 @@
         {
             $("#ProdCode").prop('disabled', false);
             $("#cmpsrProduct").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
-            $("#_txtMinPctKary").prop('disabled', true);
-            $("#_txtMinPctNonKary").prop('disabled', true);
-            $("#_txtMaxPctKary").prop('disabled', true);
-            $("#_txtMaxPctNonKary").prop('disabled', true);
+            //$("#_txtMinPctKary").prop('disabled', true);
+            //$("#_txtMinPctNonKary").prop('disabled', true);
+            //$("#_txtMaxPctKary").prop('disabled', true);
+            //$("#_txtMaxPctNonKary").prop('disabled', true);
+            $("#_txtMinPctKary").data("kendoNumericTextBox").enable(false);
+            $("#_txtMinPctNonKary").data("kendoNumericTextBox").enable(false);
+            $("#_txtMaxPctKary").data("kendoNumericTextBox").enable(false);
+            $("#_txtMaxPctNonKary").data("kendoNumericTextBox").enable(false);
 
             $("#_namaGL1").prop('disabled', true);
             $("#_namaGL2").prop('disabled', true);
@@ -1029,10 +1039,15 @@
             $("#ProdCode").prop('disabled', false);
             $("#cmpsrProduct").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
 
-            $("#_txtMinPctKary").prop('disabled', false);
-            $("#_txtMinPctNonKary").prop('disabled', false);
-            $("#_txtMaxPctKary").prop('disabled', false);
-            $("#_txtMaxPctNonKary").prop('disabled', false);
+            //$("#_txtMinPctKary").prop('disabled', false);
+            //$("#_txtMinPctNonKary").prop('disabled', false);
+            //$("#_txtMaxPctKary").prop('disabled', false);
+            //$("#_txtMaxPctNonKary").prop('disabled', false);
+
+            $("#_txtMinPctKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMinPctNonKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMaxPctKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMaxPctNonKary").data("kendoNumericTextBox").enable(true);
 
             $("#_namaGL1").prop('disabled', true);
             $("#_namaGL2").prop('disabled', true);
@@ -1066,10 +1081,15 @@
             $("#ProdCode").prop('disabled', true);
             $("#cmpsrProduct").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
 
-            $("#_txtMinPctKary").prop('disabled', false);
-            $("#_txtMinPctNonKary").prop('disabled', false);
-            $("#_txtMaxPctKary").prop('disabled', false);
-            $("#_txtMaxPctNonKary").prop('disabled', false);
+            //$("#_txtMinPctKary").prop('disabled', false);
+            //$("#_txtMinPctNonKary").prop('disabled', false);
+            //$("#_txtMaxPctKary").prop('disabled', false);
+            //$("#_txtMaxPctNonKary").prop('disabled', false);
+
+            $("#_txtMinPctKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMinPctNonKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMaxPctKary").data("kendoNumericTextBox").enable(true);
+            $("#_txtMaxPctNonKary").data("kendoNumericTextBox").enable(true);
 
             $("#_namaGL1").prop('disabled', true);
             $("#_namaGL2").prop('disabled', true);
@@ -1174,4 +1194,48 @@
         $("#_Persetujuan").val(data.MustApproveBy);
    };
 
+
+    function onChange_txtMinPctNonKary() {
+        if ($("#_txtMinPctNonKary").val() > 100) {
+            $("#_txtMinPctNonKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+    function onSpin_txtMinPctNonKary() {
+        if ($("#_txtMinPctNonKary").val() > 100) {
+            $("#_txtMinPctNonKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+
+    function onChange_txtMaxPctNonKary() {
+        if ($("#_txtMaxPctNonKary").val() > 100) {
+            $("#_txtMaxPctNonKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+    function onSpin_txtMaxPctNonKary() {
+        if ($("#_txtMaxPctNonKary").val() > 100) {
+            $("#_txtMaxPctNonKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+
+    function onChange_txtMinPctKary() {
+        if ($("#_txtMinPctKary").val() > 100) {
+            $("#_txtMinPctKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+    function onSpin_txtMinPctKary() {
+        if ($("#_txtMinPctKary").val() > 100) {
+            $("#_txtMinPctKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+
+    function onChange_txtMaxPctKary() {
+        if ($("#_txtMaxPctKary").val() > 100) {
+            $("#_txtMaxPctKary").data("kendoNumericTextBox").value(0);
+        }
+    }
+    function onSpin_txtMaxPctKary() {
+        if ($("#_txtMaxPctKary").val() > 100) {
+            $("#_txtMaxPctKary").data("kendoNumericTextBox").value(0);
+        }
+    }
 </script>

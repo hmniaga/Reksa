@@ -133,15 +133,15 @@ namespace ReksaAPI.Controllers
         }
 
         [Route("api/Transaction/CalculateSwitchingFee")]
-        [HttpGet]
-        public JsonResult CalculateSwitchingFee([FromBody]CalculateFeeModel.SwitchingRequest feeModel)
+        [HttpGet("{id}")]
+        public JsonResult CalculateSwitchingFee([FromBody]CalculateFeeModel.SwitchingRequest model)
         {
             bool blnResult;
             string ErrMsg;
             CalculateFeeModel.SwitchingResponses resultFee = new CalculateFeeModel.SwitchingResponses();
-            blnResult = cls.ReksaCalcSwitchingFee(feeModel, out resultFee, out ErrMsg);
+            blnResult = cls.ReksaCalcSwitchingFee(model, out resultFee, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaCalcSwitchingFee - Core .Net SqlClient Data Provider\n", "");
-            return Json(new { resultFee });
+            return Json(new { blnResult, ErrMsg, resultFee });
         }
 
         [Route("api/Transaction/CalculateSwitchingRDBFee")]

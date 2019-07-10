@@ -12,6 +12,7 @@ namespace Reksa.ViewModels
         public ProductModel ProductModel { get; set; }
         public OfficeModel OfficeModel { get; set; }
         public List<ActivityModel> CustomerActivity { get; set; }
+        public ClientModel ClientModel { get; set; }
     }
 
     public class ParameterSubscriptionFeeListViewModel

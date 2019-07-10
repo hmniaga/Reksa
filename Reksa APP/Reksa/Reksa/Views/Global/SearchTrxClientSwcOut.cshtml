@@ -34,21 +34,25 @@
         var ClientCode = $.trim(data.ClientCode);
         var ClientName = $.trim(data.ClientName);
         var ClientId = $.trim(data.ClientId);
+        var IsEmployee = $.trim(data.IsEmployee);
 
         $("#TrxClientSwcOutSelectedCode").val(ClientCode);
         $("#TrxClientSwcOutSelectedName").val(ClientName);
         $("#TrxClientSwcOutSelectedClientId").val(ClientId);
+        $("#TrxClientSelectedIsEmployee").val(IsEmployee);
     };
 
     $("#TrxClientSwcOutSelectButton").on("click", function () {
         var selectedCode = $("#TrxClientSwcOutSelectedCode").val();
         var selectedName = $("#TrxClientSwcOutSelectedName").val();
         var selectedClientId = $("#TrxClientSwcOutSelectedClientId").val();
-
+        var selectedIsEmployee = $("#TrxClientSelectedIsEmployee").val();
        
         $("input[id='srcClientSwcOut_text1']").val(selectedCode).change();
         $("input[id='srcClientSwcOut_text2']").val(selectedName);
         $("input[id='ClientIdSwcOut']").val(selectedClientId).change();
+        $("input[id='IsEmployeeSwcOut']").val(selectedIsEmployee).change();
+        
         
     });
 
@@ -77,39 +81,39 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.TransaksiClientNew>
-    ()
-    .Name("TrxClientSwcOutSearchComponentGrid")
-    .Columns(columns =>
-    {
-    columns.Bound(m => m.ClientCode).Width(100).Title("Client Code");
-    columns.Bound(m => m.ClientName).Width(100).Title("Client Name");
-    columns.Bound(m => m.ClientId).Hidden();
-    columns.Bound(m => m.CIFNo).Hidden();
-    columns.Bound(m => m.JoinDate).Hidden();
-    columns.Bound(m => m.IsEmployee).Hidden();
-    columns.Bound(m => m.IsRDB).Hidden();
-    })
-    .ToolBar(toolbar =>
-    {
-    toolbar.ClientTemplateId("ToolbarTrxSwcOutTemplate");
-    })
-    .Events(events => events.Change("onRowTrxClientSwcOutSelect"))
-    .Pageable()
-    .Scrollable()
-    .Selectable(selectable => selectable
-    .Mode(GridSelectionMode.Single))
-    .DataSource(dataSource => dataSource
-    .Ajax()
-    .PageSize(20)
-    .Model(model =>
-    {
-    model.Id(m => m.ClientCode);
-    })
-    .Read(read => read.Action("SearchTrxClientData", "Global").Data("getData"))
-    )
-    )
+                    ()
+                    .Name("TrxClientSwcOutSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.ClientCode).Width(100).Title("Client Code");
+                        columns.Bound(m => m.ClientName).Width(100).Title("Client Name");
+                        columns.Bound(m => m.ClientId).Hidden();
+                        columns.Bound(m => m.CIFNo).Hidden();
+                        columns.Bound(m => m.JoinDate).Hidden();
+                        columns.Bound(m => m.IsEmployee).Hidden();
+                        columns.Bound(m => m.IsRDB).Hidden();
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("ToolbarTrxSwcOutTemplate");
+                    })
+                    .Events(events => events.Change("onRowTrxClientSwcOutSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                    .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .PageSize(20)
+                    .Model(model =>
+                    {
+                        model.Id(m => m.ClientCode);
+                    })
+                    .Read(read => read.Action("SearchTrxClientData", "Global").Data("getData"))
+                    )
+        )
 
-    <script id="ToolbarTrxSwcOutTemplate">
+        <script id="ToolbarTrxSwcOutTemplate">
         <div class="toolbar">
             @(Html.Kendo().TextBox().Name("TrxClientSwcOutSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
@@ -119,12 +123,13 @@
                             .Events(ev => ev.Click("onSearchTrxClientSwcOut")).ToClientTemplate()
             )
         </div>
-    </script>
+        </script>
 
-    <input type="hidden" id="TrxClientSwcOutSelectedCode" name="TrxClientSwcOutSelectedCode" value="" />
-    <input type="hidden" id="TrxClientSwcOutSelectedName" name="TrxClientSwcOutSelectedName" value="" />
-    <input type="hidden" id="TrxClientSwcOutSelectedClientId" name="TrxClientSwcOutSelectedClientId" value="" />
-</div>
+        <input type="hidden" id="TrxClientSwcOutSelectedCode" name="TrxClientSwcOutSelectedCode" value="" />
+        <input type="hidden" id="TrxClientSwcOutSelectedName" name="TrxClientSwcOutSelectedName" value="" />
+        <input type="hidden" id="TrxClientSwcOutSelectedClientId" name="TrxClientSwcOutSelectedClientId" value="" />
+        <input type="hidden" id="TrxClientSelectedIsEmployee" name="TrxClientSelectedIsEmployee" value="" />
+    </div>
     <div class="modal-footer">
         <button type="submit" id="TrxClientSwcOutSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select

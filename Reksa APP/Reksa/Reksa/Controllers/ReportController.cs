@@ -1881,6 +1881,36 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsReport });
         }
+        public JsonResult ReksaReportRDN63(string Period)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsReport = new DataSet();
+            decimal TotalPremi = 0;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Report/ReksaReportRDN63?Period=" + Period).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    TotalPremi = strObject.SelectToken("totalPremi").Value<decimal>();
+                    JToken Token = strObject["dsReport"];
+                    string Json = JsonConvert.SerializeObject(Token);
+                    dsReport = JsonConvert.DeserializeObject<DataSet>(Json);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsReport, TotalPremi });
+        }
         public List<T> MapListOfObject<T>(DataTable dt)
         {
             List<T> list = new List<T>();

@@ -116,7 +116,7 @@ namespace ReksaAPI.Models
             public string ClientId  { get; set; }
             public string CIFNo { get; set; }
             public DateTime JoinDate { get; set; }
-            public bool IsEmployee { get; set; }
+            public string IsEmployee { get; set; }
             public string IsRDB { get; set; }
         }
         public class ClientSwitchIn
@@ -136,8 +136,7 @@ namespace ReksaAPI.Models
         public class TransaksiRefID
         {
             public string RefID { get; set; }
-            [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-            public DateTime TanggalTransaksi { get; set; }
+            public string TanggalTransaksi { get; set; }
         }
         public class Waperd
         {
