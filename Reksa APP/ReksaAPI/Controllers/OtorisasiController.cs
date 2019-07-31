@@ -302,5 +302,51 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyParamFeeDetail - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/Otorisasi/ViewApprovalReject")]
+        [HttpGet("{id}")]
+        public JsonResult ViewApprovalReject()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaViewApprovalReject(out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaViewApprovalReject - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Otorisasi/RejectBooking")]
+        [HttpPost("{id}")]
+        public JsonResult RejectBooking([FromBody]DataTable dtData, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int intIdBooking = 0; int intAgentId = 0; 
+
+            for (int i = 0; i < dtData.Rows.Count; i++)
+            {
+                int.TryParse(dtData.Rows[i]["BookingId"].ToString(), out intIdBooking);
+                int.TryParse(dtData.Rows[i]["AgentCode"].ToString(), out intAgentId);
+                blnResult = cls.ReksaRejectBooking(intIdBooking, intAgentId, NIK, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaRejectBooking - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/RejectBookingApproval")]
+        [HttpPost("{id}")]
+        public JsonResult RejectBookingApproval([FromBody]DataTable dtData)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int intIdBooking = 0; int intAgentId = 0;
+
+            for (int i = 0; i < dtData.Rows.Count; i++)
+            {
+                int.TryParse(dtData.Rows[i]["BookingId"].ToString(), out intIdBooking);
+                int.TryParse(dtData.Rows[i]["AgentCode"].ToString(), out intAgentId);
+                blnResult = cls.ReksaRejectBookingApproval(intIdBooking, intAgentId, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("RejectBookingApproval - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

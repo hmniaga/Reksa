@@ -301,4 +301,14 @@ namespace Reksa.Models
         public decimal MinPctFeeNonEmployee { get; set; }
         public decimal MaxPctFeeNonEmployee { get; set; }
     }
+    public class UploadWaperd
+    {
+        public List<listWaperd> listWaperd { get; set; }
+    }
+    public class listWaperd
+    {
+        public int NIK { get; set; }
+        public string Deskripsi { get; set; }
+        public string TanggalExpired { get; set; }
+    }
 }

@@ -2,6 +2,7 @@
     ViewBag.Title = "Search Product";
     string search = (string)ViewBag.Search;
     string criteria = (string)ViewBag.Criteria;
+    bool isRDB = (bool)ViewBag.isRDB;
 
     Layout = null;
 }
@@ -57,12 +58,22 @@
                 $("input[id='srcCurrencySwcIn_text2']").val('');
             }
         });
-
-        $("input[id='srcProductSwcIn_text1']").val(selectedCode).change();
-        $("input[id='srcProductSwcIn_text2']").val(selectedName);
-        $("input[id='ProdIdSwcIn']").val(selectedId);
-        $("input[id='ProdCCYSwcIn']").val(selectedCurr);
-        $("input[id='srcCurrencySwcIn_text1']").val(selectedCurr);
+        var Criteria = "@ViewBag.isRDB";
+        if (Criteria == "False")
+        {
+            $("input[id='srcProductSwcIn_text1']").val(selectedCode).change();
+            $("input[id='srcProductSwcIn_text2']").val(selectedName);
+            $("input[id='ProdIdSwcIn']").val(selectedId);
+            $("input[id='ProdCCYSwcIn']").val(selectedCurr);
+            $("input[id='srcCurrencySwcIn_text1']").val(selectedCurr);
+        }
+        else if (Criteria == "True") {
+            $("input[id='srcProductSwcRDBIn_text1']").val(selectedCode).change();
+            $("input[id='srcProductSwcRDBIn_text2']").val(selectedName);
+            $("input[id='ProdIdSwcRDBIn']").val(selectedId);
+            $("input[id='ProdCCYSwcRDBIn']").val(selectedCurr);
+            $("input[id='srcCurrencySwcRDBIn_text1']").val(selectedCurr);
+        }
     });
 
     $("#TrxProductSwcInSearchComponentSearchTxt").on("keypress", function (e) {

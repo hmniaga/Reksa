@@ -180,9 +180,9 @@ namespace ReksaAPI.Controllers
             return Json(new { blnResult, ErrMsg, BillID });
         }
 
-        [Route("api/PO/ReksaPopulateSubscriptionLimitAlert")]
+        [Route("api/PO/PopulateSubscriptionLimitAlert")]
         [HttpPost("{id}")]
-        public JsonResult ReksaPopulateSubscriptionLimitAlert([FromQuery]int NIK, [FromQuery]string Module)
+        public JsonResult PopulateSubscriptionLimitAlert([FromQuery]int NIK, [FromQuery]string Module)
         {
             bool blnResult = false;
             string ErrMsg = "";
@@ -192,5 +192,109 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaPopulateSubscriptionLimitAlert - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/PO/GetLastTanggalPencadangan")]
+        [HttpPost("{id}")]
+        public JsonResult GetLastTanggalPencadangan()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime StartDate = new DateTime();
+            DateTime EndDate = new DateTime();
+
+            blnResult = cls.ReksaGetLastTanggalPencadangan(ref StartDate, ref EndDate , out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetLastTanggalPencadangan - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, StartDate, EndDate });
+        }
+        [Route("api/PO/MaintainPencadangan")]
+        [HttpPost("{id}")]
+        public JsonResult MaintainPencadangan([FromQuery]string Tipe, [FromQuery]string ProdCode, [FromQuery]string StartDate, [FromQuery]string EndDate, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(EndDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaMaintainPencadangan(Tipe, ProdCode, dtStartDate, dtEndDate, NIK, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetLastTanggalPencadangan - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg});
+        }
+        [Route("api/PO/PopulateRejectBooking")]
+        [HttpPost("{id}")]
+        public JsonResult PopulateRejectBooking([FromQuery]string Jenis)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateRejectBooking(Jenis, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateRejectBooking - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/SaveRejectBooking")]
+        [HttpPost("{id}")]
+        public JsonResult SaveRejectBooking([FromBody]List<MaintRejectBooking> model, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            for (int i = 0; i < model.Count; i++)
+            {
+                model[i].intNIK = NIK;
+                blnResult = cls.ReksaSaveReject(model[i], out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaSaveReject - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/SaveCancelTrans")]
+        [HttpPost("{id}")]
+        public JsonResult SaveCancelTrans([FromBody]List<MaintCancelTransaksi> model, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            for (int i = 0; i < model.Count; i++)
+            {
+                model[i].intNIK = NIK;
+                blnResult = cls.ReksaSaveCancelTrans(model[i], out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaSaveCancelTrans - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/PopulateDiscFee")]
+        [HttpPost("{id}")]
+        public JsonResult PopulateDiscFee([FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateDiscFee(NIK, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateDiscFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/MaintainDiscRedempt")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainDiscRedempt([FromQuery]int TranId, [FromQuery]decimal RedempDisc, [FromQuery]int NIK, [FromQuery]string Guid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainDiscRedempt(TranId, RedempDisc, NIK, Guid, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainDiscRedempt - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/ImportDataMFee")]
+        [HttpGet("{id}")]
+        public JsonResult ImportDataMFee([FromQuery]string FileName, [FromQuery]string XML, [FromQuery]int NIK, [FromQuery]int ProdId, [FromQuery]int BankCustody, [FromQuery]int isRecalculate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsUpload = new DataSet();
+
+            blnResult = cls.ReksaImportDataMFee(FileName, NIK, XML, ProdId, BankCustody, isRecalculate, out ErrMsg, out dsUpload);
+            ErrMsg = ErrMsg.Replace("ReksaImportDataMFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsUpload });
+        }        
     }
 }

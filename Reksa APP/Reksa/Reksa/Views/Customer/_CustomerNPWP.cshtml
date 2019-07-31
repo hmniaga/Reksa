@@ -71,6 +71,7 @@
                                                                             .Value("Kode")
                                                                             .HtmlAttributes(new { @id = "cbKepemilikanNPWPKK", @style = "width: 150px;"  })
                                                                             .Filter("contains")
+                                                                            .Events(e => { e.Change("onChange_cbKepemilikanNPWPKK"); })
                             )
                             <span class="input-group-btn"></span>
                             @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.KepemilikanNPWPKKLainnya).HtmlAttributes(new { @id = "tbKepemilikanLainnya", @style = "width: 120px" }).Enable(false)
@@ -99,13 +100,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Alasan</label>
                         <div class="input-group">
-                            @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.AlasanTanpaNPWP)
-                                                                    .BindTo(Model.AlasanTanpaNPWP)
-                                                                    .DataTextField("Deskripsi")
-                                                                    .Value("Kode")
-                                                                    .HtmlAttributes(new { @id = "cbAlasanTanpaNPWP", @style = "width: 200px" })
-                                                                    .Filter("contains")
-                            )
+                            @(Html.Kendo().DropDownListFor(model => model.CustomerNPWPModel.AlasanTanpaNPWP).BindTo(Model.AlasanTanpaNPWP).DataTextField("Deskripsi").Value("Kode").HtmlAttributes(new { @id = "cbAlasanTanpaNPWP", @style = "width: 200px" }).Filter("contains"))
                         </div>
                     </div>
                     <!-- End Alasan -->
@@ -117,11 +112,11 @@
                         <div class="input-group">
                             @Html.Kendo().TextBoxFor(model => model.CustomerNPWPModel.NoDokTanpaNPWP).HtmlAttributes(new { @id = "tbNoDokTanpaNPWP", @style = "width: 200px" }).Enable(false)
                             <span class="input-group-btn"></span>
-                            <button id="btnGenerateNoDokTanpaNPWP" class="btn btn-info btn-rounded waves-effect waves-light" disabled="disabled">
+                            <button id="btnGenerateNoDokTanpaNPWP" class="btn btn-danger waves-effect waves-light" disabled="disabled">
                                 <span class="btn-label">
                                     <i class="fa fa-plus"></i>
                                 </span>
-                                Generate No Dok
+                                Generate Nomor Dokumen
                             </button>
                         </div>
                     </div>

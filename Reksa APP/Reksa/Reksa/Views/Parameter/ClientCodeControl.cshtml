@@ -44,13 +44,12 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Client Code</label>
                                 <div class="input-group col-md-4">
-                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @style = "width: 100px;", @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
+                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @style = "width: 100px;", @class = "form-control input-sm", @id = "srcClient_text1" }).Enable(false)
                                     <span class="input-group-btn">
-                                        <a id="srcClient" href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                        <a id="srcClient" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                                     </span>
                                     @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2", @style = "width: 300px;" }).Enable(false)
-                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
-                                    @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
+                                    @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @id = "ClientId", @type = "Hidden" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -72,15 +71,81 @@
     </div>
 </div>
 <script>
+    var _intType;
     $(document).ready(function () {
-
-        //click
+        _intType = 0;
+        subResetToolBar();
         $("#btnRefresh").click(function () {
             subRefresh();
         });
         $("#btnTutup").click(function () {
-            subUpdate();
+            subNonAktif();
         });
     });
 
+    function subResetToolBar()
+    {
+        switch (_intType)
+        {
+            case 0:
+                {
+                    $("#btnRefresh").show();
+                    $("#btnTutup").hide();
+                    break;
+                }
+            case 1:
+                {
+                    $("#btnRefresh").show();
+                    $("#btnTutup").show();
+                    break;
+                }
+        }
+    }
+    function subRefresh()
+    {
+        var ClientId = $("#ClientId").val();
+        $.ajax({
+            type: 'GET',
+            url: '/Transaksi/GetLatestBalance',
+            data: { ClientId: ClientId },
+            success: function (data) {
+                if (data.blnResult)
+                {
+                    $("#MoneyNom").data("kendoNumericTextBox").value(data.unitBalance);
+                    _intType = 1;
+                    subResetToolBar();
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
+    function Reset()
+    {
+        $("#srcClient_text1").val();
+        $("#srcClient_text2").val();
+        $("#MoneyNom").data("kendoNumericTextBox").value(0);
+    }
+    function subNonAktif()
+    {
+        var ClientId = $("#ClientId").val();
+        var UnitBalance = $("#MoneyNom").data("kendoNumericTextBox").value();
+        $.ajax({
+            type: 'POST',
+            url: '/Parameter/NonAktifClientId',
+            data: { ClientId: ClientId, UnitBalance: UnitBalance },
+            success: function (data) {
+                if (data.blnResult) {
+                    swal("Proses berhasil", "Client code menjadi nonaktifkan jika sudah diotorisasi!", "success");
+                    Reset();
+                    _intType = 0;
+                    subResetToolBar();
+                }
+                else {
+                    swal("Warning", data.ErrMsg, "warning");
+                }
+            }
+        });
+    }
 </script>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -294,5 +295,15 @@ namespace ReksaAPI.Models
         public decimal maxPctFeeEmployee { get; set; }
         public decimal minPctFeeNonEmployee { get; set; }
         public decimal maxPctFeeNonEmployee { get; set; }
+    }
+    public class UploadWaperd
+    {
+        public List<listWaperd> listWaperd { get; set; }
+    }
+    public class listWaperd
+    {
+        public int NIK { get; set; }
+        public string Deskripsi { get; set; }
+        public string TanggalExpired { get; set; }
     }
 }

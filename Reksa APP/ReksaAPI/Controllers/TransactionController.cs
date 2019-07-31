@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReksaAPI.Models;
@@ -74,9 +75,12 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult RefreshBookingNew([FromQuery]string RefID, [FromQuery]int NIK, [FromQuery]string GUID)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             List<TransactionModel.BookingModel> listDetailBooking = new List<TransactionModel.BookingModel>();
-            cls.ReksaRefreshBookingNew(RefID, NIK, GUID, ref listDetailBooking);
-            return Json(new { listDetailBooking });
+            blnResult = cls.ReksaRefreshBookingNew(RefID, NIK, GUID, ref listDetailBooking, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshBookingNew - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listDetailBooking });
         }
         [Route("api/Transaction/GetLatestBalance")]
         [HttpGet("{id}")]
@@ -197,6 +201,36 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaMaintainSwitching - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, strRefID, dtError });
         }
+        [Route("api/Transaction/MaintainSwitchingRDB")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainSwitchingRDB([FromBody]TransactionModel.MaintainSwitchingRDB model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
+
+            DataTable dtError = new DataTable();
+            blnResult = cls.ReksaMaintainSwitchingRDB(model, out ErrMsg, out strRefID, out dtError);
+
+            ErrMsg = ErrMsg.Replace("ReksaMaintainSwitchingRDB - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, strRefID, dtError });
+        }
+        [Route("api/Transaction/MaintainNewBooking")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainNewBooking([FromBody]TransactionModel.MaintainBooking model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
+
+            DataTable dtError = new DataTable();
+            blnResult = cls.ReksaMaintainNewBooking(model, out ErrMsg, out strRefID, out dtError);
+
+            ErrMsg = ErrMsg.Replace("ReksaMaintainNewBooking - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, strRefID, dtError });
+        }
+        
+
         [Route("api/Transaction/GenerateTranCodeClientCode")]
         [HttpGet("{id}")]
         public JsonResult GenerateTranCodeClientCode([FromBody]TransactionModel.GenerateClientCode model)
@@ -276,11 +310,22 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaMaintainOutgoingTT(BillId, isProcess, AlasanDelete, NIK, out IsCurrencyHoliday, out dtNewValueDate, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaMaintainOutgoingTT - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
-        }        
-        private JsonResult Json(object p, object allowGet)
-        {
-            throw new NotImplementedException();
         }
+        [Route("api/Transaction/ManualUpdateRiskProfile")]
+        [HttpGet("{id}")]
+        public JsonResult ManualUpdateRiskProfile([FromQuery]string CIFNo, [FromQuery]string NewLastUpdate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime dtNewLastUpdate = new DateTime();
+            DateTime.TryParseExact(NewLastUpdate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtNewLastUpdate);
+
+
+            blnResult = cls.ReksaManualUpdateRiskProfile(CIFNo, dtNewLastUpdate, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaManualUpdateRiskProfile - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        
 
     }
 }

@@ -111,9 +111,10 @@ namespace ReksaAPI.Controllers
         public JsonResult ValidateCBOOfficeId([FromQuery]string OfficeID)
         {
             bool blnResult;
-            string IsEnable = ""; string strErrorMessage = "";
-            blnResult = cls.ReksaValidateCBOOfficeId(OfficeID, out IsEnable, out strErrorMessage);
-            return Json(new { blnResult, strErrorMessage, IsEnable});
+            string IsEnable = ""; string ErrMsg = "";
+            blnResult = cls.ReksaValidateCBOOfficeId(OfficeID, out IsEnable, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaValidateCBOOfficeId - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, IsEnable});
         }       
         [Route("api/Global/GetSrcAgen")]
         [HttpGet("{id}")]
@@ -200,7 +201,7 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/Global/GetSrcClient")]
         [HttpGet("{id}")]
-        public JsonResult GetSrcClient([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]int ProdId)
+        public JsonResult GetSrcClient([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string ProdId)
         {
             List<SearchModel.Client> list = new List<SearchModel.Client>();
             DataSet dsOut = new DataSet();

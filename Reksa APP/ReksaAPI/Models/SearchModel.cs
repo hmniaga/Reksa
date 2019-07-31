@@ -30,7 +30,7 @@ namespace ReksaAPI.Models
         public class Booking
         {
             public string RefID { get; set; }
-            public DateTime TanggalTransaksi { get; set; }
+            public string TanggalTransaksi { get; set; }
             public string BookingId { get; set; }
         }
         public class City
@@ -106,7 +106,7 @@ namespace ReksaAPI.Models
         public class Switching
         {
             public string RefID { get; set; }
-            public System.DateTime TanggalTransaksi { get; set; }
+            public string TanggalTransaksi { get; set; }
             public string TranId { get; set; }
         }
         public class TransaksiClientNew

@@ -139,7 +139,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Karyawan</label>
                         <div class="input-group col-sm-6">
-                            @(Html.Kendo().DropDownList().Name("cbStatus").BindTo(new List<SelectListItem>() {new SelectListItem() {Text = "Karyawan",Value = "1"},new SelectListItem() {Text = "Non Karyawan",Value = "0"}}).DataTextField("Text").DataValueField("Value").Value("1"))
+                            @(Html.Kendo().DropDownList().Name("cbStatus").BindTo(new List<SelectListItem>() {new SelectListItem() {Text = "Karyawan",Value = "1"},new SelectListItem() {Text = "Non Karyawan",Value = "0"}}).DataTextField("Text").DataValueField("Value").Value("1").Events(e => { e.Change("onChange_cbStatus"); }))
                         </div>
                     </div>
                     <!-- End DropDown Status Karyawan -->
@@ -217,7 +217,7 @@
         <h3 class="panel-title" style="padding-bottom:20px">Alamat Pengiriman Surat</h3>
         <!-- Begin Alamat Nasabah -->
         <div class="row">
-            <div class="col-md-6" style="padding-bottom:20px">
+            <div class="col-md-12" style="padding-bottom:20px">
                     <div class="form-group">                        
                         <div class="input-group">
                             <div class="col-md-6">
@@ -264,16 +264,16 @@
         <!-- End Alamat Nasabah -->
         <!-- Begin Alamat Cabang -->
         <div class="row" id="divAlamatCabang" style="display:none">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <!-- Begin Kode Cabang -->
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Kode Cabang</label>
-                    <div class="input-group">
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcCabang_text1" }).Enable(true)
+                    <div class="input-group col-md-5">
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcCabang_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcCabang" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#CabangModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcCabang_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcCabang_text2", style = "width: 300px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Kode Cabang -->
@@ -321,8 +321,8 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Last Updated</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("txtLastUpdated").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)
-
+                        @*@Html.Kendo().TextBox().Name("txtLastUpdated").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 300px;" }).Enable(false)*@
+                        @(Html.Kendo().DatePicker().Name("txtLastUpdated").HtmlAttributes(new { style = "width: 200px;" }).Enable(false))
                     </div>
                 </div>
                 <!-- End Last Updated -->
@@ -342,175 +342,3 @@
         <div class="modal-content"></div>
     </div>
 </div>
-
-
-<script type="text/javascript">
-    $("#srcEmployee").click(function (ev) {
-        ev.preventDefault();
-        var target = $(this).attr("href");
-        $("#NIKModal .modal-content").load(target, function () {
-            $("#NIKModal .modal-content").empty().append(this);
-        });
-    });
-
-    $("#srcCabang").click(function (ev) {
-        ev.preventDefault();
-        var target = $(this).attr("href");
-        $("#CabangModal .modal-content").load(target, function () {
-            $("#CabangModal .modal-content").empty().append(this);
-        });
-    });
-
-    function GenerateSHDID()
-    {
-        $.ajax({
-            type: "GET",
-            url: "/Customer/GetShareHolderID", 
-            dataType: "json",
-            success: function (data) {
-                if (data.blnResult == true) {
-                    $("#textShareHolderId").val(data.ShareHolderID);
-                } else
-                {
-                    swal("Error", data.ErrMsg, "error");
-                }                
-            }
-        });
-    }
-
-    function onChangeAddressType(e) {
-        var dropdownlist = $("#cbDikirimKe").data("kendoDropDownList");
-        var ValueType = dropdownlist.value();
-        if (ValueType == '0') {
-            $('#divAlamatNasabah').show();
-            $('#divAlamatCabang').hide();
-        } else {
-            $('#divAlamatNasabah').hide();
-            $('#divAlamatCabang').show();
-        }
-    }
-
-    function onBoundAddressType(e) {
-        var dropdownlist = $("#cbDikirimKe").data("kendoDropDownList");
-        var len = dropdownlist.dataSource.data().length;
-
-        if (len > 0) {
-            dropdownlist.select(0);
-            onChangeAddressType();
-        }
-    }      
-
-    function checkKonfAddressAll(e) {
-        var state = $(e).is(':checked');
-        var grid = $('#dgvKonfAddr').data('kendoGrid');
-        $.each(grid.dataSource.view(), function () {
-            if (this['Pilih'] != state)
-                this.dirty = true;
-
-            this['Pilih'] = state;
-        });
-        grid.refresh();
-    }
-
-    function onCheckBoxKonfAddressClick(e) {
-        var state = $(e).is(':checked');
-        var value = e.value;
-        var grid = $('#dgvKonfAddr').data('kendoGrid');
-        grid.refresh();
-
-        grid.tbody.find("tr[role='row']").each(function () {
-            var dataItem = grid.dataItem(this);
-
-            if (dataItem.Sequence == value) {
-                dataItem.Pilih = state;
-            }
-        })
-
-        var chkAll = $('#chkKonfAddressSelectAll').is(':checked');
-        var isCheckedAll = false;
-        var countTrue = 0;
-        var countFalse = 0;
-        var countAll = 0;   
-
-        $.each(grid.dataSource.view(), function () {
-            if (this['Pilih'] == true) {
-                countTrue = countTrue + 1;
-            }
-            else {
-                countFalse = countFalse + 1;
-                isCheckedAll = false;
-            }
-            countAll = countAll + 1;
-        });
-        if (countFalse == 0 || (countFalse == 1 && !state)) {
-            $('#chkKonfAddressSelectAll').prop("checked", state);
-        }
-        grid.refresh();
-    } 
-    
-    $("#srcCabang_text1").change(function () {
-        ValidateOffice($("#srcCabang_text1").val(), function (output) {
-            $("#srcCabang_text2").val(output);
-            GetAlamatCabang();
-        });
-    });   
-
-    $("#srcEmployee_text1").change(function () {
-        ValidateReferentor($("#srcEmployee_text1").val(), function (output) {
-            $("#srcEmployee_text2").val(output);
-        });
-    });  
-    
-    function ValidateReferentor(ReferentorID, result) {
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateReferentor',
-            data: { Col1: ReferentorID, Col2: '', Validate: 1 },
-            success: function (data) {
-                result(data[0].NAME);
-            }
-        });
-    }
-
-    function GetAlamatCabang() {
-        var Cifno = $("#srcCIF_text1").val();
-        var BranchId = $("#srcCabang_text1").val();
-        var intId = $("#idNasabah").val();
-
-        $.ajax({
-            type: 'GET',
-            url: '/Customer/GetAlamatCabang',
-            data: { CIFNO: Cifno, Branch: BranchId, intId: intId },
-            success: function (data) {
-                $("#tbAlamatSaatIni1").val(data.CustomerBranchAddress.AddressLine1);
-                $("#tbAlamatSaatIni2").val(data.CustomerBranchAddress.AddressLine2);
-                $("#tbKodePos").val(data.CustomerBranchAddress.PostalCode);
-                $("#tbKotaNasabahAlmt").val(data.CustomerBranchAddress.Kota);
-                $("#tbProvNasabahAlmt").val(data.CustomerBranchAddress.Province);
-                var LastUpdatedDate = new Date(data.CustomerBranchAddress.LastUpdated);
-                $("#txtLastUpdated").val(LastUpdatedDate.getDate() + '/' + (LastUpdatedDate.getMonth() + 1) + '/' + LastUpdatedDate.getFullYear());
-            }
-        });
-    }    
-
-    function onChangedtpRiskProfile() {
-        var CIFNo;
-        if ($("#srcCIF_text1").val() == '')
-            CIFNo = 0
-        else
-            CIFNo = $("#srcCIF_text1").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Customer/GekExpRiskProfile',
-            data: { CIFNo: CIFNo, RiskProfile: $("#dtpRiskProfile").val() },
-            success: function (data) {
-                if (data.blnResult) {
-                    var DateExpRiskProfile = new Date(data.dtExp);
-                    $("#dtExpiredRiskProfile").val(DateExpRiskProfile.getDate() + '/' + (DateExpRiskProfile.getMonth() + 1) + '/' + DateExpRiskProfile.getFullYear());
-                    $("#txtEmail").val(data.strEmail);
-                }
-            }
-        });
-    }
-
-</script>

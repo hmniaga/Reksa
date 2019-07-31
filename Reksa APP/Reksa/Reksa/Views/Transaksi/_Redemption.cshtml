@@ -22,7 +22,7 @@
                     <div class="input-group">
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCIFRedemp_text1" })
                         <span class="input-group-btn">
-                            <a id="srcCIFRedemp" href="@Url.Action("SearchCustomerRedemp", "Global")" data-toggle="modal" data-target="#CustomerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcCIFRedemp" href="#display" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcCIFRedemp_text2" }).Enable(false)
                     </div>
@@ -34,7 +34,7 @@
                     <div class="input-group">
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefRedemp_text1" })
                         <span class="input-group-btn">
-                            <a id="srcNoRefRedemp" href="@Url.Action("SearchReferensiRedemp", "Global", new { criteria = "REDEMP" })" data-toggle="modal" data-target="#ReferensiRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcNoRefRedemp" href="#display" data-toggle="modal" data-target="#NoRefModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefRedemp_text2" }).Enable(false)
                     </div>
@@ -150,7 +150,7 @@
                         <div class="input-group col-md-9">
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcProductRedemp_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcProductRedemp" href="@Url.Action("SearchTrxProductRedemp", "Global")" data-toggle="modal" data-target="#ProductRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcProductRedemp" href="#display" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcProductRedemp_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdRedemp", @type = "hidden" })
@@ -164,7 +164,7 @@
                             <div class="input-group col-md-9">
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClientRedemp_text1" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcClientRedemp" href="@Url.Action("SearchTrxClientRedemp", "Global")" data-toggle="modal" data-target="#ClientRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcClientRedemp" href="#display" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;", @id = "srcClientRedemp_text2" }).Enable(false)
                                 @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdRedemp",  @type = "hidden" })
@@ -192,13 +192,13 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"></label>
                         <div class="input-group">
-                            <button id="btnAddRedemp" class="btn btn-default waves-effect waves-light">
+                            <button id="btnAddRedemp" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                                 <span class="btn-label">
                                     <i class="fa fa-plus"></i>
                                 </span>
                                 Add
                             </button>
-                            <button id="btnEditRedemp" class="btn btn-info waves-effect waves-light">
+                            <button id="btnEditRedemp" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                                 <span class="btn-label">
                                     <i class="fa fa-edit"></i>
                                 </span>
@@ -224,27 +224,36 @@
                             <div class="portlet-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-5">
-                                            <div class="checkbox checkbox-custom checkbox-circle">
-                                                @Html.Kendo().CheckBox().Name("checkFeeEditRedemp").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit").Enable(false)
-                                            </div>
+                                        <label class="col-md-1"></label>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="checkbox checkbox-custom checkbox-circle">
+                                                    @Html.Kendo().CheckBox().Name("checkFeeEditRedemp").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit").Enable(false)
+                                                </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-5">
-                                            @(Html.Kendo().DropDownList().Name("_ComboJenisRedemp").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value"))
-                                        </div>
+                                        <label class="col-md-1"></label>
                                         <div class="form-group">
                                             <div class="input-group">
-                                                @*@Html.Kendo().TextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)*@
-                                                @Html.Kendo().NumericTextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { style = "width: 90px;" }).Enable(false).Min(0)
+                                                @(Html.Kendo().DropDownList().Name("_ComboJenisRedemp").HtmlAttributes(new { @style = "width:130px" }).BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value").Events(e => { e.Change("_ComboJenisRedemp_SelectedIndexChanged").DataBound("onBound_ComboJenisRedemp"); }))
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-1"></label>
+                                        <div class="form-group">
+                                            <div class="input-group">       
                                                 <span class="input-group-btn"></span>
-                                                <label id="labelFeeCurrencyRedemp">&nbsp;&nbsp;&nbsp;CURR</label>
+                                                @Html.Kendo().NumericTextBox().Name("MoneyFeeRedemp").HtmlAttributes(new { style = "width: 160px; margin-right:10px;" }).Enable(false).Min(0).Events(e => { e.Change("onChangeMoneyFeeRedemp").Spin("onSpinMoneyFeeRedemp"); })
+                                                <span class="input-group-btn"></span>
+                                                <label id="labelFeeCurrencyRedemp" style="margin-right:10px;">IDR</label>
                                                 <span class="input-group-btn"></span>
                                                 @*@Html.Kendo().TextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)*@
-                                                @Html.Kendo().NumericTextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { style = "width: 90px;" }).Enable(false).Min(0)
+                                                @Html.Kendo().NumericTextBox().Name("PercentageFeeRedemp").HtmlAttributes(new { style = "width:160px;margin-right:10px;" }).Enable(false).Min(0)
                                                 <span class="input-group-btn"></span>
-                                                <label id="_KeteranganFeeRedemp">&nbsp;&nbsp;&nbsp;%</label>
+                                                <label id="_KeteranganFeeRedemp">%</label>
                                             </div>
                                         </div>
                                     </div>
@@ -284,7 +293,7 @@
                                 .Scrollable(s => s.Height(250))
                                 .Selectable(selectable => selectable
                                 .Mode(GridSelectionMode.Single))
-                                .Events(events => events.Change("onRowViewRedempSelect"))
+                                .Events(events => events.Change("dataGridViewRedemp_CellClick"))
                 )
 
             </div>
@@ -322,7 +331,7 @@
                         <div class="input-group col-md-6">
                             @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcSellerRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcSellerRedemp" href="@Url.Action("SearchSellerRedemp", "Global")" data-toggle="modal" data-target="#SellerRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcSellerRedemp" href="#display" data-toggle="modal" data-target="#SellerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcSellerRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
@@ -332,7 +341,7 @@
                         <div class="input-group col-md-6">
                             @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcWaperdRedemp" href="@Url.Action("SearchWaperdRedemp", "Global")" data-toggle="modal" data-target="#WaperdRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcWaperdRedemp" href="#display" data-toggle="modal" data-target="#WaperdModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
@@ -348,7 +357,7 @@
                         <div class="input-group col-md-6">
                             @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcReferentorRedemp_text1", @class = "form-control input-sm", style = "width:150%;" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcReferentorRedemp" href="@Url.Action("SearchReferentorRedemp", "Global")" data-toggle="modal" data-target="#NIKRefRedempModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcReferentorRedemp" href="#display" data-toggle="modal" data-target="#NIKRefModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcReferentorRedemp_text2", @class = "form-control input-sm", style = "width:250px;" }).Enable(false)
                         </div>
@@ -394,47 +403,6 @@
         <div class="modal-content"></div>
     </div>
 </div>
-<div class="modal fade" id="CustomerRedempModal" tabindex="-1" role="dialog" aria-labelledby="CustomerRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ReferensiRedempModal" tabindex="-1" role="dialog" aria-labelledby="ReferensiRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ProductRedempModal" tabindex="-1" role="dialog" aria-labelledby="ProductRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ClientRedempModal" tabindex="-1" role="dialog" aria-labelledby="ClientRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="CurrencyRedempModal" tabindex="-1" role="dialog" aria-labelledby="CurrencyRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="SellerRedempModal" tabindex="-1" role="dialog" aria-labelledby="SellerRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="WaperdRedempModal" tabindex="-1" role="dialog" aria-labelledby="WaperdRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="NIKRefRedempModal" tabindex="-1" role="dialog" aria-labelledby="NIKRefRedempModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-
 <div class="modal fade" id="DocumentModalRedemp" tabindex="-1" role="dialog" aria-labelledby="DocumentModalRedempLabel">
     <div class="modal-dialog" style="width:75%;">
         <div class="modal-content"></div>
@@ -442,216 +410,3 @@
 </div>
 
 <!-- End Modal -->
-
-<script>
-    function onRowViewRedempSelect(e) {
-        var data = this.dataItem(this.select());
-        $("#textNoTransaksiRedemp").val(data.NoTrx);
-        $("#srcProductRedemp_text1").val(data.KodeProduk);
-        var dateTglTransaksiRedemp = new Date(data.TglTrx);
-        $("#dateTglTransaksiRedemp").val(dateTglTransaksiRedemp.getDate() + '/' + (dateTglTransaksiRedemp.getMonth() + 1) + '/' + dateTglTransaksiRedemp.getFullYear());
-        $("#srcClientRedemp_text1").val(data.ClientCode);
-        $("#CurrCodeRedemp").val(data.CCY);
-        //$("#OutstandingUnitRedemp").val(data.OutstandingUnit);
-        $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value(data.OutstandingUnit);        
-        //$("#RedempUnit").val(data.RedempUnit);
-        $("#RedempUnit").data("kendoNumericTextBox").value(data.RedempUnit);
-        if (data.OutstandingUnit == data.RedempUnit) {
-            $('#checkAll').prop('checked', true);
-        } else
-        {
-            $('#checkAll').prop('checked', false);
-        }
-        
-        $('#checkFeeEditRedemp').prop('checked', data.EditFee);
-        $('#checkPhoneOrderRedemp').prop('checked', data.PhoneOrder);
-        
-        var KodeProduk = data.KodeProduk;
-        var ClientCode = data.ClientCode;
-        var ProdId;
-
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateProduct',
-            data: { Col1: KodeProduk, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#srcProductRedemp_text2").val(data[0].ProdName);
-                ProdId = data[0].ProdId;
-                $.ajax({
-                    type: 'GET',
-                    url: '/Global/ValidateClient',
-                    data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
-                    success: function (data) {
-                        $("#srcClientRedemp_text2").val(data[0].ClientName);
-                    }
-                });
-            }
-        });
-
-        var dropdownlist = $("#_ComboJenisRedemp").data("kendoDropDownList");
-        var intJenis = data.JenisFee;
-        //By Nominal
-        if (intJenis == 0) {
-            dropdownlist.select(0);
-            $("#MoneyFeeRedemp").val(data.NominalFee);
-            $("#PercentageFeeRedemp").val(data.PctFee);
-            //By %
-        } else {
-            dropdownlist.select(1);
-            $("#MoneyFeeRedemp").val(data.PctFee);
-            $("#PercentageFeeRedemp").val(data.NominalFee);
-        }
-    };
-
-
-    function ValidatesrcProductRedemp_text1() {
-        var ProductCode = $("#srcProductRedemp_text1").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateProduct',
-            data: { Col1: ProductCode, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#srcProductRedemp_text2").val(data[0].ProdName);
-                $("#ProdIdRedemp").val(data[0].ProdId);
-            }
-        });
-    }
-    function ValidateClientRedemp() {
-        var ClientCode = $("#srcClientRedemp_text1").val();
-        var ProdId = $("#ProdIdRedemp").val();
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateClient',
-            data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
-            success: function (data) {
-                $("#srcClientRedemp_text2").val(data[0].ClientName);
-            }
-        });
-    }
-
-    function onChangeRedempUnit() {
-        
-        var intTranType;
-        $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(0);        
-        $("#PercentageFeeRedemp").data("kendoNumericTextBox").value(0);
-        $("#checkFeeEditRedemp").prop('checked', false);
-
-        if ($("#checkFeeEditRedemp").prop('checked') == false)
-        {
-            $("#_ComboJenisRedemp").data('kendoDropDownList').enable(false);
-            $("#MoneyFeeRedemp").data("kendoNumericTextBox").enable(false);
-        }        
-        $("#_KeteranganFeeRedemp").text('');
-        $("#labelFeeCurrencyRedemp").text('');
-
-        if ((this.value() != 0) && ($("#srcProductRedemp_text1").val() != "") && ($("#srcClientRedemp_text1").val() != "") && ($("#OutstandingUnitRedemp").data("kendoNumericTextBox").value() != 0))
-        {
-            var res = GetImportantData("PRODUKID", $("#srcProductRedemp_text1").val());
-            res.success(function (data) {
-                intProdId = data.value;
-            });
-
-            var res = GetImportantData("CLIENTID", $("#srcClientRedemp_text1").val());
-            res.success(function (data) {
-                intClientid = data.value;
-            });
-
-            if ($("#RedempUnit").data("kendoNumericTextBox").value() == $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value()) {
-                IsRedempAll = true;
-                $("#checkAll").prop('checked', true);
-            }
-            else {
-                IsRedempAll = false;
-                $("#checkAll").prop('checked', false);
-            }
-
-            if ($("#_ComboJenisRedemp").text() == "By %") {
-                ByPercent = true;
-            }
-            else {
-                ByPercent = false;
-            }
-
-            if (IsRedempAll) {
-                intTranType = 4;
-            }
-            else {
-                intTranType = 3;
-            }
-
-            var Jenis = 1;
-            var resFee = HitungFee(intProdId, intClientid, intTranType, 0, this.value()
-                , false, $("#checkFeeEditRedemp").prop('checked')
-                , $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFRedemp_text1').val());
-            resFee.success(function (data) {
-                if (data.blnResult) {              
-                    $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                    $("#PercentageFeeRedemp").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                    $("#labelFeeCurrencyRedemp").text('%');
-                    $("#_KeteranganFeeRedemp").text(data.resultFee.FeeCCY);                    
-                }
-            });
-        }
-    }
-    function onSpinRedempUnit() {
-        var intProdId, intClientid, intTranType;
-        $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(0);
-        $("#PercentageFeeRedemp").data("kendoNumericTextBox").value(0);
-        $("#checkFeeEditRedemp").prop('checked', false);
-
-        if ($("#checkFeeEditRedemp").prop('checked') == false) {
-            $("#_ComboJenisRedemp").data('kendoDropDownList').enable(false);
-            $("#MoneyFeeRedemp").data("kendoNumericTextBox").enable(false);
-        }
-        $("#_KeteranganFeeRedemp").text('');
-        $("#labelFeeCurrencyRedemp").text('');
-
-        if ((this.value() != 0) && ($("#srcProductRedemp_text1").val() != "") && ($("#srcClientRedemp_text1").val() != "") && ($("#OutstandingUnitRedemp").data("kendoNumericTextBox").value() != 0)) {
-            var res = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
-            res.success(function (data) {
-                intProdId = data.value;
-            });
-
-            var res = GetImportantData("CLIENTID", $("#srcProductRedemp_text1").val());
-            res.success(function (data) {
-                intClientid = data.value;
-            });
-
-            if ($("#RedempUnit").data("kendoNumericTextBox").value() == $("#OutstandingUnitRedemp").data("kendoNumericTextBox").value()) {
-                IsRedempAll = true;
-                $("#checkAll").prop('checked', true);
-            }
-            else {
-                IsRedempAll = false;
-                $("#checkAll").prop('checked', false);
-            }
-
-            if ($("#_ComboJenisRedemp").text() == "By %") {
-                ByPercent = true;
-            }
-            else {
-                ByPercent = false;
-            }
-
-            if (IsRedempAll) {
-                intTranType = 4;
-            }
-            else {
-                intTranType = 3;
-            }
-
-            var Jenis = 1;
-            var resFee = HitungFee(intProdId, intClientid, intTranType, 0, this.value()
-                , false, $("#checkFeeEditRedemp").prop('checked')
-                , $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFRedemp_text1').val());
-            resFee.success(function (data) {
-                if (data.blnResult) {
-                    $("#MoneyFeeRedemp").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                    $("#PercentageFeeRedemp").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                    $("#labelFeeCurrencyRedemp").text('%');
-                    $("#_KeteranganFeeRedemp").text(data.resultFee.FeeCCY);
-                }
-            });
-        }
-    }
-</script>

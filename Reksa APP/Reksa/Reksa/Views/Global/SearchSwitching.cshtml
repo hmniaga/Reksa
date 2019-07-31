@@ -32,18 +32,18 @@
     function onRowSwitchingSelect(e) {
         var data = this.dataItem(this.select());
         var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var TanggalTransaksi = $.trim(data.TanggalTransaksi);
 
         $("#SwitchingSelectedRefID").val(RefID);
-        $("#SwitchingSelectedtanggalTransaksi").val(tanggalTransaksi);
+        $("#SwitchingSelectedtanggalTransaksi").val(TanggalTransaksi);
     };
 
     $("#SwitchingSelectButton").on("click", function () {
         var selectedRefID = $("#SwitchingSelectedRefID").val();
         var selectedtanggalTransaksi = $("#SwitchingSelectedtanggalTransaksi").val();
-
-        $("input[name='SwitchingModel.RefID']").val(selectedRefID).change();
-        $("input[name='SwitchingModel.TanggalTransaksi']").val(selectedtanggalTransaksi);
+        
+        $("input[id='srcNoRefSwc_text1']").val(selectedRefID).change();
+        $("input[id='srcNoRefSwc_text2']").val(selectedtanggalTransaksi);
 
     });
 

@@ -39,7 +39,7 @@
                                             .Scrollable(s => s.Height(250))
                                             .Selectable(selectable => selectable
                                             .Mode(GridSelectionMode.Single))
-                                            .Events(events => events.Change("onRowClientSelect")))
+                                            .Events(events => events.Change("dgvClientCode_CellClick")))
                 </div>
                 <!-- End Grid Client -->
                 <!-- Begin Jangka Waktu -->
@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Jangka Waktu</label>
                         <div class="input-group">
-                            @Html.Kendo().NumericTextBox().Name("txtRDBJangkaWaktu").HtmlAttributes(new { style = "width: 80px" }).Enable(false).Min(0).Decimals(0)
+                            @Html.Kendo().NumericTextBox().Name("txtRDBJangkaWaktu").HtmlAttributes(new { style = "width: 80px" }).Enable(false).Min(0).Decimals(0).Format("{0:n0}")
                             <span class="input-group-btn"></span>
                             <label>&nbsp;&nbsp;&nbsp;Bulan</label>
                         </div>
@@ -68,7 +68,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <label class="col-sm-7 control-label">Frek Pendebetan</label>
-                            @Html.Kendo().NumericTextBox().Name("textFrekPendebetan").HtmlAttributes(new { style = "width: 80px" }).Enable(false).Min(0).Decimals(0)
+                            @Html.Kendo().NumericTextBox().Name("textFrekPendebetan").HtmlAttributes(new { style = "width: 80px" }).Enable(false).Min(0).Decimals(0).Format("{0:n0}")
                         </div>
                     </div>
                     <!-- End Frek Pendebetan -->
@@ -165,147 +165,3 @@
         </div>
     </div>
 </div>
-
-<script>
-function checkAllClient(e) {
-    var state = $(e).is(':checked');
-    var grid = $('#dgvClientCode').data('kendoGrid');
-    $.each(grid.dataSource.view(), function () {
-        if (this['Pilih'] != state)
-            this.dirty = true;
-
-        this['Pilih'] = state;
-    });
-    grid.refresh();
-    }
-
-    
-    function onCheckBoxFlag(e) {
-        var state = $(e).is(':checked');
-        var guid = e.value;
-
-        var grid = $('#dgvClientCode').data('kendoGrid');
-        grid.refresh();
-
-        grid.tbody.find("tr[role='row']").each(function () {
-            var dataItem = grid.dataItem(this);
-
-            if (dataItem.ClientId == guid) {
-                dataItem.Flag = state;
-            }
-        })
-
-        var countTrue = 0;
-        var countFalse = 0;
-        var countAll = 0;
-
-        $.each(grid.dataSource.view(), function () {
-            if (this['Flag'] == true) {
-                countTrue = countTrue + 1;
-            }
-            else {
-                countFalse = countFalse + 1;
-                isCheckedAll = false;
-            }
-            countAll = countAll + 1;
-        });
-        grid.refresh();
-    }
-
-function onCheckBoxClickClient(e) {
-    var state = $(e).is(':checked');
-    var guid = e.value;
-
-    var grid = $('#dgvClientCode').data('kendoGrid');
-    grid.refresh();
-
-    grid.tbody.find("tr[role='row']").each(function () {
-        var dataItem = grid.dataItem(this);
-
-        if (dataItem.ClientId == guid) {
-            dataItem.Pilih = state;
-        }
-    })
-
-    var chkAll = $('#chkSelectAllClient').is(':checked');
-    var isCheckedAll = true;
-    var countTrue = 0;
-    var countFalse = 0;
-    var countAll = 0;
-
-    $.each(grid.dataSource.view(), function () {
-        if (this['Pilih'] == true) {
-            countTrue = countTrue + 1;
-        }
-        else {
-            countFalse = countFalse + 1;
-            isCheckedAll = false;
-        }
-        countAll = countAll + 1;
-    });
-    if (countFalse == 0 || (countFalse == 1 && !state)) {
-        $('#chkSelectAllClient').prop("checked", state);
-    }
-    grid.refresh();
-    }
-
-var clientCode;
-var clientId;
-    function onRowClientSelect(e) {
-        var data = this.dataItem(this.select());
-        clientCode = $.trim(data.ClientCode);
-        clientId = $.trim(data.ClientId);
-
-        $.ajax({
-            type: 'GET',
-            url: '/Customer/GetDataRDB',
-            data: { strClientCode: clientCode},
-            success: function (data) {
-                if (data.blnResult == true) {
-                    $("#txtRDBJangkaWaktu").val(data.listRDB[0].JangkaWaktu);
-                    var dateJT = new Date(data.listRDB[0].JatuhTempo);
-                    $("#dtRDBJatuhTempo").val(dateJT.getDate() + '/' + (dateJT.getMonth() + 1) + '/' + dateJT.getFullYear());
-                    $('#chkAutoRedemp').prop('checked', data.listRDB[0].AutoRedemption);
-                    $('#chkRDBAsuransi').prop('checked', data.listRDB[0].Asuransi);
-                    $("#textFrekPendebetan").val(data.listRDB[0].FrekPendebetan);
-                }
-                else
-                {
-                    $("#txtRDBJangkaWaktu").val('');
-                    $("#dtRDBJatuhTempo").val('');
-                    $('#chkAutoRedemp').prop('checked', false);                    
-                    $('#chkRDBAsuransi').prop('checked', false);
-                    $("#textFrekPendebetan").val('');
-                }
-            }
-        });
-    };
-    
-    $("#btnPopulate").click(function () {
-        var dtStart = $("#dtpStartDate").val();
-        var dtEnd = $("#dtpEndDate").val(); 
-        $.ajax({
-            type: "GET",
-            url: "/Customer/ViewActivityData",
-            data: { intSelectedClient: clientId, strStart: dtStart, strEnd: dtEnd },
-            dataType: "json",
-            success: function (data) {
-                if (data.CustomerActivity.length != 0)
-                {
-                    var dataSource = new kendo.data.DataSource(
-                        {
-                            data: data.CustomerActivity
-                        });
-                    var Actgrid = $('#dgvAktifitas').data('kendoGrid');
-                    Actgrid.setDataSource(dataSource);
-                    Actgrid.dataSource.page(1);
-                    Actgrid.select("tr:eq(0)");
-                } else
-                {
-                    $("#dgvAktifitas").data('kendoGrid').dataSource.data([]);
-                }
-            }
-        });
-    });
-
-</script>

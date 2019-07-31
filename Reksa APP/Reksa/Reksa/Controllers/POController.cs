@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -11,14 +12,13 @@ using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace Reksa.Controllers
 {
     public class POController : Controller
     {
         #region "Default Var"
-        public string strModule;
+        public string strModule = "Pro Reksa 2";
         public int _intNIK = 10137;
         public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
@@ -28,10 +28,16 @@ namespace Reksa.Controllers
         private string _strAPIUrl;
         #endregion
 
-        public POController(IConfiguration iconfig)
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private clsConvert clsConvert;
+
+        public POController(IConfiguration iconfig, IHttpContextAccessor httpContextAccessor)
         {
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
+            _httpContextAccessor = httpContextAccessor;
+            clsConvert = new clsConvert();
         }
         [Authorize]
         public IActionResult CutMaintenanceFee()
@@ -474,6 +480,297 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg, BillID });
+        }
+        public JsonResult PopulateSubscriptionLimitAlert()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateSubscriptionLimitAlert?NIK=" + _intNIK + "&Module=" + strModule).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult.Tables.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult GetLastTanggalPencadangan()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DateTime StartDate = new DateTime();
+            DateTime EndDate = new DateTime();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/GetLastTanggalPencadangan").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    StartDate = Object.SelectToken("startDate").Value<DateTime>();
+                    EndDate = Object.SelectToken("endDate").Value<DateTime>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, StartDate, EndDate });
+        }
+        public JsonResult MaintainPencadangan(string Tipe, string ProdCode, string StartDate, string EndDate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/MaintainPencadangan?Tipe=" + Tipe + "&ProdCode=" + ProdCode + "&StartDate=" + StartDate + "&EndDate="+ EndDate +"&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PopulateRejectBooking(string strJenis)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateRejectBooking?Jenis=" + strJenis).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                    else
+                    {
+                        _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public ActionResult SaveRejectBooking(string listId, string strJenis)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] _SelectedId;
+                listId = (listId + "***").Replace("|***", "");
+                _SelectedId = listId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', _SelectedId);
+                if (strJenis == "A")
+                {
+                    dv1.RowFilter = " bookingId in (" + filter + ")";
+                }
+                else
+                {
+                    dv1.RowFilter = " tranId in (" + filter + ")";
+                }                
+
+                DataTable dtNew = dv1.ToTable();
+                if (dtNew == null || dtNew.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+
+                List<MaintRejectBooking> model1 = clsConvert.MapListOfObject<MaintRejectBooking>(dtNew);
+                List<MaintCancelTransaksi> model2 = clsConvert.MapListOfObject<MaintCancelTransaksi>(dtNew);
+
+                if (strJenis == "A")
+                {
+
+                    var Content = new StringContent(JsonConvert.SerializeObject(model1));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/PO/SaveRejectBooking?NIK=" + _intNIK, Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    }
+                }
+                else
+                {
+                    var Content = new StringContent(JsonConvert.SerializeObject(model2));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/PO/SaveCancelTrans?NIK=" + _intNIK, Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PopulateDiscFee()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateDiscFee?NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                    else
+                    {
+                        _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult MaintainDiscRedempt(int TranId, decimal RedempDisc)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/MaintainDiscRedempt?TranId=" + TranId + "&RedempDisc=" + RedempDisc + "&NIK=" + _intNIK + "&Guid=" + _strGuid ).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult ImportDataMFee(string FileName,int ProdId, int BankCustody, int isRecalculate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string XML = "";
+
+            DataSet dsUpload = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/ImportDataMFee?FileName=" + FileName + "&XML=" + XML + "&NIK=" + _intNIK + "&ProdId=" + ProdId + "&BankCustody=" + BankCustody + "&isRecalculate=" + isRecalculate).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsUpload"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsUpload = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsUpload });
         }
     }
 }

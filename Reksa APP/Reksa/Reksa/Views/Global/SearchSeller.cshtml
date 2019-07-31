@@ -42,8 +42,35 @@
         var selectedId = $("#SellerSelectedId").val();
         var selectedText = $("#SellerSelectedText").val();
 
-        $("input[id='srcSellerSwc_text1']").val(selectedId).change();
-        $("input[id='srcSellerSwc_text2']").val(selectedText);
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'SUBS') {
+            $("input[id='srcSellerSubs_text1']").val(selectedId).change();
+            $("input[id='srcSellerSubs_text2']").val(selectedText);
+        }
+        else if (Criteria == 'REDEMP') {
+            $("input[id='srcSellerRedemp_text1']").val(selectedId).change();
+            $("input[id='srcSellerRedemp_text2']").val(selectedText);
+        }
+        else if (Criteria == 'SUBSRDB') {
+            $("input[id='srcSellerRDB_text1']").val(selectedId).change();
+            $("input[id='srcSellerRDB_text2']").val(selectedText);
+        }
+        else if (Criteria == 'SWCNONRDB') {
+            $("input[id='srcSellerSwc_text1']").val(selectedId).change();
+            $("input[id='srcSellerSwc_text2']").val(selectedText);
+        }
+        else if (Criteria == 'SWCRDB') {
+            $("input[id='srcSellerSwcRDB_text1']").val(selectedId).change();
+            $("input[id='srcSellerSwcRDB_text2']").val(selectedText);
+        }
+        else if (Criteria == 'BOOK') {
+            $("input[id='srcSellerBooking_text1']").val(selectedId).change();
+            $("input[id='srcSellerBooking_text2']").val(selectedText);
+        }
+        else {
+            $("input[name='ReferentorModel.EMPLID']").val(selectedId).change();
+            $("input[name='ReferentorModel.NAME']").val(selectedText);
+        }
     });
 
     $("#SellerSearchComponentSearchTxt").on("keypress", function (e) {

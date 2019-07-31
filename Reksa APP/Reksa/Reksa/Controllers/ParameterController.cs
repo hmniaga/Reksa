@@ -10,6 +10,7 @@ using System;
 using Newtonsoft.Json.Linq;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Reksa.Controllers
 {
@@ -304,8 +305,7 @@ namespace Reksa.Controllers
         [Authorize]
         public IActionResult SubscriptionFee()
         {
-            ParameterSubscriptionFeeListViewModel vModel1 = new ParameterSubscriptionFeeListViewModel();
-            return View(vModel1);
+            return View();
         }
         public JsonResult RefreshSubscriptionFee(int ProdukId)
         {
@@ -757,5 +757,58 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
+        [HttpPost]
+        public JsonResult NonAktifClientId(int ClientId, decimal UnitBalance)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/NonAktifClientId?ClientId=" + ClientId + "&UnitBalance=" + UnitBalance + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+
+        public ActionResult SaveUploadWAPERD([FromBody] UploadWaperd model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsError = new DataSet();
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Parameter/UploadWAPERD?NIK=" + _intNIK + "&Module=" + strModule, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    dsError = strObject.SelectToken("dsError").Value<DataSet>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsError });
+        }
+
     }
 }

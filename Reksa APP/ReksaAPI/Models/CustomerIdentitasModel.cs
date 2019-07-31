@@ -18,7 +18,7 @@ namespace ReksaAPI.Models
             public string Kecamatan { get; set; }
             public string Kota { get; set; }
             public string Province { get; set; }
-            public System.DateTime LastUpdated { get; set; }
+            public string LastUpdated { get; set; }
         }
         public class IdentitasDetail
         {

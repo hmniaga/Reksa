@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReksaAPI.Models;
@@ -34,13 +35,13 @@ namespace ReksaAPI.Controllers
             List<CustomerNPWPModel> listCustNPWP = new List<CustomerNPWPModel>();
  
 
-            blnResult = cls.setDataCustomerByProcedure(CIFNO, "ReksaRefreshNasabah", out ErrMsg);
-            if (blnResult)
-            {
+            //blnResult = cls.setDataCustomerByProcedure(CIFNO, "ReksaRefreshNasabah", out ErrMsg);
+            //if (blnResult)
+            //{
                 blnResult = false;
                 blnResult = cls.ReksaRefreshNasabah(CIFNO, NIK, Guid, ref listCust, ref listRisk, ref listCustNPWP, out ErrMsg);
                 ErrMsg = ErrMsg.Replace("ReksaRefreshNasabah - Core .Net SqlClient Data Provider\n", "");
-            }
+            //}
             return Json(new { blnResult, ErrMsg, listCust, listRisk, listCustNPWP });
         }
 
@@ -55,7 +56,6 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaGenerateShareholderID - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, shareholderID });           
         }
-
         [Route("api/Customer/GetConfAddress")]
         [HttpGet("{id}")]
         public JsonResult GetConfAddress([FromQuery]int Type, [FromQuery]string CIFNO, [FromQuery]string Branch, [FromQuery]int Id, [FromQuery]int NIK, [FromQuery]string Guid)
@@ -65,24 +65,21 @@ namespace ReksaAPI.Controllers
             List<CustomerIdentitasModel.KonfirmAddressList> listKonfAddress = new List<CustomerIdentitasModel.KonfirmAddressList>();
             List<CustomerIdentitasModel.AlamatCabangDetail> listBranch = new List<CustomerIdentitasModel.AlamatCabangDetail>();
             string strMessage, ErrMsg;
-            blnResult = cls.ReksaGetConfAddress(Type, CIFNO, Branch, Id, NIK, Guid, 
-                out intAddressType, out strMessage, out ErrMsg,  
-                ref listKonfAddress, ref listBranch);
+            blnResult = cls.ReksaGetConfAddress(Type, CIFNO, Branch, Id, NIK, Guid, out intAddressType, out strMessage, out ErrMsg, ref listKonfAddress, ref listBranch);
             ErrMsg = ErrMsg.Replace("ReksaGetConfAddress - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, intAddressType, listKonfAddress, listBranch, strMessage });
         }
-
-
         [Route("api/Customer/GetAlamatCabang")]
         [HttpGet("{id}")]
         public JsonResult GetAlamatCabang([FromQuery]string Branch, [FromQuery]string CIFNO, [FromQuery]int Id)
         {
+            bool blnResult;
+            string ErrMsg;
             List<CustomerIdentitasModel.AlamatCabangDetail> listBranchAddress = new List<CustomerIdentitasModel.AlamatCabangDetail>();
-            cls.ReksaGetAlamatCabang(Branch, CIFNO, Id, ref listBranchAddress);
-            return Json(new { listBranchAddress });
+            blnResult = cls.ReksaGetAlamatCabang(Branch, CIFNO, Id, ref listBranchAddress, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetAlamatCabang - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listBranchAddress });
         }
-        
-
         [Route("api/Customer/GetAccountRelationDetail")]
         [HttpGet("{id}")]
         public JsonResult GetAccountRelationDetail([FromQuery]string AccountNum, [FromQuery]int Type)
@@ -95,8 +92,7 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaGetAccountRelationDetail(AccountNum, Type, out NoRek, out Nama, out NIK, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaGetAccountRelationDetail - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, NoRek, Nama, NIK });
-        }
-        
+        }        
         [Route("api/Customer/GetListClient")]
         [HttpGet("{id}")]
         public JsonResult GetListClient([FromQuery]string CIFNO)
@@ -122,37 +118,44 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Customer/PopulateAktivitas")]
         [HttpGet("{id}")]
-        public JsonResult PopulateAktivitas([FromQuery]int ClientId, [FromQuery]DateTime dtStartDate, [FromQuery]DateTime dtEndDate, [FromQuery]int IsBalance, [FromQuery]int intNIK, [FromQuery]int IsAktivitasOnly, [FromQuery]int isMFee, [FromQuery]string strGuid)
+        public JsonResult PopulateAktivitas([FromQuery]int ClientId, [FromQuery]string StartDate, [FromQuery]string EndDate, [FromQuery]int isBalance, [FromQuery]int NIK, [FromQuery]int isAktivitasOnly, [FromQuery]int isMFee, [FromQuery]string GUID)
         {
             bool blnResult;
             string ErrMsg;
             List<CustomerAktifitasModel.PopulateAktifitas> listPopulateAktifitas = new List<CustomerAktifitasModel.PopulateAktifitas>();
             decimal decEffBal, decNomBal;
-            blnResult = cls.ReksaPopulateAktivitas(ClientId, dtStartDate, dtEndDate, IsBalance, intNIK,
-                IsAktivitasOnly, isMFee, strGuid,  ref listPopulateAktifitas, out decEffBal, out decNomBal, out ErrMsg);
-            ErrMsg = ErrMsg.Replace("ReksaPopulateAktivitas - Core .Net SqlClient Data Provider\n", "");
-            return Json(new { listPopulateAktifitas, decEffBal, decNomBal });
-        }
 
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(EndDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaPopulateAktivitas(ClientId, dtStartDate, dtEndDate, isBalance, NIK, isAktivitasOnly, isMFee, GUID,  ref listPopulateAktifitas, out decEffBal, out decNomBal, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateAktivitas - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listPopulateAktifitas, decEffBal, decNomBal });
+        }
         [Route("api/Customer/RefreshBlokir")]
         [HttpGet("{id}")]
-        public JsonResult RefreshBlokir([FromQuery]int intClientId, [FromQuery]int intNIK, [FromQuery]string strGuid)
+        public JsonResult RefreshBlokir([FromQuery]int ClientId, [FromQuery]int NIK, [FromQuery]string GUID)
         {
+            bool blnResult = false;
+            string ErrMsg = "";
             List<CustomerBlokirModel> listBlokir = new List<CustomerBlokirModel>();
             decimal decTotal, decOutstandingUnit;
-            cls.ReksaRefreshBlokir(intClientId, intNIK, strGuid, ref listBlokir, out decTotal, out decOutstandingUnit);
-            return Json(new { listBlokir, decTotal, decOutstandingUnit });
-        }        
-
+            blnResult = cls.ReksaRefreshBlokir(ClientId, NIK, GUID, ref listBlokir, out decTotal, out decOutstandingUnit, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshBlokir - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listBlokir, decTotal, decOutstandingUnit });
+        }
         [Route("api/Customer/FlagClientId")]
         [HttpGet("{id}")]
-        public string FlagClientId([FromQuery]int ClientId, [FromQuery]int NIK, [FromQuery]int Flag)
+        public JsonResult FlagClientId([FromQuery]int ClientId, [FromQuery]int NIK, [FromQuery]int Flag)
         {
-            string strErr;
-            cls.ReksaFlagClientId(ClientId, NIK, Flag, out strErr);
-            return strErr;
+            bool blnResult = false;
+            string ErrMsg = "";
+            blnResult = cls.ReksaFlagClientId(ClientId, NIK, Flag, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaFlagClientId - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
         }
-
         [Route("api/Customer/GetRiskProfileParam")]
         public JsonResult GetRiskProfileParam()
         {
@@ -161,9 +164,9 @@ namespace ReksaAPI.Controllers
             int intExpRiskProfileYear;
             int intExpRiskProfileDay;
             blnResult = cls.ReksaCekExpRiskProfileParam(out intExpRiskProfileYear, out intExpRiskProfileDay, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCekExpRiskProfileParam - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, intExpRiskProfileYear, intExpRiskProfileDay, ErrMsg }); 
         }
-
         [Route("api/Customer/MaintainBlokir")]
         [HttpPost]
         public JsonResult MaintainBlokir([FromQuery]string BlockDesc, [FromQuery]bool isAccepted, [FromQuery]int NIK, [FromQuery]string GUID, [FromBody] CustomerBlokirModel model)
@@ -177,24 +180,34 @@ namespace ReksaAPI.Controllers
 
         [Route("api/Customer/SaveExpRiskProfile")]
         [HttpGet("{id}")]
-        public JsonResult SaveExpRiskProfile([FromQuery]DateTime dtRiskProfile, [FromQuery]DateTime dtExpRiskProfile,
+        public JsonResult SaveExpRiskProfile([FromQuery]string RiskProfile, [FromQuery]string ExpRiskProfile,
             [FromQuery]long CIFNo)
         {
             bool blnResult;
             string ErrMsg;
+
+            DateTime dtRiskProfile = new DateTime();
+            DateTime dtExpRiskProfile = new DateTime();
+            DateTime.TryParseExact(RiskProfile, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtRiskProfile);
+            DateTime.TryParseExact(ExpRiskProfile, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtExpRiskProfile);
+
             blnResult = cls.ReksaSaveExpRiskProfile(dtRiskProfile, dtExpRiskProfile, CIFNo, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaSaveExpRiskProfile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
         [Route("api/Customer/CekExpRiskProfile")]
         [HttpGet("{id}")]
-        public JsonResult CekExpRiskProfile([FromQuery]DateTime DateRiskProfile, [FromQuery]long CIFNo)
+        public JsonResult CekExpRiskProfile([FromQuery]string DateRiskProfile, [FromQuery]long CIFNo)
         {
             bool blnResult;
             string ErrMsg;
             DateTime dtExpiredRiskProfile;
             string strEmail;
-            blnResult = cls.ReksaCekExpRiskProfile(DateRiskProfile, CIFNo, out dtExpiredRiskProfile, out strEmail, out ErrMsg);
+
+            DateTime dtRiskProfile = new DateTime();
+            DateTime.TryParseExact(DateRiskProfile, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtRiskProfile);
+
+            blnResult = cls.ReksaCekExpRiskProfile(dtRiskProfile, CIFNo, out dtExpiredRiskProfile, out strEmail, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaCekExpRiskProfile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dtExpiredRiskProfile, strEmail });
         }
@@ -216,15 +229,14 @@ namespace ReksaAPI.Controllers
             bool blnResult;
             string ErrMsg;
             List<CIFDataModel> CIFData = new List<CIFDataModel>();
-            blnResult = cls.setDataCustomerByProcedure(CIFNo, "ReksaGetCIFData", out ErrMsg);
-            if (blnResult)
-            {
+            //blnResult = cls.setDataCustomerByProcedure(CIFNo, "ReksaGetCIFData", out ErrMsg);
+            //if (blnResult)
+            //{
                 blnResult = cls.ReksaGetCIFData(CIFNo, NIK, GUID, NPWP, ref CIFData, out ErrMsg);
                 ErrMsg = ErrMsg.Replace("ReksaGetCIFData - Core .Net SqlClient Data Provider\n", "");
-            }
+            //}
             return Json(new { blnResult, ErrMsg, CIFData });
         }
-
         [Route("api/Customer/GetRiskProfile")]
         [HttpGet("{id}")]
         public JsonResult GetRiskProfile([FromQuery]string CIFNo)
@@ -239,7 +251,6 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaGetRiskProfile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, RiskProfile, LastUpdate, IsRegistered, ExpRiskProfileYear});
         }
-
         [Route("api/Customer/MaintainNasabah")]
         [HttpGet("{id}")]
         public JsonResult MaintainNasabah([FromQuery]int NIK, [FromQuery]string GUID, [FromBody]MaintainNasabah model)
@@ -249,11 +260,19 @@ namespace ReksaAPI.Controllers
 
             DataTable dtError = new DataTable();
             blnResult = cls.ReksaMaintainNasabah(model, NIK, GUID, out ErrMsg, out dtError);
-
             ErrMsg = ErrMsg.Replace("ReksaMaintainNasabah - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dtError });
         }
-
+        [Route("api/Customer/GetMandatoryFieldStatus")]
+        [HttpGet("{id}")]
+        public JsonResult GetMandatoryFieldStatus([FromQuery]long CIFNo)
+        {
+            bool blnResult;
+            string ErrMsg, ErrorMessage;
+            blnResult = cls.ReksaGetMandatoryFieldStatus(CIFNo, out ErrMsg, out ErrorMessage);
+            ErrMsg = ErrMsg.Replace("ReksaGetMandatoryFieldStatus - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, ErrorMessage });
+        }
         private JsonResult Json(object p, object allowGet)
         {
             throw new NotImplementedException();

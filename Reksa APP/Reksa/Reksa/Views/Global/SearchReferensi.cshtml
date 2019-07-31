@@ -6,9 +6,9 @@
     Layout = null;
 }
 <script type="text/javascript">
-    function onSearchReferensi() {
-        var value = $("#ReferensiSearchComponentSearchTxt").val();
-        var grid = $("#ReferensiSearchComponentGrid").data("kendoGrid");
+    function onSearchReferensiSubs() {
+        var value = $("#ReferensiSubsSearchComponentSearchTxt").val();
+        var grid = $("#ReferensiSubsSearchComponentGrid").data("kendoGrid");
 
         var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
         grid.dataSource.transport.options.read.url = parsedUrl;
@@ -29,32 +29,56 @@
         }
     }
 
-    function onRowReferensiSelect(e) {
+    function onRowReferensiSubsSelect(e) {
         var data = this.dataItem(this.select());
         var RefID = $.trim(data.RefID);
-        var tanggalTransaksi = $.trim(data.tanggalTransaksi);
+        var TanggalTransaksi = $.trim(data.TanggalTransaksi);
 
-        $("#ReferensiSelectedRefID").val(RefID);
-        $("#ReferensiSelectedtanggalTransaksi").val(tanggalTransaksi);
+        $("#ReferensiSubsSelectedRefID").val(RefID);
+        $("#ReferensiSubsSelectedtanggalTransaksi").val(TanggalTransaksi);
     };
 
-    $("#ReferensiSelectButton").on("click", function () {
-        var selectedRefID = $("#ReferensiSelectedRefID").val();
-        var selectedtanggalTransaksi = $("#ReferensiSelectedtanggalTransaksi").val();
+    $("#ReferensiSubsSelectButton").on("click", function () {
+        var selectedRefID = $("#ReferensiSubsSelectedRefID").val();
+        var selectedtanggalTransaksi = $("#ReferensiSubsSelectedtanggalTransaksi").val(); 
 
-        $("input[name='ReferensiModel.RefID']").val(selectedRefID).change();
-        $("input[name='ReferensiModel.tanggalTransaksi']").val(selectedtanggalTransaksi);
-
+        var Criteria = "@ViewBag.Criteria";
+        Criteria = Criteria.split("#", 1);
+        if (Criteria[0] == 'SUBS')
+        {
+            $("input[id='srcNoRefSubs_text1']").val(selectedRefID).change();
+            $("input[id='srcNoRefSubs_text2']").val(selectedtanggalTransaksi);
+        }
+        else if (Criteria[0] == 'REDEMP') {
+            $("input[id='srcNoRefRedemp_text1']").val(selectedRefID).change();
+            $("input[id='srcNoRefRedemp_text2']").val(selectedtanggalTransaksi);
+        }
+        else if (Criteria[0] == 'SUBSRDB') {
+            $("input[id='srcNoRefRDB_text1']").val(selectedRefID).change();
+            $("input[id='srcNoRefRDB_text2']").val(selectedtanggalTransaksi);
+        }
+        else {
+            $("input[name='ReferensiModel.RefID'']").val(selectedRefID).change();
+            $("input[name='ReferensiModel.TanggalTransaksi']").val(selectedtanggalTransaksi);
+        }
     });
 
-    $("#ReferensiSearchComponentSearchTxt").on("keypress", function (e) {
+    $("#ReferensiSubsSearchComponentSearchTxt").on("keypress", function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
         {
-            $("#ReferensiSearchComponentSearchBtn").click();
+            $("#ReferensiSubsSearchComponentSearchBtn").click();
             return false;
         }
     });
+     function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
 </script>
 <div class="modal-content">
     <div class="modal-header">
@@ -63,17 +87,17 @@
     </div>
     <div class="modal-body">
         @(Html.Kendo().Grid<Reksa.Models.ReferensiModel>()
-                    .Name("ReferensiSearchComponentGrid")
+                    .Name("ReferensiSubsSearchComponentGrid")
                     .Columns(columns =>
                     {
                         columns.Bound(m => m.RefID).Title("No Referensi");
-                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd MMMM yyyy}").Title("Tanggal Transaksi");
+                        columns.Bound(m => m.TanggalTransaksi).Format("{0:dd/MM/yyyy}").Title("Tanggal Transaksi");
                     })
                     .ToolBar(toolbar =>
                     {
                         toolbar.ClientTemplateId("GridToolbarTemplate");
                     })
-                    .Events(events => events.Change("onRowReferensiSelect"))
+                    .Events(events => events.Change("onRowReferensiSubsSelect"))
                     .Pageable()
                     .Scrollable()
                     .Selectable(selectable => selectable
@@ -85,27 +109,27 @@
                         {
                             model.Id(m => m.RefID);
                         })
-                        .Read(read => read.Action("SearchReferensiData", "Global", new { search = search, criteria = criteria }))
+                        .Read(read => read.Action("SearchReferensiData", "Global").Data("getData"))
                     )
         )
 
         <script id="GridToolbarTemplate">
         <div class="toolbar">
-            @(Html.Kendo().TextBox().Name("ReferensiSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().TextBox().Name("ReferensiSubsSearchComponentSearchTxt").Value(search).ToClientTemplate())
             @(Html.Kendo().Button()
                             .HtmlAttributes(new { type = "button" })
-                            .Name("ReferensiSearchComponentSearchBtn")
+                            .Name("ReferensiSubsSearchComponentSearchBtn")
                             .Content("Search")
-                            .Events(ev => ev.Click("onSearchReferensi")).ToClientTemplate()
+                            .Events(ev => ev.Click("onSearchReferensiSubs")).ToClientTemplate()
             )
         </div>
         </script>
 
-        <input type="hidden" id="ReferensiSelectedRefID" name="ReferensiSelectedRefID" value="" />
-        <input type="hidden" id="ReferensiSelectedtanggalTransaksi" name="ReferensiSelectedtanggalTransaksi" value="" />
+        <input type="hidden" id="ReferensiSubsSelectedRefID" name="ReferensiSubsSelectedRefID" value="" />
+        <input type="hidden" id="ReferensiSubsSelectedtanggalTransaksi" name="ReferensiSubsSelectedtanggalTransaksi" value="" />
     </div>
     <div class="modal-footer">
-        <button type="submit" id="ReferensiSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+        <button type="submit" id="ReferensiSubsSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
             <span class="glyphicon glyphicon-ok"></span> Select
         </button>
         <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">

@@ -169,13 +169,7 @@ namespace Reksa.Controllers
             }
             return Json(result);
         }
-        public ActionResult SearchTrxClientSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            return View();
-        }
-        public ActionResult SearchTrxClientRedemp(string search, string criteria)
+        public ActionResult SearchTrxClient(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -187,7 +181,6 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
             return View();
         }
-
         public ActionResult SearchTrxClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
@@ -268,37 +261,12 @@ namespace Reksa.Controllers
             return Json(result);
         }
 
-        public ActionResult SearchTrxProductSubs(string search, string criteria)
+        public ActionResult SearchTrxProduct(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
             return View();
-        }
-        public ActionResult SearchTrxProductSwcIn(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            return View();
-        }
-        public ActionResult SearchTrxProductSwcOut(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            return View();
-        }
-        public ActionResult SearchTrxProductRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            return View();
-        }
-        public ActionResult SearchTrxProductRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            return View();
-        }
-
+        }  
         public ActionResult SearchTrxProductData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             var EncodedstrPopulate = System.Net.WebUtility.UrlDecode(criteria);
@@ -334,6 +302,13 @@ namespace Reksa.Controllers
             }
 
             return Json(result);
+        }
+        public ActionResult SearchTrxProductSwcIn(string search, string criteria, bool isRDB)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            ViewBag.isRDB = isRDB;
+            return View();
         }
         public ActionResult SearchTransSwitchInData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
@@ -492,52 +467,6 @@ namespace Reksa.Controllers
 
             return View();
         }
-
-        public ActionResult SearchCIFSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCIFRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCIFRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchCIFSwc(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchCIFSwcRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCIFBooking(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
         public ActionResult SearchCIFData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             string ErrMsg;
@@ -579,24 +508,66 @@ namespace Reksa.Controllers
                 result.Data = list;
             }
             return Json(result);
+        }
+        public ActionResult SearchCIFAll(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCIFAllData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            string ErrMsg;
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<CustomerModel> list = new List<CustomerModel>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCIFAll?Col1=&Col2=" + search + "&Validate=0").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<CustomerModel>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
 
         }
 
-        public ActionResult SearchClient(string search, string criteria, int ProdId)
+        public ActionResult SearchClient(string search, string criteria, string ProdId)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
             ViewBag.ProdId = ProdId;
             return View();
         }
-        public ActionResult SearchClientSubs(string search, string criteria, int ProdId)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-            ViewBag.ProdId = ProdId;
-            return View();
-        }
-        public ActionResult SearchClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria, int ProdId)
+        public ActionResult SearchClientData([DataSourceRequest]DataSourceRequest request, string search, string criteria, string ProdId)
         {
             int pageNum = request.Page;
             int pageSize = request.PageSize;
@@ -695,7 +666,6 @@ namespace Reksa.Controllers
                 result.Total = total;
                 result.Data = list;
             }
-
             return Json(result);
         }
 
@@ -824,49 +794,7 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
 
             return View();
-        }
-        public ActionResult SearchCustomerSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCustomerRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCustomerRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCustomerSwc(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCustomerSwcRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchCustomerBook(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
+        }        
         public ActionResult SearchCustomerData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             string ErrMsg;
@@ -1135,66 +1063,20 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-        public ActionResult SearchReferentorSubs(string search, string criteria)
+        public ActionResult SearchReferentor(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
 
             return View();
         }
-        public ActionResult SearchReferentorSwc(string search, string criteria)
+        public ActionResult SearchSeller(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
 
             return View();
         }
-        public ActionResult SearchReferentorRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchReferentorRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchSellerSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchSellerSwc(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchSellerRDB(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchSellerRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
         public ActionResult SearchReferentorData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             if (request.Filters.Count > 0)
@@ -1245,27 +1127,6 @@ namespace Reksa.Controllers
             return Json(list);
         }
         public ActionResult SearchReferensi(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchReferensiSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchReferensiRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-        public ActionResult SearchReferensiRDB(string search, string criteria)
         {
             ViewBag.Search = search;
             ViewBag.Criteria = criteria;
@@ -1426,21 +1287,6 @@ namespace Reksa.Controllers
 
             return View();
         }
-        public ActionResult SearchWaperdSubs(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
-
-        public ActionResult SearchWaperdRedemp(string search, string criteria)
-        {
-            ViewBag.Search = search;
-            ViewBag.Criteria = criteria;
-
-            return View();
-        }
         public ActionResult SearchWaperdData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
         {
             if (request.Filters.Count > 0)
@@ -1490,7 +1336,6 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
-
         public JsonResult ValidateOfficeId(string OfficeId)
         {
             string strErrMsg = "";
@@ -1527,7 +1372,6 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, strErrMsg, isAllowed });
         }
-
         public JsonResult ValidasiCBOKodeKantor(string OfficeId)
         {
             string strErrMsg = "";
@@ -1731,6 +1575,57 @@ namespace Reksa.Controllers
             }
             return Json(list);
         }
+        public JsonResult ValidateTrxClient(string Col1, string Col2, int Validate, string criteria)
+        {
 
+            if (Col1 == null)
+                Col1 = "";
+            List<TransaksiClientNew> list = new List<TransaksiClientNew>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcTrxClientNew?Col1=" + Col1.Trim() + "&Col2=" + Col2 + "&Validate=" + Validate + "&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<TransaksiClientNew>>(stringData);
+            }
+            return Json(list);
+        }
+        public JsonResult ValidateCBOOfficeId(string OfficeId)
+        {
+            string strErrMsg = "";
+            bool blnResult = false;
+            bool IsEnable = false;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/Global/ValidateCBOOfficeId?OfficeId=" + OfficeId).Result;
+                    string strResponse = response.Content.ReadAsStringAsync().Result;
+
+                    JObject Object = JObject.Parse(strResponse);
+                    JToken TokenResult = Object["blnResult"];
+                    JToken TokenErrMsg = Object["ErrMsg"];
+                    JToken TokenData = Object["IsEnable"];
+                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+
+                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    IsEnable = JsonConvert.DeserializeObject<bool>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                strErrMsg = e.Message;
+            }
+            return Json(new { blnResult, strErrMsg, IsEnable });
+        }
     }
 }

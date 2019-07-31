@@ -45,8 +45,36 @@
         var selectedName = $("#CustomerSelectedName").val();
         var selectedId = $("#CustomerSelectedId").val();
 
-        $("input[name='CustomerModel.CIFNo']").val(selectedCode).change();
-        $("input[name='CustomerModel.CIFName']").val(selectedName);
+        var criteria = "@ViewBag.Criteria";
+        if (criteria == 'SUBS') {
+            $("input[id='srcCIFSubs_text1']").val(selectedCode).change();
+            $("input[id='srcCIFSubs_text2']").val(selectedName);
+        }
+        else if (criteria == 'REDEMP') {
+            $("input[id='srcCIFRedemp_text1']").val(selectedCode).change();
+            $("input[id='srcCIFRedemp_text2']").val(selectedName);
+        }
+        else if (criteria == 'SUBSRDB') {
+            $("input[id='srcCIFRDB_text1']").val(selectedCode).change();
+            $("input[id='srcCIFRDB_text2']").val(selectedName);
+        }
+        else if (criteria == 'SWC') {
+            $("input[id='srcCIFSwc_text1']").val(selectedCode).change();
+            $("input[id='srcCIFSwc_text2']").val(selectedName);
+        }
+        else if (criteria == 'SWCRDB') {
+            $("input[id='srcCIFSwcRDB_text1']").val(selectedCode).change();
+            $("input[id='srcCIFSwcRDB_text2']").val(selectedName);
+        }
+        else if (criteria == 'BOOK') {
+            $("input[id='srcCIFBooking_text1']").val(selectedCode).change();
+            $("input[id='srcCIFBooking_text2']").val(selectedName);
+        }
+        else {
+            $("input[name='CustomerModel.CIFNo']").val(selectedCode).change();
+            $("input[name='CustomerModel.CIFName']").val(selectedName);
+        }
+
         $("input[name='CustomerModel.NasabahId']").val(selectedId);
 
     });

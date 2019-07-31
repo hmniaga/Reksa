@@ -45,10 +45,49 @@
         var selectedWaperdNo = $("#WaperdSelectedWaperdNo").val();
         var selectedDateExpire = $("#WaperdSelectedDateExpire").val();
 
-        $("input[name='WaperdModel.employee_id']").val(selectedEmployeeId).change();
-        $("input[name='WaperdModel.WaperdNo']").val(selectedWaperdNo)
-        var dtExpire = new Date(selectedDateExpire);
-        $("input[name='WaperdModel.DateExpire']").val(dtExpire.getDate() + '/' + (dtExpire.getMonth() + 1) + '/' + dtExpire.getFullYear());
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'SUBS') {
+            $("input[id='srcWaperdSubs_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdSubs_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdSubs']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else if (Criteria == 'REDEMP') {
+            $("input[id='srcWaperdRedemp_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdRedemp_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdRedemp']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else if (Criteria == 'SUBSRDB') {
+            $("input[id='srcWaperdRDB_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdRDB_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdRDB']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else if (Criteria == 'SWCNONRDB') {
+            $("input[id='srcWaperdSwc_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdSwc_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdSwc']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else if (Criteria == 'SWCRDB') {
+            $("input[id='srcWaperdSwcRDB_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdSwcRDB_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdSwcRDB']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else if (Criteria == 'BOOK') {
+            $("input[id='srcWaperdBooking_text1']").val(selectedEmployeeId).change();
+            $("input[id='srcWaperdBooking_text2']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[id='textExpireWaperdBooking']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
+        else {
+            $("input[name='WaperdModel.employee_id']").val(selectedEmployeeId).change();
+            $("input[name='WaperdModel.WaperdNo']").val(selectedWaperdNo)
+            var dtExpire = new Date(selectedDateExpire);
+            $("input[name='WaperdModel.DateExpire']").val(pad((dtExpire.getDate()), 2) + '/' + pad((dtExpire.getMonth() + 1), 2) + '/' + dtExpire.getFullYear());
+        }
     });
 
     $("#WaperdSearchComponentSearchTxt").on("keypress", function (e) {

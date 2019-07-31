@@ -98,10 +98,10 @@ namespace Reksa.Models
         {
             public string TranType { get; set; }
             public System.DateTime TranDate { get; set; }
-            public string srcProductSwcOut_text1 { get; set; }
-            public string srcProductSwcIn_text1 { get; set; }
-            public string srcClientSwcOut_text1 { get; set; }
-            public string srcClientSwcIn_text1 { get; set; }
+            public string ProdCodeSwcOut { get; set; }
+            public string ProdCodeSwcIn { get; set; }
+            public string ClientCodeSwcOut{ get; set; }
+            public string ClientCodeSwcIn { get; set; }
             public string FundCodeSwcOut { get; set; }
             public string FundCodeSwcIn { get; set; }
             public string AgentCode { get; set; }
@@ -250,6 +250,94 @@ namespace Reksa.Models
             public bool isNew { get; set; }
             public string strClientCodeSwitchInNew { get; set; }
             public int intReferentor { get; set; }
+            public bool isTrxTaxAmnesty { get; set; }
+        }
+        public class MaintainSwitchingRDB
+        {
+            public int intType { get; set; }
+            public int strTranType { get; set; }
+            public string strTranCode { get; set; }
+            public int intTranId { get; set; }
+            public DateTime dtTranDate { get; set; }
+            public int intProdIdSwcOut { get; set; }
+            public int intProdIdSwcIn { get; set; }
+            public int intClientIdSwcOut { get; set; }
+            public int intClientIdSwcIn { get; set; }
+            public string strSelectedAccNo { get; set; }
+            public decimal decTranUnit { get; set; }
+            public decimal decSwitchingFee { get; set; }
+            public decimal decUnitBalanceSwcOut { get; set; }
+            public int intJangkaWaktu { get; set; }
+            public int intJatuhTempo { get; set; }
+            public int intFrekPendebetan { get; set; }
+            public int intAutoRedemption { get; set; }
+            public int intAsuransi { get; set; }
+            public int intUserSuid { get; set; }
+            public int intReferentor { get; set; }
+            public bool isByUnit { get; set; }
+            public string strGuid { get; set; }
+            public string strCIFNo { get; set; }
+            public string strOfficeId { get; set; }
+            public string strRefID { get; set; }
+            public bool isNew { get; set; }
+            public string strClientCodeSwitchInNew { get; set; }
+            public string strInputter { get; set; }
+            public int intSeller { get; set; }
+            public int intWaperd { get; set; }
+            public bool isFeeEdit { get; set; }
+            public decimal decPercentageFee { get; set; }
+            public bool isByPhoneOrder { get; set; }
+            public bool isDocFCSubscriptionForm { get; set; }
+            public bool isDocFCDevidentAuthLetter { get; set; }
+            public bool isDocFCJoinAcctStatementLetter { get; set; }
+            public bool isDocFCIDCopy { get; set; }
+            public bool isDocFCOthers { get; set; }
+            public bool isDocTCSubscriptionForm { get; set; }
+            public bool isDocTCTermCondition { get; set; }
+            public bool isDocTCProspectus { get; set; }
+            public bool isDocTCFundFactSheet { get; set; }
+            public bool isDocTCOthers { get; set; }
+            public string strDocFCOthersList { get; set; }
+            public string strDocTCOthersList { get; set; }
+            public bool isTrxTaxAmnesty { get; set; }
+
+        }
+        public class MaintainBooking
+        {
+            public int intType { get; set; }
+            public int intBookingId { get; set; }
+            public string strRefID { get; set; }
+            public string strCIFNo { get; set; }
+            public string strCIFName { get; set; }
+            public int intProdId { get; set; }
+            public string strOfficeId { get; set; }
+            public string strCurrency { get; set; }
+            public decimal decNominal { get; set; }
+            public string strRekening { get; set; }
+            public string strNamaRekening { get; set; }
+            public int intReferentor { get; set; }
+            public int intNIK { get; set; }
+            public string strGuid { get; set; }
+            public string strInputter { get; set; }
+            public int intSeller { get; set; }
+            public int intWaperd { get; set; }
+            public bool isByPhoneOrder { get; set; }
+            public bool isFeeEdit { get; set; }
+            public int intJenisPerhitunganFee { get; set; }
+            public decimal decPercentageFee { get; set; }
+            public decimal decSubcFee { get; set; }
+            public bool isDocFCSubscriptionForm { get; set; }
+            public bool isDocFCDevidentAuthLetter { get; set; }
+            public bool isDocFCJoinAcctStatementLetter { get; set; }
+            public bool isDocFCIDCopy { get; set; }
+            public bool isDocFCOthers { get; set; }
+            public bool isDocTCSubscriptionForm { get; set; }
+            public bool isDocTCTermCondition { get; set; }
+            public bool isDocTCProspectus { get; set; }
+            public bool isDocTCFundFactSheet { get; set; }
+            public bool isDocTCOthers { get; set; }
+            public string strDocFCOthersList { get; set; }
+            public string strDocTCOthersList { get; set; }
             public bool isTrxTaxAmnesty { get; set; }
         }
         public class MaintainTransaksi

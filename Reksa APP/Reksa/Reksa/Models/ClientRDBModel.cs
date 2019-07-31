@@ -13,6 +13,6 @@ namespace Reksa.Models
         public bool Asuransi { get; set; }
         public int FrekPendebetan { get; set; }
         public int SisaJangkaWaktu { get; set; }
-        public bool IsDoneDebet { get; set; }
+        public string IsDoneDebet { get; set; }
     }
 }

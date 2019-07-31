@@ -328,7 +328,30 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaMaintainSwcFee(model, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaMaintainUpfrontSellingFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
-        }        
+        }
+        [Route("api/Parameter/NonAktifClientId")]
+        [HttpGet("{id}")]
+        public JsonResult NonAktifClientId([FromQuery]int ClientId, [FromQuery]decimal UnitBalance, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaNonAktifClientId(ClientId, UnitBalance, NIK, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaNonAktifClientId - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+
+        [Route("api/Parameter/UploadWAPERD")]
+        [HttpGet("{id}")]
+        public JsonResult UploadWAPERD([FromBody]UploadWaperd model, [FromQuery]int NIK, [FromQuery]string Module)
+        {
+            bool blnResult;
+            string ErrMsg;
+            DataSet dsError = new DataSet();
+            blnResult = cls.ReksaUploadWAPERD(model, NIK, Module, out ErrMsg, out dsError);
+            ErrMsg = ErrMsg.Replace("ReksaUploadWAPERD - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsError });
+        }
     }
 }
 

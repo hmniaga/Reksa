@@ -8,7 +8,7 @@ namespace Reksa.Models
     public class BookingModel
     {
         public string RefID { get; set; }
-        public System.DateTime TanggalTransaksi { get; set; }
+        public string TanggalTransaksi { get; set; }
         public int BookingId { get; set; }
     }
 }

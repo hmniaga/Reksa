@@ -56,8 +56,8 @@ namespace Reksa.Controllers
                         new AuthenticationProperties
                         {
                             ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
-                            IsPersistent = false,
-                            AllowRefresh = false
+                            IsPersistent = true,
+                            AllowRefresh = true
                         });
                 }
 

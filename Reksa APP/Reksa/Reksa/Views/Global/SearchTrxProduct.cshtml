@@ -48,21 +48,65 @@
         var selectedId = $("#TrxProductSubsSelectedId").val();
         var selectedCurr = $("#TrxProductSubsSelectedCurr").val();
 
-        var res = ValidateCurrency(selectedCurr);
+        var Criteria = "@ViewBag.Criteria";
+        Criteria = Criteria.split("#", 1);
 
+        var res = ValidateCurrency(selectedCurr);
         res.success(function (data) {
-            if (data.length != 0) {
+            if (data.length != 0)
+            {
                 $("input[id='srcCurrencySubs_text2']").val(data[0].CurrencyName);
             } else {
                 $("input[id='srcCurrencySubs_text2']").val('');
             }
         });
 
-        $("input[id='srcProductSubs_text1']").val(selectedCode).change();
-        $("input[id='srcProductSubs_text2']").val(selectedName);
-        $("input[id='ProdIdSubs']").val(selectedId);
-        $("input[id='ProdCCYSubs']").val(selectedCurr);
-        $("input[id='srcCurrencySubs_text1']").val(selectedCurr);
+        if (Criteria[0] == 'SUBS') {
+            $("input[id='srcProductSubs_text1']").val(selectedCode).change();
+            $("input[id='srcProductSubs_text2']").val(selectedName);
+            $("input[id='ProdIdSubs']").val(selectedId);
+            $("input[id='ProdCCYSubs']").val(selectedCurr);
+            $("input[id='srcCurrencySubs_text1']").val(selectedCurr);
+        }
+        else if (Criteria[0] == 'REDEMP') {
+            $("input[id='srcProductRedemp_text1']").val(selectedCode).change();
+            $("input[id='srcProductRedemp_text2']").val(selectedName);
+            $("input[id='ProdIdRedemp']").val(selectedId);
+            $("input[id='ProdCCYRedemp']").val(selectedCurr);
+            $("input[id='srcCurrencyRedemp_text1']").val(selectedCurr);
+        }
+        else if (Criteria[0] == 'SUBSRDB') {
+            $("input[id='srcProductRDB_text1']").val(selectedCode).change();
+            $("input[id='srcProductRDB_text2']").val(selectedName);
+            $("input[id='ProdIdRDB']").val(selectedId);
+            $("input[id='ProdCCYRDB']").val(selectedCurr);
+            $("input[id='srcCurrencyRDB_text1']").val(selectedCurr);
+        }
+        else if (Criteria[0] == 'SWCNONRDB') {
+            $("input[id='srcProductSwcOut_text1']").val(selectedCode).change();
+            $("input[id='srcProductSwcOut_text2']").val(selectedName);
+            $("input[id='ProdIdSwcOut']").val(selectedId);
+            $("input[id='ProdCCYSwcOut']").val(selectedCurr);
+        }
+        else if (Criteria[0] == 'SWCRDB') {
+            $("input[id='srcProductSwcRDBOut_text1']").val(selectedCode).change();
+            $("input[id='srcProductSwcRDBOut_text2']").val(selectedName);
+            $("input[id='ProdIdSwcRDBOut']").val(selectedId).change();
+            $("input[id='ProdCCYSwcRDBOut']").val(selectedCurr).change();
+        }
+        else if (Criteria[0] == 'BOOK') {
+            $("input[id='srcProductBooking_text1']").val(selectedCode).change();
+            $("input[id='srcProductBooking_text2']").val(selectedName);
+            $("input[id='ProdIdBooking']").val(selectedId);
+            $("input[id='ProdCCYBooking']").val(selectedCurr);
+            $("input[id='srcCurrencyBooking_text1']").val(selectedCurr);
+        }
+        else {
+            $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
+            $("input[name='ProductModel.ProdName']").val(selectedName);
+            $("input[name='ProductModel.ProdId']").val(selectedId);
+            $("input[name='ProductModel.ProdCCY']").val(selectedCurr);
+        }
     });
 
     $("#TrxProductSubsSearchComponentSearchTxt").on("keypress", function (e) {

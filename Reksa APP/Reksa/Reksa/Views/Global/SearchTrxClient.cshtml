@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Search Client";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchTrxClient() {
+        var value = $("#TrxClientSearchComponentSearchTxt").val();
+        var grid = $("#TrxClientSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowTrxClientSelect(e) {
+        var data = this.dataItem(this.select());
+        var ClientCode = $.trim(data.ClientCode);
+        var ClientName = $.trim(data.ClientName);
+        var ClientId = $.trim(data.ClientId);
+
+        $("#TrxClientSelectedCode").val(ClientCode);
+        $("#TrxClientSelectedName").val(ClientName);
+        $("#TrxClientSelectedClientId").val(ClientId);
+    };
+
+    $("#TrxClientSelectButton").on("click", function () {
+        var selectedCode = $("#TrxClientSelectedCode").val();
+        var selectedName = $("#TrxClientSelectedName").val();
+        var selectedClientId = $("#TrxClientSelectedClientId").val();
+
+        var Criteria = "@ViewBag.Criteria";
+        Criteria = Criteria.split("#", 3);
+        if (Criteria[2] == 'SUBS') {
+            $("input[id='srcClientSubs_text1']").val(selectedCode).change();
+            $("input[id='srcClientSubs_text2']").val(selectedName);
+            $("input[id='ClientIdSubs']").val(selectedClientId).change();
+        } else if (Criteria[2] == 'REDEMP') {
+            $("input[id='srcClientRedemp_text1']").val(selectedCode).change();
+            $("input[id='srcClientRedemp_text2']").val(selectedName);
+            $("input[id='ClientIdRedemp']").val(selectedClientId).change();
+        } else if (Criteria[2] == 'SUBSRDB') {
+            $("input[id='srcClientRDB_text1']").val(selectedCode).change();
+            $("input[id='srcClientRDB_text2']").val(selectedName);
+            $("input[id='ClientIdRDB']").val(selectedClientId).change();
+        } else if (Criteria[2] == 'SWCNONRDB') {
+            $("input[id='srcClientSwcOut_text1']").val(selectedCode).change();
+            $("input[id='srcClientSwcOut_text2']").val(selectedName);
+            $("input[id='ClientIdSwcOut']").val(selectedClientId).change();        
+        } else if (Criteria[2] == 'SWCRDB') {
+            $("input[id='srcClientSwcRDBOut_text1']").val(selectedCode).change();
+            $("input[id='srcClientSwcRDBOut_text2']").val(selectedName);
+            $("input[id='ClientIdSwCRDBOut']").val(selectedClientId).change();
+        }
+
+
+        
+       
+        
+        
+    });
+
+    $("#TrxClientSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#TrxClientSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.TransaksiClientNew>
+    ()
+    .Name("TrxClientSearchComponentGrid")
+    .Columns(columns =>
+    {
+    columns.Bound(m => m.ClientCode).Width(100).Title("Client Code");
+    columns.Bound(m => m.ClientName).Width(100).Title("Client Name");
+    columns.Bound(m => m.ClientId).Hidden();
+    columns.Bound(m => m.CIFNo).Hidden();
+    columns.Bound(m => m.JoinDate).Hidden();
+    columns.Bound(m => m.IsEmployee).Hidden();
+    columns.Bound(m => m.IsRDB).Hidden();
+    })
+    .ToolBar(toolbar =>
+    {
+    toolbar.ClientTemplateId("ToolbarTrxTemplate");
+    })
+    .Events(events => events.Change("onRowTrxClientSelect"))
+    .Pageable()
+    .Scrollable()
+    .Selectable(selectable => selectable
+    .Mode(GridSelectionMode.Single))
+    .DataSource(dataSource => dataSource
+    .Ajax()
+    .PageSize(20)
+    .Model(model =>
+    {
+    model.Id(m => m.ClientCode);
+    })
+    .Read(read => read.Action("SearchTrxClientData", "Global").Data("getData"))
+    )
+    )
+
+    <script id="ToolbarTrxTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("TrxProductSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("TrxProductSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchTrxClient")).ToClientTemplate()
+            )
+        </div>
+    </script>
+
+    <input type="hidden" id="TrxClientSelectedCode" name="TrxClientSelectedCode" value="" />
+    <input type="hidden" id="TrxClientSelectedName" name="TrxClientSelectedName" value="" />
+    <input type="hidden" id="TrxClientSelectedClientId" name="TrxClientSelectedClientId" value="" />
+</div>
+    <div class="modal-footer">
+        <button type="submit" id="TrxClientSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

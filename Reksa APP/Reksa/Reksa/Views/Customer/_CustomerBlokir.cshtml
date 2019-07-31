@@ -9,11 +9,11 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Client Code</label>
                         <div class="input-group col-md-8">
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @style = "font-size: 90%;", @class = "form-control input-sm", @required = "required", @id = "srcClient_text1" }).Enable(true)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcClient" href="@Url.Action("SearchClientbyCIF", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                <a id="srcClient" href="#display"  data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" >...</a>
                             </span>
-                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2", @style = "width: 200px;font-size: 70%;" }).Enable(false)
+                            @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", @id = "srcClient_text2", @style = "width: 200px;" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", @id = "BlokirClientId", @type = "Hidden" })
                             @Html.Kendo().TextBox().Name("BlokirId").HtmlAttributes(new { @class = "form-control input-sm", @type = "Hidden" })
                         </div>
@@ -23,8 +23,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Unit Blokir</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBox().Name("MoneyBlokir").HtmlAttributes(new { @class = "form-control input-sm", @required = "required" }).Enable(false)
-
+                            @Html.Kendo().NumericTextBox().Name("MoneyBlokir").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                         </div>
                     </div>
                 <!-- End Unit Blokir -->
@@ -32,7 +31,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Outstanding Unit</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decOutStanding).HtmlAttributes(new { @id = "OutsUnit", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().NumericTextBox().Name("OutsUnit").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                         </div>
                     </div>
                 <!-- End Outstanding Unit -->
@@ -58,7 +57,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Jml Unit Blokir</label>
                         <div class="input-group">
-                            @Html.Kendo().TextBoxFor(model => model.BlokirModel.decTotal).HtmlAttributes(new { @id = "MoneyTotal", @class = "form-control input-sm" }).Enable(false)
+                            @Html.Kendo().NumericTextBox().Name("MoneyTotal").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                         </div>
                     </div>
                 <!-- End Jml Unit Blokir -->
@@ -82,7 +81,7 @@
                         .Scrollable(s => s.Height(250))
                         .Selectable(selectable => selectable
                         .Mode(GridSelectionMode.Single))
-                        .Events(events => events.Change("onRowBlokirSelect"))
+                        .Events(events => events.Change("dgvBlokir_Click"))
 
     )
 </div>
@@ -91,28 +90,4 @@
         <div class="modal-content"></div>
     </div>
 </div>
-
-<script>
-    $("#srcClient").click(function (ev) {
-        ev.preventDefault();
-        var CIFNo = $('#srcCIF_text1').val();
-        var url = '@Html.Raw(Url.Action("SearchClientbyCIF", "Global"))';
-        var target = $(this).attr('href', url + '?CIFNo=' + CIFNo);
-        $("#ClientModal .modal-content").load(target, function () {
-            $("#ClientModal .modal-content").empty().append(this);
-        });
-    });
-
-    function onRowBlokirSelect(e) {
-        var data = this.dataItem(this.select());
-        $("#BlokirId").val(data.BlockId);
-        $("#MoneyBlokir").val(data.UnitBlokir);
-        var TanggalBlokir = new Date(data.TanggalBlokir);
-        $("#dtpTglTran").val(TanggalBlokir.getDate() + '/' + (TanggalBlokir.getMonth() + 1) + '/' + TanggalBlokir.getFullYear());
-        var TanggalExpiryBlokir = new Date(data.TanggalExpiryBlokir);
-        $("#dtpExpiry").val(TanggalExpiryBlokir.getDate() + '/' + (TanggalExpiryBlokir.getMonth() + 1) + '/' + TanggalExpiryBlokir.getFullYear());
-    };
-
-</script>
-
 

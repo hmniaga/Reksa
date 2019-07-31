@@ -22,7 +22,7 @@
                     <div class="input-group">
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFNo).HtmlAttributes(new { @id = "srcCIFSubs_text1", @class = "form-control input-sm", style = "width: 150%;" })
                         <span class="input-group-btn">
-                            <a id="srcCIFSubs" href="@Url.Action("SearchCustomerSubs", "Global")" data-toggle="modal" data-target="#CustomerSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcCIFSubs" href="#display" data-toggle="modal" data-target="#CustomerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
                         @Html.Kendo().TextBoxFor(model => model.CustomerModel.CIFName).HtmlAttributes(new { @id = "srcCIFSubs_text2", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
                     </div>
@@ -34,9 +34,9 @@
                     <div class="input-group">
                         @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefSubs_text1" })
                         <span class="input-group-btn">
-                            <a id="srcNoRefSubs" href="@Url.Action("SearchReferensiSubs", "Global", new { criteria = "SUBS" })" data-toggle="modal" data-target="#ReferensiSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                            <a id="srcNoRefSubs" href="#display" data-toggle="modal" data-target="#NoRefModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.RefID).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefSubs_text2" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.ReferensiModel.TanggalTransaksi).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcNoRefSubs_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- Begin Search RefID -->
@@ -151,7 +151,7 @@
                         <div class="input-group col-md-9">
                             @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProductSubs_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcProductSubs" href="@Url.Action("SearchTrxProductSubs", "Global")" data-toggle="modal" data-target="#ProductSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcProductSubs" href="#display" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 280px;font-size: 90%;", @id = "srcProductSubs_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.TransaksiProduct.ProdId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ProdIdSubs", @type = "hidden" })
@@ -165,7 +165,7 @@
                         <div class="input-group col-md-9">
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcClientSubs_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcClientSubs" href="@Url.Action("SearchClientSubs", "Global")" data-toggle="modal" data-target="#ClientSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
+                                <a id="srcClientSubs" href="#display" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled" data-animation="flash">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;font-size: 90%;", @id = "srcClientSubs_text2" }).Enable(false)
                             @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientIdSubs", @type = "hidden" })
@@ -178,7 +178,7 @@
                         <div class="input-group col-md-8">
                             @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcCurrencySubs_text1" }).Enable(false)
                             <span class="input-group-btn">
-                                <a id="srcCurrenySubs" href="@Url.Action("SearchCurrency", "Global")" data-toggle="modal" data-target="#CurrencySubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                <a id="srcCurrenySubs" href="#display" data-toggle="modal" data-target="#CurrencyModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                             </span>
                             @Html.Kendo().TextBoxFor(model => model.CurrencyModel.CurrencyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 250px;font-size: 90%;", @id = "srcCurrencySubs_text2" }).Enable(false)
                         </div>
@@ -193,13 +193,13 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"></label>
                         <div class="input-group">
-                            <button id="btnAddSubs" class="btn btn-default waves-effect waves-light">
+                            <button id="btnAddSubs" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                                 <span class="btn-label">
                                     <i class="fa fa-plus"></i>
                                 </span>
                                 Add
                             </button>
-                            <button id="btnEditSubs" class="btn btn-info waves-effect waves-light">
+                            <button id="btnEditSubs" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                                 <span class="btn-label">
                                     <i class="fa fa-edit"></i>
                                 </span>
@@ -225,28 +225,37 @@
                             <div class="portlet-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-5">
-                                            <div class="checkbox checkbox-custom checkbox-circle">
-                                                @Html.Kendo().CheckBox().Name("checkFeeEditSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit")
+                                        <label class="col-md-1"></label>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="checkbox checkbox-custom checkbox-circle">
+                                                    @Html.Kendo().CheckBox().Name("checkFeeEditSubs").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Fee Edit")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-1"></label>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                @(Html.Kendo().DropDownList().Name("_ComboJenisSubs").HtmlAttributes(new { @style = "width:130px" }).BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value").Events(e => { e.Change("_ComboJenisSubs_SelectedIndexChanged").DataBound("onBound_ComboJenisSubs"); }))
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="col-md-5">
-                                            @(Html.Kendo().DropDownList().Name("_ComboJenisSubs").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "By Nominal", Value = "0" }, new SelectListItem() { Text = "By %", Value = "1" } }).DataTextField("Text").DataValueField("Value").Events(e => { e.Change("onChange_ComboJenisSubs").DataBound("onBound_ComboJenisSubs"); }))
-                                        </div>
+                                        <label class="col-md-1"></label>
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <span class="input-group-btn"></span>
-                                                @Html.Kendo().NumericTextBox().Name("MoneyFeeSubs").HtmlAttributes(new { style = "width: 120px;" }).Enable(false).Min(0)
+                                                @Html.Kendo().NumericTextBox().Name("MoneyFeeSubs").HtmlAttributes(new { style = "width: 160px; margin-right:10px;" }).Enable(false).Min(0).Events(e => { e.Change("onChangeMoneyFeeSubs").Spin("onSpinMoneyFeeSubs"); })
                                                 @*@Html.Kendo().TextBox().Name("MoneyFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;padding - top:200%;" }).Enable(false)*@
                                                 <span class="input-group-btn"></span>
-                                                <label id="labelFeeCurrencySubs">&nbsp;&nbsp;&nbsp;IDR</label>
+                                                <label id="labelFeeCurrencySubs" style="margin-right:10px;">IDR</label>
                                                 <span class="input-group-btn"></span>
-                                                @Html.Kendo().NumericTextBox().Name("PercentageFeeSubs").HtmlAttributes(new { style = "width:70px;" }).Enable(false).Min(0)
+                                                @Html.Kendo().NumericTextBox().Name("PercentageFeeSubs").HtmlAttributes(new { style = "width:160px;margin-right:10px;" }).Enable(false).Min(0)
                                                 @*@Html.Kendo().TextBox().Name("PercentageFeeSubs").HtmlAttributes(new { @class = "form-control input-sm", @style = "width:50px" }).Enable(false)*@
                                                 <span class="input-group-btn"></span>
-                                                <label id="_KeteranganFeeSubs">&nbsp;&nbsp;&nbsp;%</label>
+                                                <label id="_KeteranganFeeSubs">%</label>
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +304,7 @@
                         .Scrollable(s => s.Height(250))
                         .Selectable(selectable => selectable
                         .Mode(GridSelectionMode.Single))
-                        .Events(events => events.Change("onRowViewSubsSelect"))
+                        .Events(events => events.Change("dataGridViewSubs_CellClick").DataBound("onBounddataGridViewSubs"))
                 )
 
             </div>
@@ -318,22 +327,12 @@
                                 </button>
                             </div>
                         </div>
-                    <script>
-                        $(function () {
-                            $('#btnDocumentSubs').click(function () {
-                                var value = $('#srcNoRefSubs_text1').val();
-                                $(this).attr('href', function () {
-                                    return '@Html.Raw(Url.Action("Document", "Global"))?IsEdit=false&TranId=0&IsSwitching=false&IsBooking=false,RefID=' + value;
-                                });
-                            });
-                        });
-                    </script>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Seller</label>
                             <div class="input-group col-md-6">
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcSellerSubs_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcSellerSubs" href="@Url.Action("SearchSellerSubs", "Global")" data-toggle="modal" data-target="#SellerSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcSellerSubs" href="#display" data-toggle="modal" data-target="#SellerModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcSellerSubs_text2", @class = "form-control input-sm", style = "width: 250px;" }).Enable(false)
                             </div>
@@ -343,7 +342,7 @@
                             <div class="input-group col-md-6">
                                 @Html.Kendo().TextBoxFor(model => model.WaperdModel.employee_id).HtmlAttributes(new { @id = "srcWaperdSubs_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id ="srcWaperdSubs" href="@Url.Action("SearchWaperdSubs", "Global")" data-toggle="modal" data-target="#WaperdSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id ="srcWaperdSubs" href="#display" data-toggle="modal" data-target="#WaperdModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.WaperdModel.WaperdNo).HtmlAttributes(new { @id = "srcWaperdSubs_text2",  @class = "form-control input-sm", style = "width: 250px;" }).Enable(false)
                             </div>
@@ -359,7 +358,7 @@
                             <div class="input-group col-md-6">
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.EMPLID).HtmlAttributes(new { @id = "srcReferentorSubs_text1", @class = "form-control input-sm", style = "width: 150%;" }).Enable(false)
                                 <span class="input-group-btn">
-                                    <a id="srcReferentorSubs" href="@Url.Action("SearchReferentorSubs", "Global")" data-toggle="modal" data-target="#NIKRefSubsModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    <a id="srcReferentorSubs" href="#display" data-toggle="modal" data-target="#NIKRefModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                 </span>
                                 @Html.Kendo().TextBoxFor(model => model.ReferentorModel.NAME).HtmlAttributes(new { @id = "srcReferentorSubs_text2", @class = "form-control input-sm", style = "width: 250px;" }).Enable(false)
                             </div>
@@ -405,47 +404,6 @@
         <div class="modal-content"></div>
     </div>
 </div>
-<div class="modal fade" id="CustomerSubsModal" tabindex="-1" role="dialog" aria-labelledby="CustomerSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ReferensiSubsModal" tabindex="-1" role="dialog" aria-labelledby="ReferensiSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ProductSubsModal" tabindex="-1" role="dialog" aria-labelledby="ProductSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="ClientSubsModal" tabindex="-1" role="dialog" aria-labelledby="ClientSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="CurrencySubsModal" tabindex="-1" role="dialog" aria-labelledby="CurrencySubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="SellerSubsModal" tabindex="-1" role="dialog" aria-labelledby="SellerSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="WaperdSubsModal" tabindex="-1" role="dialog" aria-labelledby="WaperdSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<div class="modal fade" id="NIKRefSubsModal" tabindex="-1" role="dialog" aria-labelledby="NIKRefSubsModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-
 <div class="modal fade" id="DocumentModalSubs" tabindex="-1" role="dialog" aria-labelledby="DocumentModalSubsLabel">
     <div class="modal-dialog" style="width:75%;">
         <div class="modal-content">
@@ -454,235 +412,3 @@
         </div>
 </div>
 <!-- End Modal -->
-
-<script type="text/javascript">
-    function onRowViewSubsSelect(e) {
-        var data = this.dataItem(this.select());
-        $("#textNoTransaksiSubs").val(data.NoTrx);
-        $("#srcProductSubs_text1").val(data.KodeProduk); 
-        var dateTglTransaksiSubs = new Date(data.TglTrx);  
-        $("#dateTglTransaksiSubs").val(dateTglTransaksiSubs.getDate() + '/' + (dateTglTransaksiSubs.getMonth() + 1) + '/' + dateTglTransaksiSubs.getFullYear());
-        $("#srcClientSubs_text1").val(data.ClientCode);
-        $("#srcCurrencySubs_text1").val(data.CCY);  
-        //$("#MoneyNomSubs").val(data.Nominal);
-        $("#MoneyNomSubs").data("kendoNumericTextBox").value(data.Nominal);
-        $('#checkFullAmtSubs').prop('checked', data.FullAmount);
-        $('#checkFeeEditSubs').prop('checked', data.EditFee);
-        $('#checkPhoneOrderSubs').prop('checked', data.PhoneOrder);
-        ValidateCurrCodeSubs();
-        var KodeProduk = data.KodeProduk;
-        var ClientCode = data.ClientCode;
-        var ProdId;
-        
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateProduct',
-            data: { Col1: KodeProduk , Col2: '', Validate: 1 },
-            success: function (data) {
-                if (ClientCode != '') {
-                    $("#srcProductSubs_text1").val(data[0].ProdCode);
-                    $("#srcProductSubs_text2").val(data[0].ProdName);
-                    ProdId = data[0].ProdId;
-                    $.ajax({
-                        type: 'GET',
-                        url: '/Global/ValidateClient',
-                        data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
-                        success: function (data) {
-                            $("#srcClientSubs_text2").val(data[0].ClientName);
-                        }
-                    });
-                }
-            }
-        });
-
-        var dropdownlist = $("#_ComboJenisSubs").data("kendoDropDownList");
-        var intJenis = data.JenisFee;
-        //By Nominal
-        if (intJenis == 0) {
-            dropdownlist.select(0);
-            $("#MoneyFeeSubs").val(data.NominalFee);
-            $("#PercentageFeeSubs").val(data.PctFee);
-        //By %
-        } else
-        {
-            dropdownlist.select(1);
-            $("#MoneyFeeSubs").val(data.PctFee);
-            $("#PercentageFeeSubs").val(data.NominalFee);
-        }
-    };
-    function ValidateCurrCodeSubs() {
-        var CurrCode = $("#srcCurrencySubs_text1").val();
-        if (CurrCode != '') {
-            $.ajax({
-                type: 'GET',
-                url: '/Global/ValidateCurrency',
-                data: { Col1: CurrCode, Col2: '', Validate: 1 },
-                success: function (data) {
-                    $("#srcCurrencySubs_text2").val(data[0].CurrencyName);
-                }
-            });
-        }
-    }
-    function ValidateProdCodeSubs() {
-        var ProductCode = $("#srcProductSubs_text1").val();        
-        $.ajax({
-            type: 'GET',
-            url: '/Global/ValidateProduct',
-            data: { Col1: ProductCode, Col2: '', Validate: 1 },
-            success: function (data) {
-                $("#srcProductSubs_text2").val(data[0].ProdName);
-                $("#ProdIdSubs").val(data[0].ProdId);
-            }
-        });
-    }  
-    function ValidateClientSubs() {
-        var ClientCode = $("#srcClientSubs_text1").val();
-        var ProdId = $("#ProdIdSubs").val();
-        if (ClientCode != '') {
-            $.ajax({
-                type: 'GET',
-                url: '/Global/ValidateClient',
-                data: { Col1: ClientCode, Col2: '', Validate: 1, ProdId: ProdId },
-                success: function (data) {
-                    $("#srcClientSubs_text2").val(data[0].ClientName);
-                }
-            });
-        }
-    }  
-    function onChangeMoneyNomSubs()
-    {
-        if ($("#srcProductSubs_text1").val() != '') {
-            var res = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
-            res.success(function (data) {
-                intProdId = data.value;
-            });
-
-            if ($("#_ComboJenisSubs").text() == "By %") {
-                ByPercent = true;
-            }
-            else {
-                ByPercent = false;
-            }
-
-            if (IsSubsNew) {
-                intTranType = 1;
-                intClientid = 0;
-            }
-            else {
-                intTranType = 2;
-                var res = GetImportantData("CLIENTID", $("#srcProductSubs_text1").val());
-                res.success(function (data) {
-                    intClientid = data.value;
-                });
-            }
-
-            var Jenis = 1;
-            var resFee = HitungFee(intProdId, intClientid, intTranType, this.value(), 0
-                , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
-                , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFSubs_text1').val());
-            resFee.success(function (data) {
-                $("#labelFeeCurrencySubs").text("%");
-                if (data.blnResult) {
-                    $("#_KeteranganFeeSubs").text(data.resultFee.FeeCCY);
-                    intPeriod = data.resultFee.Period;
-
-                    if (Jenis == 1) //hitung fee tanpa edit fee
-                    {
-                        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        if (ByPercent == true) {
-                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        }
-                        else if (ByPercent == false) {
-                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        }
-                    }
-                    else if (Jenis == 2) //hitung fee dengan edit fee 
-                    {
-                        if (ByPercent == true) {
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        }
-                        else if (ByPercent == false) {
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        }
-                    }
-                }
-                else {
-                    $("#_KeteranganFeeSubs").text('');
-                    $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
-                    $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
-                }
-            });
-        }
-    }
-    function onSpinMoneyNomSubs() {
-        if ($("#srcProductSubs_text1").val() != '') {
-            var res = GetImportantData("PRODUKID", $("#srcProductSubs_text1").val());
-            res.success(function (data) {
-                intProdId = data.value;
-            });
-
-            if ($("#_ComboJenisSubs").text() == "By %") {
-                ByPercent = true;
-            }
-            else {
-                ByPercent = false;
-            }
-
-            if (IsSubsNew) {
-                intTranType = 1;
-                intClientid = 0;
-            }
-            else {
-                intTranType = 2;
-                var res = GetImportantData("CLIENTID", $("#srcProductSubs_text1").val());
-                res.success(function (data) {
-                    intClientid = data.value;
-                });
-            }
-
-            var Jenis = 1;
-            var resFee = HitungFee(intProdId, intClientid, intTranType, this.value(), 0
-                , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
-                , $("#PercentageFeeSubs").data("kendoNumericTextBox").value(), Jenis, $('#srcCIFSubs_text1').val());
-            resFee.success(function (data) {
-                $("#labelFeeCurrencySubs").text("%");
-                if (data.blnResult) {
-                    $("#_KeteranganFeeSubs").text(data.resultFee.FeeCCY);
-                    intPeriod = data.resultFee.Period;
-
-                    if (Jenis == 1) //hitung fee tanpa edit fee
-                    {
-                        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        if (ByPercent == true) {
-                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        }
-                        else if (ByPercent == false) {
-                            $("#MoneyFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        }
-                    }
-                    else if (Jenis == 2) //hitung fee dengan edit fee 
-                    {
-                        if (ByPercent == true) {
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.Fee);
-                        }
-                        else if (ByPercent == false) {
-                            $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.resultFee.PercentageFeeOutput);
-                        }
-                    }
-                }
-                else {
-                    $("#_KeteranganFeeSubs").text('');
-                    $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
-                    $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
-                }
-            });
-        }
-    }
-
-</script>

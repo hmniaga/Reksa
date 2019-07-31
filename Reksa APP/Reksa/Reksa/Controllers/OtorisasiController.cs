@@ -987,5 +987,104 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        public JsonResult ViewApprovalReject()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/ViewApprovalReject").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult != null && dsResult.Tables.Count > 0 && dsResult.Tables[0].Rows.Count > 0)
+                    {                        
+                        _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    }
+                    else
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+                return Json(new { blnResult, ErrMsg, dsResult });
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public ActionResult ApproveRejectBooking(string listBookingId, bool isApprove)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] _SelectedBookingId;
+                listBookingId = (listBookingId + "***").Replace("|***", "");
+                _SelectedBookingId = listBookingId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', _SelectedBookingId);
+                
+                dv1.RowFilter = " bookingId in (" + filter + ")";
+
+                DataTable dtData = dv1.ToTable();
+                if (dtData == null || dtData.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+                if (isApprove)
+                {
+
+                    var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Otorisasi/RejectBooking?NIK=" + _intNIK, Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    }
+                }
+                else
+                {
+                    var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Otorisasi/RejectBookingApproval", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

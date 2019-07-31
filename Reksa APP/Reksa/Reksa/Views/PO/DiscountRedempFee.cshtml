@@ -25,13 +25,13 @@
                         </span>
                         Edit
                     </button>
-                    <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
+                    <button id="btnSave" style="margin-right:10px" class="btn btn-warning waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-save"></i>
                         </span>
                         Save
                     </button>
-                    <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-danger waves-effect waves-light">
+                    <button id="btnCancel" style="margin-right:10px" class="btn btn-danger waves-effect waves-light">
                         <span class="btn-label">
                             <i class="fa fa-remove"></i>
                         </span>
@@ -72,7 +72,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Tran Amount</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money1").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Amount -->
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Tran Unit</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money3").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Unit -->
@@ -88,10 +88,9 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Redempt Discount</label>
                     <div class="input-group col-sm-4">
-                        @Html.Kendo().TextBox().Name("Money2").HtmlAttributes(new { @class = "form-control input-sm" }).Enable(false)
-                        <span class="input-group-addon">
-                            %
-                        </span>
+                        @Html.Kendo().NumericTextBox().Name("Money2").HtmlAttributes(new { style = "width: 180px;" }).Enable(false).Min(0)
+                        <span class="input-group-btn"></span>
+                        <label>&nbsp;&nbsp;&nbsp;%</label>
                     </div>
                 </div>
                 <!-- End Redempt Discount -->
@@ -101,36 +100,15 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Redemption Fee</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money4").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Redemption Fee -->
             </div>
         </div>
         <div class="col-md-12">
-            <!-- Begin dataGridView1 -->
-            <div class="form-group">
-                <div class="input-group">
-                    <div id="dataGridView1"></div>
-                </div>
-            </div>
-            <!-- End dataGridView1 -->
+            <div id="dataGridView1"></div>
         </div>
     </div>
 </div>
-
-<script>
-
-    $(document).ready(function () {
-        var grid = {
-            height: 250
-        };
-        $("#dataGridView1").kendoGrid(grid);
-    });
-
-    function PopulateProducts()
-    {
-
-    }
-</script>
-
+<script src="~/js/reksa.po.discountredempfee.js"></script>
