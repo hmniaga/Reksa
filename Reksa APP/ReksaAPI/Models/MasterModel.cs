@@ -34,21 +34,39 @@ namespace ReksaAPI.Models
         public int intDevidenPeriod { get; set; }
         public DateTime dtDevidenDate { get; set; }
         public int intCalcId { get; set; }
-        public DataSet dsNEmployeeSFee { get; set; }
-        public DataSet dsEmployeeSFee { get; set; }
+        public List<EmpolyeeSubsFee> dsNEmployeeSFee { get; set; }
+        public List<EmpolyeeSubsFee> dsEmployeeSFee { get; set; }
         public decimal decUpFrontFee { get; set; }
         public decimal decSubcFeeBased { get; set; }
         public decimal decRedempFeeBased { get; set; }
         public decimal decMaintenanceFee { get; set; }
-        public DataSet dsNEmployeeRFee { get; set; }
-        public DataSet dsEmployeeRFee { get; set; }
+        public List<EmpolyeeRedempFee> dsNEmployeeRFee { get; set; }
+        public List<EmpolyeeRedempFee> dsEmployeeRFee { get; set; }
         public string strMIAccountId { get; set; }
         public string strCTDAccountId { get; set; }
         public int intNIK { get; set; }
         public string strGUID { get; set; }
-        public DataSet dsMaintenanceFee { get; set; }
+        public List<MaintFeeProduct> dsMaintenanceFee { get; set; }
         public decimal decDevidentPct { get; set; }
         public int intEffectiveAfter { get; set; }
     }
-
+    public class EmpolyeeSubsFee
+    {
+        public decimal Fee { get; set; }
+        public decimal Nominal { get; set; }
+    }
+    public class EmpolyeeRedempFee
+    {
+        public decimal Fee { get; set; }
+        public int Period { get; set; }
+        public decimal Nominal { get; set; }
+    }
+    public class MaintFeeProduct
+    {
+        public decimal AUMMin { get; set; }
+        public decimal AUMMax { get; set; }
+        public decimal NispPct { get; set; }
+        public decimal FundMgrPct { get; set; }
+        public decimal MaintFee { get; set; }
+    }
 }

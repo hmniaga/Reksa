@@ -13,7 +13,8 @@ $("#cmpsrProduct").click(function cmpsrProduct_click() {
         $('#display').modal({ show: true });
     });
 });
+
 //click
-$("#btnUpload").click(function btnUpload_click() {
+$("#btnUpload").click(function () {
     subUpload();
 });

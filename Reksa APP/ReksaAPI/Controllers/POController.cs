@@ -286,15 +286,129 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/PO/ImportDataMFee")]
         [HttpGet("{id}")]
-        public JsonResult ImportDataMFee([FromQuery]string FileName, [FromQuery]string XML, [FromQuery]int NIK, [FromQuery]int ProdId, [FromQuery]int BankCustody, [FromQuery]int isRecalculate)
+        public JsonResult ImportDataMFee([FromQuery]string FileName, [FromQuery]string XML, [FromQuery]int NIK, [FromQuery]int ProdId, [FromQuery]int BankCustody, [FromQuery]int isRecalculate, [FromQuery]string XMLRecalc)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsUpload = new DataSet();
+            string RefId = "";
+
+            blnResult = cls.ReksaImportDataMFee(FileName, NIK, XML, ProdId, BankCustody, isRecalculate, XMLRecalc, out ErrMsg, out dsUpload, out RefId);
+            ErrMsg = ErrMsg.Replace("ReksaImportDataMFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsUpload, RefId });
+        }
+        [Route("api/PO/PopulateRedemptDate")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateRedemptDate([FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateRedemptDate(NIK, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateRedemptDate - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/MaintainSettleDate")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainSettleDate([FromQuery]int TranId, [FromQuery]string NewSettleDate, [FromQuery]int NIK, [FromQuery]string Guid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DateTime dtNewSettleDate = new DateTime();
+            DateTime.TryParseExact(NewSettleDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtNewSettleDate);
+
+            blnResult = cls.ReksaMaintainSettleDate(TranId, dtNewSettleDate, NIK, Guid, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainSettleDate - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/RecalcMFee")]
+        [HttpPost("{id}")]
+        public JsonResult RecalcMFee([FromQuery]string XML, [FromQuery]int ProdId, [FromQuery]int BankCustody)
         {
             bool blnResult = false;
             string ErrMsg = "";
             DataSet dsUpload = new DataSet();
 
-            blnResult = cls.ReksaImportDataMFee(FileName, NIK, XML, ProdId, BankCustody, isRecalculate, out ErrMsg, out dsUpload);
-            ErrMsg = ErrMsg.Replace("ReksaImportDataMFee - Core .Net SqlClient Data Provider\n", "");
+            blnResult = cls.ReksaRecalcMFee(XML, ProdId, BankCustody, out dsUpload, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRecalcMFee - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsUpload });
-        }        
+        }
+        [Route("api/PO/PopulateValueDate")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateValueDate([FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateValueDate(NIK, GUID, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateValueDate - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/MaintainValueDate")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainValueDate([FromQuery]string TranCode, [FromQuery]string NewValueDate, [FromQuery]int NIK, [FromQuery]string Guid, [FromQuery]int TranType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DateTime dtNewValueDate = new DateTime();
+            DateTime.TryParseExact(NewValueDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtNewValueDate);
+
+            blnResult = cls.ReksaMaintainValueDate(TranCode, dtNewValueDate, NIK, Guid, TranType, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainValueDate - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/PreviewMaintenanceFee")]
+        [HttpGet("{id}")]
+        public JsonResult PreviewMaintenanceFee([FromQuery]string StartDate, [FromQuery]string EndDate, [FromQuery]string ProdId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(EndDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaPreviewMaintenanceFee(dtStartDate, dtEndDate, ProdId, NIK, GUID, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPreviewMaintenanceFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/CutMaintenanceFee")]
+        [HttpGet("{id}")]
+        public JsonResult CutMaintenanceFee([FromQuery]string StartDate, [FromQuery]string EndDate, [FromQuery]string ProdId, [FromQuery]int ManId, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(EndDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaCutMtncFee(dtStartDate, dtEndDate, ProdId, ManId, NIK, GUID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCutMtncFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/CutRedempFee")]
+        [HttpGet("{id}")]
+        public JsonResult CutRedempFee([FromQuery]string StartDate, [FromQuery]string EndDate, [FromQuery]int NIK, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DateTime dtStartDate = new DateTime();
+            DateTime dtEndDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+            DateTime.TryParseExact(EndDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEndDate);
+
+            blnResult = cls.ReksaCutRedempFee(dtStartDate, dtEndDate, NIK, GUID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaCutRedempFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

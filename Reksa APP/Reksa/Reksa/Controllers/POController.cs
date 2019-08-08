@@ -30,14 +30,12 @@ namespace Reksa.Controllers
 
         private ISession _session => _httpContextAccessor.HttpContext.Session;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private clsConvert clsConvert;
 
         public POController(IConfiguration iconfig, IHttpContextAccessor httpContextAccessor)
         {
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
             _httpContextAccessor = httpContextAccessor;
-            clsConvert = new clsConvert();
         }
         [Authorize]
         public IActionResult CutMaintenanceFee()
@@ -741,13 +739,66 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
-        public JsonResult ImportDataMFee(string FileName,int ProdId, int BankCustody, int isRecalculate)
+        public JsonResult ImportDataMFee([FromBody]ImportDataMFee model)
         {
             bool blnResult = false;
             string ErrMsg = "";
-            string XML = "";
+            string RefId = "";
 
             DataSet dsUpload = new DataSet();
+            try
+            {
+                DataTable dtHasil = new DataTable();
+                dtHasil = clsConvert.ToDataTable<ImportDataMFeeView>(model.listPreview);
+                dtHasil.Columns.Remove("ProdId");
+                dtHasil.Columns.Remove("ClientId");
+                dtHasil.Columns.Remove("OutstandingUnit");
+                dtHasil.Columns.Remove("NAV");
+                dtHasil.Columns.Remove("ProductCode");
+                dtHasil.Columns.Remove("PembagiHariMFee");
+                dtHasil.Columns.Remove("Remark");
+
+                DataTable dtRecalc = new DataTable();
+                dtRecalc = clsConvert.ToDataTable<ImportDataMFeeView>(model.listPreview);
+                dtRecalc.Columns.Remove("ProdId");
+                dtRecalc.Columns.Remove("ClientId");
+                dtRecalc.Columns.Remove("ProductCode");
+                dtRecalc.Columns.Remove("PembagiHariMFee");
+                dtRecalc.Columns.Remove("Remark");
+
+                string xml = clsConvert.GetXML(dtHasil);
+                string xmlRecalc = clsConvert.GetXML(dtRecalc);
+
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/ImportDataMFee?FileName=" + model.FileName + "&XML=" + xml + "&NIK=" + _intNIK + "&ProdId=" + model.ProdId + "&BankCustody=" + model.BankCustody + "&isRecalculate=" + model.isRecalculate + "&XMLRecalc=" + xmlRecalc).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    RefId = Object.SelectToken("refId").Value<string>();
+
+                    JToken TokenData = Object["dsUpload"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsUpload = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsUpload, RefId });
+        }
+        public JsonResult PopulateRedemptDate()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -755,7 +806,80 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
-                    HttpResponseMessage response = client.GetAsync("/api/PO/ImportDataMFee?FileName=" + FileName + "&XML=" + XML + "&NIK=" + _intNIK + "&ProdId=" + ProdId + "&BankCustody=" + BankCustody + "&isRecalculate=" + isRecalculate).Result;
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateRedemptDate?NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult MaintainSettleDate(int TranId, string NewSettleDate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/MaintainSettleDate?TranId=" + TranId + "&NewSettleDate=" + NewSettleDate + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult RecalcMFee([FromBody] RecalculateMFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string XML = "";
+            DataSet dsUpload = new DataSet();
+            try
+            {
+                DataTable dt = new DataTable();
+                dt.Columns.Add("TanggalTransaksi");
+                dt.Columns.Add("ReverseTanggalTransaksi");
+                dt.Columns.Add("ClientCode");
+                dt.Columns.Add("OutstandingUnit");
+                dt.Columns.Add("NAV");
+                foreach (var data in model.listPreview)
+                {
+                    dt.Rows.Add(data.TanggalTransaksi, data.ReverseTanggalTransaksi, data.ClientCode, data.OutstandingUnit, data.NAV);
+                }
+                XML = clsConvert.GetXML(dt);
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/RecalcMFee?XML=" + XML + "&ProdId=" + model.ProdId + "&BankCustody=" + model.BankCustody).Result;
                     string stringData = response.Content.ReadAsStringAsync().Result;
                     JObject Object = JObject.Parse(stringData);
                     blnResult = Object.SelectToken("blnResult").Value<bool>();
@@ -771,6 +895,152 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg, dsUpload });
+        }
+        public JsonResult PopulateValueDate()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateValueDate?NIK=" + _intNIK + "&GUID=" +_strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult MaintainValueDate(string TranCode, string NewValueDate, int TranType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/MaintainValueDate?TranCode=" + TranCode + "&NewValueDate=" + NewValueDate + "&NIK=" + _intNIK + "&Guid=" + _strGuid + "&TranType=" + TranType).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PreviewMaintenanceFee([FromBody]PreviewMaintFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                DataTable dtPreview = new DataTable();
+                dtPreview = clsConvert.ToDataTable<PreviewMaintFeeView>(model.listPreview);     
+                string xml = clsConvert.GetXML(dtPreview);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PreviewMaintenanceFee?StartDate=" + model.StartDate + "&EndDate=" + model.EndDate + "&ProdId=" + xml + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult ProsesCutMaintenanceFee([FromBody]PreviewMaintFee model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                DataTable dtPreview = new DataTable();
+                dtPreview = clsConvert.ToDataTable<PreviewMaintFeeView>(model.listPreview);
+                string xml = clsConvert.GetXML(dtPreview);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/CutMaintenanceFee?StartDate=" + model.StartDate + "&EndDate=" + model.EndDate + "&ProdId=" + xml + "&ManId=" + 1 + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult ProsesCutRedempFee(string StartDate, string EndDate)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/CutRedempFee?StartDate=" + StartDate + "&EndDate=" + EndDate + "&NIK=" + _intNIK + "&GUID=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
         }
     }
 }

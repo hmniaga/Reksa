@@ -14,38 +14,47 @@
         </h4>
     </div>
     <div class="panel-body">
-        <div class="col-md-6">
+        <div class="card-box">
+            <!-- Begin Button -->
+            <div class="input-group">
+                <button id=btnProses type="button" class="btn btn-default waves-effect waves-light">
+                    <span class="btn-label">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    Proses
+                </button>
+            </div>
+            <!-- End Button -->
+        </div>
+        <div class="col-md-12">
             <!-- Begin StartDate -->
             <div class="form-group">
-                <label class="col-sm-3 control-label">Start Period</label>
+                <label class="col-sm-2 control-label">Start Period</label>
                 <div class="input-group">
-                    @(Html.Kendo().DatePicker().Name("StarDateAct").Format("{0:dd/MM/yyyy}")
+                    @(Html.Kendo().DatePicker().Name("dateTimePicker1").Format("{0:dd/MM/yyyy}")
                     )
                 </div>
             </div>
             <!-- End StartDate -->
             <!-- Begin EndDate -->
             <div class="form-group">
-                <label class="col-sm-3 control-label">End Period</label>
+                <label class="col-sm-2 control-label">End Period</label>
                 <div class="input-group">
-                    @(Html.Kendo().DatePicker().Name("EndDateAct")
-                                                                                                                                                        .HtmlAttributes(new { @class = "form-control input-sm", style = "width: 100%" })
-                                                                                                                                                        .Format("{0:dd/MM/yyyy}")
-                    )
+                    @(Html.Kendo().DatePicker().Name("dateTimePicker2").Format("{0:dd/MM/yyyy}"))
                 </div>
             </div>
             <!-- End EndDate -->
             <!-- Begin Kode Produk -->
             <div class="form-group">
-                <label class="col-sm-3 control-label">Kode Produk</label>
+                <label class="col-sm-2 control-label">Kode Produk</label>
                 <div class="input-group">
-                <div id="dataGridViewProduct"></div>
+                    <div id="dataGridViewProduct"></div>
                 </div>
             </div>
             <!-- End Kode Produk -->
             <!-- Begin Buttons -->
             <div class="form-group">
-                <label class="col-sm-3 control-label"></label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="input-group">
                     <button id="button1" class="btn btn-default waves-effect waves-light">
                         <span class="btn-label">
@@ -57,133 +66,12 @@
             </div>
             <!-- End Buttons -->
             <!-- Begin dataGridView1 -->
-            <div class="form-group">
-                <label class="col-sm-3 control-label"></label>
-                <div class="input-group">
-                        <div id="dataGridView1"></div>
-                </div>
+            <div class="col-md-12">
+                    <div id="dataGridView1"></div>
             </div>
             <!-- End dataGridView1 -->
-        </div>        
+        </div>
     </div>
 </div>
-
-<script>
-
-    $(document).ready(function () {
-        var grid1 = {
-            height: 200,
-            width: 200
-        };        
-        var grid2 = {
-            height: 200,
-            width: 600
-        };        
-        $("#dataGridViewProduct").kendoGrid(grid1);
-        $("#dataGridView1").kendoGrid(grid2);
-        PopulateProducts();
-    });
-
-    function PopulateProducts()
-    {
-        $.ajax({
-            type: 'GET',
-            url: '/PO/GetListProducts',
-            success: function (data) {
-                if (data.blnResult) {
-                    var grid = $("#dataGridViewProduct").data("kendoGrid");
-                    var gridViewdata = populateGrid(data.listProduct);
-                    $("#dataGridViewProduct").kendoGrid(gridViewdata);
-                    $("#dataGridViewProduct").data("kendoGrid").hideColumn('ProdId');
-                }
-                else {
-                    $("#dataGridViewProduct").empty();
-                    swal("Warning", data.ErrMsg, "warning");
-                }
-            }
-        });
-        
-    }
-    function populateGrid(response) {
-        if (response.length > 0) {
-            var columns = generateColumns(response);
-            return gridOptions = {
-                dataSource: {
-                    transport: {
-                        read: function (options) {
-                            options.success(response);
-                        }
-                    },
-                    pageSize: 5,
-                    page: 1
-                },
-                columns: columns,
-                pageable: true,
-                selectable: true,
-                height: 300
-            };
-
-        } else {
-            $("#dataGridViewProduct").empty();
-        }
-    }
-    function generateColumns(response) {
-        var columnNames = Object.keys(response[0]);
-        return columnNames.map(function (name) {
-            var isIdColumn = name.indexOf("CheckB") > -1 || name.indexOf("CheckBox") > -1;
-            var value;
-            value = 'ProdId';
-            return {
-                headerTemplate: isIdColumn ? "Pilih" : name,
-                template: isIdColumn ? "<input type='checkbox' onclick='onCheckBoxClick(this)' value= '#= " + value + " #'" +
-                    "# if (CheckB) { #" +
-                    "checked='checked'" +
-                    "# } #" +
-                    "/>" : columnNames,
-                field: name,
-                width: isIdColumn ? 50 : 180,
-                title: isIdColumn ? "CheckBox" : name
-            };
-        })
-    }
-
-    function onCheckBoxClick(e) {
-        var state = $(e).is(':checked');
-        var value = e.value;
-
-        var grid = $('#dataGridViewProduct').data('kendoGrid');
-        grid.refresh();
-
-        grid.tbody.find("tr[role='row']").each(function () {
-            var dataItem = grid.dataItem(this);
-
-            if (dataItem.ProdId == value) {
-                dataItem.CheckB = state;
-                if (state) {
-                    grid.select("tr:eq(value)");
-                }
-            }
-        })
-        var chkAll = $('#chkSelectAll').is(':checked');
-        var isCheckedAll = true;
-        var countTrue = 0;
-        var countFalse = 0;
-        var countAll = 0;
-
-        $.each(grid.dataSource.view(), function () {
-            if (this['CheckB'] == true) {
-                countTrue = countTrue + 1;
-            }
-            else {
-                countFalse = countFalse + 1;
-                isCheckedAll = false;
-            }
-            countAll = countAll + 1;
-        });
-        if (countFalse == 0 || (countFalse == 1 && !state)) {
-            $('#chkSelectAll').prop("checked", state);
-        }
-        grid.refresh();
-    }
-
-</script>
+<script src="~/js/reksa.po.cutmaintenancefee.js"></script>
+<script src="~/js/reksa.po.cutmaintenancefee.events.js"></script>

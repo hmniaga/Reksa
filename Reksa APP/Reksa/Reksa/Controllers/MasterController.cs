@@ -165,7 +165,7 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, sisaUnit });
         }
-        public JsonResult CalcEffectiveDate(DateTime StartDate, int NumDays)
+        public JsonResult CalcEffectiveDate(string StartDate, int NumDays)
         {
             string ErrMsg = "";
             DateTime dateEnd = new DateTime();
@@ -176,7 +176,7 @@ namespace Reksa.Controllers
                     client.BaseAddress = new Uri(_strAPIUrl);
                     MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                     client.DefaultRequestHeaders.Accept.Add(contentType);
-                    HttpResponseMessage response = client.GetAsync("/api/Master/CalcEffectiveDate?StartDate=" + StartDate + "NumDays=" + NumDays).Result;
+                    HttpResponseMessage response = client.GetAsync("/api/Master/CalcEffectiveDate?StartDate=" + StartDate + "&NumDays=" + NumDays).Result;
                     string stringData = response.Content.ReadAsStringAsync().Result;
                     dateEnd = JsonConvert.DeserializeObject<DateTime>(stringData);
                 }

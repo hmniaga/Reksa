@@ -1468,7 +1468,7 @@ async function subRefresh() {
 
                     $("#textNoTransaksiSwc").val(data.listSwitching[0].TranCode);
                     var dateTglTransaksiSwc = new Date(data.listSwitching[0].TranDate);
-                    $("#dateTglTransaksiSwc").val(dateTglTransaksiSwc.getDate() + '/' + (dateTglTransaksiSwc.getMonth() + 1) + '/' + dateTglTransaksiSwc.getFullYear());
+                    $("#dateTglTransaksiSwc").val(pad((dateTglTransaksiSwc.getDate()), 2) + '/' + pad((dateTglTransaksiSwc.getMonth() + 1), 2) + '/' + dateTglTransaksiSwc.getFullYear());
 
                     var criteria = _strTabName + "#" + $("#srcCIFSwc_text1").val();
                     var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(criteria);
@@ -1574,7 +1574,7 @@ async function subRefresh() {
 
                     $("#textNoTransaksiSwcRDB").val(data.listSwitchingRDB[0].TranCode);
                     var dateTglTransaksiSwcRDB = new Date(data.listSwitchingRDB[0].TranDate);
-                    $("#dateTglTransaksiSwcRDB").val(dateTglTransaksiSwcRDB.getDate() + '/' + (dateTglTransaksiSwcRDB.getMonth() + 1) + '/' + dateTglTransaksiSwcRDB.getFullYear());
+                    $("#dateTglTransaksiSwcRDB").val(pad((dateTglTransaksiSwcRDB.getDate()), 2) + '/' + pad((dateTglTransaksiSwcRDB.getMonth() + 1), 2) + '/' + dateTglTransaksiSwcRDB.getFullYear());
 
                     var criteria = _strTabName + "#" + $("#srcCIFSwcRDB_text1").val();
                     var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(criteria);

@@ -72,7 +72,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Tran Amount</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money1").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Amount -->
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Tran Unit</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money2").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Unit -->
@@ -88,7 +88,7 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Settle Date</label>
                     <div class="input-group col-sm-4">
-                        @(Html.Kendo().DatePicker().Name("dateTimePicker1"))
+                        @(Html.Kendo().DatePicker().Name("dateTimePicker1").HtmlAttributes(new { style = "width: 200px;" }).Enable(false))
                     </div>
                 </div>
                 <!-- End Settle Date -->
@@ -96,28 +96,10 @@
         </div>
         <div class="col-md-12">
             <!-- Begin dataGridView1 -->
-            <div class="form-group">
-                <div class="input-group">
                     <div id="dataGridView1"></div>
-                </div>
-            </div>
             <!-- End dataGridView1 -->
         </div>
     </div>
 </div>
-
-<script>
-
-    $(document).ready(function () {
-        var grid = {
-            height: 250
-        };
-        $("#dataGridView1").kendoGrid(grid);
-    });
-
-    function PopulateProducts()
-    {
-
-    }
-</script>
-
+<script src="~/js/reksa.po.adjustredempdate.js"></script>
+<script src="~/js/reksa.po.adjustredempdate.events.js"></script>

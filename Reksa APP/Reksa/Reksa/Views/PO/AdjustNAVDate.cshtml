@@ -25,13 +25,13 @@
                     </span>
                     Edit
                 </button>
-                <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
+                <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="margin-right:10px">
                     <span class="btn-label">
                         <i class="fa fa-save"></i>
                     </span>
                     Save
                 </button>
-                <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-danger waves-effect waves-light">
+                <button id="btnCancel" class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
                     <span class="btn-label">
                         <i class="fa fa-remove"></i>
                     </span>
@@ -44,7 +44,7 @@
             <div class="col-md-4">
                 <!-- Begin Client Code Switch Out-->
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Client Code Switch Out</label>
+                    <label id="label1" class="col-sm-5 control-label">Client Code Switch Out</label>
                     <div class="input-group">
                         @Html.Kendo().TextBox().Name("textBox1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
                     </div>
@@ -52,15 +52,15 @@
                 <!-- End Client Code Switch Out -->
                 <!-- Begin Client Name Switch Out -->
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Client Name Switch Out</label>
+                    <label id="label2" class="col-sm-5 control-label">Client Name Switch Out</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("textBox2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("textBox2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 210px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Name Switch Out -->
                 <!-- Begin Tran Code -->
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Tran Code</label>
+                    <label class="col-sm-5 control-label">Tran Code</label>
                     <div class="input-group">
                         @Html.Kendo().TextBox().Name("textBox3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
                     </div>
@@ -70,17 +70,17 @@
             <div class="col-md-4">
                 <!-- Begin Client Code Switch In -->
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Client Code Switch In</label>
+                    <label id="label4" class="col-sm-6 control-label">Client Code Switch In</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("textBox4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Code Switch In -->
                 <!-- Begin Client Name Switch In -->
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Client Name Switch In</label>
+                    <label id="label5" class="col-sm-6 control-label">Client Name Switch In</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        @Html.Kendo().TextBox().Name("textBox5").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Client Name Switch In -->
@@ -98,7 +98,7 @@
                 <div class="form-group">
                     <label class="col-sm-6 control-label">Tran Amount</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money3").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Amount -->
@@ -106,7 +106,7 @@
                 <div class="form-group">
                     <label class="col-sm-6 control-label">Tran Unit</label>
                     <div class="input-group">
-                        @Html.Kendo().TextBox().Name("Money4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
+                        @Html.Kendo().NumericTextBox().Name("Money4").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
                     </div>
                 </div>
                 <!-- End Tran Unit -->
@@ -122,27 +122,11 @@
         </div>
         <div class="col-md-12">
             <!-- Begin dataGridView1 -->
-            <div class="form-group">
-                <div class="input-group">
                     <div id="dataGridView1"></div>
-                </div>
-            </div>
             <!-- End dataGridView1 -->
         </div>
     </div>
 </div>
-
-<script>
-
-    $(document).ready(function () {
-        var grid = {
-            height: 250
-        };
-        $("#dataGridView1").kendoGrid(grid);
-    });
-
-    function PopulateProducts() {
-
-    }
-</script>
+<script src="~/js/reksa.po.adjustnavdate.js"></script>
+<script src="~/js/reksa.po.adjustnavdate.events.js"></script>
 

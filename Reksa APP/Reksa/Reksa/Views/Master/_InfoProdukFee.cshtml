@@ -1,104 +1,105 @@
-﻿<div class="col-md-12">
-    <div class="card-box">
-        <div class="row">
+﻿
             <div class="col-md-6">
-                <label>Subcription Fee</label>
-                <div class="card-box">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4>&nbsp;</h4>
-                            <div id="dataGridView3"></div>
-                        </div>
-                        <div class="col-md-6" >
-                            <h4>(karyawan)</h4>
-                            <div id="dataGridView4"></div>
+                <div class="portlet">
+                    <div class="portlet-heading bg-custom">Subscription Fee</div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>&nbsp;</h4>
+                                <div id="dataGridView3"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>(karyawan)</h4>
+                                <div id="dataGridView4"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <label>Redemption Fee</label>
-                <div class="card-box">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4>&nbsp;</h4>
-                            <div id="dataGridView1"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <h4>(karyawan)</h4>
-                            <div id="dataGridView2"></div>
+                <div class="portlet">
+                    <div class="portlet-heading bg-custom">Redemption Fee</div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>&nbsp;</h4>
+                                <div id="dataGridView1"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>(karyawan)</h4>
+                                <div id="dataGridView2"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<div class="col-md-12">
-    <div class="card-box">
-        <div class="row">
+
+
             <div class="col-md-6">
-                <label>Fee Based</label>
-                <div class="card-box">
-                    <div class="row">
-                        <!-- Begin Subscription Fee -->
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Subscription Fee</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("textBox13").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
-                                <label id="label13">&nbsp;&nbsp;&nbsp;%</label>
+                <div class="portlet">
+                    <div class="portlet-heading bg-custom">Fee Based</div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <!-- Begin Subscription Fee -->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Subscription Fee</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("textBox13").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
+                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                </div>
                             </div>
-                        </div>
-                        <!-- End Subscription Fee -->
-                        <!-- Begin Redemption Fee -->
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Redemption Fee</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("textBox15").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
-                                <label id="label13">&nbsp;&nbsp;&nbsp;%</label>
+                            <!-- End Subscription Fee -->
+                            <!-- Begin Redemption Fee -->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Redemption Fee</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("textBox15").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
+                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                </div>
                             </div>
-                        </div>
-                        <!-- End Redemption Fee -->
-                        <!-- Begin Maintenance Fee -->
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Maintenance Fee</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("textBox16").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
-                                <label id="label13">&nbsp;&nbsp;&nbsp;%</label>
+                            <!-- End Redemption Fee -->
+                            <!-- Begin Maintenance Fee -->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Maintenance Fee</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("textBox16").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
+                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                </div>
                             </div>
-                        </div>
-                        <!-- End Maintenance Fee -->
-                        <!-- Begin Up Front Fee -->
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Up Front Fee</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("textBox3").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
-                                <label id="label13">&nbsp;&nbsp;&nbsp;%</label>
+                            <!-- End Maintenance Fee -->
+                            <!-- Begin Up Front Fee -->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Up Front Fee</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("textBox3").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
+                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                </div>
                             </div>
-                        </div>
-                        <!-- End Up Front Fee -->
-                        <!-- Begin Selling Fee -->
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Selling Fee</label>
-                            <div class="input-group">
-                                @Html.Kendo().TextBox().Name("textBox4").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150px;" }).Enable(false)
-                                <label id="label13">&nbsp;&nbsp;&nbsp;%</label>
+                            <!-- End Up Front Fee -->
+                            <!-- Begin Selling Fee -->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Selling Fee</label>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("textBox4").HtmlAttributes(new { style = "width: 150px;" }).Enable(false).Min(0)
+                                    <label>&nbsp;&nbsp;&nbsp;%</label>
+                                </div>
                             </div>
+                            <!-- End Selling Fee -->
                         </div>
-                        <!-- End Selling Fee -->
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <label>Maintenance Fee Distribution</label>
-                <div class="card-box">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="dgvMaintenanceFee"></div>
+                <div class="portlet">
+                    <div class="portlet-heading bg-custom">Maintenance Fee Distribution</div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="dgvMaintenanceFee"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+
+

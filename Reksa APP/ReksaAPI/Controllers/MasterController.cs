@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using ReksaAPI.Models;
@@ -51,10 +52,13 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/Master/CalcEffectiveDate")]
         [HttpGet("{id}")]
-        public JsonResult CalcEffectiveDate([FromQuery]DateTime StartDate, [FromQuery]int NumDays)
+        public JsonResult CalcEffectiveDate([FromQuery]string StartDate, [FromQuery]int NumDays)
         {
             DateTime dateEnd = new DateTime();
-            dateEnd = cls.ReksaCalcEffectiveDate(StartDate, NumDays);
+            DateTime dtStartDate = new DateTime();
+            DateTime.TryParseExact(StartDate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStartDate);
+
+            dateEnd = cls.ReksaCalcEffectiveDate(dtStartDate, NumDays);
             return Json(dateEnd);
         }
         [Route("api/Master/MaintainProduct")]
