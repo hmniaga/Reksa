@@ -23,7 +23,7 @@
                                     </span>
                                     Refresh
                                 </button>
-                                <button id=btnRefresh class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                <button id=btnProcess class="btn btn-info waves-effect waves-light" style="margin-right:10px">
                                     <span class="btn-label">
                                         <i class="fa fa-cog"></i>
                                     </span>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-md-12">
                 <div class="card-box">
-                    <div class="row">                        
+                    <div class="row">
                         <div class="col-md-12">
                             <div id="dataGrid"></div>
                         </div>
@@ -47,26 +47,5 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-
-        var grid = {
-            height: 200
-        };
-        $("#dataGrid").kendoGrid(grid);
-        //click
-        $("#btnRefresh").click(function () {
-            subRefresh();
-        });
-        $("#btnEdit").click(function () {
-            subUpdate();
-        });
-        $("#btnSave").click(function () {
-            subSave();
-        });
-        $("#btnCancel").click(function () {
-            subCancel();
-        });
-    });
-
-</script>
+<script src="~/js/reksa.po.canceltransactionibmb.js"></script>
+<script src="~/js/reksa.po.canceltransactionibmb.events.js"></script>

@@ -133,5 +133,5 @@ namespace Reksa.Models
         public int NIK { get; set; }
         public string Module { get; set; }
         public string ProcessType { get; set; }
-    }
+    }    
 }

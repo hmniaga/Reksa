@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Search Gift";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchGift() {
+        var value = $("#GiftSearchComponentSearchTxt").val();
+        var grid = $("#GiftSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowGiftSelect(e) {
+        var data = this.dataItem(this.select());
+        var GiftCode = $.trim(data.GiftCode);
+        var GiftDesc = $.trim(data.GiftDesc);
+
+        $("#GiftSelectedCode").val(GiftCode);
+        $("#GiftSelectedName").val(GiftDesc);
+    };
+
+    $("#GiftSelectButton").on("click", function () {
+        var selectedCode = $("#GiftSelectedCode").val();
+        var selectedName = $("#GiftSelectedName").val();
+        
+        $("input[id='cmpsrGift_text1']").val(selectedCode).change();
+        $("input[id='cmpsrGift_text2']").val(selectedName);
+    });
+
+    $("#GiftSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#GiftSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+        
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.Gift>()
+                                            .Name("GiftSearchComponentGrid")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(m => m.GiftCode).Width(100).Title("Gift Code");
+                                                columns.Bound(m => m.GiftDesc).Width(100).Title("Gift Name");
+                                            })
+                                            .ToolBar(toolbar =>
+                                            {
+                                                toolbar.ClientTemplateId("GridToolbarTemplate");
+                                            })
+                                            .Events(events => events.Change("onRowGiftSelect"))
+                                            .Pageable()
+                                            .Scrollable()
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(m => m.GiftCode);
+                                                })
+                                                .Read(read =>
+                                                read.Action("SearchGiftData", "Global").Data("getData"))
+                                            )
+        )
+
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("GiftSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("GiftSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchGift")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="GiftSelectedCode" name="GiftSelectedCode" value="" />
+        <input type="hidden" id="GiftSelectedName" name="GiftSelectedName" value="" />
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="GiftSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

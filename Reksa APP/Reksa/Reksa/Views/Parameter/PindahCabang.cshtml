@@ -38,12 +38,11 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Cabang Asal</label>
                                 <div class="input-group col-md-5">
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @id = "srcCabangAsal_text1", @class = "form-control input-sm" }).Enable(false)
                                     <span class="input-group-btn">
-                                        <a id="srcCabangAsal" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#OfficeAsalModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                        <a id="srcCabangAsal" href="#display" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                     </span>
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @id = "srcCabangAsal_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
                                 </div>
                             </div>
                         </div>
@@ -54,12 +53,11 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Cabang Tujuan</label>
                                 <div class="input-group col-md-5">
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @id = "srcCabangTujuan_text1", @class = "form-control input-sm" }).Enable(false)
                                     <span class="input-group-btn">
-                                        <a id="srcCabangTujuan" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#OfficeTujuanModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                        <a id="srcCabangTujuan" href="#display" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                     </span>
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
-                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @id = "srcCabangTujuan_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
                                 </div>
                             </div>
                         </div>
@@ -72,29 +70,11 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="OfficeAsalModal" tabindex="-1" role="dialog" aria-labelledby="OfficeAsalModalLabel">
+<div class="modal fade" id="OfficeModal" tabindex="-1" role="dialog" aria-labelledby="OfficeModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content"></div>
     </div>
 </div>
-<div class="modal fade" id="OfficeTujuanModal" tabindex="-1" role="dialog" aria-labelledby="OfficeTujuanModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-<script>
-    $(document).ready(function () {
 
-        var grid = {
-            height: 200
-        };
-        $("#dataGridAgentAsal").kendoGrid(grid);
-        $("#dataGridAgentTujuan").kendoGrid(grid);
-        //click
-        $("#btnSave").click(function () {
-            subSave();
-        });
-    });
-
-</script>
-
+<script src="~/js/reksa.parameter.pindahcabang.js"></script>
+<script src="~/js/reksa.parameter.pindahcabang.events.js"></script>

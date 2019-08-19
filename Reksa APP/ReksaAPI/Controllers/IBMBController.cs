@@ -43,10 +43,53 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaMaintainKinerja - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
-        private JsonResult Json(object p, object allowGet)
+        [Route("api/IBMB/RefreshLimitFeeIBMB")]
+        [HttpGet("{id}")]
+        public JsonResult RefreshLimitFeeIBMB([FromQuery]int NIK, [FromQuery]string Module)
         {
-            throw new NotImplementedException();
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaRefreshLimitFeeIBMB(NIK, Module, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshLimitFeeIBMB - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/IBMB/MaintainLimitFeeIBMB")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainLimitFeeIBMB([FromBody]MaintainLimitFeeIBMB model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string EffectiveDate = "";
+
+            blnResult = cls.ReksaMaintainLimitFeeIBMB(model, out EffectiveDate, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainLimitFeeIBMB - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, EffectiveDate });
+        }
+        [Route("api/IBMB/RefreshUploadPDF")]
+        [HttpGet("{id}")]
+        public JsonResult RefreshUploadPDF([FromQuery]int NIK, [FromQuery]string Module)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaRefreshUploadPDF(NIK, Module, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshUploadPDF - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/IBMB/MaintainUploadPDF")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainUploadPDF([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]int ProdId, [FromQuery]string JenisKebutuhanPDF, [FromQuery]string FilePath, [FromQuery]string ProcessType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainUploadPDF(NIK, Module, ProdId, JenisKebutuhanPDF, FilePath, ProcessType, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainUploadPDF - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        
 
     }
 }

@@ -23,10 +23,13 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult Refresh([FromQuery]int ProdId, [FromQuery]string TreeInterface, [FromQuery]int NIK, [FromQuery]string Guid)
         {
-            List<ParameterModel> list = new List<ParameterModel>();
-            DataSet dsOut = new DataSet();
-            list = cls.ReksaRefreshParameter(ProdId, TreeInterface, NIK, Guid);
-            return Json(list);
+            //List<ParameterModel> list = new List<ParameterModel>();
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaRefreshParameter(ProdId, TreeInterface, NIK, Guid, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaRefreshParameter - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         [Route("api/Parameter/RefreshWARPED")]
         [HttpGet("{id}")]
@@ -82,132 +85,129 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult PopulateVerifyGlobalParam([FromQuery]string ProdId, [FromQuery]string InterfaceId, [FromQuery]int NIK)
         {
-            DataSet dsOut = new DataSet();
-            dsOut = cls.ReksaPopulateVerifyGlobalParam("", InterfaceId, NIK);
-            return Json(dsOut);
+            DataSet dsResult = new DataSet();
+            bool blnResult = false;
+            string ErrMsg = "";
+            blnResult = cls.ReksaPopulateVerifyGlobalParam("", InterfaceId, NIK, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyGlobalParam - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         [Route("api/Parameter/MaintainParameterGlobal")]
         [HttpGet("{id}")]
         public JsonResult MaintainParameterGlobal([FromBody] MaintainParamGlobal MaintParamGlobal, [FromQuery]int NIK, [FromQuery] string GUID)
         {
-            bool blnResult = false;
-            int intType; string InterfaceId; string strCode=""; string strDesc=""; string strOfficeId="";
-            int intProdId; int intId; DateTime dtValue; string strErrMsg;
+            bool blnResult = false;            
+            string strErrMsg;
+            MaintainParameter model = new MaintainParameter();
 
-            intType = MaintParamGlobal._intType;
-            InterfaceId = MaintParamGlobal._strTreeInterface;
-            intProdId = 0;
-            if ((intType == 1) | (intType == 2))
+            model.Type = MaintParamGlobal._intType;
+            model.InterfaceId = MaintParamGlobal._strTreeInterface;
+            model.ProdId = 0;
+            if ((model.Type == 1) | (model.Type == 2))
             {
-                if (InterfaceId != "RSB" && InterfaceId != "MSC" && InterfaceId != "SWC" && InterfaceId != "RPP"
-                        && InterfaceId != "CTR" && InterfaceId != "OFF"
-                        )
+                if (model.InterfaceId != "RSB" && model.InterfaceId != "MSC" && model.InterfaceId != "SWC" && model.InterfaceId != "RPP" && model.InterfaceId != "CTR" && model.InterfaceId != "OFF")
                 {
-                    strCode = MaintParamGlobal.txtbSP1;
+                    model.Code = MaintParamGlobal.txtbSP1;
                 }
                 else
                 {
-                    strCode = MaintParamGlobal.cmpsrSearch1[0];
+                    model.Code = MaintParamGlobal.cmpsrSearch1[0];
                 }
             }
             else
             {
-                strCode = "";
-                if (intType == 3 && (InterfaceId == "EVT" | InterfaceId == "WPR" | InterfaceId == "GFM" | InterfaceId == "ANP" | InterfaceId == "KNP"))
-                    strCode = MaintParamGlobal.txtbSP1;
-                else if (intType == 3 && (InterfaceId == "RSB"))
-                    strCode = MaintParamGlobal.cmpsrSearch1[0];
-                else if (intType == 3 && (InterfaceId == "PFP"))
-                    strCode = MaintParamGlobal.txtbSP1;
-                else if (intType == 3 && (InterfaceId == "MSC"))
-                    strCode = MaintParamGlobal.cmpsrSearch1[0];
-                else if (intType == 3 && (InterfaceId == "SWC"))
-                    strCode = MaintParamGlobal.cmpsrSearch1[0];
-                else if (intType == 3 && (InterfaceId == "RPP"))
-                    strCode = MaintParamGlobal.cmpsrSearch1[0];
+                model.Code = "";
+                if (model.Type == 3 && (model.InterfaceId == "EVT" | model.InterfaceId == "WPR" | model.InterfaceId == "GFM" | model.InterfaceId == "ANP" | model.InterfaceId == "KNP"))
+                    model.Code = MaintParamGlobal.txtbSP1;
+                else if (model.Type == 3 && (model.InterfaceId == "RSB"))
+                    model.Code = MaintParamGlobal.cmpsrSearch1[0];
+                else if (model.Type == 3 && (model.InterfaceId == "PFP"))
+                    model.Code = MaintParamGlobal.txtbSP1;
+                else if (model.Type == 3 && (model.InterfaceId == "MSC"))
+                    model.Code = MaintParamGlobal.cmpsrSearch1[0];
+                else if (model.Type == 3 && (model.InterfaceId == "SWC"))
+                    model.Code = MaintParamGlobal.cmpsrSearch1[0];
+                else if (model.Type == 3 && (model.InterfaceId == "RPP"))
+                    model.Code = MaintParamGlobal.cmpsrSearch1[0];
                 else
-                    strCode = MaintParamGlobal.txtbSP1;
+                    model.Code = MaintParamGlobal.txtbSP1;
             }
-            if (InterfaceId == "SWC")
+            if (model.InterfaceId == "SWC")
             {
-                strDesc = MaintParamGlobal.cmpsrSearch2[0].Trim() + " #" + MaintParamGlobal.txtbSP3.Trim().Replace(",", "") + " #" + MaintParamGlobal.comboBox1.Trim() + "#" + MaintParamGlobal.txtbSP5.Trim() + "#" + MaintParamGlobal.textPctSwc.Trim();
+                model.Desc = MaintParamGlobal.cmpsrSearch2[0].Trim() + " #" + MaintParamGlobal.txtbSP3.Trim().Replace(",", "") + " #" + MaintParamGlobal.comboBox1.Trim() + "#" + MaintParamGlobal.txtbSP5.Trim() + "#" + MaintParamGlobal.textPctSwc.Trim();
             }
-            else if (InterfaceId == "OFF" | InterfaceId == "CTR")
+            else if (model.InterfaceId == "OFF" | model.InterfaceId == "CTR")
             {
-                strDesc = MaintParamGlobal.cmpsrSearch1[1].Trim();
+                model.Desc = MaintParamGlobal.cmpsrSearch1[1].Trim();
             }
             else
             {
-                if ((intType == 1) | (intType == 2) | (intType == 3))
+                if ((model.Type == 1) | (model.Type == 2) | (model.Type == 3))
                 {
-                    strDesc = MaintParamGlobal.txtbSP2;
-                    if (InterfaceId == "GFM")
+                    model.Desc = MaintParamGlobal.txtbSP2;
+                    if (model.InterfaceId == "GFM")
                     {
                         if (MaintParamGlobal.txtbSP3 == "") MaintParamGlobal.txtbSP3 = "0";
-                        strDesc = strDesc + "#" + MaintParamGlobal.txtbSP3;
+                        model.Desc = model.Desc + "#" + MaintParamGlobal.txtbSP3;
                     }
-                    if (InterfaceId == "RPP")
+                    if (model.InterfaceId == "RPP")
                     {
-                        strDesc = MaintParamGlobal.comboBox3;
+                        model.Desc = MaintParamGlobal.comboBox3;
                     }
-                    if (InterfaceId == "RTY")
+                    if (model.InterfaceId == "RTY")
                     {
-                        strDesc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
+                        model.Desc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
                     }
-                    if (InterfaceId == "RSB")
+                    if (model.InterfaceId == "RSB")
                     {
-                        strDesc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3 + "#" + MaintParamGlobal.textBox1 + "#" + MaintParamGlobal.textPctSwc + "#" + MaintParamGlobal.txtbSP5;
+                        model.Desc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3 + "#" + MaintParamGlobal.textBox1 + "#" + MaintParamGlobal.textPctSwc + "#" + MaintParamGlobal.txtbSP5;
                     }
-                    if (InterfaceId == "WPR")
+                    if (model.InterfaceId == "WPR")
                     {
-                        strDesc = MaintParamGlobal.txtbSP2.Trim() + "#" + MaintParamGlobal.txtbSP3.Trim() + "#" + MaintParamGlobal.txtbSP4.Trim() + "#" + MaintParamGlobal.dtpSP5.ToString();
+                        model.Desc = MaintParamGlobal.txtbSP2.Trim() + "#" + MaintParamGlobal.txtbSP3.Trim() + "#" + MaintParamGlobal.txtbSP4.Trim() + "#" + MaintParamGlobal.dtpSP5.ToString();
                     }
-                    if (InterfaceId == "PFP")
+                    if (model.InterfaceId == "PFP")
                     {
-                        strDesc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
+                        model.Desc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
                     }
-                    if (InterfaceId == "MNI" || InterfaceId == "CTD")
+                    if (model.InterfaceId == "MNI" || model.InterfaceId == "CTD")
                     {
-                        strDesc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
+                        model.Desc = MaintParamGlobal.txtbSP2 + "#" + MaintParamGlobal.txtbSP3;
                     }
                 }
             }
-            if (InterfaceId == "MSC")
+            if (model.InterfaceId == "MSC")
             {
                 if (MaintParamGlobal.checkBox1)
-                    intProdId = 1;
+                    model.ProdId = 1;
                 else
-                    intProdId = 0;
+                    model.ProdId = 0;
             }
-            if ((intType == 2) | (intType == 3))
+            if ((model.Type == 2) | (model.Type == 3))
             {
-                intId = MaintParamGlobal.Id;
+                model.Id = MaintParamGlobal.Id;
             }
             else
             {
-                intId = 0;
+                model.Id = 0;
             }
-            if ((intType == 1) | (intType == 2))
+            if ((model.Type == 1) | (model.Type == 2))
             {
-                dtValue = MaintParamGlobal.dtpSP;
+                model.Value = MaintParamGlobal.dtpSP;
             }
             else
             {
-                if (InterfaceId != "SWC")
+                if (model.InterfaceId != "SWC")
                 {
-                    dtValue = MaintParamGlobal.TanggalValuta;
+                    model.Value = MaintParamGlobal.TanggalValuta;
                 }
                 else
                 {
-                    dtValue = DateTime.Today;
+                    model.Value = DateTime.Today;
                 }
             }
-
-            blnResult = cls.ReksaMaintainParameter(intType, InterfaceId, strCode, strDesc, strOfficeId,
-            intProdId, intId, dtValue, NIK, GUID, out strErrMsg);
-
+            blnResult = cls.ReksaMaintainParameter(model , out strErrMsg);
             strErrMsg = strErrMsg.Replace("ReksaMaintainParameter - Core .Net SqlClient Data Provider\n", "");
-
             return Json(new { blnResult, strErrMsg });
         }
         //Nico
@@ -351,6 +351,40 @@ namespace ReksaAPI.Controllers
             blnResult = cls.ReksaUploadWAPERD(model, NIK, Module, out ErrMsg, out dsError);
             ErrMsg = ErrMsg.Replace("ReksaUploadWAPERD - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsError });
+        }
+
+        [Route("api/Parameter/PopulateAgentCode")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateAgentCode([FromQuery]string OfficeId, [FromQuery]string Module, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaGetAgentCodeByOfficeId(NIK, Module, OfficeId, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetAgentCodeByOfficeId - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Parameter/PindahOffice")]
+        [HttpPost("{id}")]
+        public JsonResult PindahOffice([FromQuery]string OfficeAsal, [FromQuery]string OfficeTujuan, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            blnResult = cls.ReksaPindahOffice(NIK, OfficeAsal, OfficeTujuan, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPindahOffice - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Parameter/MaintainParameter")]
+        [HttpGet("{id}")]
+        public JsonResult MaintainParameter([FromBody]MaintainParameter model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaMaintainParameter(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaMaintainParameter - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
         }
     }
 }

@@ -23,7 +23,7 @@
                                     </span>
                                     Refresh
                                 </button>
-                                <button id="btnAdd" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                <button id="btnNew" class="btn btn-default waves-effect waves-light" style="margin-right:10px">
                                     <span class="btn-label">
                                         <i class="fa fa-plus"></i>
                                     </span>
@@ -34,6 +34,12 @@
                                         <i class="fa fa-edit"></i>
                                     </span>
                                     Edit
+                                </button>
+                                <button id="btnDelete" class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
+                                    <span class="btn-label">
+                                        <i class="fa fa-trash"></i>
+                                    </span>
+                                    Delete
                                 </button>
                                 <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="margin-right:10px">
                                     <span class="btn-label">
@@ -62,7 +68,7 @@
                                 <div class="input-group col-md-5">
                                     @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @id = "_cmpsrProduct_text1", @class = "form-control input-sm" }).Enable(false)
                                     <span class="input-group-btn">
-                                        <a id="_cmpsrProduct" href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                        <a id="_cmpsrProduct" href="#display" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                                     </span>
                                     @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @id = "_cmpsrProduct_text2", @class = "form-control input-sm", style = "width: 350px;" }).Enable(false)
                                     @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @id = "ProdId", @class = "form-control input-sm", @type = "Hidden" })
@@ -128,18 +134,20 @@
                                                         <label class="col-sm-3 control-label">Minimum Subscription New</label>
                                                         <div class="input-group">
                                                             @Html.Kendo().NumericTextBox().Name("_minSubsNew").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                            <label id="_matauangnew"></label>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-3 control-label">Minimum Subscription Add</label>
                                                         <div class="input-group">
                                                             @Html.Kendo().NumericTextBox().Name("_minSubsAdd").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                            <label id="_matauangadd"></label>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-3 control-label">% Fee Subscription</label>
                                                         <div class="input-group">
-                                                            @Html.Kendo().NumericTextBox().Name("_pctFeeSubs").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                            @Html.Kendo().NumericTextBox().Name("_pctFeeSubs").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0).Events(e => { e.Change("onChange_pctFeeSubs").Spin("onSpin_pctFeeSubs"); })
                                                             <label>&nbsp;&nbsp;&nbsp;%</label>
                                                         </div>
                                                     </div>
@@ -161,7 +169,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">% Fee Redemption</label>
                                                     <div class="input-group">
-                                                        @Html.Kendo().NumericTextBox().Name("_pctFeeRedemp").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                        @Html.Kendo().NumericTextBox().Name("_pctFeeRedemp").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0).Events(e => { e.Change("onChange_pctFeeRedemp").Spin("onSpin_pctFeeRedemp"); })
                                                         <label>&nbsp;&nbsp;&nbsp;%</label>
                                                     </div>
                                                 </div>
@@ -183,14 +191,14 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">% Fee Switching</label>
                                                     <div class="input-group">
-                                                        @Html.Kendo().NumericTextBox().Name("_pctFeeSwitching").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                        @Html.Kendo().NumericTextBox().Name("_pctFeeSwitching").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0).Events(e => { e.Change("onChange_pctFeeSwitching").Spin("onSpin_pctFeeSwitching"); })
                                                         <label>&nbsp;&nbsp;&nbsp;%</label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">% Hold Amount</label>
                                                     <div class="input-group">
-                                                        @Html.Kendo().NumericTextBox().Name("_pctHoldAmount").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
+                                                        @Html.Kendo().NumericTextBox().Name("_pctHoldAmount").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0).Events(e => { e.Change("onChange_pctHoldAmount").Spin("onSpin_pctHoldAmount"); })
                                                         <label>&nbsp;&nbsp;&nbsp;%</label>
                                                     </div>
                                                 </div>
@@ -215,28 +223,5 @@
         <div class="modal-content"></div>
     </div>
 </div>
-<script>
-    var intMyType;
-    $(document).ready(function () {
-        var grid = {
-            height: 200
-        };
-        $("#dataGridView1").kendoGrid(grid);
-        //click
-        $("#btnRefresh").click(function () {
-            subRefresh();
-        });
-        $("#btnRefresh").click(function () {
-            subRefresh();
-        });
-        $("#btnEdit").click(function () {
-            subUpdate();
-        });
-        $("#btnSave").click(function () {
-            subSave();
-        });
-        $("#btnCancel").click(function () {
-            subCancel();
-        });
-    });
-</script>
+<script src="~/js/reksa.ibmb.settinglimitfee.js"></script>
+<script src="~/js/reksa.ibmb.settinglimitfee.events.js"></script>

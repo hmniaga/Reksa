@@ -244,16 +244,12 @@ namespace ReksaAPI.Controllers
         }
         [Route("api/Otorisasi/CheckValiditasData")]
         [HttpPost("{id}")]
-        public JsonResult CheckValiditasData([FromQuery]int intTranId, [FromQuery]int intTranType, [FromQuery]double decNominal, [FromQuery]double decUnit,
-            [FromQuery]bool FullAmount, [FromQuery]string ChannelDesc, [FromQuery]double FeeAmount, [FromQuery]double FeePercent, [FromQuery]int intJangkaWaktu,
-            [FromQuery]bool AutoRedemp, [FromQuery]bool Asuransi, [FromQuery]int FrekPendebetan)
+        public JsonResult CheckValiditasData([FromBody]CheckValiditasDataModel model)
         {
             string ErrMsg = "";
             bool blnResult = false;
 
-            blnResult = cls.ReksaCheckValiditasData(intTranId, intTranType, decNominal, decUnit,
-            FullAmount, ChannelDesc, FeeAmount, FeePercent, intJangkaWaktu,
-            AutoRedemp, Asuransi, FrekPendebetan, out ErrMsg);
+            blnResult = cls.ReksaCheckValiditasData(model, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaCheckValiditasData - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }

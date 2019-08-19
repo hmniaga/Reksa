@@ -163,6 +163,14 @@ namespace ReksaAPI.Controllers
             //}
             return Json(list);
         }
+        [Route("api/Global/GetSrcCountry")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcCountry([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.Country> list = new List<SearchModel.Country>();
+            list = cls.ReksaSrcCountry(Col1, Col2, Validate);
+            return Json(list);
+        }
         [Route("api/Global/GetSrcCustody")]
         [HttpGet("{id}")]
         public JsonResult GetSrcCustody([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
@@ -243,12 +251,36 @@ namespace ReksaAPI.Controllers
             list = cls.ReksaSrcCurrency(Col1, Col2, Validate);
             return Json(list);
         }
+        [Route("api/Global/GetSrcGift")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcGift([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string Criteria)
+        {
+            List<SearchModel.Gift> list = new List<SearchModel.Gift>();
+            list = cls.ReksaSrcGift(Col1, Col2, Validate, Criteria);
+            return Json(list);
+        }        
         [Route("api/Global/GetSrcProduct")]
         [HttpGet("{id}")]
         public JsonResult GetSrcProduct([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]int Status)
         {
             List<SearchModel.Product> list = new List<SearchModel.Product>();
             list = cls.ReksaSrcProduct(Col1, Col2, Validate, Status);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcProductSwitchOut")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcProductSwitchOut([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate)
+        {
+            List<SearchModel.Product> list = new List<SearchModel.Product>();
+            list = cls.ReksaSrcProdSwitchOut(Col1, Col2, Validate);
+            return Json(list);
+        }
+        [Route("api/Global/GetSrcProductSwitchIn")]
+        [HttpGet("{id}")]
+        public JsonResult GetSrcProductSwitchIn([FromQuery]string Col1, [FromQuery]string Col2, [FromQuery]int Validate, [FromQuery]string ProdCode)
+        {
+            List<SearchModel.Product> list = new List<SearchModel.Product>();
+            list = cls.ReksaSrcProdSwitchIn(Col1, Col2, Validate, ProdCode);
             return Json(list);
         }
         [Route("api/Global/GetSrcManInv")]

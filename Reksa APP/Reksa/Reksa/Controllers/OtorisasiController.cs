@@ -249,22 +249,43 @@ namespace Reksa.Controllers
         }
         public JsonResult PopulateVerifyGlobalParam(string InterfaceId)
         {
-            OtorisasiListViewModel vModel = new OtorisasiListViewModel();
-            List<OtorisasiModel.AuthParamGlobal> list = new List<OtorisasiModel.AuthParamGlobal>();
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateVerifyGlobalParam?ProdId=&InterfaceId=" + InterfaceId + "&NIK=" + _intNIK).Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                DataSet dsResult = JsonConvert.DeserializeObject<DataSet>(stringData);
-                _session.SetString("dsPopulateParamGlobal", JsonConvert.SerializeObject(dsResult));
-                List<OtorisasiModel.AuthParamGlobal> result = this.MapListOfObject<OtorisasiModel.AuthParamGlobal>(dsResult.Tables[0]);
-                list.AddRange(result);
-                vModel.AuthParamGlobal = list;
+            //OtorisasiListViewModel vModel = new OtorisasiListViewModel();
+            //List<OtorisasiModel.AuthParamGlobal> list = new List<OtorisasiModel.AuthParamGlobal>();
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
+            {                
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateVerifyGlobalParam?ProdId=&InterfaceId=" + InterfaceId + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                    else
+                    {
+                        _session.SetString("dsPopulateParamGlobal", JsonConvert.SerializeObject(dsResult));
+                    }
+                }
             }
-            return Json(vModel);
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public JsonResult AuthorizeGlobalParam(string listId, string InterfaceId, bool isApprove)
         {
@@ -476,11 +497,6 @@ namespace Reksa.Controllers
                 dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
 
                 _session.SetString("dsVerifyGlobalParam", JsonConvert.SerializeObject(dsResult));
-                //List<OtorisasiModel.AuthTransaction> result = this.MapListOfObject<OtorisasiModel.AuthTransaction>(dsResult.Tables[0]);
-                //List<OtorisasiModel.AuthTransactionDetail> result1 = this.MapListOfObject<OtorisasiModel.AuthTransactionDetail>(dsResult.Tables[1]);
-                //list.AddRange(result);
-                //list1.AddRange(result1);
-                //vModel.AuthTransaction = list;
             }
             return Json(new { blnResult, ErrMsg, dsResult });
         }
@@ -1078,6 +1094,30 @@ namespace Reksa.Controllers
                         blnResult = strObject.SelectToken("blnResult").Value<bool>();
                         ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public ActionResult CheckValiditasData([FromBody]CheckValiditasDataModel model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/CheckValiditasData", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                 }
             }
             catch (Exception e)

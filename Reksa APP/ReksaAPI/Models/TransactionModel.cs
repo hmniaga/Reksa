@@ -441,4 +441,27 @@ namespace ReksaAPI.Models
             public string GLBiayaFullAmt { get; set; }
         }
     }
+    public class MaintainStatusJurnalTT {
+        public int NIK { get; set; }
+        public int BillId { get; set; }
+        public string TTGuid { get; set; }
+        public string Guid { get; set; }
+        public string JenisJurnal { get; set; }
+        public string CreditAccount { get; set; }
+        public string CreditCurrency { get; set; }
+        public decimal CreditAmount { get; set; }
+        public string DebitAccount { get; set; }
+        public string DebitCurrency { get; set; }
+        public decimal DebitAmount { get; set; }
+        public decimal TTBuy { get; set; }
+        public decimal TTSell { get; set; }
+        public decimal BNBuy { get; set; }
+        public decimal BNSell { get; set; }
+        public decimal FeeFullAmount { get; set; }
+        public string FeeCurrency { get; set; }
+        public string DebittingAccountFee { get; set; }
+        public bool Status { get; set; }
+        public string ErrorMsg { get; set; }
+        public string TranBranch { get; set; }
+    }
 }

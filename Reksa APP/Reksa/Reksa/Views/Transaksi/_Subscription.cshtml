@@ -270,36 +270,36 @@
                         .Name("dataGridViewSubs")
                         .Columns(columns =>
                         {
-                        columns.Bound(p => p.NoTrx).Width(150).Title("No Transaksi");
-                        columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
-                        columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
-                        columns.Bound(p => p.NamaProduk).Width(250).Title("Nama Produk");
-                        columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
-                        columns.Bound(p => p.Nominal).Width(150).Title("Nominal").Format("{0:###,###.##}");
-                        columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
-                        columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee").Format("{0:###,###.##}");
-                        columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount").ClientTemplate("<input type='checkbox' disabled='disabled' " +
-                            "# if (FullAmount) { #" +
+                            columns.Bound(p => p.NoTrx).Width(150).Title("No Transaksi");
+                            columns.Bound(p => p.StatusTransaksi).Width(150).Title("Status");
+                            columns.Bound(p => p.KodeProduk).Width(150).Title("Kode Produk");
+                            columns.Bound(p => p.NamaProduk).Width(250).Title("Nama Produk");
+                            columns.Bound(p => p.ClientCode).Width(150).Title("Client Code");
+                            columns.Bound(p => p.Nominal).Width(150).Title("Nominal").Format("{0:###,###.##}");
+                            columns.Bound(p => p.EditFeeBy).Width(150).Title("Edit Fee By");
+                            columns.Bound(p => p.NominalFee).Width(150).Title("NominalFee").Format("{0:###,###.##}");
+                            columns.Bound(p => p.FullAmount).Width(150).Title("FullAmount").ClientTemplate("<input type='checkbox' disabled='disabled' " +
+                                "# if (FullAmount) { #" +
+                                    "checked='checked'" +
+                                    "# } #" +
+                                    "/>");
+                            columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder").ClientTemplate("<input type='checkbox' disabled='disabled' " +
+                            "# if (PhoneOrder) { #" +
                                 "checked='checked'" +
                                 "# } #" +
                                 "/>");
-                        columns.Bound(p => p.PhoneOrder).Width(150).Title("PhoneOrder").ClientTemplate("<input type='checkbox' disabled='disabled' " +
-                        "# if (PhoneOrder) { #" +
-                            "checked='checked'" +
-                            "# } #" +
-                            "/>");
-                    columns.Bound(p => p.TglTrx).Width(150).Title("Tanggal Transaksi");
-                    columns.Bound(p => p.CCY).Title("Currency");
-                    columns.Bound(p => p.EditFee).Hidden();
-                    columns.Bound(p => p.JenisFee).Width(150).Title("Jenis Fee").Format("{0:###,###.##}");
-                    columns.Bound(p => p.PctFee).Width(150).Title("Percent Fee").Format("{0:###,###.##}");
-                    columns.Bound(p => p.FeeCurr).Hidden();
-                    columns.Bound(p => p.FeeKet).Hidden();
-                    columns.Bound(p => p.IsNew).Hidden();
-                    columns.Bound(p => p.OutstandingUnit).Hidden();
-                    columns.Bound(p => p.ApaDiUpdate).Hidden();
-                    columns.Bound(p => p.TrxTaxAmnesty).Hidden();
-                })
+                            columns.Bound(p => p.TglTrx).Width(150).Title("Tanggal Transaksi");
+                            columns.Bound(p => p.CCY).Title("Currency");
+                            columns.Bound(p => p.EditFee).Hidden();
+                            columns.Bound(p => p.JenisFee).Width(150).Title("Jenis Fee").Format("{0:###,###.##}");
+                            columns.Bound(p => p.PctFee).Width(150).Title("Percent Fee").Format("{0:###,###.##}");
+                            columns.Bound(p => p.FeeCurr).Hidden();
+                            columns.Bound(p => p.FeeKet).Hidden();
+                            columns.Bound(p => p.IsNew).Hidden();
+                            columns.Bound(p => p.OutstandingUnit).Hidden();
+                            columns.Bound(p => p.ApaDiUpdate).Hidden();
+                            columns.Bound(p => p.TrxTaxAmnesty).Hidden();
+                        })
                         .Pageable()
                         .Scrollable(s => s.Height(250))
                         .Selectable(selectable => selectable

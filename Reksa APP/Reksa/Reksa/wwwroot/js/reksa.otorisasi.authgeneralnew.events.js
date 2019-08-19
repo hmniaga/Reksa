@@ -1,7 +1,18 @@
-﻿$("#btnRefresh").click(function () {
+﻿$("#btnRefresh").click(function btnRefresh_click() {
+    if (($("#radioTransaction").prop('checked') == true) && ((($("#radioAllTrx").prop('checked') == false) && ($("#radioSubs").prop('checked') == false) && ($("#radioRedemption").prop('checked') == false) && ($("#radioRDB").prop('checked') == false)
+        && ($("#radioSwitching").prop('checked') == false) && ($("#radioSwcRDB").prop('checked') == false) && ($("#radioBooking").prop('checked') == false)))) {
+        swal("Warning", "Jenis Transaksi harus dipilih!", "warning");
+        return;
+    }
+
+    if (($("#radioReverse").prop('checked') == true) && ((($("#radioAllTrx").prop('checked') == false) && ($("#radioSubs").prop('checked') == false) && ($("#radioRedemption").prop('checked') == false) && ($("#radioRDB").prop('checked') == false)
+        && ($("#radioSwitching").prop('checked') == false) && ($("#radioSwcRDB").prop('checked') == false) && ($("#radioBooking").prop('checked') == false)))) {
+        swal("Warning", "Jenis Transaksi harus dipilih!", "warning");
+        return;
+    }
     subRefresh();
 });
-$("#btnProcess").click(function () {
+$("#btnProcess").click(function btnProcess_click() {
     swal({
         title: "Apakah akan melakukan Otorisasi Transaksi?",
         text: "",
@@ -19,7 +30,7 @@ $("#btnProcess").click(function () {
         });
 
 });
-$("#btnReject").click(function () {
+$("#btnReject").click(function btnReject_click() {
     swal({
         title: "Reject Transaksi?",
         text: "",
@@ -38,15 +49,37 @@ $("#btnReject").click(function () {
 });
 
 //change
-$("#radioTransaction").change(function () {
+$("#radioNewAccount").change(function radioNewAccount_CheckedChanged() {
+    if ($("#radioNewAccount").prop('checked') == true) {
+        subDisableAllTrxControl(false);
+    }
+    else {
+        subDisableAllTrxControl(true);
+    }
+    subDisableAllActionControl(true);
+    document.getElementById("btnReject").disabled = false;
+});
+$("#radioTransaction").change(function radioTransaction_CheckedChanged() {
     if ($("#radioTransaction").prop('checked') == true) {
         subDisableAllTrxControl(true);
     }
     else {
         subDisableAllTrxControl(false);
     }
+    subDisableAllActionControl(true);
+    document.getElementById("btnReject").disabled = false;
 });
-$("#radioReverse").change(function () {
+$("#radioBlocking").change(function radioBlocking_CheckedChanged() {
+    if ($("#radioBlocking").prop('checked') == true) {
+        subDisableAllTrxControl(true);
+    }
+    else {
+        subDisableAllTrxControl(false);
+    }
+    subDisableAllActionControl(true);
+    document.getElementById("btnReject").disabled = false;
+});
+$("#radioReverse").change(function radioReverse_CheckedChanged() {
     if ($("#radioReverse").prop('checked') == true) {
         subDisableAllTrxControl(true);
         subDisableAllActionControl(false);
@@ -60,7 +93,6 @@ $("#radioReverse").change(function () {
         document.getElementById("btnReject").disabled = false;
     }
 });
-
 function onCheckBoxClick(e) {
     var state = $(e).is(':checked');
     var value = e.value;
@@ -99,7 +131,6 @@ function onCheckBoxClick(e) {
     }
     grid.refresh();
 }
-
 function onCheckBoxClickDetail(e) {
     var state = $(e).is(':checked');
     var value = e.value;
@@ -136,8 +167,7 @@ function onCheckBoxClickDetail(e) {
     }
     grid.refresh();
 }
-
-function onRowOtorisasiSelect() {
+function dataGridView1_CellClick() {
     var data = this.dataItem(this.select());
     PopulateVerifyData(data.noReferensi);
 };

@@ -410,7 +410,6 @@ function subSave() {
         'decDevidentPct': $("#checkBox1").prop('checked') == true ? $("#txtbDevidentPct").val() == "" ? 0 : $("#txtbDevidentPct").data("kendoNumericTextBox").value() : 0,
         'intEffectiveAfter': $("#txtbEffectiveDays").data("kendoNumericTextBox").value()
     });
-    console.log(model);
 
     $.ajax({
         type: "POST",

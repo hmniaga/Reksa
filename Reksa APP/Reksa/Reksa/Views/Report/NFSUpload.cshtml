@@ -210,6 +210,9 @@ var do_file = (function() {
             type: 'POST',
             url: '/Report/NFSGenerateFileUpload',
             data: { FileCode: sFileCode, TranDate: iTranDate },
+            beforeSend: function () {
+                $("#load_screen").show();
+            },
             success: function (data) {
                 if (data.blnResult) {
                     window.location = '/Report/Download?fileGuid=' + data.FileGuid
@@ -219,6 +222,9 @@ var do_file = (function() {
                 {
                     swal("Warning", data.ErrMsg, "warning");
                 }
+            },
+            complete: function () {
+                $("#load_screen").hide();
             }
         });
     }
@@ -259,9 +265,6 @@ var do_file = (function() {
         });
 
     }
-
-
-
     
     function onChangeFileType(e)
     {

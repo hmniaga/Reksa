@@ -86,4 +86,53 @@ namespace ReksaAPI.Models
         public string NamaSeller { get; set; }
         public int intNIK { get; set; }
     }
+    public class MaintCancelTransaksiIBMB {
+        public string TranCode { get; set; }
+        public int TranType { get; set; }
+        public int NIK { get; set; }
+    }
+    public class ImportData
+    {
+        public int Type { get; set; }
+        public int BankCustody { get; set; }
+        public int Period { get; set; }
+        public string FileName { get; set; }
+        public int NIK { get; set; }
+        public string TableNames { get; set; }
+        public List<SinkronisasiTransaksi> listTransaksi { get; set; }
+        public List<OSUnitShareholderID> listOSUnitShareholderID { get; set; }
+        public List<OSUnitClientCode> listOSUnitClientCode { get; set; }
+    }
+    public class SinkronisasiTransaksi
+    {
+        public DateTime TglTransaksi { get; set; }
+        public DateTime TglNAV { get; set; }
+        public string JenisTransaksi { get; set; }
+        public string Produk { get; set; }
+        public string ClientCode { get; set; }
+        public string ClientName { get; set; }
+        public string AgentCode { get; set; }
+        public decimal Unit { get; set; }
+        public decimal NAV { get; set; }
+        public decimal Nominal { get; set; }
+        public decimal UnitBalance { get; set; }
+        public DateTime TglGoodFund { get; set; }
+        public string ShareholderID { get; set; }
+        public int TransID { get; set; }
+    }
+    public class OSUnitShareholderID
+    {
+        public DateTime TglEOD { get; set; }
+        public string ShareholderID { get; set; }
+        public decimal EndingBalance { get; set; }
+        public string ProductCode { get; set; }
+        public int TranId { get; set; }
+    }
+    public class OSUnitClientCode
+    {
+        public DateTime TglEOD { get; set; }
+        public string ClientCode { get; set; }
+        public decimal EndingBalance { get; set; }
+        public string ProductCode { get; set; }
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace Reksa.Models
+﻿using System;
+
+namespace Reksa.Models
 {
     public class SearchComponentModel
     {
@@ -83,5 +85,18 @@
         public string CalcCode { get; set; }
         public string CalcName { get; set; }
         public string CalcId { get; set; }
+    }
+    public class Gift
+    {
+        public string GiftCode { get; set; }
+        public string GiftDesc { get; set; }
+        public decimal GiftCost { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public int LastUser { get; set; }
+    }
+    public class Country
+    {
+        public string KodeNegara { get; set; }
+        public string NamaNegara { get; set; }
     }
 }

@@ -283,6 +283,24 @@ function subAddSubs() {
                         grid.dataSource.pageSize(5);
                         grid.dataSource.page(1);
                         grid.select("tr:eq(0)");
+                        //$("#dataGridViewSubs").data("kendoGrid").setOptions({
+                        //    columns: [
+                        //        { command: "destroy", width: 100 },
+                        //        { field: "NoTrx", title: "No Transaksi", width: 150 },
+                        //        { field: "StatusTransaksi", title: "Status", width: 100 },
+                        //        { field: "KodeProduk", title: "Kode Produk", width: 150 },
+                        //        { field: "NamaProduk", title: "Nama Produk", width: 300 },
+                        //        { field: "ClientCode", title: "Client Code", width: 150 },
+                        //        { field: "Nominal", title: "Nominal", width: 150 },
+                        //        { field: "EditFeeBy", title: "Nominal", width: 150 },        
+                        //        { field: "NominalFee", title: "Nominal", width: 150 },
+                        //        { field: "FullAmount", title: "FullAmount", width: 150 },
+                        //        { field: "PhoneOrder", title: "Phone Order", width: 150 },
+                        //        { field: "JenisFee", title: "Jenis Fee", width: 150 },
+                        //        { field: "PctFee", title: "Percent Fee", width: 150 },
+                        //    ],
+                        //    editable: "inline"
+                        //});
 
                         subSetVisibleGrid(_strTabName);
                         ResetFormTrxSubs();
@@ -364,17 +382,14 @@ function subEditSubs() {
                         setTimeout(function () { swal("Warning", "Kode Produk harus diisi", "warning") }, 500);
                         return;
                     }
-
                     if ($("#srcCurrencySubs_text1").val() == "") {
                         setTimeout(function () { swal("Warning", "Mata Uang Produk harus diisi", "warning") }, 500);
                         return;
                     }
-
                     if ((IsSubsNew == false) && ($("#srcClientSubs_text1").val() == "")) {
                         setTimeout(function () { swal("Warning", "Client Code harus diisi", "warning") }, 500);
                         return;
                     }
-
                     if ($("#MoneyNomSubs").val() == 0) {
                         setTimeout(function () { swal("Warning", "Nominal harus diisi", "warning") }, 500);
                         return;
@@ -495,7 +510,6 @@ function subEditSubs() {
                     grid.dataSource.pageSize(5);
                     grid.dataSource.page(1);
                     grid.select("tr:eq(0)");
-
 
                     subSetVisibleGrid(_strTabName);
                     ResetFormTrxSubs();

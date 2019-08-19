@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Search Country";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchCountry() {
+        var value = $("#CountrySearchComponentSearchTxt").val();
+        var grid = $("#CountrySearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+
+        grid.dataSource.page(1);
+        grid.dataSource.read();
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowCountrySelect(e) {
+        var data = this.dataItem(this.select());
+        var CountryCode = $.trim(data.KodeNegara);
+        var CountryName = $.trim(data.NamaBegara);
+
+        $("#CountrySelectedCode").val(CountryCode);
+        $("#CountrySelectedName").val(CountryName);    };
+
+    $("#CountrySelectButton").on("click", function () {
+        var selectedCode = $("#CountrySelectedCode").val();
+        var selectedName = $("#CountrySelectedName").val();
+        
+        $("input[id='cmpsrCountry_text1']").val(selectedCode).change();
+        $("input[id='cmpsrCountry_text2']").val(selectedName)
+    });
+
+    $("#CountrySearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#CountrySearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+
+    function getData() {
+        var Search = "@ViewBag.Search";
+        var criter = "@ViewBag.Criteria";
+        return {
+            search: Search,
+            criteria: encodeURIComponent(criter)
+        }
+    }
+        
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.Country>()
+                                            .Name("CountrySearchComponentGrid")
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(m => m.KodeNegara).Width(100).Title("Kode Negara");
+                                                columns.Bound(m => m.NamaNegara).Width(100).Title("Nama Negara");
+                                            })
+                                            .ToolBar(toolbar =>
+                                            {
+                                                toolbar.ClientTemplateId("GridToolbarTemplate");
+                                            })
+                                            .Events(events => events.Change("onRowCountrySelect"))
+                                            .Pageable()
+                                            .Scrollable()
+                                            .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(m => m.KodeNegara);
+                                                })
+                                                .Read(read =>
+                                                read.Action("SearchCountryData", "Global").Data("getData"))
+                                            )
+        )
+
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("CountrySearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("CountrySearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchCountry")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="CountrySelectedCode" name="CountrySelectedCode" value="" />
+        <input type="hidden" id="CountrySelectedName" name="CountrySelectedName" value="" />
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="CountrySelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

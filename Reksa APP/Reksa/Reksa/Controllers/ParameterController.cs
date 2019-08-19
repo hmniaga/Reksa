@@ -169,44 +169,61 @@ namespace Reksa.Controllers
         }
         public JsonResult RefreshParam(string InterfaceId, int ProdukId)
         {
-            ViewData["label1"] = "Produk";
-            ViewData["lblSP1"] = "Kode";
-            ViewData["lblSP2"] = "Deskripsi";
-            ViewData["lblSP4"] = "Tanggal valuta";
-            ViewData["lblOffice"] = "Kode Kantor";
-            List<ParameterModel> list = new List<ParameterModel>();
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=" + ProdukId + "&TreeInterface="+ InterfaceId + "&NIK="+ _intNIK +"&Guid=" + _strGuid).Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=" + ProdukId + "&TreeInterface=" + InterfaceId + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
             }
-            ParameterListViewModel vModel = new ParameterListViewModel();             
-            vModel.Parameter = list;
-            return Json(vModel);
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public JsonResult RefreshParamGlobal(string InterfaceId, int ProdukId)
         {
-            ViewData["label1"] = "Produk";
-            ViewData["lblSP1"] = "Kode";
-            ViewData["lblSP2"] = "Deskripsi";
-            ViewData["lblSP4"] = "Tanggal valuta";
-            List<ParameterModel> list = new List<ParameterModel>();
-            using (HttpClient client = new HttpClient())
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
             {
-                client.BaseAddress = new Uri(_strAPIUrl);
-                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                client.DefaultRequestHeaders.Accept.Add(contentType);
-                HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=&TreeInterface=" + InterfaceId + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                list = JsonConvert.DeserializeObject<List<ParameterModel>>(stringData);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/Refresh?ProdId=&TreeInterface=" + InterfaceId + "&NIK=" + _intNIK + "&Guid=" + _strGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
             }
-            ParameterListViewModel vModel = new ParameterListViewModel();
-            vModel.Parameter = list;
-            return Json(vModel);
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public ActionResult RefreshWARPED(int NIK)
         {
@@ -809,6 +826,85 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsError });
         }
+        public JsonResult PopulateAgentCode(string OfficeId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
 
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/PopulateAgentCode?OfficeId=" + OfficeId + "&Module=" + strModule + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult PindahOffice(string OfficeAsal, string OfficeTujuan)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Parameter/PindahOffice?OfficeAsal=" + OfficeAsal + "&OfficeTujuan=" + OfficeTujuan + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [HttpPost]
+        public ActionResult MaintainParameter([FromBody] MaintainParameter model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Parameter/MaintainParameter", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(response);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

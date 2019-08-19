@@ -23,7 +23,7 @@ namespace Reksa.Controllers
         public string _strGuid = "77bb8d13-22af-4233-880d-633dfdf16122";
         public string _strMenuName;
         public string _strBranch = "01010";
-        public int _intClassificationId;
+        public int _intClassificationId = 72;
         private IConfiguration _config;
         private string _strAPIUrl;
         #endregion
@@ -218,7 +218,7 @@ namespace Reksa.Controllers
         {
             bool blnResult = false;
             string ErrMsg = "";
-            List<JurnalRTGS> listJurnalRTGS = new List<JurnalRTGS>();
+            DataSet dsResult = new DataSet();
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -233,21 +233,21 @@ namespace Reksa.Controllers
                     blnResult = strObject.SelectToken("blnResult").Value<bool>();
                     ErrMsg = strObject.SelectToken("errMsg").Value<string>();
 
-                    JToken TokenData = strObject["listJurnalRTGS"];
+                    JToken TokenData = strObject["dsResult"];
                     string JsonData = JsonConvert.SerializeObject(TokenData);
-                    listJurnalRTGS = JsonConvert.DeserializeObject<List<JurnalRTGS>>(JsonData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
                 }
             }
             catch (Exception e)
             {
                 ErrMsg = e.Message;
             }
-            return Json(new { blnResult, ErrMsg, listJurnalRTGS });
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         public JsonResult Process(string Guid1)
         {
             bool blnResult = false;
-            string ErrMsg = "";
+            string ErrMsg = ""; string strResult = "";
             try
             {
                 if (_intClassificationId == 71)
@@ -257,16 +257,54 @@ namespace Reksa.Controllers
                         client.BaseAddress = new Uri(_strAPIUrl);
                         MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
                         client.DefaultRequestHeaders.Accept.Add(contentType);
-                        HttpResponseMessage response = client.GetAsync("/api/PO/PopulateJurnalRTGS?ClassificationId=" + _intClassificationId + "&Module=" + strModule).Result;
+                        HttpResponseMessage response = client.GetAsync("/api/PO/ProsesJurnalRTGSSKN?NIK=" + _intNIK + "&Module=" + strModule + "&GUID=" + Guid1).Result;
                         string stringData = response.Content.ReadAsStringAsync().Result;
 
                         JObject strObject = JObject.Parse(stringData);
                         blnResult = strObject.SelectToken("blnResult").Value<bool>();
                         ErrMsg = strObject.SelectToken("errMsg").Value<string>();
-
-                        JToken TokenData = strObject["listJurnalRTGS"];
-                        string JsonData = JsonConvert.SerializeObject(TokenData);
                     }
+                }
+                else if (_intClassificationId == 72)
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        client.DefaultRequestHeaders.Accept.Add(contentType);
+                        HttpResponseMessage response = client.GetAsync("/api/PO/ProcessResponseXmlRTGS?NIK=" + _intNIK + "&Module=" + strModule + "&GUID=" + Guid1).Result;
+                        string stringData = response.Content.ReadAsStringAsync().Result;
+
+                        JObject strObject = JObject.Parse(stringData);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                        strResult = strObject.SelectToken("strResult").Value<string>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, _intClassificationId, strResult });
+        }
+        public JsonResult RejectJurnalRTGS(string Guid1)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/RejectJurnalRTGSSKN?NIK=" + _intNIK + "&Module=" + strModule + "&GUID=" + Guid1).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(stringData);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
                 }
             }
             catch (Exception e)
@@ -1041,6 +1079,150 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PopulateCancelTrxIBMB()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/PopulateCancelTrxIBMB").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                    else
+                    {
+                        _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public ActionResult ProsesCancelTransactionIBMB(string listId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] selectedId;
+                listId = (listId + "***").Replace("|***", "");
+                selectedId = listId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', selectedId);
+                dv1.RowFilter = " tranCode in ('" + filter + "')";
+
+                DataTable dtNew = dv1.ToTable();
+                if (dtNew == null || dtNew.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+
+                List<MaintCancelTransaksiIBMB> model = clsConvert.MapListOfObject<MaintCancelTransaksiIBMB>(dtNew);
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/PO/CancelTransactionIBMB?NIK=" + _intNIK, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult GetFileColumns(string FileType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/PO/GetFileColumns?FileType=" + FileType).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult ImportData([FromBody]ImportData model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "", strXML = "", strRefID = "" ;
+            DataSet dsResult = new DataSet();
+            try
+            {
+                
+                model.NIK = _intNIK;
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                var EncodedContent = System.Net.WebUtility.UrlEncode(Content.ToString());
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/PO/ImportData", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    strRefID = strObject.SelectToken("strRefID").Value<string>();
+
+                    JToken TokenData = strObject["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult, strRefID });
         }
     }
 }

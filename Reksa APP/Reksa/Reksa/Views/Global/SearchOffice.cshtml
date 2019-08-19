@@ -42,8 +42,19 @@
         var selectedId = $("#OfficeSelectedId").val();
         var selectedName = $("#OfficeSelectedName").val();
 
-        $("input[name='OfficeModel.OfficeId']").val(selectedId).change();
-        $("input[name='OfficeModel.OfficeName']").val(selectedName);
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'ASAL') {
+            $("input[id='srcCabangAsal_text1']").val(selectedId).change();
+            $("input[id='srcCabangAsal_text2']").val(selectedName);
+        }
+        else if (Criteria == 'TUJUAN') {
+            $("input[id='srcCabangTujuan_text1']").val(selectedId).change();
+            $("input[id='srcCabangTujuan_text2']").val(selectedName);
+        }
+        else {
+            $("input[name='OfficeModel.OfficeId']").val(selectedId).change();
+            $("input[name='OfficeModel.OfficeName']").val(selectedName);
+        }
     });
 
     $("#OfficeSearchComponentSearchTxt").on("keypress", function (e) {

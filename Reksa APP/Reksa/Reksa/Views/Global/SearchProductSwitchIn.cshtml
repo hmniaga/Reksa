@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Search Product";
+    string search = (string)ViewBag.Search;
+    string criteria = (string)ViewBag.Criteria;
+    string prodcode = (string)ViewBag.ProdCode;
+
+    Layout = null;
+}
+<script type="text/javascript">
+    function onSearchProductSwitchIn() {
+        var value = $("#ProductSwitchInSearchComponentSearchTxt").val();
+        var grid = $("#ProductSwitchInSearchComponentGrid").data("kendoGrid");
+
+        var parsedUrl = updateQueryStringParameter(grid.dataSource.transport.options.read.url, "search", value);
+        grid.dataSource.transport.options.read.url = parsedUrl;
+        grid.dataSource.read();
+        grid.dataSource.page(1);
+        grid.select("tr:eq(0)");
+        grid.refresh();
+    }
+
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+    }
+
+    function onRowProductSwitchInSelect(e) {
+        var data = this.dataItem(this.select());
+        var ProdCode = $.trim(data.ProdCode);
+        var ProdName = $.trim(data.ProdName);
+        var ProdId = $.trim(data.ProdId);
+
+        $("#ProductSwitchInSelectedCode").val(ProdCode);
+        $("#ProductSwitchInSelectedName").val(ProdName);
+        $("#ProductSwitchInSelectedId").val(ProdId);
+    };
+
+    $("#ProductSwitchInSelectButton").on("click", function () {
+        var selectedCode = $("#ProductSwitchInSelectedCode").val();
+        var selectedName = $("#ProductSwitchInSelectedName").val();
+        var selectedId = $("#ProductSwitchInSelectedId").val();
+
+        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
+        $("input[name='ProductModel.ProdName']").val(selectedName);
+        $("input[name='ProductModel.ProdId']").val(selectedId);
+
+    });
+
+    $("#ProductSwitchInSearchComponentSearchTxt").on("keypress", function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#ProductSwitchInSearchComponentSearchBtn").click();
+            return false;
+        }
+    });
+</script>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @(Html.Kendo().Grid<Reksa.Models.ProductModel>()
+                    .Name("ProductSwitchInSearchComponentGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(m => m.ProdCode).Width(100).Title("Product Code");
+                        columns.Bound(m => m.ProdName).Width(300).Title("Product Name");
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.ClientTemplateId("GridToolbarTemplate");
+                    })
+                    .Events(events => events.Change("onRowProductSwitchInSelect"))
+                    .Pageable()
+                    .Scrollable()
+                    .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(20)
+                        .Model(model =>
+                        {
+                            model.Id(m => m.ProdCode);
+                        })
+                        .Read(read => read.Action("SearchProductSwitchInData", "Global", new { search = search, criteria = criteria, prodcode = prodcode }))
+                    )
+        )
+
+        <script id="GridToolbarTemplate">
+        <div class="toolbar">
+            @(Html.Kendo().TextBox().Name("ProductSwitchInSearchComponentSearchTxt").Value(search).ToClientTemplate())
+            @(Html.Kendo().Button()
+                            .HtmlAttributes(new { type = "button" })
+                            .Name("ProductSwitchInSearchComponentSearchBtn")
+                            .Content("Search")
+                            .Events(ev => ev.Click("onSearchProductSwitchIn")).ToClientTemplate()
+            )
+        </div>
+        </script>
+
+        <input type="hidden" id="ProductSwitchInSelectedCode" name="ProductSwitchInSelectedCode" value="" />
+        <input type="hidden" id="ProductSwitchInSelectedName" name="ProductSwitchInSelectedName" value="" />
+        <input type="hidden" id="ProductSwitchInSelectedId" name="ProductSwitchInSelectedCId" value="" />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="ProductSwitchInSelectButton" class="btn btn-primary pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-ok"></span> Select
+        </button>
+        <button type="submit" class="btn btn-warning pull-left" data-dismiss="modal">
+            <span class="glyphicon glyphicon-remove"></span> Cancel
+        </button>
+    </div>
+</div>

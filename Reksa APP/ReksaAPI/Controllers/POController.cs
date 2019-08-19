@@ -24,10 +24,10 @@ namespace ReksaAPI.Controllers
         {
             bool blnResult;
             string ErrMsg;
-            List<JurnalRTGS> listJurnalRTGS = new List<JurnalRTGS>();
-            blnResult = cls.ReksaPopulateJurnalRTGS(ClassificationId, Module, out listJurnalRTGS, out ErrMsg);
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaPopulateJurnalRTGS(ClassificationId, Module, out dsResult, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaPopulateJurnalRTGS - Core .Net SqlClient Data Provider\n", "");
-            return Json(new { blnResult, ErrMsg, listJurnalRTGS });
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         [Route("api/PO/RefreshProdNAV")]
         [HttpGet("{id}")]
@@ -76,22 +76,26 @@ namespace ReksaAPI.Controllers
         public JsonResult ProcessResponseXmlRTGS([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string GUID)
         {
             bool blnResult = false;
-            string ErrMsg = "";
+            string ErrMsg = ""; string strResult = "";
             try
             {
                 string XMLInput = cls.ReksaGetXmlRTGS(GUID, NIK, Module);
                 string strOutPut = "";
                 if (XMLInput != "")
                 {
-                    blnResult = cls.ReksaProcessResponseXmlRTGS(NIK, Module, GUID, strOutPut,out ErrMsg);
+                    blnResult = cls.ReksaProcessResponseXmlRTGS(NIK, Module, GUID, strOutPut, out strResult, out ErrMsg);
                     ErrMsg = ErrMsg.Replace("ReksaProcessResponseXmlRTGS - Core .Net SqlClient Data Provider\n", "");
+                }
+                else
+                {
+                    ErrMsg = "Error ReksaGetXmlRTGS : Result XML Kosong";
                 }
             }
             catch (Exception ex)
             {
                 ErrMsg = ex.Message;
             }
-            return Json(new { blnResult, ErrMsg });
+            return Json(new { blnResult, ErrMsg, strResult });
         }
         [Route("api/PO/GetListProducts")]
         [HttpGet("{id}")]
@@ -408,6 +412,69 @@ namespace ReksaAPI.Controllers
 
             blnResult = cls.ReksaCutRedempFee(dtStartDate, dtEndDate, NIK, GUID, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaCutRedempFee - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/PopulateCancelTrxIBMB")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateCancelTrxIBMB()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateCancelTrxIBMB(out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateCancelTrxIBMB - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/CancelTransactionIBMB")]
+        [HttpPost("{id}")]
+        public JsonResult CancelTransactionIBMB([FromBody]List<MaintCancelTransaksiIBMB> model, [FromQuery]int NIK)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            for (int i = 0; i < model.Count; i++)
+            {
+                model[i].NIK = NIK;
+                blnResult = cls.ReksaCancelTransactionIBMB(model[i], out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaCancelTransactionIBMB - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/PO/GetFileColumns")]
+        [HttpGet("{id}")]
+        public JsonResult GetFileColumns([FromQuery] string FileType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaGetFileColumns(FileType, out dsResult, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetFileColumns - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/PO/ImportData")]
+        [HttpGet("{id}")]
+        public JsonResult ImportData([FromBody]ImportData model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strRefID = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaImportData(model, out ErrMsg, out dsResult, out strRefID);
+            ErrMsg = ErrMsg.Replace("ReksaImportData - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult, strRefID });
+        }
+        [Route("api/PO/RejectJurnalRTGSSKN")]
+        [HttpGet("{id}")]
+        public JsonResult RejectJurnalRTGSSKN([FromQuery]int NIK, [FromQuery]string Module, [FromQuery]string GUID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaRejectJurnalRTGSSKN(NIK, Module, GUID, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaRejectJurnalRTGSSKN - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
         }
     }

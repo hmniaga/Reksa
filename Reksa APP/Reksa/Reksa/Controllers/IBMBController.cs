@@ -104,5 +104,119 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
+        public JsonResult RefreshLimitFeeIBMB()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/IBMB/RefreshLimitFeeIBMB?NIK=" + _intNIK + "&Module=" + strModule).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    JToken TokenData = strObject["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public ActionResult MaintainLimitFeeIBMB([FromBody] MaintainLimitFeeIBMB model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string EffectiveDate = "";
+
+            try
+            {
+                model.NIK = _intNIK;
+                model.Module = strModule;
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/IBMB/MaintainLimitFeeIBMB", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                    EffectiveDate = strObject.SelectToken("effectiveDate").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, EffectiveDate });
+        }
+        public JsonResult RefreshUploadPDF()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/IBMB/RefreshUploadPDF?NIK=" + _intNIK + "&Module=" + strModule).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+
+                    JToken strToken = strObject["dsResult"];
+                    string strJsonResult = JsonConvert.SerializeObject(strToken);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(strJsonResult);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult MaintainUploadPDF(int ProdId, string JenisKebutuhanPDF, string FilePath, string ProcessType)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+
+                    HttpResponseMessage response = client.GetAsync("/api/IBMB/MaintainUploadPDF?NIK=" + _intNIK + "&Module=" + strModule + "&ProdId=" + ProdId + "&JenisKebutuhanPDF=" + JenisKebutuhanPDF + "&FilePath=" + FilePath + "&ProcessType=" + ProcessType).Result;
+                    string strJson = response.Content.ReadAsStringAsync().Result;
+
+                    JObject strObject = JObject.Parse(strJson);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

@@ -18,13 +18,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         @(Html.Kendo().TreeView().Name("TreeViewParam")
-                        .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
-                        {mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>
-                        {item.Id = node.InterfaceTypeId.ToString();
-                        item.Text = node.Caption;
-                        item.Expanded = node.Expanded;
-                        }).Children(node => node.Children));
-                        }).Events(events => events.Select("onSelect"))
+                                .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
+                                {
+                                    mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>
+                                           {
+                                    item.Id = node.InterfaceTypeId.ToString();
+                                    item.Text = node.Caption;
+                                    item.Expanded = node.Expanded;
+                                }).Children(node => node.Children));
+                                }).Events(events => events.Select("trvSetupParameter_AfterSelect"))
                         )
                     </div>
                 </div>
@@ -42,26 +44,62 @@
             <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-8" style="padding-bottom: 30px">
-                                <div class="form-group">
-                                    <label id="label1" class="col-sm-3 control-label">@ViewData["label1"]</label>
-                                    <div class="input-group col-md-9" >
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" }).Enable(false)
-                                        <span class="input-group-btn">
-                                            <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        <div class="card-box">
+                            <!-- Begin Button -->
+                            <div>
+                                <div class="input-group">
+                                    <button id=btnRefresh class="btn btn-default waves-effect waves-light" style="margin-right:10px">
+                                        <span class="btn-label">
+                                            <i class="fa fa-refresh"></i>
                                         </span>
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 200%;" }).Enable(false)
-                                        @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden" })
-                                    </div>
+                                        Refresh
+                                    </button>
+                                    <button id="btnNew" class="btn btn-primary waves-effect waves-light" style="margin-right:10px">
+                                        <span class="btn-label">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
+                                        New
+                                    </button>
+                                    <button id="btnEdit" class="btn btn-info waves-effect waves-light" style="margin-right:10px">
+                                        <span class="btn-label">
+                                            <i class="fa fa-edit"></i>
+                                        </span>
+                                        Edit
+                                    </button>
+                                    <button id="btnDelete" class="btn btn-danger waves-effect waves-light" style="margin-right:10px">
+                                        <span class="btn-label">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                        Delete
+                                    </button>
+                                    <button id="btnSave" style="display:none;margin-right:10px;" class="btn btn-warning waves-effect waves-light">
+                                        <span class="btn-label">
+                                            <i class="fa fa-save"></i>
+                                        </span>
+                                        Save
+                                    </button>
+                                    <button id="btnCancel" style="display:none;margin-right:10px;" class="btn btn-danger waves-effect waves-light">
+                                        <span class="btn-label">
+                                            <i class="fa fa-remove"></i>
+                                        </span>
+                                        Cancel
+                                    </button>
                                 </div>
+                            </div>
+                            <!-- End Button -->
                         </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-default waves-effect waves-light" id=btnRefresh>
-                                <span class="btn-label">
-                                    <i class="fa fa-refresh"></i>
-                                </span>
-                                Refresh
-                            </button>
+                        <div class="col-md-8" style="padding-bottom: 30px">
+                            <div class="form-group">
+                                <label id="label1" class="col-sm-3 control-label">@ViewData["label1"]</label>
+                                <div class="input-group col-md-9">
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProductCode" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a href="@Url.Action("SearchProduct", "Global", new { seq = 1, type = "MB" })" data-toggle="modal" data-target="#ProductModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", style = "width: 300px;" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdId).HtmlAttributes(new { @class = "form-control input-sm", @id = "ProdId", @type = "Hidden" })
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -70,30 +108,40 @@
                             <div class="form-group">
                                 <label id="lblSP1" class="col-sm-4 control-label">@ViewData["lblSP1"]</label>
                                 <div class="input-group">
-                                    @Html.Kendo().TextBox().Name("txtbSP1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
+                                    @Html.Kendo().TextBox().Name("txtbSP1").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px;" }).Enable(false)
+                                </div>
+                                <div id="cmpsrSearch1_div" class="input-group col-md-8" style="display:none;">
+                                    @Html.Kendo().TextBox().Name("cmpsrGift_text1").HtmlAttributes(new { @id = "cmpsrGift_text1", @class = "form-control input-sm" }).Enable(false)
+                                    <span class="input-group-btn">
+                                        <a id="cmpsrSearch1" href="#display" data-toggle="modal" data-target="#GiftModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                                    </span>
+                                    @Html.Kendo().TextBox().Name("cmpsrGift_text2").HtmlAttributes(new { @id = "cmpsrGift_text2", @class = "form-control input-sm", style = "width: 200px;" }).Enable(false)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label id="lblSP2" class="col-sm-4 control-label">@ViewData["lblSP2"]</label>
                                 <div class="input-group">
-                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px;"}).Enable(false)
+                                    @Html.Kendo().TextBox().Name("txtbSP2").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px;" }).Enable(false)
+                                </div>
+                                <div class="input-group">
+                                    @Html.Kendo().NumericTextBox().Name("MoneyNominal").HtmlAttributes(new { style = "width: 200px;" }).Enable(false).Min(0)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label id="lblSP4" class="col-sm-4 control-label">@ViewData["lblSP4"]</label>
-                                <div id ="vdtpSP">
-                                    @(Html.Kendo().DatePicker().Name("dtpSP").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
+                                <div id="vdtpSP">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP").HtmlAttributes(new { style = "width: 200px; font-size: 100%" }))
                                 </div>
                             </div>
                             <!-- Begin Search Kantor -->
                             <div class="form-group">
                                 <label id="lblOffice" style="display:none;" class="col-sm-4 control-label">Kode Kantor</label>
-                                <div id ="Office"class="input-group" style="display:none;">
-                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "OfficeId" }).Enable(false)
+                                <div id="Office_div" class="input-group col-md-8" style="display:none;">
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm", @id = "cmpsrOffice_text1" }).Enable(false)
                                     <span class="input-group-btn">
-                                        <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OffcieModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
+                                        <a id="srcOffice" href="#display" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif disabled">...</a>
                                     </span>
-                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "OfficeName" }).Enable(false)
+                                    @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "cmpsrOffice_text2", style = "width: 180px;" }).Enable(false)
                                 </div>
                             </div>
                             <!-- End Search Kantor -->
@@ -102,90 +150,25 @@
                             <div class="form-group">
                                 <label id="lblSP11" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP11"]</label>
                                 <div class="input-group">
-                                    @Html.Kendo().TextBox().Name("txtbSP11").HtmlAttributes(new { @class = "form-control input-sm", style = "display:none; width: 100%;" }).Enable(false)
+                                    @Html.Kendo().TextBox().Name("txtbSP11").HtmlAttributes(new { @class = "form-control input-sm", style = "display:none; width: 270px;" }).Enable(false)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label id="lblSP12" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP12"]</label>
-                                <div id="vdtpSP12" style="display:none;">
-                                    @(Html.Kendo().DatePicker().Name("dtpSP12").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
+                                <div id="dtpSP12_div" style="display:none;">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP12").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px; font-size: 100%" }).Enable(false))
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label id="lblSP13" style="display:none;" class="col-sm-3 control-label">@ViewData["lblSP13"]</label>
-                                <div id ="vdtpSP13" style="display:none;">
-                                    @(Html.Kendo().DatePicker().Name("dtpSP13").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 200px; font-size: 100%" }).Enable(false))
+                                <div id="dtpSP13_div" style="display:none;">
+                                    @(Html.Kendo().DatePicker().Name("dtpSP13").HtmlAttributes(new { @class = "form-control input-sm", style = "width: 270px; font-size: 100%" }).Enable(false))
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-12" style="padding-top:4%">
-                        <div class="input-group">
-                            <button id="btnAdd" class="btn btn-primary waves-effect waves-light">
-                                <span class="btn-label">
-                                    <i class="fa fa-plus"></i>
-                                </span>
-                                Add
-                            </button>
-
-                            <button id="btnEdit" class="btn btn-info waves-effect waves-light">
-                                <span class="btn-label">
-                                    <i class="fa fa-edit"></i>
-                                </span>
-                                Edit
-                            </button>
-
-                            <button id="btnDelete" class="btn btn-danger waves-effect waves-light">
-                                <span class="btn-label">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                                Delete
-                            </button>
-
-                            <button id="btnSave" class="btn btn-warning waves-effect waves-light" style="display:none;">
-                                <span class="btn-label">
-                                    <i class="fa fa-save"></i>
-                                </span>
-                                Save
-                            </button>
-
-                            <button id="btnCancel" class="btn btn-pink waves-effect waves-light" style="display:none;">
-                                <span class="btn-label">
-                                    <i class="fa fa-remove"></i>
-                                </span>
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
                     <div class="col-md-12">
-                        @(Html.Kendo().Grid(Model.Parameter)
-                                            .Name("GridParam")
-                                            .Columns(columns =>
-                                            {
-                                                columns.Bound(p => p.Id).Hidden();
-                                                columns.Bound(p => p.Kode).Width(100).Title("Kode");
-                                                columns.Bound(p => p.Deskripsi);
-                                                columns.Bound(p => p.ProdId).Hidden();
-                                                columns.Bound(p => p.Desc2).Hidden();
-                                                columns.Bound(p => p.Desc5).Hidden();
-                                                columns.Bound(p => p.TglEfektif).Hidden();
-                                                columns.Bound(p => p.TglExpire).Hidden();
-                                                columns.Bound(p => p.Keterangan).Hidden();
-                                                columns.Bound(p => p.MinSwitchRedempt).Hidden();
-                                                columns.Bound(p => p.JenisSwitchRedempt).Hidden();
-                                                columns.Bound(p => p.SwitchingFeeNonKaryawan).Hidden();
-                                                columns.Bound(p => p.SwitchingFeeKaryawan).Hidden();
-                                                columns.Bound(p => p.OfficeId).Hidden();
-                                                columns.Bound(p => p.TanggalValuta).Format("{0:dd MMMM yyyy}");
-                                                columns.Bound(p => p.LastUpdate);
-                                                columns.Bound(p => p.LastUser);
-                                            }).Pageable()
-                                            .Scrollable(s => s.Height(250))
-                                            .Selectable(selectable => selectable
-                                                .Mode(GridSelectionMode.Single))
-                                    .Events(events => events.Change("onRowParamSelect"))
-                        )
+                        <div id="dgvParam"></div>
                     </div>
                 </div>
                 <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="ProductModalLabel">
@@ -193,437 +176,21 @@
                         <div class="modal-content"></div>
                     </div>
                 </div>
+                <div class="modal fade" id="OfficeModal" tabindex="-1" role="dialog" aria-labelledby="OfficeModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content"></div>
+                    </div>
+                </div>
+                <div class="modal fade" id="GiftModal" tabindex="-1" role="dialog" aria-labelledby="GiftModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
-
-<script>
-    var _intType;
-    var IdInterface;
-    $(document).ready(function () {   
-        document.getElementById('lblSP1').innerHTML = 'Kode';
-        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                
-        //lblOffice.Visible = false;
-        //txtbSP1.Enabled = false;
-        //txtbSP2.Enabled = false;
-        //dtpSP.Enabled = false;
-        //cmpsrOffice.Enabled = false;
-        //cmpsrOffice.Visible = false;
-
-        document.getElementById('lblSP11').innerHTML = '';
-        document.getElementById('lblSP12').innerHTML = '';
-        document.getElementById('lblSP13').innerHTML = '';
-
-  
-        //txtbSP11.Enabled = false;
-        document.getElementById("txtbSP11").style.display = 'none';
-        $("#dtpSP12").data("kendoDatePicker").enable(false);
-        $('#vdtpSP13').attr('style', 'display:none;');
-        $("#dtpSP13").data("kendoDatePicker").enable(false);
-        _intType = 0;
-
-        $("#btnAdd").click(function () {
-            $("#btnAdd").hide();
-            $("#btnEdit").hide();
-            $("#btnDelete").hide();
-            $("#btnSave").show();
-            $("#btnCancel").show();
-            subNew();
-        });
-        $("#btnEdit").click(function () {
-            $("#btnAdd").hide();
-            $("#btnEdit").hide();
-            $("#btnDelete").hide();
-            $("#btnSave").show();
-            $("#btnCancel").show();
-            disableAll(1);
-        });
-        $("#btnDelete").click(function () {
-
-        });
-        $("#btnSave").click(function () {
+<script src="~/js/reksa.setting.parameter.js"></script>
+<script src="~/js/reksa.setting.parameter.events.js"></script>
 
 
-        });
-        $("#btnCancel").click(function () {
-            $("#btnAdd").show();
-            $("#btnEdit").show();
-            $("#btnDelete").show();
-            $("#btnSave").hide();
-            $("#btnCancel").hide();
-            disableAll(0);
-        });
-        $("#btnRefresh").click(function () {
-            subRefresh();
-        });
-    });
-    
-    function onSelect(e) {
-        var dataItem = this.dataItem(e.node);
-        IdInterface = dataItem.id;
-        document.getElementById('lblSP11').innerHTML = '';
-        document.getElementById('lblSP12').innerHTML = '';
-        document.getElementById("txtbSP11").style.display = 'none';
-        $('#vdtpSP12').attr('style', 'display:none;');
-        $('#vdtpSP13').attr('style', 'display:none;');
-
-        switch (IdInterface) {
-            case "PAR":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode';
-                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "SFC":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode Fund';
-                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "SAC":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode Agen';
-                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', '');
-                $('#Office').attr('style', '');
-                clearAll();
-                break;
-            case "SBC":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode Bank';
-                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "SNV":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode';
-                document.getElementById('lblSP2').innerHTML = 'NAV';
-                $("#txtbSP1").val("NAV");
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "SDV":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode';
-                document.getElementById('lblSP2').innerHTML = 'Deviden';
-                $("#txtbSP1").val("Deviden");
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "SKR":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode';
-                document.getElementById('lblSP2').innerHTML = 'Kurs';
-                $("#txtbSP1").val("Kurs");
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "RDD":
-                LoadDefaultSettings();
-                document.getElementById('lblSP1').innerHTML = 'Kode';
-                document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-                $("#txtbSP1").val("Schedule");
-                $("#txtbSP2").val("Schedule Deviden");
-                document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-            case "GFP":
-                LoadDefaultSettings();
-
-                document.getElementById('lblSP1').innerHTML = 'Kode Gift';
-                document.getElementById('lblSP2').innerHTML = 'Nominal';
-                document.getElementById('lblSP11').innerHTML = 'Jk Wkt(bln)';
-                document.getElementById('lblSP12').innerHTML = 'Tgl Efektif';
-                document.getElementById('lblSP13').innerHTML = 'Tgl Expire';
-
-                document.getElementById("txtbSP11").style.display = 'block';
-
-                $('#vdtpSP12').attr('style', '');
-                $('#vdtpSP13').attr('style', '');
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                clearAll();
-                break;
-        }
-        subRefresh();
-    }
-
-    function LoadDefaultSettings()
-    {
-        document.getElementById('lblSP1').innerHTML = 'Kode';
-        document.getElementById('lblSP2').innerHTML = 'Deskripsi';
-        document.getElementById('lblSP4').innerHTML = 'Tanggal valuta';
-        document.getElementById("txtbSP1").style.display = 'block';
-        document.getElementById("txtbSP2").style.display = 'block';
-        $('#lblOffice').attr('style', 'display:none;');
-        $("#Office").attr('style', 'display:none;');
-        clearAll();
-    }
-
-    function clearAll()
-    {
-        $("#txtbSP1").val("");
-        $("#txtbSP2").val("");
-        $("#txtbSP11").val("");
-    }
-
-    function subResetToolBar()
-    {
-
-    }
-
-    function disableAll(intType) {
-        if (intType == 1) {
-            $("#txtbSP1").prop('disabled', false);
-            $("#txtbSP2").prop('disabled', false);
-            var datepicker = $("#dtpSP").data("kendoDatePicker");
-            datepicker.enable(true);
-        }
-        else {
-            $("#txtbSP1").prop('disabled', true);
-            $("#txtbSP2").prop('disabled', true);
-            var datepicker = $("#dtpSP").data("kendoDatePicker");
-            datepicker.enable(false);
-        }
-    }
-    
-    function subRefresh()
-    {
-        var ProdId = $("#ProdId").val();
-        if (ProdId == '')
-        {
-            swal("Warning", "Produk Harus Diisi", "warning");
-            return;
-        }
-        
-        $.ajax({
-            type: 'GET',
-            url: '/Parameter/RefreshParam',
-            data: { ProdukId: ProdId, InterfaceId: IdInterface },
-            success: function (data) {
-                if (data.Parameter.length != 0) {
-                    var dataSource = new kendo.data.DataSource(
-                        {
-                            data: data.Parameter
-                        });
-                    var Paramgrid = $('#GridParam').data('kendoGrid');
-                    Paramgrid.setDataSource(dataSource);
-                    Paramgrid.dataSource.page(1);
-                    Paramgrid.select("tr:eq(0)");
-                    
-                    Paramgrid.hideColumn('Id');
-                    Paramgrid.hideColumn('ProdId');
-                    Paramgrid.hideColumn('OfficeId');
-                    Paramgrid.hideColumn('Desc2');
-                    Paramgrid.hideColumn('TglEfektif');
-                    Paramgrid.hideColumn('TglExpire');
-                    Paramgrid.hideColumn('Desc5');
-                    Paramgrid.hideColumn('Keterangan');
-                    Paramgrid.hideColumn('MinSwitchRedempt');
-                    Paramgrid.hideColumn('JenisSwitchRedempt');
-                    Paramgrid.hideColumn('SwitchingFeeNonKaryawan');
-                    Paramgrid.hideColumn('SwitchingFeeKaryawan');
-
-                    switch (IdInterface) {
-                        case "PAR":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                        case "SAC":
-                            Paramgrid.showColumn('OfficeId');
-                            $('#lblOffice').attr('style', '');
-                            $('#Office').attr('style', '');                            
-                            break;
-                        case "SFC":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                        case "SBC":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                        case "SNV":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                        case "SDV":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;'); 
-                            break;
-                        case "SKR":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;'); 
-                            break;
-                        case "RDD":
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                        case "GFP":
-                            Paramgrid.showColumn('Desc2');
-                            Paramgrid.showColumn('TglEfektif');
-                            Paramgrid.showColumn('TglExpire');
-                            break;
-                        default:
-                            $('#lblOffice').attr('style', 'display:none;');
-                            $('#Office').attr('style', 'display:none;');
-                            break;
-                    }
-
-                } else {
-                    $("#GridParam").data('kendoGrid').dataSource.data([]);
-                }
-            }
-        });
-    }
-
-    function subNew()
-    {
-        _intType = 1; 
-        if ($("#ProductModel_ProdName").val() == "")
-            return;
-        var DateNow = new Date();
-        $("#dtpSP12").val(DateNow.getDate() + '/' + (DateNow.getMonth() + 1) + '/' + DateNow.getFullYear());
-        $("#dtpSP13").val(DateNow.getDate() + '/' + (DateNow.getMonth() + 1) + '/' + DateNow.getFullYear());
-
-        if (IdInterface != "RDD") {
-            $("#txtbSP1").val('');
-            $("#txtbSP2").val('');
-        }
-
-        $("#OfficeId").val('');
-        
-
-        switch (IdInterface)
-        {
-            case "PAR":
-                $("#txtbSP1").prop('disabled', true);
-                $("#txtbSP2").prop('disabled', true);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "SAC":
-                $("#txtbSP1").prop('disabled', false);
-                $("#txtbSP2").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', '');
-                $('#Office').attr('style', '');
-               //cmpsrOffice.Enabled = true;
-                break;
-            case "SFC":
-                $("#txtbSP1").prop('disabled', false);
-                $("#txtbSP2").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "SBC":
-                $("#txtbSP1").prop('disabled', false);
-                $("#txtbSP2").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "SNV":
-                $("#txtbSP1").prop('disabled', true);
-                $("#txtbSP2").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "SDV":
-                $("#txtbSP1").prop('disabled', true);
-                $("#txtbSP2").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "SKR":
-                $("#txtbSP1").prop('disabled', true);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "RDD":
-                $("#txtbSP1").prop('disabled', true);
-                $("#txtbSP2").prop('disabled', true);
-                $("#dtpSP").data("kendoDatePicker").enable(true);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            case "GFP":
-                $("#txtbSP1").prop('disabled', false);
-                $("#txtbSP2").prop('disabled', false);
-                $("#txtbSP11").prop('disabled', false);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $("#dtpSP12").data("kendoDatePicker").enable(true);
-                $("#dtpSP13").data("kendoDatePicker").enable(true);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-            default:
-                $("#txtbSP1").prop('disabled', true);
-                $("#txtbSP2").prop('disabled', true);
-                $("#dtpSP").data("kendoDatePicker").enable(false);
-                $('#lblOffice').attr('style', 'display:none;');
-                $('#Office').attr('style', 'display:none;');
-                break;
-        }        
-        subResetToolBar();
-    }
-
-    function onRowParamSelect(e) {
-        var data = this.dataItem(this.select());
-        $("#txtbSP1").val(data.Kode);
-        $("#txtbSP2").val(data.Deskripsi);
-        $("#OfficeId").val(data.OfficeId);
-        ValidateOffice($("#OfficeId").val(), function (output) {
-            $("#OfficeName").val(output);
-        });
-
-        var TanggalValuta = new Date(data.TanggalValuta);
-        $("#dtpSP").val(TanggalValuta.getDate() + '/' + (TanggalValuta.getMonth() + 1) + '/' + TanggalValuta.getFullYear());
-       
-        };
-
-    function ValidateOffice(OfficeId, result) {
-            $.ajax({
-                type: 'GET',
-                url: '/Global/ValidateOffice',
-                data: { Col1: OfficeId, Col2: '', Validate: 1 },
-                success: function (data) {
-                    if (data.length != 0) {
-                        result(data[0].OfficeName);
-                    } else {
-                        result("");
-                    }
-                },
-                error: function (error) {
-                    result("");
-                }
-            });
-        }
-
-</script>

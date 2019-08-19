@@ -320,10 +320,57 @@ namespace ReksaAPI.Controllers
             DateTime dtNewLastUpdate = new DateTime();
             DateTime.TryParseExact(NewLastUpdate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtNewLastUpdate);
 
-
             blnResult = cls.ReksaManualUpdateRiskProfile(CIFNo, dtNewLastUpdate, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaManualUpdateRiskProfile - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Transaction/PrepareDataJurnalTT")]
+        [HttpGet("{id}")]
+        public JsonResult PrepareDataJurnalTT([FromQuery]int NIK, [FromQuery]string Branch, [FromQuery]int BillId, [FromQuery]string JenisJurnal)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string IsCurrencyHoliday = "";
+            string strNewValueDate = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPrepareDataJurnalTT(NIK, Branch, BillId, JenisJurnal, out ErrMsg, out IsCurrencyHoliday, out strNewValueDate, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaPrepareDataJurnalTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, IsCurrencyHoliday, strNewValueDate, dsResult });
+        }
+        [Route("api/Transaction/UpdateStatusJurnalTT")]
+        [HttpGet("{id}")]
+        public JsonResult UpdateStatusJurnalTT([FromBody]MaintainStatusJurnalTT model)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaUpdateStatusJurnalTT(model, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaUpdateStatusJurnalTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Transaction/AuthorizeOutgoingTT")]
+        [HttpGet("{id}")]
+        public JsonResult AuthorizeOutgoingTT([FromQuery]int NIK, [FromQuery]string JenisProses, [FromQuery]bool isProcess, [FromQuery]int BillId, [FromQuery]string RemittanceNumber)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            blnResult = cls.ReksaAuthorizeOutgoingTT(NIK, JenisProses, isProcess, BillId, RemittanceNumber, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaAuthorizeOutgoingTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Transaction/PopulateVerifyOutgoingTT")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateVerifyOutgoingTT([FromQuery]string JenisProses)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaPopulateVerifyOutgoingTT(JenisProses, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyOutgoingTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
         
 

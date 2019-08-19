@@ -1117,6 +1117,38 @@ namespace ReksaAPI
             }
             return list;
         }
+        public List<SearchModel.Country> ReksaSrcCountry(string Col1, string Col2, int Validate)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            string ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            List<SearchModel.Country> list = new List<SearchModel.Country>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input },
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcCountry", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+
+                        List<SearchModel.Country> result = this.MapListOfObject<SearchModel.Country>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
         public List<SearchModel.Custody> ReksaSrcCustody(string Col1, string Col2, int Validate)
         {
             SqlCommand cmdOut = new SqlCommand();
@@ -1260,6 +1292,69 @@ namespace ReksaAPI
                 };
 
                 if (this.ExecProc(QueryReksa(), "ReksaSrcProduct", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<SearchModel.Product> result = this.MapListOfObject<SearchModel.Product>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
+        public List<SearchModel.Product> ReksaSrcProdSwitchOut(string Col1, string Col2, int Validate)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            string ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            List<SearchModel.Product> list = new List<SearchModel.Product>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcProdSwitchOut", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<SearchModel.Product> result = this.MapListOfObject<SearchModel.Product>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
+        public List<SearchModel.Product> ReksaSrcProdSwitchIn(string Col1, string Col2, int Validate, string strProdCode)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            string ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            List<SearchModel.Product> list = new List<SearchModel.Product>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.NVarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cProdCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = strProdCode, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcProdSwitchIn", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
                 {
                     if (dsOut != null && dsOut.Tables.Count > 0)
                     {
@@ -1657,6 +1752,38 @@ namespace ReksaAPI
             return list;
         }
 
+        public List<SearchModel.Gift> ReksaSrcGift(string Col1, string Col2, int Validate, string Criteria)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            string ErrMsg = "";
+            DataSet dsOut = new DataSet();
+            List<SearchModel.Gift> list = new List<SearchModel.Gift>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@cCol1", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col1, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@cCol2", SqlDbType = System.Data.SqlDbType.VarChar, Value = Col2, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@bValidate", SqlDbType = System.Data.SqlDbType.Int, Value = Validate, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@cCriteria", SqlDbType = System.Data.SqlDbType.VarChar, Value = Criteria, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                if (this.ExecProc(QueryReksa(), "ReksaSrcGift", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                {
+                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    {
+                        DataTable dtOut = dsOut.Tables[0];
+                        List<SearchModel.Gift> result = this.MapListOfObject<SearchModel.Gift>(dtOut);
+                        list.AddRange(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return list;
+        }
         #endregion
 
         #region "CUSTOMER"
@@ -2453,6 +2580,131 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaRefreshLimitFeeIBMB(int intNIK, string strModule, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRefreshLimitFeeIBMB", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaMaintainLimitFeeIBMB(MaintainLimitFeeIBMB model, out string strEffectiveDate, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = ""; strEffectiveDate = "";
+            DataSet ds = new DataSet();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = model.NIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", Value = model.Module, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnProdId", Value = model.ProdId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmMinSubsNew", Value = model.MinSubsNew, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmMinSubsAdd", Value = model.MinSubsAdd, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmMinRedemption", Value = model.MinRedemption, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmMinSwitching", Value = model.MinSwitching, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmPctFeeSubs", Value = model.PctFeeSubs, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmPctFeeRedemp", Value = model.PctFeeRedemp, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pmPctFeeSwitching", Value = model.PctFeeSwitching, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmPctHoldAmount", Value = model.PctHoldAmount, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcProcessType", Value = model.ProcessType, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbCanSubsNew", Value = model.CanSubsNew, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbCanTrxIBank", Value = model.CanTrxIBank, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbCanTrxMBank", Value = model.CanTrxMBank, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbIsVisibleIBMB", Value = model.IsVisibleIBMB, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbMinRedempByUnit", Value = model.MinRedempByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbMinSwitchingByUnit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdEffectiveDate", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 50 },
+                    new SqlParameter() { ParameterName = "@pbRDBBit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbRDBRedeemBit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbRDBSwitchBit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdRDBMinSubs", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdRDBFeeSubsIns", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdRDBFeeSubsNoIns", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbRDBFullRedeemBit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdRDBFeeRedempIns", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdRDBFeeRedempNoIns", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbRDBFullSwitchBit", Value = model.MinSwitchingByUnit, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainLimitFeeIBMB", ref dbParam, out ds, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    strEffectiveDate = cmdOut.Parameters["@pdEffectiveDate"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaRefreshUploadPDF(int intNIK, string strModule, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRefreshUploadPDF", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }        
+        public bool ReksaMaintainUploadPDF(int intNIK, string strModule, int intProdId, string strJenisKebutuhanPDF, string strFilePath, string strProcessType, out string ErrMsg) {
+            bool blnResult = false;
+            ErrMsg = "";
+            DataSet ds = new DataSet();
+
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", Value = strModule, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnProdId", Value = intProdId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcJenisKebutuhanPDF", Value = strJenisKebutuhanPDF, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcFilePath", Value = strFilePath, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcProcessType", Value = strProcessType, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainUploadPDF", ref dbParam, out ds, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
         #endregion
 
         #region "MASTER"
@@ -2694,11 +2946,12 @@ namespace ReksaAPI
         #endregion
 
         #region "PARAMETER"
-        public DataSet ReksaPopulateVerifyGlobalParam(string strProdId, string strInterfaceId, int intNIK)
+        public bool ReksaPopulateVerifyGlobalParam(string strProdId, string strInterfaceId, int intNIK, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
+            dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
+            bool blnResult = false;
+            ErrMsg = "";
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -2708,26 +2961,29 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input }
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateVerifyGlobalParam", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateVerifyGlobalParam", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+
+                if(blnResult)
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    if (dsOut == null || dsOut.Tables.Count == 0 || dsOut.Tables[0].Rows.Count == 0)
                     {
-                        DataTable dtOut = dsOut.Tables[0];
+                        ErrMsg = "Data tidak ada di database";
+                        blnResult = false;
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return dsOut;
+            return blnResult;
         }
-        public List<ParameterModel> ReksaRefreshParameter(int intProdId, string _strTreeInterface, int intNIK, string strGuid)
+        public bool ReksaRefreshParameter(int intProdId, string _strTreeInterface, int intNIK, string strGuid, out string ErrMsg, out DataSet dsOut)
         {
-            DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
-            List<ParameterModel> list = new List<ParameterModel>();
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -2738,22 +2994,21 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input }
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaRefreshParameter", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRefreshParameter", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if (blnResult)
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    if (dsOut == null || dsOut.Tables.Count == 0 || dsOut.Tables[0].Rows.Count == 0)
                     {
-                        DataTable dtOut = dsOut.Tables[0];
-
-                        List<ParameterModel> result = this.MapListOfObject<ParameterModel>(dtOut);
-                        list.AddRange(result);
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
-            return list;
+            return blnResult;
         }
         public bool ReksaPopulateParamFee(int intNIK, string strModule, int intProdId, string strTrxType, ref List<ReksaParamFeeSubs> listParamFeeSubs, ref List<ReksaTieringNotificationSubs> listReksaTieringNotificationSubs, ref List<ReksaListGLFeeSubs> listReksaListGLFeeSubs,
             out string ErrMsg)
@@ -3286,9 +3541,7 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        public bool ReksaMaintainParameter(int intType, string InterfaceId, string strCode, string strDesc, string strOfficeId,
-            int intProdId, int intId, DateTime dtValue, int intNIK, string strGuid, out string ErrMsg
-            )
+        public bool ReksaMaintainParameter(MaintainParameter model, out string ErrMsg)
         {
             bool blnResult = false;
             DataSet dsOut = new DataSet();
@@ -3298,16 +3551,16 @@ namespace ReksaAPI
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.TinyInt, Value = intType, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcInterfaceId", SqlDbType = System.Data.SqlDbType.VarChar, Value = InterfaceId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = strCode, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcDesc", SqlDbType = System.Data.SqlDbType.VarChar, Value = strDesc, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcOfficeId", SqlDbType = System.Data.SqlDbType.Char, Value = strOfficeId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = intProdId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnId", SqlDbType = System.Data.SqlDbType.Int, Value = intId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcValueDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = dtValue, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input}
+                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.TinyInt, Value = model.Type, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcInterfaceId", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.InterfaceId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.Code, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcDesc", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.Desc, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcOfficeId", SqlDbType = System.Data.SqlDbType.Char, Value = model.OfficeId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnProdId", SqlDbType = System.Data.SqlDbType.Int, Value = model.ProdId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnId", SqlDbType = System.Data.SqlDbType.Int, Value = model.Id, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcValueDate", SqlDbType = System.Data.SqlDbType.DateTime, Value = model.Value, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.NIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.Guid, Direction = System.Data.ParameterDirection.Input}
                 };
 
                 blnResult = this.ExecProc(QueryReksa(), "ReksaMaintainParameter", ref dbParam, out cmdOut, out ErrMsg);
@@ -3387,6 +3640,51 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaGetAgentCodeByOfficeId(int intNIK, string strModule, string strOfficeId, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcOfficeId", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOfficeId, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaGetAgentCodeByOfficeId", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaPindahOffice(int intNIK, string strOfficeAsal, string strOfficeTujuan, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcOfficeAsal", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOfficeAsal, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcOfficeTujuan", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOfficeTujuan, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPindahOffice", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }        
         #endregion
 
         #region "PO"        
@@ -3481,12 +3779,11 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        public bool ReksaPopulateJurnalRTGS(int intClassificationId, string strModule, out List<JurnalRTGS> listJurnalRTGS, out string ErrMsg)
+        public bool ReksaPopulateJurnalRTGS(int intClassificationId, string strModule, out DataSet dsOut, out string ErrMsg)
         {
             bool blnResult = false;
             ErrMsg = "";
-            listJurnalRTGS = new List<JurnalRTGS>();
-            DataSet dsOut = new DataSet();
+            dsOut = new DataSet();
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -3495,22 +3792,9 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 100 }
                 };
-
                 SqlCommand cmdOut = new SqlCommand();
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateJurnalRTGS", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
-                {
-                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
-                    {
-                        ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
-                        List<JurnalRTGS> resultListRTGS = this.MapListOfObject<JurnalRTGS>(dsOut.Tables[0]);
-                        listJurnalRTGS.AddRange(resultListRTGS);
-                        blnResult = true;
-                    }
-                }
-                else
-                {
-                    ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
-                }
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateJurnalRTGS", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
             }
             catch (Exception ex)
             {
@@ -3529,23 +3813,16 @@ namespace ReksaAPI
                 {
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.InputOutput, Size = 100 },
-                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pcXmlOutput", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.InputOutput, Size = 800 }
+                    new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 100 },
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = Guid1, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcXmlOutput", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 800 }
                 };
 
                 SqlCommand cmdOut = new SqlCommand();
                 if (this.ExecProc(QueryReksa(), "ReksaGetXmlRTGS", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0 && dsOut.Tables[0].Rows.Count > 0)
-                    {
                         ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
                         Result = cmdOut.Parameters["@pcXmlOutput"].Value.ToString();
-                    }
-                }
-                else
-                {
-                    ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
                 }
             }
             catch (Exception ex)
@@ -3577,11 +3854,11 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        public bool ReksaProcessResponseXmlRTGS(int intNIK, string strModule, string Guid1, string strOutput, out string ErrMsg)
+        public bool ReksaProcessResponseXmlRTGS(int intNIK, string strModule, string Guid1, string strOutput, out string strResult, out string ErrMsg)
         {
             bool blnResult = false;
             ErrMsg = "";
-            string strResult = "";
+            strResult = "";
             DataSet dsOut = new DataSet();
             try
             {
@@ -3589,13 +3866,18 @@ namespace ReksaAPI
                 {
                     new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Value = "", Direction = System.Data.ParameterDirection.InputOutput, Size = 100 },
+                    new SqlParameter() { ParameterName = "@pcErrMsg", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 100 },
                     new SqlParameter() { ParameterName = "@pcXmlInput", SqlDbType = System.Data.SqlDbType.VarChar, Value = strOutput, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pcRemittanceNumber", SqlDbType = System.Data.SqlDbType.VarChar, Value = strResult, Direction = System.Data.ParameterDirection.InputOutput, Size = 50 }
+                    new SqlParameter() { ParameterName = "@pcRemittanceNumber", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 50 }
                 };
 
                 SqlCommand cmdOut = new SqlCommand();
                 blnResult = this.ExecProc(QueryReksa(), "ReksaProcessResponseXmlRTGS", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    strResult = cmdOut.Parameters["@pcRemittanceNumber"].Value.ToString();
+                    ErrMsg = cmdOut.Parameters["@pcErrMsg"].Value.ToString();
+                }
             }
             catch (Exception ex)
             {
@@ -4188,6 +4470,140 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaPopulateCancelTrxIBMB(out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateCancelTrxIBMB", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaCancelTransactionIBMB(MaintCancelTransaksiIBMB model, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcTranCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.TranCode, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.NIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcTranType", SqlDbType = System.Data.SqlDbType.Int, Value = model.TranType, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaCancelTransactionIBMB", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaImportData(ImportData model, out string ErrMsg, out DataSet dsUpload, out string strRefID)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            dsUpload = new DataSet();
+            strRefID = "";
+            string strXML = "";
+            try
+            {
+                DataSet dsPreview = new DataSet("XMLData");
+                DataTable dtPreview = new DataTable(model.TableNames);
+                if (model.TableNames == "Transaksi")
+                {
+                    dtPreview = ListConverter.ToDataTable<SinkronisasiTransaksi>(model.listTransaksi);
+                }
+                else if (model.TableNames == "OSUnitShareholderID")
+                {
+                    dtPreview = ListConverter.ToDataTable<OSUnitShareholderID>(model.listOSUnitShareholderID);
+                }
+                else if (model.TableNames == "OSUnitClientCode")
+                {
+                    dtPreview = ListConverter.ToDataTable<OSUnitClientCode>(model.listOSUnitClientCode);
+                }
+                dsPreview.Tables.Add(dtPreview);
+                strXML = dsPreview.GetXml();
+
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnType", SqlDbType = System.Data.SqlDbType.Int, Value = model.Type, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnBankCustody", SqlDbType = System.Data.SqlDbType.Int, Value = model.BankCustody, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnPeriod", SqlDbType = System.Data.SqlDbType.Int, Value = model.Period, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcFileName", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.FileName, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = model.NIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pxXML", SqlDbType = System.Data.SqlDbType.Xml, Value = strXML, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnRefId", SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Output},
+                    new SqlParameter() { ParameterName = "@pbDebug", SqlDbType = System.Data.SqlDbType.Bit, Value = 0, Direction = System.Data.ParameterDirection.Input}
+
+                };
+                intTimeOut = 6000;
+                blnResult = this.ExecProc(QueryReksa(), "ReksaImportData", ref dbParam, out dsUpload, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    strRefID = cmdOut.Parameters["@pnRefId"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaGetFileColumns(string strFileType, out DataSet dsOut, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcFileType", SqlDbType = System.Data.SqlDbType.VarChar, Value = strFileType, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaGetFileColumns", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaRejectJurnalRTGSSKN(int intNIK, string strModule, string strGUID, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            SqlCommand cmdOut = new SqlCommand();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcModule", SqlDbType = System.Data.SqlDbType.VarChar, Value = strModule, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcGuid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGUID, Direction = System.Data.ParameterDirection.Input}
+                };
+
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRejectJurnalRTGSSKN", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
 
         #region "TRANSACTION"
@@ -4240,8 +4656,7 @@ namespace ReksaAPI
             return blnResult;
         }
 
-        public void ReksaPopulateVerifyDocuments(int intTranId, bool IsEdit, bool IsSwitching, bool IsBooking, string strRefID,
-            ref List<DocumentModel.VerifyDocument> listVerifyDoc)
+        public void ReksaPopulateVerifyDocuments(int intTranId, bool IsEdit, bool IsSwitching, bool IsBooking, string strRefID, ref List<DocumentModel.VerifyDocument> listVerifyDoc)
         {
             DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
@@ -4272,9 +4687,7 @@ namespace ReksaAPI
                 throw ex;
             }
         }
-
-        public bool ReksaRefreshSwitching(string strRefID, int intNIK, string strGUID,
-            ref List<TransactionModel.SwitchingNonRDBModel> listDetailSwcNonRDB, out string ErrMsg)
+        public bool ReksaRefreshSwitching(string strRefID, int intNIK, string strGUID, ref List<TransactionModel.SwitchingNonRDBModel> listDetailSwcNonRDB, out string ErrMsg)
         {
             bool blnResult = false;
             ErrMsg = "";
@@ -4311,7 +4724,6 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-
         public bool ReksaRefreshSwitchingRDB(string strRefID, int intNIK, string strGUID, ref List<TransactionModel.SwitchingRDBModel> listDetailSwcRDB, out string ErrMsg)
         {
             bool blnResult = false;
@@ -4349,7 +4761,6 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-
         public bool ReksaRefreshBookingNew(string strRefID, int intNIK, string strGUID, ref List<TransactionModel.BookingModel> listDetailBooking, out string ErrMsg)
         {
             DataSet dsOut = new DataSet();
@@ -4824,7 +5235,8 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pcWarnMsg4", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 400}
                 };
 
-                SqlCommand cmdOut = new SqlCommand();                
+                SqlCommand cmdOut = new SqlCommand();
+                intTimeOut = 6000;
                 if (this.ExecProc(QueryReksa(), "ReksaMaintainAllTransaksiNew", ref dbParam, out ds, out cmdOut, out ErrMsg))
                 {
                    
@@ -5075,6 +5487,7 @@ namespace ReksaAPI
                 };
 
                 SqlCommand cmdOut = new SqlCommand();
+                intTimeOut = 6000;
                 if (this.ExecProc(QueryReksa(), "ReksaMaintainSwitchingRDB", ref dbParam, out ds, out cmdOut, out ErrMsg))
                 {
 
@@ -5451,6 +5864,122 @@ namespace ReksaAPI
             }
             return blnResult;
         }
+        public bool ReksaPrepareDataJurnalTT(int intNIK, string strBranch, int intBillId, string strJenisJurnal, out string ErrMsg, out string IsCurrencyHoliday, out string strNewValueDate, out DataSet dsOut )
+        {
+            bool blnResult = false;
+            ErrMsg = ""; IsCurrencyHoliday = ""; strNewValueDate = "";
+            dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnTranBranch", Value = strBranch, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnBillId", Value = intBillId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcJenisJurnal", Value = strJenisJurnal, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbIsCurrencyHoliday", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output },
+                    new SqlParameter() { ParameterName = "@pdNewValueDate", SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Output }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPrepareDataJurnalTT", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    IsCurrencyHoliday = cmdOut.Parameters["@pbIsCurrencyHoliday"].Value.ToString();
+                    strNewValueDate = cmdOut.Parameters["@pdNewValueDate"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaUpdateStatusJurnalTT(MaintainStatusJurnalTT model, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = ""; 
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = model.NIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnBillId", Value = model.BillId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcTTGuid", Value = model.TTGuid, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcGuid", Value = model.Guid, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcJenisJurnal", Value = model.JenisJurnal,SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcCreditAccount", Value = model.CreditAccount , SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcCreditCurrency", Value = model.CreditCurrency, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdCreditAmount", Value = model.CreditAmount, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcDebitAccount", Value = model.DebitAccount, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcDebitCurrency", Value = model.DebitCurrency, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdDebitAmount", Value = model.DebitAmount, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdTTBuy", Value = model.TTBuy, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdTTSell", Value = model.TTSell, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdBNBuy", Value = model.BNBuy, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdBNSell", Value = model.BNSell, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdFeeFullAmount", Value = model.FeeFullAmount, SqlDbType = System.Data.SqlDbType.Decimal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcFeeCurrency", Value = model.FeeCurrency, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcDebittingAccountFee", Value = model.DebittingAccountFee, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pdStatus", Value = model.Status, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcErrorMsg", Value = model.ErrorMsg, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcTranBranch", Value = model.TranBranch, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaUpdateStatusJurnalTT", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaAuthorizeOutgoingTT(int intNIK, string strJenisProses, bool isProcess, int intBillId, string strRemittanceNumber, out string ErrMsg)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnNIK", Value = intNIK, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pcJenisProses", Value = strJenisProses, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbIsApprove", Value = isProcess, SqlDbType = System.Data.SqlDbType.Bit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnBillId", Value = intBillId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcRemittanceNumber", Value = strRemittanceNumber,SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaAuthorizeOutgoingTT", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+        public bool ReksaPopulateVerifyOutgoingTT(string strJenisProses, out string ErrMsg, out DataSet dsOut)
+        {
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pcJenisProses", Value = strJenisProses, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input }
+                };
+
+                SqlCommand cmdOut = new SqlCommand();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateVerifyOutgoingTT", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         #endregion
 
         #region "REPORT"
@@ -5560,12 +6089,14 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pcFileCode", SqlDbType = System.Data.SqlDbType.VarChar, Value = sFileCode, Direction = System.Data.ParameterDirection.Input},
                     new SqlParameter() { ParameterName = "@pnDate", SqlDbType = System.Data.SqlDbType.Int, Value = iTranDate, Direction = System.Data.ParameterDirection.Input}
                 };
-
-                if (this.ExecProc(QueryReksa(), "ReksaNFSGenerateFileUpload", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                intTimeOut = 6000;
+                blnResult = this.ExecProc(QueryReksa(), "ReksaNFSGenerateFileUpload", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if (blnResult)
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    if (dsOut == null && dsOut.Tables.Count == 0 && dsOut.Tables[0].Rows.Count == 0)
                     {
-                        blnResult = true;
+                        ErrMsg = "Data tidak ada";
+                        blnResult = false;
                     }
                 }
             }
@@ -6516,11 +7047,8 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        public bool ReksaCheckValiditasData(int intTranId, int intTranType, double decNominal, double decUnit,
-            bool FullAmount, string ChannelDesc, double FeeAmount, double FeePercent, int intJangkaWaktu,
-            bool AutoRedemp, bool Asuransi, int FrekPendebetan, out string ErrMsg)
+        public bool ReksaCheckValiditasData(CheckValiditasDataModel model, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
             SqlCommand cmdOut = new SqlCommand();
             bool blnResult = false;
             ErrMsg = "";
@@ -6528,25 +7056,20 @@ namespace ReksaAPI
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
-                    new SqlParameter() { ParameterName = "@pnTranId", SqlDbType = System.Data.SqlDbType.Int, Value = intTranId, Direction = System.Data.ParameterDirection.Input},
-                    new SqlParameter() { ParameterName = "@pnTranType", SqlDbType = System.Data.SqlDbType.Int, Value = intTranType, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pmNominal", SqlDbType = System.Data.SqlDbType.Decimal, Value = decNominal, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pmUnit", SqlDbType = System.Data.SqlDbType.Decimal, Value = decUnit, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pbFullAmount", SqlDbType = System.Data.SqlDbType.Bit, Value = FullAmount, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pcChannelDesc", SqlDbType = System.Data.SqlDbType.VarChar, Value = ChannelDesc, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pmFeeAmount", SqlDbType = System.Data.SqlDbType.Decimal, Value = FeeAmount, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pmFeePercent", SqlDbType = System.Data.SqlDbType.Decimal, Value = FeePercent, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pnJangkaWaktu", SqlDbType = System.Data.SqlDbType.Int, Value = intJangkaWaktu, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pbAutoRedemp", SqlDbType = System.Data.SqlDbType.Bit, Value = AutoRedemp, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pbAsuransi", SqlDbType = System.Data.SqlDbType.Bit, Value = Asuransi, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pnFrekPendebetan", SqlDbType = System.Data.SqlDbType.Int, Value = FrekPendebetan, Direction = System.Data.ParameterDirection.Input }
+                    new SqlParameter() { ParameterName = "@pnTranId", SqlDbType = System.Data.SqlDbType.Int, Value = model.TranId, Direction = System.Data.ParameterDirection.Input},
+                    new SqlParameter() { ParameterName = "@pnTranType", SqlDbType = System.Data.SqlDbType.Int, Value = model.TranType, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmNominal", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.Nominal, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmUnit", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.Unit, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbFullAmount", SqlDbType = System.Data.SqlDbType.Bit, Value = model.FullAmount, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcChannelDesc", SqlDbType = System.Data.SqlDbType.VarChar, Value = model.ChannelDesc, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmFeeAmount", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.FeeAmount, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pmFeePercent", SqlDbType = System.Data.SqlDbType.Decimal, Value = model.FeePercent, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnJangkaWaktu", SqlDbType = System.Data.SqlDbType.Int, Value = model.JangkaWaktu, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbAutoRedemp", SqlDbType = System.Data.SqlDbType.Bit, Value = model.AutoRedemp, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pbAsuransi", SqlDbType = System.Data.SqlDbType.Bit, Value = model.Asuransi, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnFrekPendebetan", SqlDbType = System.Data.SqlDbType.Int, Value = model.FrekPendebetan, Direction = System.Data.ParameterDirection.Input }
                 };
-
-                if (this.ExecProc(QueryReksa(), "ReksaCheckValiditasData", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
-                //if (this.ExecProc(QueryReksa(), "ReksaAuthorizeTransaction_BS", ref dbParam, out dsOut))
-                {
-                    blnResult = true;
-                }
+                blnResult = this.ExecProc(QueryReksa(), "ReksaCheckValiditasData", ref dbParam, out cmdOut, out ErrMsg);
             }
             catch (Exception ex)
             {
@@ -6554,7 +7077,6 @@ namespace ReksaAPI
             }
             return blnResult;
         }
-        
         public bool ReksaAuthorizeGlobalParam(string strId, string strTreeInterface, int intNIK, bool isApprove, out string ErrMsg)
         {
             SqlCommand cmdOut = new SqlCommand();
@@ -6569,7 +7091,7 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pbIsApprove", SqlDbType = System.Data.SqlDbType.Bit, Value = isApprove, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pnNIKAuthorizer", SqlDbType = System.Data.SqlDbType.Int, Value = intNIK, Direction = System.Data.ParameterDirection.Input }
                 };
-
+                intTimeOut = 6000;
                 blnResult = this.ExecProc(QueryReksa(), "ReksaAuthorizeGlobalParam", ref dbParam, out cmdOut, out ErrMsg);
             }
             catch (Exception ex)

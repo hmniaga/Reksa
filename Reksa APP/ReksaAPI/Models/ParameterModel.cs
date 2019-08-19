@@ -134,7 +134,7 @@ namespace ReksaAPI.Models
         public int prodId { get; set; }
         public int PeriodEfektif { get; set; }
     }
-    
+
     public class PercentTieringMFee
     {
         public decimal AUMMin { get; set; }
@@ -305,5 +305,49 @@ namespace ReksaAPI.Models
         public int NIK { get; set; }
         public string Deskripsi { get; set; }
         public string TanggalExpired { get; set; }
+    }
+    public class MaintainLimitFeeIBMB
+    {
+        public int NIK { get; set; }
+        public string Module { get; set; }
+        public int ProdId { get; set; }
+        public decimal MinSubsNew { get; set; }
+        public decimal MinSubsAdd { get; set; }
+        public decimal MinRedemption { get; set; }
+        public decimal MinSwitching { get; set; }
+        public decimal PctFeeSubs { get; set; }
+        public decimal PctFeeRedemp { get; set; }
+        public decimal PctFeeSwitching { get; set; }
+        public decimal PctHoldAmount { get; set; }
+        public string ProcessType { get; set; }
+        public bool CanSubsNew { get; set; }
+        public bool CanTrxIBank { get; set; }
+        public bool CanTrxMBank { get; set; }
+        public bool IsVisibleIBMB { get; set; }
+        public bool MinRedempByUnit { get; set; }
+        public bool MinSwitchingByUnit { get; set; }
+        public bool RDBBit { get; set; }
+        public bool RDBRedeemBit { get; set; }
+        public bool RDBSwitchBit { get; set; }
+        public decimal RDBMinSubs { get; set; }
+        public decimal RDBFeeSubsIns { get; set; }
+        public decimal RDBFeeSubsNoIns { get; set; }
+        public bool RDBFullRedeemBit { get; set; }
+        public decimal RDBFeeRedempIns { get; set; }
+        public decimal RDBFeeRedempNoIns { get; set; }
+        public bool RDBFullSwitchBit { get; set; }
+    }
+    public class MaintainParameter
+    {
+        public int Type { get; set; }
+        public string InterfaceId { get; set; }
+        public string Code { get; set; }
+        public string Desc { get; set; }
+        public string OfficeId { get; set; }
+        public int ProdId { get; set; }
+        public int Id { get; set; }
+        public DateTime Value { get; set; }
+        public int NIK { get; set; }
+        public string Guid { get; set; }
     }
 }

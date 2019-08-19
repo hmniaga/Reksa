@@ -1,13 +1,14 @@
 ﻿var strTransaction;
 var strAction;
 var strJenisTrx;
-$(document).ready(function () {
+$(document).ready(function load() {
     var gridOptions = {
         height: 300
     };
     $("#dataGridView1").kendoGrid(gridOptions);
     $("#dataGridView2").kendoGrid(gridOptions);
     $("#dataGridView3").kendoGrid(gridOptions);
+    subDisableAllTrxControl(false);
 });
 function subRefresh() {
     PopulateVerifyData("");
@@ -62,6 +63,7 @@ function PopulateVerifyData(RefID) {
     var gridView1 = $("#dataGridView1").data("kendoGrid");
     var gridView2 = $("#dataGridView2").data("kendoGrid");
     var gridView3 = $("#dataGridView3").data("kendoGrid");
+    var rowsView2 = 0;
 
     $.ajax({
         type: 'GET',
@@ -75,34 +77,24 @@ function PopulateVerifyData(RefID) {
                 if (ObjectLength(data.dsResult) != 0) {
                     if (RefID == "") {
                         var gridView1data = populateGrid(data.dsResult.table);
-                        if (gridView1) {
-                            gridView1.setOptions(gridView1data);
-                        } else {
-                            $("#dataGridView1").kendoGrid(gridView1data);
-                        }
+                        gridView1.setOptions(gridView1data);
 
-                        var gridViewData = {
-                            height: 300
-                        };
-                        $("#dataGridView2").kendoGrid(gridViewData);
-                        $("#dataGridView3").kendoGrid(gridViewData);
+                        $("#dataGridView2").empty();
+                        $("#dataGridView3").empty();
 
                         if (ObjectLength(data.dsResult) == 2) {
                             var gridView2Data = populateGridDetail(data.dsResult.table1);
-                            if (gridView2) {
-                                gridView2.setOptions(gridView2Data);
-                            } else {
-                                $("#dataGridView2").kendoGrid(gridView2Data);
-                            }
+                            gridView2.setOptions(gridView2Data);
+                            gridView2.hideColumn('checkB');
                         }
 
                         if ((strTransaction == "TRX") || (strTransaction == "REV")) {
                             gridView1.hideColumn('tranType');
                             gridView1.hideColumn('noCIFBigInt');
                             gridView1.hideColumn('noCIF19');
-                            if (data.dsResult.table1.length > 0) {
-                                gridView2.hideColumn('checkB');
-                            }
+
+                            gridView2.showColumn('checkB');
+
                             $("#groupBox1").text('Data Master');
                             $("#groupBox2").text('');
                             $("#groupBox3").text('');
@@ -127,13 +119,23 @@ function PopulateVerifyData(RefID) {
                     else {
                         if (ObjectLength(data.dsResult) >= 2 && data.dsResult.table1.length != 0) {
                             var gridView2Data = populateGridDetail(data.dsResult.table1);
-                            if (gridView2) {
-                                gridView2.setOptions(gridView2Data);
-                            } else {
-                                $("#dataGridView2").kendoGrid(gridView2Data);
-                            }
+                            gridView2.setOptions(gridView2Data);
+                            var datagridView2 = gridView2.dataSource.data();
+                            $.each(datagridView2, function (i, row) {
+                                var ValueDate = row.tglValuta;
+                                var CurrentDate = row.today;
+
+                                if (ValueDate > CurrentDate) {
+                                    $('tr[data-uid="' + row.uid + '"] ').css("background-color", "salmon"); //salmon
+                                }
+                                else {
+                                    $('tr[data-uid="' + row.uid + '"] ').css("background-color", "#ffffff");  //putih
+                                }
+                            });
+                            
                             if ((strTransaction == "TRX") || (strTransaction == "REV")) {
-                                gridView2.hideColumn('tranType');
+                                gridView2.hideColumn('tranType');                               
+
                                 if (strAction == "ADD") {
                                     $("#groupBox2").text('Data Transaksi');
                                 }
@@ -173,47 +175,47 @@ function PopulateVerifyData(RefID) {
                                     gridView2.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SUBSRDB") {
-                                    gridView2.hideColumn('KodeProdukSwcOut');
-                                    gridView2.hideColumn('KodeProdukSwcIn');
-                                    gridView2.hideColumn('ClientCodeSwcOut');
-                                    gridView2.hideColumn('ClientCodeSwcIn');
-                                    gridView2.hideColumn('UnitTransaksi');
-                                    gridView2.hideColumn('FullAmount');
-                                    gridView2.hideColumn('Today');
+                                    gridView2.hideColumn('kodeProdukSwcOut');
+                                    gridView2.hideColumn('kodeProdukSwcIn');
+                                    gridView2.hideColumn('clientCodeSwcOut');
+                                    gridView2.hideColumn('clientCodeSwcIn');
+                                    gridView2.hideColumn('unitTransaksi');
+                                    gridView2.hideColumn('fullAmount');
+                                    gridView2.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SWCNONRDB") {
-                                    gridView2.hideColumn('KodeProduk');
-                                    gridView2.hideColumn('ClientCode');
-                                    gridView2.hideColumn('NominalTransaksi');
-                                    gridView2.hideColumn('FullAmount');
-                                    gridView2.hideColumn('JangkaWaktu');
-                                    gridView2.hideColumn('JatuhTempo');
-                                    gridView2.hideColumn('FrekPendebetan');
-                                    gridView2.hideColumn('Asuransi');
-                                    gridView2.hideColumn('AutoRedemption');
-                                    gridView2.hideColumn('Today');
+                                    gridView2.hideColumn('kodeProduk');
+                                    gridView2.hideColumn('clientCode');
+                                    gridView2.hideColumn('nominalTransaksi');
+                                    gridView2.hideColumn('fullAmount');
+                                    gridView2.hideColumn('jangkaWaktu');
+                                    gridView2.hideColumn('jatuhTempo');
+                                    gridView2.hideColumn('frekPendebetan');
+                                    gridView2.hideColumn('asuransi');
+                                    gridView2.hideColumn('autoRedemption');
+                                    gridView2.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SWCRDB") {
-                                    gridView2.hideColumn('KodeProduk');
-                                    gridView2.hideColumn('ClientCode');
-                                    gridView2.hideColumn('NominalTransaksi');
-                                    gridView2.hideColumn('FullAmount');
-                                    gridView2.hideColumn('Today');
+                                    gridView2.hideColumn('kodeProduk');
+                                    gridView2.hideColumn('clientCode');
+                                    gridView2.hideColumn('nominalTransaksi');
+                                    gridView2.hideColumn('fullAmount');
+                                    gridView2.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "BOOK") {
-                                    gridView2.hideColumn('ClientCode');
-                                    gridView2.hideColumn('KodeProdukSwcOut');
-                                    gridView2.hideColumn('KodeProdukSwcIn');
-                                    gridView2.hideColumn('ClientCodeSwcOut');
-                                    gridView2.hideColumn('ClientCodeSwcIn');
-                                    gridView2.hideColumn('FullAmount');
-                                    gridView2.hideColumn('UnitTransaksi');
-                                    gridView2.hideColumn('JangkaWaktu');
-                                    gridView2.hideColumn('JatuhTempo');
-                                    gridView2.hideColumn('FrekPendebetan');
-                                    gridView2.hideColumn('Asuransi');
-                                    gridView2.hideColumn('AutoRedemption');
-                                    gridView2.hideColumn('Today');
+                                    gridView2.hideColumn('clientCode');
+                                    gridView2.hideColumn('kodeProdukSwcOut');
+                                    gridView2.hideColumn('kodeProdukSwcIn');
+                                    gridView2.hideColumn('clientCodeSwcOut');
+                                    gridView2.hideColumn('clientCodeSwcIn');
+                                    gridView2.hideColumn('fullAmount');
+                                    gridView2.hideColumn('initTransaksi');
+                                    gridView2.hideColumn('jangkaWaktu');
+                                    gridView2.hideColumn('jatuhTempo');
+                                    gridView2.hideColumn('frekPendebetan');
+                                    gridView2.hideColumn('asuransi');
+                                    gridView2.hideColumn('autoRedemption');
+                                    gridView2.hideColumn('today');
                                 }
                             }
                             else {
@@ -230,11 +232,24 @@ function PopulateVerifyData(RefID) {
                         }
                         if (ObjectLength(data.dsResult) == 3 && data.dsResult.table2.length != 0) {
                             var gridView3Data = populateGridDetail(data.dsResult.table2);
-                            if (gridView3) {
-                                gridView3.setOptions(gridView3Data);
-                            } else {
-                                $("#dataGridView3").kendoGrid(gridView3Data);
+                            gridView3.setOptions(gridView3Data);
+
+                            if ((strTransaction == "TRX") && (strAction == "EDIT")) {
+                                CariPerbedaan();
                             }
+                            var datagridView3 = gridView3.dataSource.data();
+                            $.each(datagridView3, function (i, row) {
+                                var ValueDate = row.tglValuta;
+                                var CurrentDate = row.today;
+
+                                if (ValueDate > CurrentDate) {
+                                    $('tr[data-uid="' + row.uid + '"] ').css("background-color", "salmon"); //salmon
+                                }
+                                else {
+                                    $('tr[data-uid="' + row.uid + '"] ').css("background-color", "#ffffff");  //putih
+                                }
+                            });
+
                             if ((strTransaction == "TRX") || (strTransaction == "REV")) {
                                 gridView3.hideColumn('tranType');
 
@@ -246,74 +261,74 @@ function PopulateVerifyData(RefID) {
                                 }
 
                                 if (strJenisTrx == "SUBS") {
-                                    gridView3.hideColumn('KodeProdukSwcOut');
-                                    gridView3.hideColumn('KodeProdukSwcIn');
-                                    gridView3.hideColumn('ClientCodeSwcOut');
-                                    gridView3.hideColumn('ClientCodeSwcIn');
-                                    gridView3.hideColumn('UnitTransaksi');
-                                    gridView3.hideColumn('JangkaWaktu');
-                                    gridView3.hideColumn('JatuhTempo');
-                                    gridView3.hideColumn('FrekPendebetan');
-                                    gridView3.hideColumn('Asuransi');
-                                    gridView3.hideColumn('AutoRedemption');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('kodeProdukSwcOut');
+                                    gridView3.hideColumn('kodeProdukSwcIn');
+                                    gridView3.hideColumn('clientCodeSwcOut');
+                                    gridView3.hideColumn('clientCodeSwcIn');
+                                    gridView3.hideColumn('unitTransaksi');
+                                    gridView3.hideColumn('jangkaWaktu');
+                                    gridView3.hideColumn('jatuhTempo');
+                                    gridView3.hideColumn('frekPendebetan');
+                                    gridView3.hideColumn('asuransi');
+                                    gridView3.hideColumn('autoRedemption');
+                                    gridView3.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "REDEMP") {
-                                    gridView3.hideColumn('KodeProdukSwcOut');
-                                    gridView3.hideColumn('KodeProdukSwcIn');
-                                    gridView3.hideColumn('ClientCodeSwcOut');
-                                    gridView3.hideColumn('ClientCodeSwcIn');
-                                    gridView3.hideColumn('JangkaWaktu');
-                                    gridView3.hideColumn('JatuhTempo');
-                                    gridView3.hideColumn('FrekPendebetan');
-                                    gridView3.hideColumn('Asuransi');
-                                    gridView3.hideColumn('AutoRedemption');
-                                    gridView3.hideColumn('MataUang');
-                                    gridView3.hideColumn('NominalTransaksi');
-                                    gridView3.hideColumn('FullAmount');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('kodeProdukSwcOut');
+                                    gridView3.hideColumn('kodeProdukSwcIn');
+                                    gridView3.hideColumn('clientCodeSwcOut');
+                                    gridView3.hideColumn('clientCodeSwcIn');
+                                    gridView3.hideColumn('jangkaWaktu');
+                                    gridView3.hideColumn('jatuhTempo');
+                                    gridView3.hideColumn('frekPendebetan');
+                                    gridView3.hideColumn('asuransi');
+                                    gridView3.hideColumn('autoRedemption');
+                                    gridView3.hideColumn('mataUang');
+                                    gridView3.hideColumn('nominalTransaksi');
+                                    gridView3.hideColumn('fullAmount');
+                                    gridView3.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SUBSRDB") {
-                                    gridView3.hideColumn('KodeProdukSwcOut');
-                                    gridView3.hideColumn('KodeProdukSwcIn');
-                                    gridView3.hideColumn('ClientCodeSwcOut');
-                                    gridView3.hideColumn('ClientCodeSwcIn');
-                                    gridView3.hideColumn('UnitTransaksi');
-                                    gridView3.hideColumn('FullAmount');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('kodeProdukSwcOut');
+                                    gridView3.hideColumn('kodeProdukSwcIn');
+                                    gridView3.hideColumn('clientCodeSwcOut');
+                                    gridView3.hideColumn('clientCodeSwcIn');
+                                    gridView3.hideColumn('unitTransaksi');
+                                    gridView3.hideColumn('fullAmount');
+                                    gridView3.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SWCNONRDB") {
-                                    gridView3.hideColumn('KodeProduk');
-                                    gridView3.hideColumn('ClientCode');
-                                    gridView3.hideColumn('NominalTransaksi');
-                                    gridView3.hideColumn('FullAmount');
-                                    gridView3.hideColumn('JangkaWaktu');
-                                    gridView3.hideColumn('JatuhTempo');
-                                    gridView3.hideColumn('FrekPendebetan');
-                                    gridView3.hideColumn('Asuransi');
-                                    gridView3.hideColumn('AutoRedemption');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('kodeProduk');
+                                    gridView3.hideColumn('clientCode');
+                                    gridView3.hideColumn('nominalTransaksi');
+                                    gridView3.hideColumn('fullAmount');
+                                    gridView3.hideColumn('jangkaWaktu');
+                                    gridView3.hideColumn('jatuhTempo');
+                                    gridView3.hideColumn('frekPendebetan');
+                                    gridView3.hideColumn('asuransi');
+                                    gridView3.hideColumn('autoRedemption');
+                                    gridView3.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "SWCRDB") {
-                                    gridView3.hideColumn('KodeProduk');
-                                    gridView3.hideColumn('ClientCode');
-                                    gridView3.hideColumn('NominalTransaksi');
-                                    gridView3.hideColumn('FullAmount');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('kodeProduk');
+                                    gridView3.hideColumn('clientCode');
+                                    gridView3.hideColumn('nominalTransaksi');
+                                    gridView3.hideColumn('fullAmount');
+                                    gridView3.hideColumn('today');
                                 }
                                 else if (strJenisTrx == "BOOK") {
-                                    gridView3.hideColumn('ClientCode');
-                                    gridView3.hideColumn('KodeProdukSwcOut');
-                                    gridView3.hideColumn('KodeProdukSwcIn');
-                                    gridView3.hideColumn('ClientCodeSwcIn');
-                                    gridView3.hideColumn('FullAmount');
-                                    gridView3.hideColumn('UnitTransaksi');
-                                    gridView3.hideColumn('JangkaWaktu');
-                                    gridView3.hideColumn('JatuhTempo');
-                                    gridView3.hideColumn('FrekPendebetan');
-                                    gridView3.hideColumn('Asuransi');
-                                    gridView3.hideColumn('AutoRedemption');
-                                    gridView3.hideColumn('Today');
+                                    gridView3.hideColumn('clientCode');
+                                    gridView3.hideColumn('kodeProdukSwcOut');
+                                    gridView3.hideColumn('kodeProdukSwcIn');
+                                    gridView3.hideColumn('clientCodeSwcIn');
+                                    gridView3.hideColumn('fullAmount');
+                                    gridView3.hideColumn('unitTransaksi');
+                                    gridView3.hideColumn('jangkaWaktu');
+                                    gridView3.hideColumn('jatuhTempo');
+                                    gridView3.hideColumn('frekPendebetan');
+                                    gridView3.hideColumn('asuransi');
+                                    gridView3.hideColumn('autoRedemption');
+                                    gridView3.hideColumn('today');
                                 }
                             }
                             else {
@@ -323,12 +338,6 @@ function PopulateVerifyData(RefID) {
                     }
                 }
             }
-            else {
-                $("#dataGridView1").empty();
-                $("#dataGridView2").empty();
-                $("#dataGridView3").empty();
-                //swal("Warning", data.ErrMsg, "warning");
-            }
         }
         ,
         complete: function () {
@@ -336,6 +345,10 @@ function PopulateVerifyData(RefID) {
         }
     });
 }
+function CariPerbedaan() {
+
+}
+
 function ObjectLength(object) {
     var length = 0;
     for (var key in object) {
@@ -358,7 +371,7 @@ function populateGrid(response) {
                 pageSize: 5,
                 page: 1
             },
-            change: onRowOtorisasiSelect,
+            change: dataGridView1_CellClick,
             columns: columns,
             pageable: true,
             selectable: true,
@@ -387,10 +400,7 @@ function populateGridDetail(response) {
             selectable: true,
             height: 300
         };
-
-    } else {
-        $("#dataGridView2").empty();
-    }
+    } 
 }
 function generateColumns(response) {
     var columnNames = Object.keys(response[0]);

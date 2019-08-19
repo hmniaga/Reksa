@@ -865,7 +865,54 @@ namespace Reksa.Controllers
             ViewBag.Criteria = criteria;
 
             return View();
-        }        
+        }
+        public ActionResult SearchGift(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchGiftData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            int pageNum = request.Page;
+            int pageSize = request.PageSize;
+
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+
+            int total = 0;
+            List<Gift> list = new List<Gift>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcGift?Col1=" + search + "&Col2=&Validate=0&Criteria=" + criteria).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<Gift>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+
         public ActionResult SearchKota(string search, string criteria, string type, int seq = 0)
         {
             ViewBag.Search = search;
@@ -1062,6 +1109,97 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(list);
+        }
+        public ActionResult SearchProductSwitchOut(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            return View();
+        }
+        public ActionResult SearchProductSwitchOutData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            int pageNum = request.Page;
+            int pageSize = request.PageSize;
+
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+
+            int total = 0;
+            List<ProductModel> list = new List<ProductModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcProductSwitchOut?Col1=" + search + "&Col2=&Validate=0").Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<ProductModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
+        }
+        public ActionResult SearchProductSwitchIn(string search, string criteria, string prodcode)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+            ViewBag.ProdCode = prodcode;
+            return View();
+        }
+        public ActionResult SearchProductSwitchInData([DataSourceRequest]DataSourceRequest request, string search, string criteria, string prodcode)
+        {
+            int pageNum = request.Page;
+            int pageSize = request.PageSize;
+
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+
+            int total = 0;
+            List<ProductModel> list = new List<ProductModel>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_strAPIUrl);
+                MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                client.DefaultRequestHeaders.Accept.Add(contentType);
+                HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcProductSwitchIn?Col1=" + search + "&Col2=&Validate=0&ProdCode=" + prodcode).Result;
+                string stringData = response.Content.ReadAsStringAsync().Result;
+                list = JsonConvert.DeserializeObject<List<ProductModel>>(stringData);
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+
+            return Json(result);
         }
         public ActionResult SearchReferentor(string search, string criteria)
         {
@@ -1626,6 +1764,54 @@ namespace Reksa.Controllers
                 strErrMsg = e.Message;
             }
             return Json(new { blnResult, strErrMsg, IsEnable });
+        }
+        public ActionResult SearchCountry(string search, string criteria)
+        {
+            ViewBag.Search = search;
+            ViewBag.Criteria = criteria;
+
+            return View();
+        }
+        public ActionResult SearchCountryData([DataSourceRequest]DataSourceRequest request, string search, string criteria)
+        {
+            string ErrMsg;
+            if (request.Filters.Count > 0)
+            {
+                string type = request.Filters[0].GetType().ToString();
+                if (type == "Kendo.Mvc.FilterDescriptor")
+                {
+                    var filter = (Kendo.Mvc.FilterDescriptor)request.Filters[0];
+                    criteria = filter.ConvertedValue.ToString();
+                }
+            }
+            int total = 0;
+            List<Country> list = new List<Country>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCountry?Col1=&Col2=" + search + "&Validate=0").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<Country>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+
+            DataSourceResult result = null;
+            if (list != null)
+            {
+                request.Filters = null;
+                result = list.ToDataSourceResult(request);
+                result.Total = total;
+                result.Data = list;
+            }
+            return Json(result);
         }
     }
 }

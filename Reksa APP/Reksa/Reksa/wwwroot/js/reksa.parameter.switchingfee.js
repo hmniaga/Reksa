@@ -362,8 +362,6 @@ function subSave(intMyType) {
         'listSettingGL': arrSettingGL,
         'listTieringNotif': arrTieringNotif
     });
-
-    console.log(model);
     $.ajax({
         type: 'POST',
         url: '/Parameter/MaintainSwcFee',
