@@ -16,7 +16,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        @(Html.Kendo().TreeView().Name("TreeViewParamGlobal")
+                        @(Html.Kendo().TreeView().Name("trvSetupParameter")
                                             .BindTo((IEnumerable<TreeViewModel>)ViewBag.Tree, (NavigationBindingFactory<TreeViewItem> mappings) =>
                                             {
                                                 mappings.For<TreeViewModel>(binding => binding.ItemDataBound((item, node) =>

@@ -918,5 +918,84 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg});
         }
+        public JsonResult PopulateVerifyOutgoingTT(string JenisProses)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/PopulateVerifyOutgoingTT?JenisProses=" + JenisProses).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult AuthorizeOutgoingTT(string JenisProses, bool isProcess, string BillId, string RemittanceNumber)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/AuthorizeOutgoingTT?NIK=" + _intNIK + "&JenisProses=" + JenisProses + "&isProcess=" + isProcess + "&BillId=" + BillId + "&RemittanceNumber=" + RemittanceNumber).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PrepareDataJurnalTT(string BillId, bool JenisJurnal)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/PrepareDataJurnalTT?NIK=" + _intNIK + "&Branch=" + _strBranch + "&BillId=" + BillId + "&JenisJurnal=" + JenisJurnal).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        
     }
 }

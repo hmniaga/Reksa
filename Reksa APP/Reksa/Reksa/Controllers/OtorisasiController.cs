@@ -342,7 +342,6 @@ namespace Reksa.Controllers
             }
             return blnResult;
         }
-        
         public JsonResult ApproveReject(string listId, string treeid, bool isApprove)
         {
             bool blnResult = false;
@@ -394,6 +393,10 @@ namespace Reksa.Controllers
                 else if (treeid == "RKPF01" || treeid == "RKPF02" || treeid == "RKPF03" || treeid == "RKPF04" || treeid == "RKPF05" || treeid == "RKPF06")
                 {
                     dv1.RowFilter = " subsId in (" + filter + ")";
+                }
+                else if (treeid == "REKSY1" || treeid == "REKSY2" || treeid == "REKSY3" || treeid == "REKSY4" || treeid == "REKSY5" || treeid == "REKSY6")
+                {
+                    dv1.RowFilter = " refId in (" + filter + ")";
                 }
                 DataTable dtNew = dv1.ToTable();
                 if (dtNew == null || dtNew.Columns.Count == 0)
@@ -1125,6 +1128,96 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult PopulateDetailMFee(string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/UpdateMFeePopulateVerifyDetail?BatchGuid=" + BatchGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult PopulateDetailItem(string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/UpdateOSPopulateVerifyDetail?BatchGuid=" + BatchGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        public JsonResult PopulateDetailOSSHID(string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/UpdateOSSHIDPopulateVerifyDetail?BatchGuid=" + BatchGuid).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
     }
 }

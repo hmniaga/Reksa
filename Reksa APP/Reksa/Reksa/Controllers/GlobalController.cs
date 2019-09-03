@@ -1813,5 +1813,27 @@ namespace Reksa.Controllers
             }
             return Json(result);
         }
+        public JsonResult ValidateCountry(string Col1, string Col2, int Validate)
+        {
+            string ErrMsg;
+            List<Country> list = new List<Country>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Global/GetSrcCountry?Col1=" + Col1 + "&Col2=" + Col2 + "&Validate=" + Validate).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    list = JsonConvert.DeserializeObject<List<Country>>(stringData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(list);
+        }
     }
 }

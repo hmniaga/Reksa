@@ -177,8 +177,9 @@ $("#srcNoRefBooking").click(function srcNoRefBooking_click() {
 }); 
 
 $("#srcProductSubs").click(function srcProductSubs_click() {
-    var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();
-    var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(strCriteria);
+    //var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();
+    //var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(strCriteria);
+    var url = $(this).attr("href");
     $('#ProductModal .modal-content').load(url, function (result) {
         $(this).html(result);
         $('#display').modal({ show: true });
@@ -235,9 +236,6 @@ $("#srcProductSwcRDBIn").click(function srcProductSwcRDBIn_click() {
     });
 });
 $("#srcProductBooking").click(function srcProductBooking_click() {
-    var strCriteria = _strTabName + "#" + $("#srcCIFBooking_text1").val();
-    var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(strCriteria);
-
     $('#ProductModal .modal-content').load(url, function (result) {
         $(this).html(result);
         $('#display').modal({ show: true });
@@ -695,6 +693,9 @@ $("#srcCIFSubs_text1").change(async function srcCIFSubs_text1_change() {
         else {
             swal("Warning", data.ErrMsg, "warning");
         }
+        var strCriteria = _strTabName + "#" + $('#srcCIFSubs_text1').val();
+        var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(strCriteria);
+        $('#srcProductSubs').attr('href', url);
     }
     else
     {
@@ -772,6 +773,9 @@ $("#srcCIFRedemp_text1").change(async function srcCIFRedemp_text1_change() {
 $("#srcCIFRDB_text1").change(async function srcCIFRDB_text1_change() {
     var intUmur = 0;
     if ($("#srcCIFRDB_text1").val() != "") {
+        var criteria = _strTabName + "#" + $("#srcCIFRDB_text1").val();
+        var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(criteria);
+        $('#srcProductRDB').attr('href', url);
         if (_intType == 1) {
             //if (!CheckCIF($("#srcCIFRDB_text1").val())) {
             //    subCancel();
@@ -831,6 +835,9 @@ $("#srcCIFRDB_text1").change(async function srcCIFRDB_text1_change() {
 $("#srcCIFBooking_text1").change(async function srcCIFBooking_text1_change() {
     var intUmur = 0;
     if ($("#srcCIFBooking_text1").val() != "") {
+        var strCriteria = _strTabName + "#" + $("#srcCIFBooking_text1").val();
+        var url = "/Global/SearchTrxProduct/?criteria=" + encodeURIComponent(strCriteria);
+        $('#srcProductBooking').attr('href', url);
         if (_intType == 1) {
             //if (!CheckCIF($("#srcCIFBooking_text1").val())) {
             //    subCancel();
@@ -1014,7 +1021,6 @@ $("#srcCIFSwcRDB_text1").change(async function srcCIFSwcRDB_text1_change() {
     }
 });
 $("#srcNoRefSubs_text2").change(function srcNoRefSubs_text2_change() {
-    alert('DEBUG');
     if ($("#srcNoRefSubs_text1").val() == "" && $("#srcNoRefSubs_text2").val() == "") {
         ResetFormSubs();
     }
@@ -1072,35 +1078,43 @@ $("#srcProductSubs_text1").change(function srcProductSubs_text1_change() {
     ValidateCurrency($("#srcCurrencySubs_text1").val(), function (output) {
         $("#srcCurrencySubs_text2").val(output);
     });
-    var strCriteria = $("#srcCIFSubs_text1").val() + "#" + $("#srcProductSubs_text1").val() + "#" + _strTabName + "#0";
-    var url = "/Global/SearchTrxClient/";
-    var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
-    $('#srcClientSubs').attr('href', target);
-    if (_intType == 1) {
-        var ClientCodeSubsAdd = "";
-        var res = CheckIsSubsNew($("#srcCIFSubs_text1").val(), $("#ProdIdSubs").val(), false);
-        res.success(function (data) {
-            if (data.blnResult) {
-                IsSubsNew = data.IsSubsNew;
-                ClientCodeSubsAdd = data.strClientCode;
-            }
-            else {
-                IsSubsNew = false;
-                ClientCodeSubsAdd = "";
-            }
-        });
-
-        if (IsSubsNew) {
-            $("#srcClientSubs_text1").prop('disabled', true);
-            $("#srcClientSubs").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+    ValidateProduct($("#srcProductSubs_text1").val(), function (result) {
+        var strCriteria = $("#srcCIFSubs_text1").val() + "#" + $("#srcProductSubs_text1").val() + "#" + _strTabName + "#0";
+        var url = "/Global/SearchTrxClient/";
+        var target = $(this).attr('href', url + '?criteria=' + encodeURIComponent(strCriteria));
+        $('#srcClientSubs').attr('href', target);
+        if (_intType == 1) {
+            var ClientCodeSubsAdd = "";
+            var res = CheckIsSubsNew($("#srcCIFSubs_text1").val(), result[0].ProdId, false);
+            res.success(function (data) {
+                if (data.blnResult) {
+                    IsSubsNew = data.IsSubsNew;
+                    ClientCodeSubsAdd = data.strClientCode;
+                    if (IsSubsNew) {
+                        $("#srcClientSubs_text1").val('');
+                        $("#srcClientSubs_text2").val('');
+                        $("#srcClientSubs_text1").prop('disabled', true);
+                        $("#srcClientSubs").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                    }
+                    else {
+                        $("#srcClientSubs_text1").prop('disabled', true);
+                        $("#srcClientSubs").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                        $("#srcClientSubs_text1").val(ClientCodeSubsAdd);
+                        ValidateClient($("#srcClientSubs_text1").val(), result[0].ProdId, function (result) {
+                            $("#srcClientSubs_text2").val(result[0].ClientName);
+                        });
+                    }
+                }
+                else {
+                    IsSubsNew = false;
+                    ClientCodeSubsAdd = "";
+                    $("#srcClientSubs_text1").val('');
+                    $("#srcClientSubs_text2").val('');
+                }
+            });
         }
-        else {
-            $("#srcClientSubs_text1").prop('disabled', true);
-            $("#srcClientSubs").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            $("#srcClientSubs_text1").val(ClientCodeSubsAdd);
-            //cmpsrClientSwcIn.ValidateField();
-        }
-    }
+    });
+    
 });
 $("#srcProductRedemp_text1").change(function srcProductRedemp_text1_change() {
     var strCriteria = $('#srcCIFRedemp_text1').val() + "#" + $('#srcProductRedemp_text1').val() + "#" + _strTabName + "#0";
@@ -1131,32 +1145,33 @@ $("#srcProductSwcIn_text1").change(function srcProductSwcIn_text1_change() {
             }
         });
         if (_intType == 1) {
-            var ClientCodeSwcIn = "";
-
-            var res = CheckIsSubsNew($("#srcCIFSwc_text1").val(), $("#ProdIdSwcIn").val(), false);
+            ValidateProduct($("#srcProductSwcIn_text1").val(), function (result) {
+            var res = CheckIsSubsNew($("#srcCIFSwc_text1").val(), result[0].ProdId, false);
             res.success(function (data) {
                 if (data.blnResult) {
-                    IsSubsNew = data.IsSubsNew;
-                    ClientCodeSwcIn = data.strClientCode;
-                    console.log(IsSubsNew);
+                    if (data.IsSubsNew) {
+                        $("#srcClientSwcIn_text1").val('');
+                        $("#srcClientSwcIn_text2").val('');
+                        $("#srcClientSwcIn_text1").prop('disabled', true);
+                        $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                    }
+                    else {
+                        $("#srcClientSwcIn_text1").prop('disabled', true);
+                        $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                        $("#srcClientSwcIn_text1").val(data.strClientCode);
+                        ValidateClient($("#srcClientSwcIn_text1").val(), result[0].ProdId, function (result) {
+                            $("#srcClientSwcIn_text2").val(result[0].ClientName);
+                        });
+                    }
                 }
                 else {
                     IsSubsNew = false;
                     ClientCodeSwcIn = "";
-                    swal("Warning", data.ErrMsg, "warning");
+                    $("#srcClientSwcIn_text1").val('');
+                    $("#srcClientSwcIn_text2").val('');
                 }
+                });
             });
-
-            if (IsSubsNew) {
-                $("#srcClientSwcIn_text1").prop('disabled', true);
-                $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            }
-            else {
-                $("#srcClientSwcIn_text1").prop('disabled', true);
-                $("#srcClientSwcIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-                $("#srcClientSwcIn_text1").val(ClientCodeSwcIn);
-                //cmpsrClientSwcIn.ValidateField();
-            }
         }
         var resFee = HitungSwitchingFee($("#srcProductSwcOut_text1").val(), $("#srcProductSwcIn_text1").val()
             , true, 0, $("#RedempSwc").data("kendoNumericTextBox").value()
@@ -1197,28 +1212,33 @@ $("#srcProductSwcRDBIn_text1").change(function srcProductSwcRDBIn_text1_change()
         });
 
         if ((_intType == 1) && ($("#JangkaWktSwcRDB").val() == 0) && (DoneDebet == "1")) {
-            console.log($("#srcCIFSwcRDB_text1").val());
-            var res = CheckIsSubsNew($("#srcCIFSwcRDB_text1").val(), $("#ProdIdSwcRDBIn").val(), false);
-            res.success(function (data) {
-                if (data.blnResult) {
-                    IsSubsNew = data.IsSubsNew;
-                    ClientCodeSwcIn = data.strClientCode;
-                }
-                else {
-                    IsSubsNew = false;
-                    ClientCodeSwcIn = "";
-                }
+            ValidateProduct($("#srcProductSwcRDBIn_text1").val(), function (result) {
+                var res = CheckIsSubsNew($("#srcCIFSwcRDB_text1").val(), result[0].ProdId, false);
+                res.success(function (data) {
+                    if (data.blnResult) {
+                        if (data.IsSubsNew) {
+                            $("#srcClientSwcRDBIn_text1").val('');
+                            $("#srcClientSwcRDBIn_text2").val('');
+                            $("#srcClientSwcRDBIn_text1").prop('disabled', true);
+                            $("#srcClientSwcRDBIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                        }
+                        else {
+                            $("#srcClientSwcRDBIn_text1").prop('disabled', true);
+                            $("#srcClientSwcRDBIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                            $("#srcClientSwcRDBIn_text1").val(data.strClientCode);
+                            ValidateClient($("#srcClientSwcRDBIn_text1").val(), result[0].ProdId, function (result) {
+                                $("#srcClientSwcRDBIn_text2").val(result[0].ClientName);
+                            });
+                        }
+                    }
+                    else {
+                        IsSubsNew = false;
+                        ClientCodeSwcIn = "";
+                        $("#srcClientSwcRDBIn_text1").val('');
+                        $("#srcClientSwcRDBIn_text2").val('');
+                    }
+                });
             });
-            if (IsSubsNew) {
-                $("#srcClientSwcRDBIn_text1").prop('disabled', true);
-                $("#srcClientSwcRDBIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-            }
-            else {
-                $("#srcClientSwcRDBIn_text1").prop('disabled', true);
-                $("#srcClientSwcRDBIn").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-                $("#srcClientSwcRDBIn_text1").val(ClientCodeSwcIn);
-                //cmpsrClientSwcRDBIn.ValidateField();
-            }
         }
     }
 });
@@ -1323,7 +1343,6 @@ $("#srcClientSwcIn_text1").change(function srcClientSwcIn_text1_change() {
     if (!IsSubsNew) {
         var res = GetLatestBalance($("#ClientIdSwcIn").val());
         res.success(function (data) {
-            console.log(data);
             if (data.blnResult) {
                 OutstandingUnitSwcIn = data.unitBalance;
             }
@@ -1520,10 +1539,8 @@ $("#srcSellerBooking_text1").change(function srcSellerBooking_text1_change() {
 
 });
 $("#srcWaperdSubs_text1").change(function srcWaperdSubs_text1_change() {
-    alert('DEBUG WOI');
     if ($("#srcWaperdSubs_text1").val() != "") {
         var TanggalExpire = new Date($("#textExpireWaperdSubs").val(""));
-        console.log(TanggalExpire);
     }
     else
     {
@@ -1532,18 +1549,83 @@ $("#srcWaperdSubs_text1").change(function srcWaperdSubs_text1_change() {
 });
 
 //tab click
-$('a[data-toggle=tab]').click(function _tabJenisTransaksi_Selected() {
+$('a[data-toggle=tab]').on('show.bs.tab', function (e) {
     _strTabName = this.id;
+    
     var url = "/Global/SearchReferensi/?criteria=" + _strTabName;
     $('#srcRefSubs').attr('href', url);
     $('#srcRefRedemp').attr('href', url);
     $('#srcRefRDB').attr('href', url);
-    if (_strTabName == "SWCRDB")
-    {
-        document.getElementById("btnEdit").disabled = true;
+    
+    if ((_intType == 1) || (_intType == 2)) {
+        var message;
+        if (_intType == 1)
+            message = 'New';
+        else
+            message = 'Update';
+        if ((_strLastTabName == "SUBS")
+            && ((_strTabName == "REDEMP") || (_strTabName == "SUBSRDB") || (_strTabName == "SWCNONRDB")
+                || (_strTabName == "SWCRDB") || (_strTabName == "BOOK")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
+        if ((_strLastTabName == "REDEMP")
+            && ((_strTabName == "SUBS") || (_strTabName == "SUBSRDB") || (_strTabName == "SWCNONRDB")
+                || (_strTabName == "SWCRDB") || (_strTabName == "BOOK")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
+
+        if ((_strLastTabName == "SUBSRDB")
+            && ((_strTabName == "SUBS") || (_strTabName == "REDEMP") || (_strTabName == "SWCNONRDB")
+                || (_strTabName == "SWCRDB") || (_strTabName == "BOOK")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
+
+        if ((_strLastTabName == "SWCNONRDB")
+            && ((_strTabName == "SUBS") || (_strTabName == "REDEMP") || (_strTabName == "SUBSRDB")
+                || (_strTabName == "SWCRDB") || (_strTabName == "BOOK")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
+
+        if ((_strLastTabName == "SWCRDB")
+            && ((_strTabName == "SUBS") || (_strTabName == "REDEMP") || (_strTabName == "SUBSRDB")
+                || (_strTabName == "SWCNONRDB") || (_strTabName == "BOOK")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
+
+        if ((_strLastTabName == "BOOK")
+            && ((_strTabName == "SUBS") || (_strTabName == "REDEMP") || (_strTabName == "SUBSRDB")
+                || (_strTabName == "SWCNONRDB") || (_strTabName == "SWCRDB")
+            )) {
+            swal("Warning", "Klik tombol Cancel untuk membatalkan proses " + message + " " + _strLastTabText + " ini !!", "info");
+            _strTabName = _strLastTabName;
+            e.preventDefault();
+        }
     }
-    else {
-        document.getElementById("btnEdit").disabled = false;
+    else
+    {
+        if (_strTabName == "SWCRDB") {
+            document.getElementById("btnEdit").disabled = true;
+        }
+        else {
+            document.getElementById("btnEdit").disabled = false;
+        }
+        _strLastTabName = this.id;
+        _strLastTabText =  this.text;
     }
 });
 
@@ -1559,9 +1641,6 @@ function ValidateOffice(OfficeId, result) {
             } else {
                 result("");
             }
-        },
-        error: function (error) {
-            result("");
         }
     });
 }
@@ -1745,8 +1824,6 @@ function ValidateReferensi(Noref, Criteria, result) {
 
 //dropdown change
 function cmbAutoRedempRDB_Validating() {
-    console.log($("#cmbAutoRedempRDB").data("kendoDropDownList").text());
-    console.log($("#cmbAutoRedempRDB").prop('disabled'));
     if (($("#cmbAutoRedempRDB").data("kendoDropDownList").text() == "Ya") && ($("#cmbAutoRedempRDB").prop('disabled') == false)) {
 
         swal({
@@ -1826,10 +1903,9 @@ function _ComboJenisRedemp_SelectedIndexChanged() {
     }
 }
 function _ComboJenisSubs_SelectedIndexChanged() {
-    $("#MoneyFeeSubs").val(0);
-    $("#PercentageFeeSubs").val(0);
-
     if ($("#_ComboJenisSubs").data("kendoDropDownList").text() == "By %") {
+        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
+        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
         $("#_KeteranganFeeSubs").text($("#srcCurrencySubs_text1").val());
         $("#labelFeeCurrencySubs").text("%");
         ByPercent = true;
@@ -1837,6 +1913,8 @@ function _ComboJenisSubs_SelectedIndexChanged() {
         //$("#PercentageFeeSubs").data("kendoNumericTextBox").setOptions({ format: "#.#", decimals: 2 });
     }
     else {
+        $("#MoneyFeeSubs").data("kendoNumericTextBox").value(0);
+        $("#PercentageFeeSubs").data("kendoNumericTextBox").value(0);
         $("#_KeteranganFeeSubs").text("%");
         $("#labelFeeCurrencySubs").text($("#srcCurrencySubs_text1").val());
         ByPercent = false;
@@ -1876,10 +1954,10 @@ function onBound_ComboJenisSubs() {
     var dropdownlist = $("#_ComboJenisSubs").data("kendoDropDownList");
     var len = dropdownlist.dataSource.data().length;
 
-    if (len > 0) {
-        dropdownlist.select(0);
-        _ComboJenisSubs_SelectedIndexChanged();
-    }
+    //if (len > 0) {
+    //    dropdownlist.select(0);
+    //    _ComboJenisSubs_SelectedIndexChanged();
+    //}
 }
 function onBounddataGridViewSubs()
 {
@@ -2074,22 +2152,21 @@ function onChangeMoneyNomRDB()
     }
     $("#labelFeeCurrencyRDB").text('');
     $("#_KeteranganFeeRDB").text('');
-    console.log(this.value());
-    console.log($("#srcProductRDB_text1").val());
-    if ((this.value() != 0) && ($("#srcProductRDB_text1").val() != "")) {
-        
-        ValidateProduct($("#srcProductRDB_text1").val(), function (result) { intProdId = result[0].ProdId; });
-        intTranType = 5;
-        var resFee = HitungFee(intProdId, 0, intTranType, this.value(), 0, true,
-            $("#checkFeeEditRDB").prop('checked'), $("#PercentageFeeRDB").data("kendoNumericTextBox").value()
-            , 1, $("#srcCIFRDB_text1").val()
-        );
-        resFee.success(function (data) {
-            if (data.blnResult) {
-                $("#MoneyFeeRDB").data("kendoNumericTextBox").value(data.NominalFee);
-                $("#PercentageFeeRDB").data("kendoNumericTextBox").value(data.PctFee);
-                $("#labelFeeCurrencyRDB").text(data.FeeCurr);              
-            }
+    if ((this.value() != 0) && ($("#srcProductRDB_text1").val() != "")) {        
+        ValidateProduct($("#srcProductRDB_text1").val(), function (result) {
+            intProdId = result[0].ProdId;
+            intTranType = 5;
+            var resFee = HitungFee(intProdId, 0, intTranType, $("#MoneyNomRDB").data("kendoNumericTextBox").value(), 0, true,
+                $("#checkFeeEditRDB").prop('checked'), $("#PercentageFeeRDB").data("kendoNumericTextBox").value()
+                , 1, $("#srcCIFRDB_text1").val()
+            );
+            resFee.success(function (data) {
+                if (data.blnResult) {
+                    $("#MoneyFeeRDB").data("kendoNumericTextBox").value(data.NominalFee);
+                    $("#PercentageFeeRDB").data("kendoNumericTextBox").value(data.PctFee);
+                    $("#labelFeeCurrencyRDB").text(data.FeeCurr);
+                }
+            });
         });
     }
 }
@@ -2168,7 +2245,7 @@ function onChangeMoneyFeeRDB() {
 
         ValidateProduct($("#srcProductRDB_text1").val(), function (result) { intProdId = result[0].ProdId; });
         var intTranType = 5;
-        var resFee = HitungFee(intProdId, intTranType, $("#MoneyNomRDB").data("kendoNumericTextBox").value(), 0
+        var resFee = HitungFee(intProdId, 0 , intTranType, $("#MoneyNomRDB").data("kendoNumericTextBox").value(), 0
             , true, $("#checkFeeEditRDB").prop('checked')
             , $("#MoneyFeeRDB").data("kendoNumericTextBox").value(), 2, $('#srcCIFRDB_text1').val());
         resFee.success(function (data) {
@@ -2256,11 +2333,10 @@ function onChangeMoneyFeeSubs()
             });
         }
     }
-    var resFee = HitungFee(intProdId, intClientid, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
+    var resFee = HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
         , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
         , $("#MoneyFeeSubs").data("kendoNumericTextBox").value(), 2, $('#srcCIFSubs_text1').val());
     resFee.success(function (data) {
-        console.log(data);
         if (data.blnResult) {
             $("#PercentageFeeSubs").data("kendoNumericTextBox").value(data.PctFee);
         }
@@ -2534,18 +2610,20 @@ function onSpinMoneyNomRDB() {
     $("#_KeteranganFeeRDB").text('');
 
     if ((this.value() != 0) && ($("#srcProductRDB_text1").val() != "")) {
-        ValidateProduct($("#srcProductRDB_text1").val(), function (result) { intProdId = result[0].ProdId; });
-        intTranType = 5;
-        var resFee = HitungFee(intProdId, 0, intTranType, this.value(), 0, true,
-            $("#checkFeeEditRDB").prop('checked'), $("#PercentageFeeRDB").data("kendoNumericTextBox").value()
-            , 1, $("#srcCIFRDB_text1").val()
-        );
-        resFee.success(function (data) {
-            if (data.blnResult) {
-                $("#MoneyFeeRDB").data("kendoNumericTextBox").value(data.NominalFee);
-                $("#PercentageFeeRDB").data("kendoNumericTextBox").value(data.PctFee);
-                $("#labelFeeCurrencyRDB").text(data.FeeCurr);
-            }
+        ValidateProduct($("#srcProductRDB_text1").val(), function (result) {
+            intProdId = result[0].ProdId;
+            intTranType = 5;
+            var resFee = HitungFee(intProdId, 0, intTranType, $("#MoneyNomRDB").data("kendoNumericTextBox").value(), 0, true,
+                $("#checkFeeEditRDB").prop('checked'), $("#PercentageFeeRDB").data("kendoNumericTextBox").value()
+                , 1, $("#srcCIFRDB_text1").val()
+            );
+            resFee.success(function (data) {
+                if (data.blnResult) {
+                    $("#MoneyFeeRDB").data("kendoNumericTextBox").value(data.NominalFee);
+                    $("#PercentageFeeRDB").data("kendoNumericTextBox").value(data.PctFee);
+                    $("#labelFeeCurrencyRDB").text(data.FeeCurr);
+                }
+            });
         });
     }
 }
@@ -2712,7 +2790,7 @@ function onSpinMoneyFeeSubs()
             });
         }
     }
-    var resFee = HitungFee(intProdId, intClientid, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
+    var resFee = HitungFee(intProdId, intClientid, intTranType, $("#MoneyNomSubs").data("kendoNumericTextBox").value(), 0
         , $("#checkFullAmtSubs").prop('checked'), $("#checkFeeEditSubs").prop('checked')
         , $("#MoneyFeeSubs").data("kendoNumericTextBox").value(), 2, $('#srcCIFSubs_text1').val());
     resFee.success(function (data) {

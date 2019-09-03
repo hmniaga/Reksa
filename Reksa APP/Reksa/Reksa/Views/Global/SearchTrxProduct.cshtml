@@ -49,17 +49,7 @@
         var selectedCurr = $("#TrxProductSubsSelectedCurr").val();
 
         var Criteria = "@ViewBag.Criteria";
-        Criteria = Criteria.split("#", 1);
-
-        var res = ValidateCurrency(selectedCurr);
-        res.success(function (data) {
-            if (data.length != 0)
-            {
-                $("input[id='srcCurrencySubs_text2']").val(data[0].CurrencyName);
-            } else {
-                $("input[id='srcCurrencySubs_text2']").val('');
-            }
-        });
+        Criteria = Criteria.split("#", 1);        
 
         if (Criteria[0] == 'SUBS') {
             $("input[id='srcProductSubs_text1']").val(selectedCode).change();
@@ -67,6 +57,14 @@
             $("input[id='ProdIdSubs']").val(selectedId);
             $("input[id='ProdCCYSubs']").val(selectedCurr);
             $("input[id='srcCurrencySubs_text1']").val(selectedCurr);
+            var res = ValidateCurrency(selectedCurr);
+            res.success(function (data) {
+                if (data.length != 0) {
+                    $("input[id='srcCurrencySubs_text2']").val(data[0].CurrencyName);
+                } else {
+                    $("input[id='srcCurrencySubs_text2']").val('');
+                }
+            });
         }
         else if (Criteria[0] == 'REDEMP') {
             $("input[id='srcProductRedemp_text1']").val(selectedCode).change();
@@ -81,6 +79,14 @@
             $("input[id='ProdIdRDB']").val(selectedId);
             $("input[id='ProdCCYRDB']").val(selectedCurr);
             $("input[id='srcCurrencyRDB_text1']").val(selectedCurr);
+            var res = ValidateCurrency(selectedCurr);
+            res.success(function (data) {
+                if (data.length != 0) {
+                    $("input[id='srcCurrencyRDB_text2']").val(data[0].CurrencyName);
+                } else {
+                    $("input[id='srcCurrencyRDB_text2']").val('');
+                }
+            });
         }
         else if (Criteria[0] == 'SWCNONRDB') {
             $("input[id='srcProductSwcOut_text1']").val(selectedCode).change();
@@ -100,6 +106,14 @@
             $("input[id='ProdIdBooking']").val(selectedId);
             $("input[id='ProdCCYBooking']").val(selectedCurr);
             $("input[id='srcCurrencyBooking_text1']").val(selectedCurr);
+            var res = ValidateCurrency(selectedCurr);
+            res.success(function (data) {
+                if (data.length != 0) {
+                    $("input[id='srcCurrencyBooking_text2']").val(data[0].CurrencyName);
+                } else {
+                    $("input[id='srcCurrencyBooking_text2']").val('');
+                }
+            });
         }
         else {
             $("input[name='ProductModel.ProdCode']").val(selectedCode).change();

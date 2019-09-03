@@ -33,22 +33,27 @@
         var data = this.dataItem(this.select());
         var ProdCode = $.trim(data.ProdCode);
         var ProdName = $.trim(data.ProdName);
-        var ProdId = $.trim(data.ProdId);
-
+        var ProdId = $.trim(data.ProdId);        
         $("#ProductSwitchOutSelectedCode").val(ProdCode);
         $("#ProductSwitchOutSelectedName").val(ProdName);
-        $("#ProductSwitchOutSelectedId").val(ProdId);
+        $("#ProductSwitchOutSelectedId").val(ProdId);        
     };
 
     $("#ProductSwitchOutSelectButton").on("click", function () {
         var selectedCode = $("#ProductSwitchOutSelectedCode").val();
         var selectedName = $("#ProductSwitchOutSelectedName").val();
-        var selectedId = $("#ProductSwitchOutSelectedId").val();
-
-        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
-        $("input[name='ProductModel.ProdName']").val(selectedName);
-        $("input[name='ProductModel.ProdId']").val(selectedId);
-
+        var selectedId = $("#ProductSwitchOutSelectedId").val();        
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'PAR') {
+            $("input[id='cmpsrSearch1_text1']").val(selectedCode).change();
+            $("input[id='cmpsrSearch1_text2']").val(selectedName);
+            $("input[id='ProdId']").val(selectedId);
+        }
+        else {
+            $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
+            $("input[name='ProductModel.ProdName']").val(selectedName);
+            $("input[name='ProductModel.ProdId']").val(selectedId);
+        }
     });
 
     $("#ProductSwitchOutSearchComponentSearchTxt").on("keypress", function (e) {

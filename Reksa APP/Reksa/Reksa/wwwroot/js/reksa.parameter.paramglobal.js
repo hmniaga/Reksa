@@ -1,11 +1,16 @@
 ﻿var _intType;
 var _strTreeInterface;
+var _LastSelectedNode = "";
+var _LastSelectedNodeName = "";
+var _Id = 0;
+var _tanggalValuta;
 
 $(document).ready(function load() {
     var grid = {
         height: 200
     };
     $("#dgvParam").kendoGrid(grid);
+
     $("#lblSP1").text('Kode');
     $("#lblSP2").text('Deskripsi');
     $("#lblSP4").text('Tanggal valuta');
@@ -23,24 +28,69 @@ $(document).ready(function load() {
     $("#dtpSP5").data("kendoDatePicker").enable(false);
     $('#textPctSwc').attr('style', 'display:none;');
     $("#textPctSwc").prop('disabled', true);
-    //cmpsrSearch1.Enabled = false;
+    $("#cmpsrSearch1_text1").prop('disabled', false);
+    $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
     $("#txtbSP1").prop('disabled', true);
     $("#txtbSP2").prop('disabled', true);
     $("#dtpSP").data("kendoDatePicker").enable(false);
-    //cmpsrSearch2.Enabled = false;
+    $("#cmpsrSearch2_text1").prop('disabled', false);
+    $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
     $("#txtbSP2").prop('disabled', true);
     $("#txtbSP5").prop('disabled', true);
     $("#comboBox1").data("kendoDropDownList").enable(false);
     $("#comboBox2").data("kendoDropDownList").enable(false);
     $("#comboBox3").data("kendoDropDownList").enable(false);
-    _intType = 0;    
+    _intType = 0;   
+    var treeview = $("#trvSetupParameter").data("kendoTreeView");
+    var barDataItem = treeview.dataSource.get("PAR");
+    var bar = treeview.findByUid(barDataItem.uid);
+    treeview.select(bar);
+    treeview.trigger('select', { node: bar });
+    _strTreeInterface = "PAR";
     subRefresh();
 });
 
 function trvSetupParameter_AfterSelect(e) {
+    subResetToolBar();
     var dataItem = this.dataItem(e.node);
     _strTreeInterface = dataItem.id;
-    console.log(_strTreeInterface);
+    if (_intType == 1 || _intType == 2) {
+        var message;
+        if (_intType == 1)
+            message = 'new';
+        else
+            message = 'edited';
+        swal({
+            title: "Confirmation",
+            text: "Cancel This " + _LastSelectedNodeName + " " + message +" data ?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-info',
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
+        },
+            function (isConfirm) {
+                if (!isConfirm) {
+                    var treeview = $("#trvSetupParameter").data("kendoTreeView");
+                    var barDataItem = treeview.dataSource.get(_LastSelectedNode);
+                    var bar = treeview.findByUid(barDataItem.uid);
+                    treeview.select(bar);
+                }
+                else {
+                    SelectNodes(dataItem.text);
+                    subCancel();
+                }
+            });
+    }
+    else {
+        SelectNodes(dataItem.text);
+        subRefresh();
+    }    
+}
+
+function SelectNodes(strTreeName) {
+    _LastSelectedNode = _strTreeInterface;
+    _LastSelectedNodeName = strTreeName;
     switch (_strTreeInterface) {
         case "PAR":
             LoadDefaultSettings();
@@ -133,8 +183,8 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP5').innerHTML = '';
             document.getElementById('lblSP6').innerHTML = '';
             document.getElementById("txtbSP3").style.display = 'block';
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById("textPctSwc").style.display = 'none';
             $("#cmpsrSearch1_div").prop('style', 'display:none;');
             break;
@@ -146,16 +196,16 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById("txtbSP3").style.display = 'block';
             document.getElementById("txtbSP5").style.display = 'block';
             document.getElementById("textPctSwc").style.display = 'block';
-            $("#dtpSP").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById('lblSP1').innerHTML = 'Kode Produk';
             document.getElementById('lblSP2').innerHTML = 'Subs Fee(%)';
             document.getElementById('lblSP3').innerHTML = 'Redemption Fee(%)';
             document.getElementById('lblSP4').innerHTML = 'Swc.Fee Non Asuransi (%)';
             document.getElementById('lblSP6').innerHTML = 'Swc.Fee Asuransi (%)';
-            
-            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct'); 
+
+            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct/?criteria=PAR');
             $("#textBox1").prop('style', '');
             $("#textBox1").prop('disabled', true);
             document.getElementById('lblSP5').innerHTML = 'Red.Fee Non Asuransi (%)';
@@ -174,9 +224,9 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP5').innerHTML = 'Job Title';
             document.getElementById('lblSP6').innerHTML = 'Tgl Expired';
             $("#txtbSP3").prop('style', 'display:block;width:270px;');
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#txtbSP4").prop('style', 'display:block;width:270px;');            
-            $("#dtpSP5").data("kendoDatePicker").wrapper.show(); 
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#txtbSP4").prop('style', 'display:block;width:270px;');
+            $("#dtpSP5").data("kendoDatePicker").wrapper.show();
             document.getElementById("textPctSwc").style.display = 'none';
 
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
@@ -189,11 +239,11 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP2').innerHTML = 'Min Jangka Wkt';
             document.getElementById('lblSP3').innerHTML = 'Kelipatan';
             document.getElementById("txtbSP3").style.display = 'block';
-            $("#dtpSP").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.hide();
             $("#lblSP3").prop('style', '');
             $("#lblSP4").prop('style', 'display:none;');
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById("textPctSwc").style.display = 'none';
             $("#cmpsrSearch1_div").prop('style', 'display:none;');
 
@@ -210,9 +260,9 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById("txtbSP2").style.display = 'block';
             document.getElementById("txtbSP3").style.display = 'none';
 
-            $("#dtpSP").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById("textPctSwc").style.display = 'none';
 
             $("#checkBox1_div").attr('style', '');
@@ -225,9 +275,9 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP4').innerHTML = '';
             document.getElementById('lblSP5').innerHTML = '';
             document.getElementById('lblSP6').innerHTML = '';
-            
-            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct');
-            
+
+            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct/?criteria=PAR');
+
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
             $("#lblSP2").prop('class', 'col-sm-4 control-label');
             $("#lblSP4").prop('class', 'col-sm-4 control-label');
@@ -244,9 +294,9 @@ function trvSetupParameter_AfterSelect(e) {
             $("#comboBox1").data("kendoDropDownList").wrapper.show();
             $("#comboBox2").data("kendoDropDownList").wrapper.hide();
 
-            $("#dtpSP").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
 
             document.getElementById("textPctSwc").style.display = 'block';
             $("#checkBox1_div").attr('style', 'display:none;');
@@ -260,8 +310,8 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById("lblSP5").style.display = 'none';
             document.getElementById('lblSP6').innerHTML = '%Swc Employee';
 
-            $('#cmpsrSearch1').attr('href', '/Global/SearchProductSwitchOut'); 
-            $('#cmpsrSearch2').attr('href', '/Global/SearchProductSwitchIn/?criteria=' + $("#ProductCode").val()); 
+            $('#cmpsrSearch1').attr('href', '/Global/SearchProductSwitchOut/?criteria=PAR');
+            $('#cmpsrSearch2').attr('href', '/Global/SearchProductSwitchIn/?criteria=PAR&prodcode=' + $("#cmpsrSearch1_text1").val());
 
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
             $("#lblSP2").prop('class', 'col-sm-4 control-label');
@@ -283,9 +333,9 @@ function trvSetupParameter_AfterSelect(e) {
             $("#comboBox2").data("kendoDropDownList").wrapper.hide();
             $("#comboBox3").data("kendoDropDownList").wrapper.show();
 
-            $("#dtpSP").data("kendoDatePicker").wrapper.show(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.show();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
 
             document.getElementById("textPctSwc").style.display = 'none';
             $("#checkBox1_div").attr('style', 'display:none;');
@@ -296,7 +346,7 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
             document.getElementById('lblSP5').innerHTML = '';
             document.getElementById('lblSP6').innerHTML = '';
-            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct'); 
+            $('#cmpsrSearch1').attr('href', '/Global/SearchProduct/?criteria=PAR');
 
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
             $("#lblSP2").prop('class', 'col-sm-5 control-label');
@@ -315,13 +365,13 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById("txtbSP2").style.display = 'none';
             document.getElementById("txtbSP3").style.display = 'none';
             document.getElementById("txtbSP4").style.display = 'none';
-            document.getElementById("txtbSP5").style.display = 'none';            
+            document.getElementById("txtbSP5").style.display = 'none';
             $("#comboBox1").data("kendoDropDownList").wrapper.hide();
             $("#comboBox2").data("kendoDropDownList").wrapper.hide();
             $("#comboBox3").data("kendoDropDownList").wrapper.hide();
 
-            $("#dtpSP").data("kendoDatePicker").wrapper.show(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
+            $("#dtpSP").data("kendoDatePicker").wrapper.show();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
             $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById("textPctSwc").style.display = 'none';
             $("#checkBox1_div").attr('style', 'display:none;');
@@ -333,8 +383,8 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
             document.getElementById('lblSP5').innerHTML = '';
             document.getElementById('lblSP6').innerHTML = '';
-            
-            $('#cmpsrSearch1').attr('href', '/Global/SearchCountry');  
+
+            $('#cmpsrSearch1').attr('href', '/Global/SearchCountry/?criteria=PAR');
 
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
             $("#lblSP2").prop('class', 'col-sm-4 control-label');
@@ -348,16 +398,16 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById("txtbSP2").style.display = 'none';
             document.getElementById("txtbSP3").style.display = 'none';
             document.getElementById("txtbSP4").style.display = 'none';
-            document.getElementById("txtbSP5").style.display = 'none';            
+            document.getElementById("txtbSP5").style.display = 'none';
             $("#comboBox1").data("kendoDropDownList").wrapper.hide();
             $("#comboBox2").data("kendoDropDownList").wrapper.hide();
             $("#comboBox3").data("kendoDropDownList").wrapper.hide();
-            
-            $("#dtpSP").data("kendoDatePicker").wrapper.show(); 
-            $("#dtpSP4").data("kendoDatePicker").wrapper.hide(); 
-            $("#dtpSP5").data("kendoDatePicker").wrapper.hide(); 
+
+            $("#dtpSP").data("kendoDatePicker").wrapper.show();
+            $("#dtpSP4").data("kendoDatePicker").wrapper.hide();
+            $("#dtpSP5").data("kendoDatePicker").wrapper.hide();
             document.getElementById("textPctSwc").style.display = 'none';
-            $("#checkBox1_div").attr('style', 'display:none;'); 
+            $("#checkBox1_div").attr('style', 'display:none;');
 
             document.getElementById('lblSP1').innerHTML = 'Office';
             document.getElementById('lblSP2').innerHTML = '';
@@ -366,9 +416,9 @@ function trvSetupParameter_AfterSelect(e) {
             document.getElementById('lblSP4').innerHTML = 'Tanggal Valuta';
             document.getElementById('lblSP5').innerHTML = '';
             document.getElementById('lblSP6').innerHTML = '';
-            
-            $('#cmpsrSearch1').attr('href', '/Global/SearchOffice'); 
-            
+
+            $('#cmpsrSearch1').attr('href', '/Global/SearchOffice/?criteria=PAR');
+
             $("#lblSP1").prop('class', 'col-sm-4 control-label');
             $("#lblSP2").prop('class', 'col-sm-4 control-label');
             $("#lblSP4").prop('class', 'col-sm-4 control-label');
@@ -378,8 +428,6 @@ function trvSetupParameter_AfterSelect(e) {
             break;
 
     }
-
-    subRefresh();
 }
 
 function LoadDefaultSettings() {
@@ -425,7 +473,13 @@ function LoadDefaultSettings() {
 }
 
 function subResetToolBar() {
-    if ((_intType == 0) | (_intType == 3)) {
+    $("#btnRefresh").show();
+    $("#btnNew").show();
+    $("#btnEdit").show();
+    $("#btnDelete").show();
+    $("#btnSave").show();
+    $("#btnCancel").show();
+    if ((_intType == 0) || (_intType == 3)) {
         $("#btnRefresh").show();
         $("#btnNew").show();
         $("#btnEdit").show();
@@ -441,7 +495,7 @@ function subResetToolBar() {
         if (_strTreeInterface == "OFF" || _strTreeInterface == "CTR")
             $("#btnEdit").hide();
     }
-    else if ((_intType == 1) | (_intType == 2)) {
+    else if ((_intType == 1) || (_intType == 2)) {
         $("#btnRefresh").hide();
         $("#btnNew").hide();
         $("#btnEdit").hide();
@@ -496,14 +550,15 @@ function subNew() {
             $("#dtpSP").data("kendoDatePicker").enable(false);
             break;
         case "RSB":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
             $("#dtpSP").data("kendoDatePicker").enable(false);
             $("#txtbSP2").prop('disabled', false);
             $("#txtbSP3").prop('disabled', false);
-            //textBox1.Enabled = true;
-            //textBox1.Text = "";
+            $("#textBox1").prop('disabled', false);
+            $("#textBox1").val('');            
             $("#txtbSP5").prop('disabled', false);
             $("#txtbSP5").val('');
             $("#textPctSwc").prop('disabled', false);
@@ -521,20 +576,23 @@ function subNew() {
             $("#txtbSP3").prop('disabled', false);
             break;
         case "MSC":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
             $("#txtbSP2").prop('disabled', false);
             $("#checkBox1").prop('disabled', false);
             break;
         case "SWC":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
 
-            //cmpsrSearch2.Text1 = "";
-            //cmpsrSearch2.Text2 = "";
-            //cmpsrSearch2.Enabled = true;
+            $("#cmpsrSearch2_text1").val('');
+            $("#cmpsrSearch2_text2").val('');
+            $("#cmpsrSearch2_text1").prop('disabled', false);
+            $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
 
             $("#txtbSP3").prop('disabled', false);
             $("#txtbSP4").prop('disabled', false);
@@ -544,20 +602,23 @@ function subNew() {
             $("#comboBox2").data("kendoDropDownList").enable(true);
             break;
         case "RPP":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
             $("#comboBox3").data("kendoDropDownList").enable(true);
             break;
         case "CTR":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
             break;
         case "OFF":
-            //cmpsrSearch1.Text1 = "";
-            //cmpsrSearch1.Text2 = "";
-            //cmpsrSearch1.Enabled = true;
+            $("#cmpsrSearch1_text1").val('');
+            $("#cmpsrSearch1_text2").val('');
+            $("#cmpsrSearch1_text1").prop('disabled', false);
+            $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif enabled');
             break;
         default:
             $("#txtbSP1").prop('disabled', false);
@@ -569,9 +630,10 @@ function subNew() {
 }
 
 function subRefresh() {
-    $("#txtbSP1").val('');
-    $("#txtbSP2").val('');
-    $("#dtpSP").val('');
+    $("#txtbSP1").val("");
+    $("#txtbSP2").val("");
+    var today = new Date();
+    $("#dtpSP").val(pad((today.getDate()), 2) + '/' + pad((today.getMonth() + 1), 2) + '/' + today.getFullYear());
 
     $("#txtbSP1").prop('disabled', true);
     $("#txtbSP2").prop('disabled', true);
@@ -587,9 +649,9 @@ function subRefresh() {
     $("#txtbSP4").prop('disabled', true);
     $("#cmpsrSearch2_text1").prop('disabled', false);
     $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
-    $("#comboBox1").data("kendoNumericTextBox").enable(false);
-    $("#comboBox2").data("kendoNumericTextBox").enable(false);
-    $("#comboBox3").data("kendoNumericTextBox").enable(false);
+    $("#comboBox1").data("kendoDropDownList").enable(false);
+    $("#comboBox2").data("kendoDropDownList").enable(false);
+    $("#comboBox3").data("kendoDropDownList").enable(false);
 
     var ProdId = '';
     $.ajax({
@@ -775,27 +837,104 @@ function generateColumns(response) {
 }
 
 function subSave() {
-    var dtpSP = $("#dtpSP").val().split("/");
-    var fdtpSP = new Date(dtpSP[2], dtpSP[1] - 1, dtpSP[0]);
     var message = 'save';
-    var selectedId = 0;
+    var Code, Desc, ProdId, Id, Value;
 
-    if (_intType == 3 || _intType == 2) {
-        if (_intType == 3)
-            message = 'delete';
-        else
-            message = 'edit';
-        var grid = $("#dgvParam").data("kendoGrid");
-        grid.refresh();
-        grid.tbody.find("tr[role='row']").each(function () {
-            var dataItem = grid.dataItem(this);
-            selectedId = dataItem.Id;
-        })
-        if (selectedId == 0) {
-            swal("Warning", "No data selected!", "warning");
-            return;
+    if ((_intType == 1) | (_intType == 2)) {
+        if (_strTreeInterface != "RSB" && _strTreeInterface != "MSC" && _strTreeInterface != "SWC" && _strTreeInterface != "RPP"
+            && _strTreeInterface != "CTR" && _strTreeInterface != "OFF"
+        ) {
+            Code = $("#txtbSP1").val();
+        }
+        else {
+            Code = $("#cmpsrSearch1_text1").val();
         }
     }
+    else {
+        Code = "";
+        if (_intType == 3 && (_strTreeInterface == "EVT" | _strTreeInterface == "WPR" | _strTreeInterface == "GFM" | _strTreeInterface == "ANP" | _strTreeInterface == "KNP"))
+            Code = $("#txtbSP1").val();
+        else if (_intType == 3 && (_strTreeInterface == "RSB"))
+            Code = $("#cmpsrSearch1_text1").val();
+        else if (_intType == 3 && (_strTreeInterface == "PFP"))
+            Code = $("#txtbSP1").val();
+        else if (_intType == 3 && (_strTreeInterface == "MSC"))
+            Code = $("#cmpsrSearch1_text1").val();
+        else if (_intType == 3 && (_strTreeInterface == "SWC"))
+            Code = $("#cmpsrSearch1_text1").val();
+        else if (_intType == 3 && (_strTreeInterface == "RPP"))
+            Code = $("#cmpsrSearch1_text1").val();
+        else
+            Code = $("#txtbSP1").val();
+    }
+
+    if (_strTreeInterface == "SWC") {
+        Desc = $("#cmpsrSearch2_text1").val() + " #" + $("#txtbSP3").val() + " #" + $("#comboBox1").data("kendoDropDownList").text() + "#" + $("#txtbSP5").val() + "#" + $("#textPctSwc").val();
+    }
+    else if (_strTreeInterface == "OFF" || _strTreeInterface == "CTR") {
+        Desc = $("#cmpsrSearch1_text2").val();
+    }
+    else {
+        if ((_intType == 1) | (_intType == 2) | (_intType == 3)) {
+            Desc = $("#txtbSP2").val();
+            if (_strTreeInterface == "GFM") {
+                if ($("#txtbSP3").val() == "") $("#txtbSP3").val() = "0";
+                Desc = Desc + "#" + $("#txtbSP3").val();
+            }
+            if (_strTreeInterface == "RPP") {
+                Desc = $("#comboBox3").data("kendoDropDownList").text();
+            }
+            if (_strTreeInterface == "RTY") {
+                Desc = $("#txtbSP2").val() + "#" + $("#txtbSP3").val();
+            }
+            if (_strTreeInterface == "RSB") {
+                Desc = $("#txtbSP2").val() + "#" + $("#txtbSP3").val() + "#" + $("#textBox1").val() + "#" + $("#textPctSwc").val() + "#" + $("#txtbSP5").val();
+            }
+            if (_strTreeInterface == "WPR") {
+                Desc = $("#txtbSP2").val() + "#" + $("#txtbSP3").val() + "#" + $("#txtbSP4").val() + "#" + $("#dtpSP5").val();
+            }
+            if (_strTreeInterface == "PFP") {
+                Desc = $("#txtbSP2").val() + "#" + $("#txtbSP3").val();
+            }
+            if (_strTreeInterface == "MNI" || _strTreeInterface == "CTD") {
+                Desc = $("#txtbSP2").val() + "#" + $("#txtbSP3").val();
+            }
+        }
+        else {
+            Desc = "";
+        }
+    }
+
+    if (_strTreeInterface == "MSC") {
+        if ($("#checkBox1").prop('checked' == true))
+            ProdId = "1";
+        else
+            ProdId = "0";
+    }
+    if ((_intType == 2) | (_intType == 3)) {
+        Id = _Id;
+    }
+    else {
+        Id = 0;
+    }
+
+    if ((_intType == 1) | (_intType == 2)) {
+        var dtpSP = toDate($("#dtpSP").val());
+        Value = dtpSP;
+    }
+    else {
+        if (_strTreeInterface != "SWC") {
+            Value = _tanggalValuta;
+        }
+        else {
+            Value = new Date();
+        }
+    }
+
+    if (_intType == 3)
+        message = 'delete';
+    else if (_intType == 2)
+        message = 'edit';
 
     swal({
         title: "Are you sure to " + message + " this data?",
@@ -804,29 +943,23 @@ function subSave() {
         showCancelButton: true,
         confirmButtonClass: 'btn-warning',
         confirmButtonText: "Yes, " + message + " it!",
-        closeOnConfirm: false
+        closeOnConfirm: true
     },
-        function () {
+        function Confirm () {
             var model = JSON.stringify({
-                '_intType': _intType,
-                '_strTreeInterface': _strTreeInterface,
-                'txtbSP1': $("#txtbSP1").val(),
-                'txtbSP2': $("#txtbSP2").val(),
-                'txtbSP3': $("#txtbSP3").val(),
-                'txtbSP4': $("#txtbSP4").val(),
-                'txtbSP5': $("#txtbSP5").val(),
-                'textBox1': '',
-                'checkBox1': $("#checkBox1").val(),
-                'dtpSP': fdtpSP,
-                'dtpSP5': fdtpSP,
-                'cmpsrSearch1': '',
-                'cmpsrSearch2': '',
-                'comboBox1': $("#comboBox1").val(),
-                'comboBox3': $("#comboBox3").val(),
-                'textPctSwc': $("#textPctSwc").val(),
-                'TanggalValuta': fdtpSP,
-                'Id': selectedId
+                'Type': _intType,
+                'InterfaceId': _strTreeInterface,
+                'Code': Code,
+                'Desc': Desc,
+                'OfficeId': '',
+                'ProdId': ProdId,
+                'Id': Id,
+                'Value': Value,
+                'NIK': 0,
+                'Guid': ''
             });
+
+            console.log(model);
 
             $.ajax({
                 type: "POST",
@@ -834,16 +967,22 @@ function subSave() {
                 url: '/Parameter/MaintainParamGlobal',
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
+                beforeSend: function () {
+                    $("#load_screen").show();
+                },
                 success: function (data) {
                     if (data.blnResult == true) {
-                        swal("Success!", "Your data need to approve by supervisor", "success");
+                        setTimeout(function () { swal("Success!", "Your data need to approve by supervisor", "success") }, 500);
                         _intType = 0;
                         subResetToolBar();
                         subRefresh();
                     }
                     else {
-                        swal("Error", data.strErrMsg, "error");
+                        setTimeout(function () { swal("Warning", data.strErrMsg, "warning") }, 500);
                     }
+                },
+                complete: function () {
+                    $("#load_screen").hide();
                 }
             });
         });
@@ -851,28 +990,107 @@ function subSave() {
 
 function subDelete() {
     _intType = 3;
-    subSave();
-    _intType = 0;
+    if (_Id > 0) {
+        subSave();
+    } else {
+        swal("Warning", "Tidak ada data yang dipilih","warning");
+    }
 }
 
 function subUpdate() {
-    _intType = 2;
-    switch (_strTreeInterface) {
-        case "MNI":
-            $("#txtbSP1").prop('disabled', true);
-            $("#txtbSP2").prop('disabled', false);
-            $("#dtpSP").data("kendoDatePicker").enable(false);
-            $("#txtbSP3").prop('disabled', false);
+    var grid = $("#dgvParam").data("kendoGrid");
+    var rows = 0
+    grid.refresh();
+    grid.tbody.find("tr[role='row']").each(function () {
+        rows = rows + 1;
+    })
+    if (rows > 0) {
+        _intType = 2;
+        switch (_strTreeInterface) {
+            case "PAR":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', true);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+            case "MNI":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "CTD":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "RTY":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+            case "GFM":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "WPR":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP5").data("kendoDatePicker").enable(true);
+                $("#textPctSwc").prop('disabled', true);
+                break;
+            case "PFP":
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#txtbSP3").prop('disabled', false);
+                break;
+            case "MSC":
+                $("#cmpsrSearch1_text1").prop('disabled', true);
+                $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#txtbSP2").prop('disabled', false);
+                $("#checkBox1").prop('disabled', true);
+                break;
+            case "RSB":
+                $("#txtbSP2").prop('disabled', false);
+                $("#cmpsrSearch1_text1").prop('disabled', true);
+                $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#txtbSP3").prop('disabled', false);
+                $("#textBox1").prop('disabled', false);
+                $("#txtbSP5").prop('disabled', false);
+                $("#textPctSwc").prop('disabled', false);
+                break;
+            case "SWC":
+                $("#cmpsrSearch1_text1").prop('disabled', true);
+                $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#cmpsrSearch2_text1").prop('disabled', true);
+                $("#cmpsrSearch2").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
 
-            break;
-        default:
-            $("#txtbSP1").prop('disabled', true);
-            $("#txtbSP2").prop('disabled', false);
-            $("#dtpSP").data("kendoDatePicker").enable(false);
-
-            break;
+                $("#txtbSP3").prop('disabled', false);
+                $("#txtbSP4").prop('disabled', false);
+                $("#txtbSP5").prop('disabled', false);
+                $("#comboBox1").data("kendoDropDownList").enable(true);
+                $("#comboBox2").data("kendoDropDownList").enable(true);
+                $("#textPctSwc").prop('disabled', false);
+                break;
+            case "RPP":
+                $("#cmpsrSearch1_text1").prop('disabled', true);
+                $("#cmpsrSearch1").attr('class', 'btn btn-default btn-sm btn-search-component src-cif disabled');
+                $("#comboBox3").data("kendoDropDownList").enable(true);
+                break;
+            default:
+                $("#txtbSP1").prop('disabled', true);
+                $("#txtbSP2").prop('disabled', false);
+                $("#dtpSP").data("kendoDatePicker").enable(false);
+                break;
+        }
+        subResetToolBar();
     }
-    subResetToolBar();
+    else {
+        swal("Warning", "Tidak ada data yang dapat di update", "warning");
+    }
 }
 
 function subCancel() {
@@ -896,4 +1114,19 @@ function subRefreshWARPED(NIK) {
 function pad(num, size) {
     var s = "000000000" + num;
     return s.substr(s.length - size);
+}
+function toDate(dateStr) {
+    var [day, month, year] = dateStr.split("/")
+    return new Date(year, month - 1, day)
+}
+
+function Puntos(strValor, intNumDecimales) {
+    $.ajax({
+        type: "GET",
+        data: { strValor: strValor, intNumDecimales: intNumDecimales },
+        url: '/Parameter/Puntos',
+        success: function (data) {
+            $("#txtbSP3").val(data.strAux);
+        }
+    });
 }

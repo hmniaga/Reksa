@@ -217,6 +217,7 @@ function generateColumns(response) {
     return columnNames.map(function (name) {
         var checkB = name.indexOf("checkB") > -1 || name.indexOf("checkB") > -1;
         var lastUpdate = name.indexOf("lastUpdate") > -1 || name.indexOf("lastUpdate") > -1;
+        var tglExpire = name.indexOf("tglExpire") > -1 || name.indexOf("tglExpire") > -1;
         var value = 'id';
         return {
             headerTemplate: checkB ? "Pilih" : name,
@@ -226,6 +227,7 @@ function generateColumns(response) {
                 "# } #" +
                 "/>"
                 : lastUpdate ? "#= kendo.toString(kendo.parseDate(lastUpdate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                    : tglExpire ? "#= kendo.toString(kendo.parseDate(tglExpire, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
                 : columnNames,
             field: name,
             width: 150,

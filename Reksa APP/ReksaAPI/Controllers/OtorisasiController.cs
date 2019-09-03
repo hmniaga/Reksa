@@ -344,5 +344,41 @@ namespace ReksaAPI.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
+        [Route("api/Otorisasi/UpdateMFeePopulateVerifyDetail")]
+        [HttpGet("{id}")]
+        public JsonResult UpdateMFeePopulateVerifyDetail([FromQuery]string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaUpdateMFeePopulateVerifyDetail(BatchGuid, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaUpdateMFeePopulateVerifyDetail - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Otorisasi/UpdateOSPopulateVerifyDetail")]
+        [HttpGet("{id}")]
+        public JsonResult UpdateOSPopulateVerifyDetail([FromQuery]string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaUpdateOSPopulateVerifyDetail(BatchGuid, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaUpdateOSPopulateVerifyDetail - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Otorisasi/UpdateOSSHIDPopulateVerifyDetail")]
+        [HttpGet("{id}")]
+        public JsonResult UpdateOSSHIDPopulateVerifyDetail([FromQuery]string BatchGuid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaUpdateOSSHIDPopulateVerifyDetail(BatchGuid, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaUpdateOSSHIDPopulateVerifyDetail - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
     }
 }

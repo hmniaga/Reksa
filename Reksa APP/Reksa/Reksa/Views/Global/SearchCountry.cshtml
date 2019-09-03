@@ -32,17 +32,25 @@
     function onRowCountrySelect(e) {
         var data = this.dataItem(this.select());
         var CountryCode = $.trim(data.KodeNegara);
-        var CountryName = $.trim(data.NamaBegara);
+        var CountryName = $.trim(data.NamaNegara);
 
         $("#CountrySelectedCode").val(CountryCode);
-        $("#CountrySelectedName").val(CountryName);    };
+        $("#CountrySelectedName").val(CountryName);
+    };
 
     $("#CountrySelectButton").on("click", function () {
         var selectedCode = $("#CountrySelectedCode").val();
         var selectedName = $("#CountrySelectedName").val();
-        
-        $("input[id='cmpsrCountry_text1']").val(selectedCode).change();
-        $("input[id='cmpsrCountry_text2']").val(selectedName)
+
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'PAR') {
+            $("input[id='cmpsrSearch1_text1']").val(selectedCode).change();
+            $("input[id='cmpsrSearch1_text2']").val(selectedName);
+        }
+        else {
+            $("input[id='cmpsrCountry_text1']").val(selectedCode).change();
+            $("input[id='cmpsrCountry_text2']").val(selectedName);
+        }
     });
 
     $("#CountrySearchComponentSearchTxt").on("keypress", function (e) {

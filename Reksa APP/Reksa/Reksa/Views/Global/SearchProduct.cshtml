@@ -46,11 +46,17 @@
         var selectedCode = $("#ProductSelectedCode").val();
         var selectedName = $("#ProductSelectedName").val();
         var selectedId = $("#ProductSelectedId").val();
-
-        $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
-        $("input[name='ProductModel.ProdName']").val(selectedName);
-        $("input[name='ProductModel.ProdId']").val(selectedId);
-
+        var Criteria = "@ViewBag.Criteria";
+        if (Criteria == 'PAR') {
+            $("input[id='cmpsrSearch1_text1']").val(selectedCode).change();
+            $("input[id='cmpsrSearch1_text2']").val(selectedName);
+            $("input[id='ProdId']").val(selectedId);
+        }
+        else {
+            $("input[name='ProductModel.ProdCode']").val(selectedCode).change();
+            $("input[name='ProductModel.ProdName']").val(selectedName);
+            $("input[name='ProductModel.ProdId']").val(selectedId).change();
+        }
     });
 
     $("#ProductSearchComponentSearchTxt").on("keypress", function (e) {

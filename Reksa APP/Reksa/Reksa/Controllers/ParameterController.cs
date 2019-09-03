@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using System.Globalization;
 
 namespace Reksa.Controllers
 {
@@ -289,13 +290,15 @@ namespace Reksa.Controllers
         }
 
         [HttpPost]
-        public ActionResult MaintainParamGlobal([FromBody] MaintainParamGlobal MaintParamGlobal)
+        public ActionResult MaintainParamGlobal([FromBody] MaintainParameter model)
         {
             bool blnResult = false;
             string strErrMsg = "";
             try
             {
-                var Content = new StringContent(JsonConvert.SerializeObject(MaintParamGlobal));
+                model.NIK = _intNIK;
+                model.Guid = _strGuid;
+                var Content = new StringContent(JsonConvert.SerializeObject(model));
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(_strAPIUrl);
@@ -905,6 +908,60 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg });
+        }
+        public JsonResult Puntos(string strValor, int intNumDecimales)
+        {
+            string strAux = null;
+            string strComas = null;
+            string strPuntos = null;
+            int intX = 0;
+            bool bolMenos = false;
+
+            strComas = "";
+            if (strValor.Length == 0) { 
+                strAux = "";
+                return Json(new { strAux });
+            }
+            strValor = strValor.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator, "");
+            if (strValor.Contains(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+            {
+
+                strAux = strValor.Substring(0, strValor.LastIndexOf(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator));
+                strComas = strValor.Substring(strValor.LastIndexOf(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) + 1);
+            }
+            else
+            {
+
+                strAux = strValor;
+            }
+
+            if (strAux.Substring(0, 1) == CultureInfo.CurrentCulture.NumberFormat.NegativeSign)
+            {
+
+                bolMenos = true;
+                strAux = strAux.Substring(1);
+            }
+
+            strPuntos = strAux;
+            strAux = "";
+            while (strPuntos.Length > 3)
+            {
+                strAux = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator + strPuntos.Substring(strPuntos.Length - 3, 3) + strAux;
+                strPuntos = strPuntos.Substring(0, strPuntos.Length - 3);
+            }
+            if (intNumDecimales > 0)
+            {
+                if (strValor.Contains(CultureInfo.CurrentCulture.NumberFormat.PercentDecimalSeparator))
+                {
+                    strComas = CultureInfo.CurrentCulture.NumberFormat.PercentDecimalSeparator + strValor.Substring(strValor.LastIndexOf(CultureInfo.CurrentCulture.NumberFormat.PercentDecimalSeparator) + 1);
+                    if (strComas.Length > intNumDecimales)
+                    {
+                        strComas = strComas.Substring(0, intNumDecimales + 1);
+                    }
+                }
+            }
+            strAux = strPuntos + strAux + strComas;
+            return Json(new { strAux });
         }
     }
 }

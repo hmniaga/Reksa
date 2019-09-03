@@ -51,6 +51,10 @@
             $("input[id='srcCabangTujuan_text1']").val(selectedId).change();
             $("input[id='srcCabangTujuan_text2']").val(selectedName);
         }
+        else if (Criteria == 'PAR') {
+            $("input[id='cmpsrSearch1_text1']").val(selectedId).change();
+            $("input[id='cmpsrSearch1_text2']").val(selectedName);
+        }
         else {
             $("input[name='OfficeModel.OfficeId']").val(selectedId).change();
             $("input[name='OfficeModel.OfficeName']").val(selectedName);

@@ -598,8 +598,6 @@ function subControlTiering(IsTrue) {
 
     //$('#dataGridView1').data('kendoGrid').enable(IsTrueReverse);
 }
-
-
 function populateGrid(response) {
     if (response.length > 0) {
         var columns = generateColumns(response);

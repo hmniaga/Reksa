@@ -1,4 +1,6 @@
 ﻿var _strTabName;
+var _strLastTabName;
+var _strLastTabText;
 
 var _intType;
 var IsSubsNew = false;
@@ -34,7 +36,9 @@ $(document).ready(function load () {
     document.getElementById("btnSave").disabled = true;
     document.getElementById("btnCancel").disabled = true;
 
-    _strTabName = "SUBS";
+    _strTabName = 'SUBS';
+    _strLastTabName = 'SUBS';
+    _strLastTabText = 'Subscription';
 
     subSetVisibleGrid(_strTabName);
     _intType = 0;
@@ -135,194 +139,194 @@ function subAddSubs() {
             }
         })
         if (blnPassed) {
-            intProductId = $("#ProdIdSubs").val();
-            var ClientCodeSubsAdd = "";
-            var res = CheckIsSubsNew($("#srcCIFSubs_text1").val(), intProductId, false);
-            res.success(function (data) {
-                if (data.blnResult) {
-                    IsSubsNew = data.IsSubsNew;
-                    ClientCodeSubsAdd = data.strClientCode;
-                }
-                else {
-                    IsSubsNew = false;
-                    ClientCodeSubsAdd = "";
-                    swal("Warning", data.ErrMsg, "warning");
-                }
-            });
-
-            if ($("#_ComboJenisSubs").data("kendoDropDownList").text() == "By %") {
-                _PercentageFee = $("#MoneyFeeSubs").val();
-                _NominalFee = $("#PercentageFeeSubs").val();
-            }
-            else {
-                _PercentageFee = $("#PercentageFeeSubs").val();
-                _NominalFee = $("#MoneyFeeSubs").val();
-            }
-            var MoneyNomSubs = $("#MoneyNomSubs").data("kendoNumericTextBox").value();
-            var res = GenerateTranCodeAndClientCode(_strTabName, IsSubsNew, $("#srcProductSubs_text1").val(),
-                $("#srcClientSubs_text1").val(), $("#srcCIFSubs_text1").val(),
-                $("#checkFeeEditSubs").val(), _PercentageFee, 0
-                , $("#checkFullAmtSubs").val(), _NominalFee, MoneyNomSubs, 0, false, 0, 0
-                , _intType);
-            res.success(function success(data) {
-                if (data.blnResult) {
-                    strTranCode = data.strTrancode;
-                    strNewClientCode = data.strClientCode;
-                    strWarnMsg = data.strWarnMsg;
-                    strWarnMsg2 = data.strWarnMsg2;
-                    if (strWarnMsg != '') {
-                        swal({
-                            title: "Information",
-                            text: "Produk yang dipilih diatas ketentuan profile nasabah. Lanjutkan transaksi?",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonClass: 'btn-info',
-                            confirmButtonText: "Yes",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
-                        },
-                            function (isConfirm) {
-                                if (!isConfirm) {
-                                    swal("Canceled", "Proses transaksi dibatalkan.", "error");
-                                    return;
-                                }
-                                else {
-                                    swal("Confirmed", "Profil Risiko produk lebih tinggi dari Profil Risiko Nasabah . PASTIKAN Nasabah sudah menandatangani kolom Profil Risiko pada Subscription/Switching Form", "success");
-                                }
-                            });
-                    }
-                    if (strWarnMsg2 != '') {
-                        swal({
-                            title: "Information",
-                            text: strWarnMsg2,
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonClass: 'btn-info',
-                            confirmButtonText: "Yes",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
-                        },
-                            function (isConfirm) {
-                                if (!isConfirm) {
-                                    swal("Canceled", "Proses transaksi dibatalkan.", "error");
-                                    return;
-                                }
-                                else {
-                                    swal("Confirmed", "", "success");
-                                }
-                            });
-                    }
-
-                    if (strTranCode != "") {
-                        var arrSubscription = [];
-                        var obj = {};
-                        obj['NoTrx'] = '';
-                        obj['StatusTransaksi'] = '';
-                        obj['KodeProduk'] = $("#srcProductSubs_text1").val();
-                        obj['NamaProduk'] = $("#srcProductSubs_text2").val();
-                        obj['ClientCode'] = strNewClientCode;
-                        obj["Nominal"] = MoneyNomSubs;
-                        if ($('#checkFeeEditSubs').prop('checked') == true) {
-                            obj["EditFeeBy"] = $("#_ComboJenisSubs").data("kendoDropDownList").text();
-                        }
-                        else {
-                            obj["EditFeeBy"] = "";
-                        }
-
-                        obj["FullAmount"] = $("#checkFullAmtSubs").prop('checked');
-                        obj["PhoneOrder"] = $("#checkPhoneOrderSubs").prop('checked');
-                        var dateTglTransaksiSubs = toDate($("#dateTglTransaksiSubs").val());
-                        obj['TglTrx'] = dateTglTransaksiSubs;
-                        obj["CCY"] = $("#srcCurrencySubs_text1").val();
-                        obj["EditFee"] = $("#checkFeeEditSubs").prop('checked');
-
-
-                        obj["JenisFee"] = $("#_ComboJenisSubs").data("kendoDropDownList").value();
-
-                        obj["IsNew"] = IsSubsNew;
-                        obj["ApaDiUpdate"] = false;
-                        obj["TrxTaxAmnesty"] = false;
-
-                        if (IsSubsNew) {
-                            obj["OutstandingUnit"] = 0;
-                        }
-                        else {
-                            //int intClientId = int.Parse(cmpsrClientSubs[2].ToString());
-                            //var decUnitBalance = GetLatestBalance(intClientId);
-                            var res = GetLatestBalance($("#ClientIdSubs").val());
-                            res.success(function (data) {
-                                if (data.blnResult) {
-                                    obj["OutstandingUnit"] = data.unitBalance;
-                                }
-                            });
-                        }
+            ValidateProduct($("#srcProductSubs_text1").val(), function (result) {
+                var res = CheckIsSubsNew($("#srcCIFSubs_text1").val(), result[0].ProdId, false);
+                res.success(function (data) {
+                    if (data.blnResult) {
+                        IsSubsNew = data.IsSubsNew;
+                        ClientCodeSubsAdd = data.strClientCode;
                         if ($("#_ComboJenisSubs").data("kendoDropDownList").text() == "By %") {
-                            obj["FeeKet"] = $("#labelFeeCurrencySubs").text();
-                            obj["FeeCurr"] = $("#_KeteranganFeeSubs").text();
-
-                            obj["NominalFee"] = $("#PercentageFeeSubs").data("kendoNumericTextBox").value();
-                            obj["PctFee"] = $("#MoneyFeeSubs").data("kendoNumericTextBox").value();
+                            _PercentageFee = $("#MoneyFeeSubs").val();
+                            _NominalFee = $("#PercentageFeeSubs").val();
                         }
                         else {
-                            obj["FeeKet"] = $("#_KeteranganFeeSubs").text();
-                            obj["FeeCurr"] = $("#labelFeeCurrencySubs").text();
-
-                            obj["NominalFee"] = $("#MoneyFeeSubs").data("kendoNumericTextBox").value();
-                            obj["PctFee"] = $("#PercentageFeeSubs").data("kendoNumericTextBox").value();
+                            _PercentageFee = $("#PercentageFeeSubs").val();
+                            _NominalFee = $("#MoneyFeeSubs").val();
                         }
-                        arrSubscription.push(obj);
+                        var MoneyNomSubs = $("#MoneyNomSubs").data("kendoNumericTextBox").value();
+                        var res = GenerateTranCodeAndClientCode(_strTabName, IsSubsNew, $("#srcProductSubs_text1").val(),
+                            $("#srcClientSubs_text1").val(), $("#srcCIFSubs_text1").val(),
+                            $("#checkFeeEditSubs").val(), _PercentageFee, 0
+                            , $("#checkFullAmtSubs").val(), _NominalFee, MoneyNomSubs, 0, false, 0, 0
+                            , _intType);
+                        res.success(function success(data) {
+                            if (data.blnResult) {
+                                strTranCode = data.strTrancode;
+                                strNewClientCode = data.strClientCode;
+                                strWarnMsg = data.strWarnMsg;
+                                strWarnMsg2 = data.strWarnMsg2;
+                                if (strWarnMsg != '') {
+                                    swal({
+                                        title: "Information",
+                                        text: "Produk yang dipilih diatas ketentuan profile nasabah. Lanjutkan transaksi?",
+                                        type: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonClass: 'btn-info',
+                                        confirmButtonText: "Yes",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                        function (isConfirm) {
+                                            if (!isConfirm) {
+                                                swal("Canceled", "Proses transaksi dibatalkan.", "error");
+                                                return;
+                                            }
+                                            else {
+                                                swal("Confirmed", "Profil Risiko produk lebih tinggi dari Profil Risiko Nasabah . PASTIKAN Nasabah sudah menandatangani kolom Profil Risiko pada Subscription/Switching Form", "success");
+                                            }
+                                        });
+                                }
+                                if (strWarnMsg2 != '') {
+                                    swal({
+                                        title: "Information",
+                                        text: strWarnMsg2,
+                                        type: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonClass: 'btn-info',
+                                        confirmButtonText: "Yes",
+                                        closeOnConfirm: false,
+                                        closeOnCancel: false
+                                    },
+                                        function (isConfirm) {
+                                            if (!isConfirm) {
+                                                swal("Canceled", "Proses transaksi dibatalkan.", "error");
+                                                return;
+                                            }
+                                            else {
+                                                swal("Confirmed", "", "success");
+                                            }
+                                        });
+                                }
 
-                        var dataSet = grid.dataSource.view();
-                        $.merge(arrSubscription, dataSet);
+                                if (strTranCode != "") {
+                                    var arrSubscription = [];
+                                    var obj = {};
+                                    obj['NoTrx'] = '';
+                                    obj['StatusTransaksi'] = '';
+                                    obj['KodeProduk'] = $("#srcProductSubs_text1").val();
+                                    obj['NamaProduk'] = $("#srcProductSubs_text2").val();
+                                    obj['ClientCode'] = strNewClientCode;
+                                    obj["Nominal"] = MoneyNomSubs;
+                                    if ($('#checkFeeEditSubs').prop('checked') == true) {
+                                        obj["EditFeeBy"] = $("#_ComboJenisSubs").data("kendoDropDownList").text();
+                                    }
+                                    else {
+                                        obj["EditFeeBy"] = "";
+                                    }
 
-                        var dataSource = new kendo.data.DataSource(
-                            {
-                                data: arrSubscription
-                            });
-                        grid.setDataSource(dataSource);
-                        grid.dataSource.pageSize(5);
-                        grid.dataSource.page(1);
-                        grid.select("tr:eq(0)");
-                        //$("#dataGridViewSubs").data("kendoGrid").setOptions({
-                        //    columns: [
-                        //        { command: "destroy", width: 100 },
-                        //        { field: "NoTrx", title: "No Transaksi", width: 150 },
-                        //        { field: "StatusTransaksi", title: "Status", width: 100 },
-                        //        { field: "KodeProduk", title: "Kode Produk", width: 150 },
-                        //        { field: "NamaProduk", title: "Nama Produk", width: 300 },
-                        //        { field: "ClientCode", title: "Client Code", width: 150 },
-                        //        { field: "Nominal", title: "Nominal", width: 150 },
-                        //        { field: "EditFeeBy", title: "Nominal", width: 150 },        
-                        //        { field: "NominalFee", title: "Nominal", width: 150 },
-                        //        { field: "FullAmount", title: "FullAmount", width: 150 },
-                        //        { field: "PhoneOrder", title: "Phone Order", width: 150 },
-                        //        { field: "JenisFee", title: "Jenis Fee", width: 150 },
-                        //        { field: "PctFee", title: "Percent Fee", width: 150 },
-                        //    ],
-                        //    editable: "inline"
-                        //});
+                                    obj["FullAmount"] = $("#checkFullAmtSubs").prop('checked');
+                                    obj["PhoneOrder"] = $("#checkPhoneOrderSubs").prop('checked');
+                                    var dateTglTransaksiSubs = toDate($("#dateTglTransaksiSubs").val());
+                                    obj['TglTrx'] = dateTglTransaksiSubs;
+                                    obj["CCY"] = $("#srcCurrencySubs_text1").val();
+                                    obj["EditFee"] = $("#checkFeeEditSubs").prop('checked');
 
-                        subSetVisibleGrid(_strTabName);
-                        ResetFormTrxSubs();
-                        DisableFormTrxSubs(true);
-                        document.getElementById("btnEditSubs").disabled = true;
-                        document.getElementById("btnAddSubs").disabled = false;
-                        //if (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFSubs.Text1)) {
-                        //    checkPhoneOrderSubs.Enabled = false;
-                        //    checkPhoneOrderSubs.Checked = false;
-                        //}
-                        //else {
-                        //    checkPhoneOrderSubs.Enabled = true;
-                        //}
+
+                                    obj["JenisFee"] = $("#_ComboJenisSubs").data("kendoDropDownList").value();
+
+                                    obj["IsNew"] = IsSubsNew;
+                                    obj["ApaDiUpdate"] = false;
+                                    obj["TrxTaxAmnesty"] = false;
+
+                                    if (IsSubsNew) {
+                                        obj["OutstandingUnit"] = 0;
+                                    }
+                                    else {
+                                        //int intClientId = int.Parse(cmpsrClientSubs[2].ToString());
+                                        //var decUnitBalance = GetLatestBalance(intClientId);
+                                        var res = GetLatestBalance($("#ClientIdSubs").val());
+                                        res.success(function (data) {
+                                            if (data.blnResult) {
+                                                obj["OutstandingUnit"] = data.unitBalance;
+                                            }
+                                        });
+                                    }
+                                    if ($("#_ComboJenisSubs").data("kendoDropDownList").text() == "By %") {
+                                        obj["FeeKet"] = $("#labelFeeCurrencySubs").text();
+                                        obj["FeeCurr"] = $("#_KeteranganFeeSubs").text();
+
+                                        obj["NominalFee"] = $("#PercentageFeeSubs").data("kendoNumericTextBox").value();
+                                        obj["PctFee"] = $("#MoneyFeeSubs").data("kendoNumericTextBox").value();
+                                    }
+                                    else {
+                                        obj["FeeKet"] = $("#_KeteranganFeeSubs").text();
+                                        obj["FeeCurr"] = $("#labelFeeCurrencySubs").text();
+
+                                        obj["NominalFee"] = $("#MoneyFeeSubs").data("kendoNumericTextBox").value();
+                                        obj["PctFee"] = $("#PercentageFeeSubs").data("kendoNumericTextBox").value();
+                                    }
+                                    arrSubscription.push(obj);
+
+                                    var dataSet = grid.dataSource.view();
+                                    $.merge(arrSubscription, dataSet);
+
+                                    var dataSource = new kendo.data.DataSource(
+                                        {
+                                            data: arrSubscription
+                                        });
+                                    grid.setDataSource(dataSource);
+                                    grid.dataSource.pageSize(5);
+                                    grid.dataSource.page(1);
+                                    grid.select("tr:eq(0)");
+                                    $("#dataGridViewSubs").data("kendoGrid").setOptions({
+                                        columns: [
+                                            { command: "destroy", width: 100 },
+                                            { field: "NoTrx", title: "No Transaksi", width: 150 },
+                                            { field: "StatusTransaksi", title: "Status", width: 100 },
+                                            { field: "KodeProduk", title: "Kode Produk", width: 150 },
+                                            { field: "NamaProduk", title: "Nama Produk", width: 300 },
+                                            { field: "ClientCode", title: "Client Code", width: 150 },
+                                            { field: "Nominal", title: "Nominal", width: 150 },
+                                            { field: "EditFeeBy", title: "Nominal", width: 150 },
+                                            { field: "NominalFee", title: "Nominal", width: 150 },
+                                            { field: "FullAmount", title: "FullAmount", width: 150 },
+                                            { field: "PhoneOrder", title: "Phone Order", width: 150 },
+                                            { field: "JenisFee", title: "Jenis Fee", width: 150 },
+                                            { field: "PctFee", title: "Percent Fee", width: 150 },
+                                        ],
+                                        editable: "inline"
+                                    });
+
+                                    subSetVisibleGrid(_strTabName);
+                                    ResetFormTrxSubs();
+                                    DisableFormTrxSubs(true);
+                                    document.getElementById("btnEditSubs").disabled = true;
+                                    document.getElementById("btnAddSubs").disabled = false;
+                                    //if (!GlobalFunctionCIF.CekCIFProductFacility(cmpsrCIFSubs.Text1)) {
+                                    //    checkPhoneOrderSubs.Enabled = false;
+                                    //    checkPhoneOrderSubs.Checked = false;
+                                    //}
+                                    //else {
+                                    //    checkPhoneOrderSubs.Enabled = true;
+                                    //}
+                                }
+                                else {
+                                    swal("Warning", "Gagal generate kode transaksi!", "warning");
+                                }
+                            }
+                            else {
+                                swal("Warning", data.ErrMsg, "warning");
+                            }
+                        });
+
                     }
                     else {
-                        swal("Warning", "Gagal generate kode transaksi!", "warning");
+                        IsSubsNew = false;
+                        ClientCodeSubsAdd = "";
+                        swal("Warning", data.ErrMsg, "warning");
                     }
-                }
-                else {
-                    swal("Warning", data.ErrMsg, "warning");
-                }
-            });
+                });
+            });            
         }
     }
 }
@@ -1236,20 +1240,28 @@ function GetDataCIF(CIFNo) {
             $("#load_screen").show();
             },
             success: function (data) {
-                resolve({
-                    blnResult: data.blnResult,
-                    ErrMsg: data.ErrMsg,
-                    ShareholderID: data.listCust[0].ShareholderID,
-                    NoRekening: data.listCust[0].AccountId,
-                    NamaRekening: data.listCust[0].AccountName,
-                    SID: data.listCust[0].CIFSID,
-                    NoRekeningUSD: data.listCust[0].AccountIdUSD,
-                    NamaRekeningUSD: data.listCust[0].AccountNameUSD,
-                    NoRekeningMC: data.listCust[0].AccountIdMC,
-                    NamaRekeningMC: data.listCust[0].AccountNameMC,
-                    RiskProfile: data.listRisk[0].RiskProfile,
-                    LastUpdateRiskProfile: data.listRisk[0].LastUpdate
-                })
+                if (data.blnResult) {
+                    resolve({
+                        blnResult: data.blnResult,
+                        ErrMsg: data.ErrMsg,
+                        ShareholderID: data.listCust[0].ShareholderID,
+                        NoRekening: data.listCust[0].AccountId,
+                        NamaRekening: data.listCust[0].AccountName,
+                        SID: data.listCust[0].CIFSID,
+                        NoRekeningUSD: data.listCust[0].AccountIdUSD,
+                        NamaRekeningUSD: data.listCust[0].AccountNameUSD,
+                        NoRekeningMC: data.listCust[0].AccountIdMC,
+                        NamaRekeningMC: data.listCust[0].AccountNameMC,
+                        RiskProfile: data.listRisk[0].RiskProfile,
+                        LastUpdateRiskProfile: data.listRisk[0].LastUpdate
+                    })
+                }
+                else {
+                    resolve({
+                        blnResult: data.blnResult,
+                        ErrMsg: data.ErrMsg
+                    })
+                }
             },
             error: reject,
             complete: function () {
@@ -2639,7 +2651,6 @@ function subSave() {
         else {
             intSwcType = 5;
         }
-        console.log(IsSubsNew);
         if (IsSubsNew) {
             intClientIdSwcIn = 0;
         }
@@ -2648,11 +2659,7 @@ function subSave() {
         }
 
         var decUnitBalanceNomSwcOut, decUnitBalanceNomSwcIn;
-
-        console.log("_NAVSwcOutNonRDB :" + _NAVSwcOutNonRDB);
-        console.log("_NAVSwcInNonRDB :" + _NAVSwcInNonRDB);
-        console.log("OutstandingUnitSwcIn :" + OutstandingUnitSwcIn);
-
+        
         decUnitBalanceNomSwcOut = $("#OutstandingUnitSwc").val() * _NAVSwcOutNonRDB;
         decUnitBalanceNomSwcIn = OutstandingUnitSwcIn * _NAVSwcInNonRDB;
 
@@ -2724,7 +2731,6 @@ function subSave() {
             'intReferentor': intReferentor,
             'isTrxTaxAmnesty': false
         });
-        console.log(model);
         MaintainSwitching(model);
     }
     else if (_strTabName == "SWCRDB") {
@@ -2974,7 +2980,6 @@ function subSave() {
             'strDocTCOthersList': '',
             'isTrxTaxAmnesty': false
         });
-        console.log(model);
         MaintainSwitchingRDB(model);
     }
     else if (_strTabName == "BOOK") {
@@ -3171,7 +3176,6 @@ function subSave() {
             'strDocTCOthersList': '',
             'isTrxTaxAmnesty': false            
         });
-        console.log(model);
         MaintainNewBooking(model);
 
     }
@@ -3992,7 +3996,6 @@ function subResetToolBar() {
         }
     }
     else {
-        console.log(_intType);
         switch (_intType) {
             case 0:
                 {
@@ -4464,6 +4467,7 @@ function GenerateTranCodeAndClientCode(JenisTrx, IsSubsNew, ProductCode, ClientC
         'TranCode': '',
         'NewClientCode': ''
     });
+
     return $.ajax({
         type: 'POST',
         url: '/Transaksi/GenerateTranCodeClientCode',
@@ -4496,7 +4500,6 @@ function HitungFee(ProdId, ClientId, TranType, TranAmt, TranUnit, FullAmount, Is
     });
 }
 function GetLatestBalance(ClientId) {
-    console.log(ClientId);
     return $.ajax({
         type: 'GET',
         url: '/Transaksi/GetLatestBalance',

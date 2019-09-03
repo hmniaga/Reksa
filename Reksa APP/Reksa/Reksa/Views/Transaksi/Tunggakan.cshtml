@@ -33,7 +33,7 @@
                 <div class="input-group col-md-6">
                     @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "srcClient_text1" }).Enable(false)
                     <span class="input-group-btn">
-                        <a id="srcClient" href="@Url.Action("SearchClient", "Global")" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
+                        <a id="srcClient" href="#display" data-toggle="modal" data-target="#ClientModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                     </span>
                     @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 400px;", @id = "srcClient_text2" }).Enable(false)
                     @Html.Kendo().TextBoxFor(model => model.ClientModel.ClientId).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "ClientId", @type = "hidden" })
@@ -83,58 +83,5 @@
         <div class="modal-content"></div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#btnRefresh").click(function () {
-            subRefresh();
-        });
-
-        $("#srcClient").click(function () {
-            var strCriteria = $('#ProdId').val();
-        var url = '@Html.Raw(Url.Action("SearchClient", "Global"))';
-            $('#srcClient').attr('href', url + '?ProdId=' + encodeURIComponent(strCriteria));
-        });
-
-        $("#srcClient").click(function (ev) {
-            var strCriteria = $('#ProdId').val();
-            var url = '@Html.Raw(Url.Action("SearchClient", "Global"))';
-            var target = $(this).attr('href', url + '?ProdId=' + encodeURIComponent(strCriteria));
-                $("#ClientModal .modal-content").load(target, function () {
-                    $("#ClientModal .modal-content").empty().append(this);
-        });
-        });
-
-
-
-    });
-
-    function subRefresh()
-    {
-        if ($("#srcClient_text1").val() == '')
-        {
-            swal("Warning", "Kode Nasabah Harus Diisi!", "warning");
-        }
-        $.ajax({
-            type: 'GET',
-            url: '/Transaksi/GetRegulerSubscriptionTunggakan',
-            data: { intClientId: $("#ClientId").val() },
-            success: function (data) {
-                if (data.blnResult) {
-                    var dataSource = new kendo.data.DataSource(
-                        {
-                            data: data.listTunggakan
-                        });
-                    var grid = $('#dgvTunggakan').data('kendoGrid');
-                    grid.setDataSource(dataSource);
-                    grid.dataSource.pageSize(15);
-                    grid.dataSource.page(1);
-                    grid.select("tr:eq(0)");
-                } else {
-                    swal("Warning", data.ErrMsg, "warning");
-                }
-            }
-        });
-    }
-
-</script>
+<script src="~/js/reksa.transaksi.tunggakan.js"></script>
+<script src="~/js/reksa.transaksi.tunggakan.events.js"></script>
