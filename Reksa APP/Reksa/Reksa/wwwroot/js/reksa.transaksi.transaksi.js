@@ -1334,7 +1334,7 @@ async function subRefresh() {
             dataGridViewSubs.dataSource.pageSize(15);
             dataGridViewSubs.dataSource.page(1);
             dataGridViewSubs.select("tr:eq(0)");            
-            subSetVisibleGrid(_strTabName);
+            subSetVisibleGrid(_strTabName);            
             
             $("#srcOfficeSubs_text1").val(data.OfficeId);
             ValidateOffice($("#srcOfficeSubs_text1").val(), function (result) { $("#srcOfficeSubs_text2").val(result) });
@@ -1364,6 +1364,7 @@ async function subRefresh() {
             });
             $("#srcReferentorSubs_text1").val(data.Referentor);
             ValidateReferentor(data.Referentor, function (output) { $("#srcReferentorSubs_text2").val(output); });
+            LoadDocuments(false, 0, false, false, $("#srcNoRefSubs_text1").val());
         }
         else {
             swal("Warning", data.ErrMsg, "warning");
@@ -4681,4 +4682,16 @@ function CekRiskProfile(CIFNo) {
         data: { CIFNo: CIFNo }
     });
 }
-
+function LoadDocuments(IsEdit, TranId, IsSwitching, IsBooking, RefID) {
+    $.ajax({
+        type: 'GET',
+        url: '/Transaksi/PopulateVerifyDocuments',
+        data: { TranId: TranId, IsEdit: IsEdit, IsSwitching: IsSwitching, IsBooking: IsBooking, RefID: RefID },
+        success: function (data) {
+            if (data.blnResult)
+            {
+                $('#chkbDocFCSubscriptionForm').prop('checked', data.dsResult.table.docFCSubscriptionForm);
+            }
+        }
+    });
+}

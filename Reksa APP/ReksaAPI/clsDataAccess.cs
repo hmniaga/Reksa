@@ -4654,11 +4654,12 @@ namespace ReksaAPI
             return blnResult;
         }
 
-        public void ReksaPopulateVerifyDocuments(int intTranId, bool IsEdit, bool IsSwitching, bool IsBooking, string strRefID, ref List<DocumentModel.VerifyDocument> listVerifyDoc)
+        public bool ReksaPopulateVerifyDocuments(int intTranId, bool IsEdit, bool IsSwitching, bool IsBooking, string strRefID, out DataSet dsOut, out string ErrMsg)
         {
-            DataSet dsOut = new DataSet();
-            SqlCommand cmdOut = new SqlCommand();
-            string ErrMsg = "";
+            bool blnResult = false;
+            ErrMsg = "";
+            dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();            
             try
             {
                 List<SqlParameter> dbParam = new List<SqlParameter>()
@@ -4670,20 +4671,21 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pcRefID", SqlDbType = System.Data.SqlDbType.VarChar, Value = strRefID, Direction = System.Data.ParameterDirection.Input}
                 };
 
-                if (this.ExecProc(QueryReksa(), "ReksaPopulateVerifyDocuments", ref dbParam, out dsOut, out cmdOut, out ErrMsg))
+                blnResult = this.ExecProc(QueryReksa(), "ReksaPopulateVerifyDocuments", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+                if (blnResult)
                 {
-                    if (dsOut != null && dsOut.Tables.Count > 0)
+                    if (dsOut == null || dsOut.Tables.Count == 0)
                     {
-                        DataTable dtOut = dsOut.Tables[0];
-                        List<DocumentModel.VerifyDocument> resultVerDoc = this.MapListOfObject<DocumentModel.VerifyDocument>(dtOut);
-                        listVerifyDoc.AddRange(resultVerDoc);
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
                     }
-                }
+                }                
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrMsg = ex.Message;
             }
+            return blnResult;
         }
         public bool ReksaRefreshSwitching(string strRefID, int intNIK, string strGUID, ref List<TransactionModel.SwitchingNonRDBModel> listDetailSwcNonRDB, out string ErrMsg)
         {

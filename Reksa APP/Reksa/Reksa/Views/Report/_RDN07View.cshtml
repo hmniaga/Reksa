@@ -50,11 +50,11 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Custody</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CustodyCode" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "cmpsrCustody_text1" }).Enable(false)
                         <span class="input-group-btn">
                             <a id="srcCustody" href="@Url.Action("SearchCustody", "Global")" data-toggle="modal" data-target="#CustodyModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
                         </span>
-                        @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "CustodyName" }).Enable(false)
+                        @Html.Kendo().TextBoxFor(model => model.CustodyModel.CustodyName).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;", @id = "cmpsrCustody_text2" }).Enable(false)
                     </div>
                 </div>
                 <!-- End Search Custody -->
@@ -115,9 +115,9 @@
     $("#btnRefresh").click(function () {
         var PeriodStart = $("#StarDate").val();
         var PeriodEnd = $("#EndDate").val();
-        var CustodyName = $("#CustodyName").val();
+        var CustodyName = $("#cmpsrCustody_text2").val();
         var ProdId = $("#ProdId").val();
-        var CustCode = $("#CustodyCode").val();
+        var CustCode = $("#cmpsrCustody_text1").val();
 
         if (PeriodStart == "") {
             swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
@@ -127,8 +127,8 @@
             swal("Warning", "Periode Akhir tidak boleh kosong!", "warning");
             return;
         }
-        if (ProdId == "") {
-            swal("Warning", "Produk tidak boleh kosong!", "warning");
+        if (CustCode == "") {
+            swal("Warning", "Custody tidak boleh kosong!", "warning");
             return;
         }
 
@@ -145,9 +145,27 @@
                     gridView.dataSource.page(1);
                     gridView.select("tr:eq(0)");
 
+                    gridView.hideColumn('custodyName');
+                    gridView.hideColumn('ccy');
+                    gridView.hideColumn('noSII');
+                    gridView.hideColumn('tranIdSwitchOut');
+                    gridView.hideColumn('tranIdSwitchIn');
+                    gridView.hideColumn('cifNo');
+                    gridView.hideColumn('clientCodeSwcOutStatusRDB');
+                    gridView.hideColumn('clientCodeSwcInStatusRDB');
+
                     $("#ExportPDF").attr('class', 'btn btn-danger enabled');
                     $("#ExportExcel").attr('class', 'btn btn-success enabled');
-                    $("#dataGridView1 th[data-field=custodyName]").html("Custody Name")
+                    $("#dataGridView1 th[data-field=shdid]").html("SHDID")
+                    $("#dataGridView1 th[data-field=tradeDate]").html("Trade Date")
+                    $("#dataGridView1 th[data-field=exchangeOutAmt]").html("Exchange Out - Currency")
+                    $("#dataGridView1 th[data-field=exchangeOutUnit]").html("Exchange Out - Shares")                    
+                    $("#dataGridView1 th[data-field=liquidate]").html("Liquidation")
+                    $("#dataGridView1 th[data-field=dealerCommision]").html("Dealer Commision (CCY)")
+                    $("#dataGridView1 th[data-field=dealerCommisionPct]").html("Dealer Commision Pct")
+                    $("#dataGridView1 th[data-field=exchangeInFundId]").html("Exchange IN FUND ID")
+                    $("#dataGridView1 th[data-field=clientCodeSwitchOut]").html("Reference No 1")
+                    $("#dataGridView1 th[data-field=clientCodeSwitchIn]").html("Reference No 2")
                 }
                 else {
                     $("#ExportPDF").attr('class', 'btn btn-danger disabled');
@@ -186,9 +204,17 @@
         var columnNames = Object.keys(response[0]);
         return columnNames.map(function (name) {
             var tradeDate = name.indexOf("tradeDate") > -1 || name.indexOf("tradeDate") > -1;
+            var shdid = name.indexOf("shdid") > -1 || name.indexOf("shdid") > -1;
+            var exchangeOutAmt = name.indexOf("exchangeOutAmt") > -1 || name.indexOf("exchangeOutAmt") > -1;
+            var exchangeOutUnit = name.indexOf("exchangeOutUnit") > -1 || name.indexOf("exchangeOutUnit") > -1;
+            var dealerCommision = name.indexOf("dealerCommision") > -1 || name.indexOf("dealerCommision") > -1;
+            var exchangeInFundId = name.indexOf("exchangeInFundId") > -1 || name.indexOf("exchangeInFundId") > -1;
+            var clientCodeSwitchOut = name.indexOf("clientCodeSwitchOut") > -1 || name.indexOf("clientCodeSwitchOut") > -1;
+            var clientCodeSwitchIn = name.indexOf("clientCodeSwitchIn") > -1 || name.indexOf("clientCodeSwitchIn") > -1;
+            var shdid = name.indexOf("shdid") > -1 || name.indexOf("shdid") > -1;
             return {
                 field: name,
-                width: tradeDate ? 110 : 100,
+                width: tradeDate ? 110 : shdid ? 150 : exchangeOutAmt ? 190 : exchangeOutUnit ? 180 : dealerCommision ? 180 : exchangeInFundId ? 180 : clientCodeSwitchIn ? 150 : clientCodeSwitchOut? 150 : 100,
                 title: name,
                 template:
                     tradeDate ? "#= kendo.toString(kendo.parseDate(tradeDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" 

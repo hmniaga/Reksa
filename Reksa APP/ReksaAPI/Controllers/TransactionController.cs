@@ -42,9 +42,11 @@ namespace ReksaAPI.Controllers
         [HttpGet("{id}")]
         public JsonResult PopulateVerifyDocuments([FromQuery]int TranId, [FromQuery]bool IsEdit, [FromQuery]bool IsSwitching, [FromQuery]bool IsBooking, [FromQuery]string strRefID)
         {
-            List<DocumentModel.VerifyDocument> listVerDoc = new List<DocumentModel.VerifyDocument>();
-            cls.ReksaPopulateVerifyDocuments(TranId, IsEdit, IsSwitching, IsBooking, strRefID, ref listVerDoc);
-            return Json(new { listVerDoc });
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaPopulateVerifyDocuments(TranId, IsEdit, IsSwitching, IsBooking, strRefID, out dsResult, out ErrMsg);
+            return Json(new { blnResult, ErrMsg, dsResult });
         }
 
         [Route("api/Transaction/RefreshSwitching")]

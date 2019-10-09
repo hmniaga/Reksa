@@ -5,11 +5,102 @@
     bool IsSwitching = (bool)ViewBag.IsSwitching;
     bool IsBooking = (bool)ViewBag.IsBooking;
     string RefID = (string)ViewBag.RefID;
+    string _menuName = (string)ViewBag.MenuName;
 
     Layout = null;
 }
 <script type="text/javascript">
+    $(document).ready(function load() {
+        var gridOptions = {
+            height: 200
+        };
+        $("#dgvDocFCOthersList").kendoGrid(gridOptions);
+        $("#dgvDocTCOthersList").kendoGrid(gridOptions); 
+        //if (_menuName == "mnuAuthorizeTransaksiNew") {
+        //    $("#approveBtn").show();
+        //}
+        //else {
+            $("#approveBtn").hide();
+        //}
 
+        $("#txtbDocFCOthers").prop('disabled', true);
+        $("#btnFCAdd").prop('disabled', true);
+        $("#txtbDocTCOthers").prop('disabled', true);
+        $("#btnTCAdd").prop('disabled', true);
+        
+    });
+    $('#btnFCAdd').click(function btnFCAdd_click() {
+        if ($("#txtbDocFCOthers").val() != "") {
+            var grid = $("#dgvDocFCOthersList").data("kendoGrid");
+            grid.refresh();
+            var arr = [];
+            var obj = {};
+            obj['OtherDoc'] = $("#txtbDocFCOthers").val();
+            arr.push(obj);
+            var dataSet = grid.dataSource.view();
+            $.merge(arr, dataSet);
+            var dataSource = new kendo.data.DataSource(
+                {
+                    data: arr
+                });
+            grid.setDataSource(dataSource);
+            grid.dataSource.pageSize(5);
+            grid.dataSource.page(1);
+            grid.select("tr:eq(0)");
+            $("#txtbDocFCOthers").val('');
+        }
+    });
+    $('#btnTCAdd').click(function btnTCAdd_click() {  
+        if ($("#txtbDocTCOthers").val() != "") {
+            var grid = $("#dgvDocTCOthersList").data("kendoGrid");
+            grid.refresh();
+            var arr = [];
+            var obj = {};
+            obj['OtherDoc'] = $("#txtbDocTCOthers").val();
+            arr.push(obj);
+            var dataSet = grid.dataSource.view();
+            $.merge(arr, dataSet);
+            var dataSource = new kendo.data.DataSource(
+                {
+                    data: arr
+                });
+            grid.setDataSource(dataSource);
+            grid.dataSource.pageSize(5);
+            grid.dataSource.page(1);
+            grid.select("tr:eq(0)");
+            $("#txtbDocTCOthers").val('');
+        }
+    });      
+    $("#chkbDocFCOthers").change(function chkbDocFCOthers_change() {
+        if (this.checked) {
+            $("#txtbDocFCOthers").prop('disabled', false);
+            $("#btnFCAdd").prop('disabled', false);
+            var gridOptions = {
+                height: 200
+            };
+            $("#dgvDocFCOthersList").kendoGrid(gridOptions);
+        }
+        else {
+            $("#txtbDocFCOthers").prop('disabled', true);
+            $("#btnFCAdd").prop('disabled', true);
+            $("#dgvDocFCOthersList").empty();
+        }
+    });
+    $("#chkbDocTCOthers").change(function chkbDocTCOthers_change() {
+        if (this.checked) {
+            $("#txtbDocTCOthers").prop('disabled', false);
+            $("#btnTCAdd").prop('disabled', false);
+            var gridOptions = {
+                height: 200
+            };
+            $("#dgvDocTCOthersList").kendoGrid(gridOptions);
+        }
+        else {
+            $("#txtbDocTCOthers").prop('disabled', true);
+            $("#btnTCAdd").prop('disabled', true);
+            $("#dgvDocTCOthersList").empty();
+        }
+    });
 </script>
 <div class="modal-content">
     <div class="panel panel-color panel-primary">
@@ -33,7 +124,7 @@
                                 @Html.Kendo().CheckBox().Name("chkbDocFCIDCopy").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Copy Bukti Identitas")
                             </div>
                             <div class="checkbox checkbox-custom checkbox-circle">
-                                @Html.Kendo().CheckBox().Name("chkbDocFCOthers").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Lainnya")
+                                @Html.Kendo().CheckBox().Name("chkbDocFCOthers").HtmlAttributes(new { @id = "chkbDocFCOthers", @class = "checkbox checkbox-info checkbox-circle" }).Label("Lainnya")
                             </div>
                         </div>
                         <div class="input-group">
@@ -43,22 +134,7 @@
                             </span>
                         </div>
                         <div class="col-md-12" style="padding-top:20px">
-                            @(Html.Kendo().Grid<Reksa.Models.DocumentModel>()
-                                                                        .Name("dgvDocFCOthersList")
-                                                                        .Columns(columns =>
-                                                                        {
-                                                                            columns.Bound(p => p.DocFCOthers).Width(100);
-                                                                        })
-                                                                        .Pageable()
-                                                                        .Scrollable(s => s.Height(200))
-                                                                        .Selectable(selectable => selectable
-                                                                        .Mode(GridSelectionMode.Single))
-                                                                        .DataSource(dataSource => dataSource
-                                                                    .Ajax()
-                                                                    .PageSize(5)
-                                                                    .Read(read => read.Action("PopulateVerifyDocuments", "Global", new { IsEdit = IsEdit, TranId = TranId, IsSwitching = IsSwitching, IsBooking = IsBooking, RefID = RefID }))
-                                )
-                            )
+                            <div id="dgvDocFCOthersList"></div>
                             <div class="checkbox checkbox-custom checkbox-circle">
                                 @Html.Kendo().CheckBox().Name("chkbDocFCDevidentAuthLetter").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Surat Kuasa ke Manager Investasi untuk pembagian Deviden")
                             </div>
@@ -91,17 +167,7 @@
                             </span>
                         </div>
                         <div class="col-md-12" style="padding-top:20px">
-                            @(Html.Kendo().Grid<Reksa.Models.DocumentModel>()
-                                                                    .Name("dgvDocTCOthersList")
-                                                                    .Columns(columns =>
-                                                                    {
-                                                                        columns.Bound(p => p.DocTCOthers).Width(100);
-                                                                    })
-                                                                    .Pageable()
-                                                                    .Scrollable(s => s.Height(200))
-                                                                    .Selectable(selectable => selectable
-                                                                    .Mode(GridSelectionMode.Single))
-                            )
+                            <div id="dgvDocTCOthersList"></div>
                             <div class="checkbox checkbox-custom checkbox-circle">
                                 @Html.Kendo().CheckBox().Name("chkbDocTCTermCondition").HtmlAttributes(new { @class = "checkbox checkbox-info checkbox-circle" }).Label("Copy Ketentuan Umum Reksadana")
                             </div>

@@ -70,7 +70,7 @@ $('a[data-toggle=tab]').click(function () {
     //    cmpsrCIF.Enabled = true;
     //}
 });
-$("#btnGantiOpsiNPWP").click(function () {
+$("#btnGantiOpsiNPWP").click(function btnGantiOpsiNPWP_click() {
     $("#tbNoNPWPKK").val('');
     $("#tbNamaNPWPKK").val('');
     $("#tbKepemilikanLainnya").val('');
@@ -94,7 +94,7 @@ $("#btnGantiOpsiNPWP").click(function () {
             break;
     }
 });
-$("#btnGenerateNoDokTanpaNPWP").click(function () {
+$("#btnGenerateNoDokTanpaNPWP").click(function btnGenerateNoDokTanpaNPWP_click() {
     $.ajax({
         type: 'GET',
         url: '/Global/GetNoNPWPCounter',
@@ -109,7 +109,7 @@ $("#btnGenerateNoDokTanpaNPWP").click(function () {
         }
     });
 });
-$("#btnPopulate").click(function () {
+$("#btnPopulate").click(function btnPopulate_click() {
     if (_strTabName == "MCA") {
         ReksaPopulateAktifitas();
     }

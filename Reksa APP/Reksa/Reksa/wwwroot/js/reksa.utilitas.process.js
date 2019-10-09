@@ -6,6 +6,9 @@ function subRefresh() {
     $.ajax({
         type: 'GET',
         url: '/Utilitas/PopulateProcess',
+        beforeSend: function () {
+            $("#load_screen").show();
+        },
         success: function (data) {
             if (data.blnResult) {
                 if (data.listProcess.length != 0) {
@@ -27,6 +30,8 @@ function subRefresh() {
             else {
                 swal("Warning", data.ErrMsg, "warning");
             }
+        }, complete: function () {
+            $("#load_screen").hide();
         }
     });
 }
@@ -36,6 +41,9 @@ function subProcess(SPName, ProcessId, ProcessName) {
         type: 'POST',
         url: '/Utilitas/subProcess',
         data: { SPName: SPName, ProcessId: ProcessId },
+        beforeSend: function () {
+            $("#load_screen").show();
+        },
         success: function (data) {
             if (data.blnResult) {
                 swal("Success", ProcessName + " Telah Dijalankan", "success");
@@ -43,6 +51,9 @@ function subProcess(SPName, ProcessId, ProcessName) {
             else {
                 swal("Warning", data.ErrMsg, "warning");
             }
+        },
+        complete: function () {
+            $("#load_screen").hide();
         }
     });
     subRefresh();

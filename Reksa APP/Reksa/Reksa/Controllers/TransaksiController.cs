@@ -996,6 +996,35 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
-        
+        public JsonResult PopulateVerifyDocuments(int TranId, bool IsEdit, bool IsSwitching, bool IsBooking, string RefID)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/PopulateVerifyDocuments?TranId=" + TranId + "&IsEdit=" + IsEdit + "&IsSwitching=" + IsSwitching + "&IsBooking=" + IsBooking + "&strRefID=" + RefID).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
     }
 }

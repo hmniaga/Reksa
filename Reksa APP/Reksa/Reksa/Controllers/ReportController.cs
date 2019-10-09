@@ -336,7 +336,108 @@ namespace Reksa.Controllers
             ViewData["ReportName"] = ReportName;
             return View("_RDN48View");
         }
-
+        public IActionResult RDN49View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN49View");
+        }
+        public IActionResult RDN50View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN50View");
+        }
+        public IActionResult RDN51View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN51View");
+        }
+        public IActionResult RDN52View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN52View");
+        }
+        public IActionResult RDN53View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN53View");
+        }
+        public IActionResult RDN54View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN54View");
+        }
+        public IActionResult RDN55View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN55View");
+        }
+        public IActionResult RDN56View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN56View");
+        }
+        public IActionResult RDN57View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN57View");
+        }
+        public IActionResult RDN58View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN58View");
+        }
+        public IActionResult RDN59View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN59View");
+        }
+        public IActionResult RDN60View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN60View");
+        }
+        public IActionResult RDN61View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN61View");
+        }
+        public IActionResult RDN62View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN62View");
+        }
+        public IActionResult RDN63View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN63View");
+        }
+        public IActionResult RDN64View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN64View");
+        }
+        public IActionResult RDN65View(string ReportCode, string ReportName)
+        {
+            ViewData["ReportCode"] = ReportCode;
+            ViewData["ReportName"] = ReportName;
+            return View("_RDN65View");
+        }
         public IActionResult ExportPDF(string ReportCode, string ReportName)
         {
             DataSet dsReport = new DataSet();

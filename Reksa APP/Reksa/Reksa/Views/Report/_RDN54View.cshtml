@@ -35,7 +35,7 @@
             <div class="col-md-6">
                 <!-- Begin Kode Product -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Kode Produk</label>
+                    <label class="col-sm-3 control-label">Nama Produk</label>
                     <div class="input-group col-md-8">
                         @Html.Kendo().TextBoxFor(model => model.ProductModel.ProdCode).HtmlAttributes(new { @class = "form-control input-sm", style = "width: 150%;font-size: 90%;", @id = "srcProduct_text1" }).Enable(false)
                         <span class="input-group-btn">
@@ -46,18 +46,14 @@
                     </div>
                 </div>
                 <!-- End Kode Product -->
-                <!-- Begin Search Kantor -->
+                <!-- Begin >Tipe Produk -->
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Kode Kantor</label>
+                    <label class="col-sm-3 control-label">Tipe Produk</label>
                     <div class="input-group col-md-8">
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeId).HtmlAttributes(new { @class = "form-control input-sm col-md-1", @id = "srcOffice_text1", style = "width: 150%;font-size: 90%;" }).Enable(false)
-                        <span class="input-group-btn">
-                            <a id="srcOffice" href="@Url.Action("SearchOffice", "Global")" data-toggle="modal" data-target="#OfficeModal" class="btn btn-default btn-sm btn-search-component src-cif enabled">...</a>
-                        </span>
-                        @Html.Kendo().TextBoxFor(model => model.OfficeModel.OfficeName).HtmlAttributes(new { @class = "form-control input-sm col-md-3", @id = "srcOffice_text2", style = "width: 250px" }).Enable(false)
+                        @(Html.Kendo().DropDownList().Name("TypeProduct").BindTo(new List<SelectListItem>() { new SelectListItem() { Text = "NAV", Value = "NAV" }, new SelectListItem() { Text = "KURS", Value = "KURS" }, new SelectListItem() { Text = "DEVIDEN", Value = "DEVIDEN" } }).DataTextField("Text").DataValueField("Value"))
                     </div>
                 </div>
-                <!-- End Search Kantor -->
+                <!-- End >Tipe Produk -->
             </div>
         </div>
         <div class="col-md-12" style="margin-top:30px;margin-bottom:10px">
@@ -98,29 +94,23 @@
         <div class="modal-content"></div>
     </div>
 </div>
-<div class="modal fade" id="OfficeModal" tabindex="-1" role="dialog" aria-labelledby="OfficeModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
 
 <script>
     $(document).ready(function () {
         var grid = { height: 200 };
-        $("#dataGridView1").kendoGrid(grid);  
+        $("#dataGridView1").kendoGrid(grid);
         $("#ExportPDF").attr('class', 'btn btn-danger disabled');
-        $("#ExportExcel").attr('class', 'btn btn-success disabled');        
-    });  
+        $("#ExportExcel").attr('class', 'btn btn-success disabled');
+    });
 
     $("#btnRefresh").click(function () {
         var PeriodStart = $("#StarDate").val();
         var PeriodEnd = $("#EndDate").val();
         var ProdCode = $("#srcProduct_text1").val();
         var ProdId = $("#ProdId").val();
-        var OfficeId = $("#srcOffice_text1").val();
+        var Type = $("#TypeProduct").val();
 
-        if (PeriodStart == "")
-        {
+        if (PeriodStart == "") {
             swal("Warning", "Periode Awal tidak boleh kosong!", "warning");
             return;
         }
@@ -132,11 +122,15 @@
             swal("Warning", "Produk tidak boleh kosong!", "warning");
             return;
         }
+        if (Type == "") {
+            swal("Warning", "Tipe Produk tidak boleh kosong!", "warning");
+            return;
+        }
 
         $.ajax({
             type: 'GET',
-            url: '/Report/ReksaReportRDN08',
-            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, OfficeId: OfficeId },
+            url: '/Report/ReksaReportRDN13',
+            data: { PeriodStart: PeriodStart, PeriodEnd: PeriodEnd, ProdCode: ProdCode, ProdId: ProdId, Type: Type },
             success: function (data) {
                 if (data.blnResult) {
                     var gridView = $("#dataGridView1").data("kendoGrid");
@@ -148,35 +142,12 @@
 
                     $("#ExportPDF").attr('class', 'btn btn-danger enabled');
                     $("#ExportExcel").attr('class', 'btn btn-success enabled');
-
                     $("#dataGridView1 th[data-field=jointDate]").html("Joint Date")
-                    $("#dataGridView1 th[data-field=agentCode]").html("Agent Code")
-                    $("#dataGridView1 th[data-field=agentName]").html("Agent Name")
-                    $("#dataGridView1 th[data-field=clientCode]").html("Client Code")
-                    $("#dataGridView1 th[data-field=namaNasabah]").html("Nama Nasabah")
-                    $("#dataGridView1 th[data-field=jenisTransaksi]").html("Jenis Transaksi")
-                    $("#dataGridView1 th[data-field=jumlahUnit]").html("Jumlah Unit")
-                    $("#dataGridView1 th[data-field=ccy]").html("Currency")
-                    $("#dataGridView1 th[data-field=nominal]").html("Nominal")
-                    $("#dataGridView1 th[data-field=tranDate]").html("Tanggal Tran")
-                    $("#dataGridView1 th[data-field=valueDate]").html("Value Date")
-                    $("#dataGridView1 th[data-field=nav]").html("NAV")
-                    $("#dataGridView1 th[data-field=kurs]").html("KURS")
-                    $("#dataGridView1 th[data-field=namaInputer]").html("Nama Inputer")
-                    $("#dataGridView1 th[data-field=namaChecker]").html("Nama Checker")
-                    $("#dataGridView1 th[data-field=seller]").html("NIK Seller")
-                    $("#dataGridView1 th[data-field=namaSeller]").html("Nama Seller")
-                    $("#dataGridView1 th[data-field=shareholderID]").html("Shareholder ID")                    
-
-                    gridView.hideColumn('officeId');
-                    gridView.hideColumn('agentBranch');
-                    gridView.hideColumn('instruksiTransaksi');
-                    gridView.hideColumn('noSII');
                 }
                 else {
-                    $("#dataGridView1").empty();
                     $("#ExportPDF").attr('class', 'btn btn-danger disabled');
                     $("#ExportExcel").attr('class', 'btn btn-success disabled');
+                    $("#dataGridView1").empty();
                     swal("Warning", data.ErrMsg, "warning");
                 }
             }
@@ -211,22 +182,19 @@
         return columnNames.map(function (name) {
             var jointDate = name.indexOf("jointDate") > -1 || name.indexOf("jointDate") > -1;
             var agentName = name.indexOf("agentName") > -1 || name.indexOf("agentName") > -1;
-            var clientCode = name.indexOf("clientCode") > -1 || name.indexOf("clientCode") > -1;   
-            var namaNasabah = name.indexOf("namaNasabah") > -1 || name.indexOf("namaNasabah") > -1;   
-            var tranDate = name.indexOf("tranDate") > -1 || name.indexOf("tranDate") > -1; 
-            var valueDate = name.indexOf("valueDate") > -1 || name.indexOf("valueDate") > -1;   
-            var jenisTransaksi = name.indexOf("jenisTransaksi") > -1 || name.indexOf("jenisTransaksi") > -1;   
-            var namaInputer = name.indexOf("namaInputer") > -1 || name.indexOf("namaInputer") > -1;
-            var namaChecker = name.indexOf("namaChecker") > -1 || name.indexOf("namaChecker") > -1;
+            var clientCode = name.indexOf("clientCode") > -1 || name.indexOf("clientCode") > -1;
+            var namaNasabah = name.indexOf("namaNasabah") > -1 || name.indexOf("namaNasabah") > -1;
+            var tranDate = name.indexOf("tranDate") > -1 || name.indexOf("tranDate") > -1;
+            var valueDate = name.indexOf("valueDate") > -1 || name.indexOf("valueDate") > -1;
             return {
                 field: name,
-                width: namaChecker? 200 : namaInputer ? 200 : tranDate? 120 : jenisTransaksi ? 130 : jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah? 300 : 100,
+                width: jointDate ? 110 : agentName ? 250 : clientCode ? 150 : namaNasabah ? 300 : 100,
                 title: name,
                 template:
                     jointDate ? "#= kendo.toString(kendo.parseDate(jointDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
                         tranDate ? "#= kendo.toString(kendo.parseDate(tranDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" :
-                            valueDate ? "#= kendo.toString(kendo.parseDate(valueDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #" 
-                        : columnNames
+                            valueDate ? "#= kendo.toString(kendo.parseDate(valueDate, 'yyyy-MM-dd'), 'dd/MM/yyyy') #"
+                                : columnNames
             };
         })
     }

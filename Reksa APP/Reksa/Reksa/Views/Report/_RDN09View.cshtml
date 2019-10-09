@@ -129,6 +129,13 @@
                     $("#ExportPDF").attr('class', 'btn btn-danger enabled');
                     $("#ExportExcel").attr('class', 'btn btn-success enabled');
                     $("#dataGridView1 th[data-field=agentCode]").html("Agent Code")
+                    $("#dataGridView1 th[data-field=agentName]").html("Agent Name")
+                    $("#dataGridView1 th[data-field=nominal]").html("Nominal")
+                    $("#dataGridView1 th[data-field=nav]").html("NAV")
+                    $("#dataGridView1 th[data-field=jumlahUnit]").html("Jumlah Unit")
+                    $("#dataGridView1 th[data-field=jumlahNasabah]").html("Jumlah Nasabah")
+
+                    gridView.hideColumn('ccy');
                 }
                 else {
                     $("#ExportPDF").attr('class', 'btn btn-danger disabled');
@@ -164,11 +171,14 @@
     }
 
     function generateColumns(response) {
-        var columnNames = Object.keys(response[0]);
+        var columnNames = Object.keys(response[0]);        
         return columnNames.map(function (name) {
+            var agentName = name.indexOf("agentName") > -1 || name.indexOf("agentName") > -1;
+            var jumlahUnit = name.indexOf("jumlahUnit") > -1 || name.indexOf("jumlahUnit") > -1;
+            var jumlahNasabah = name.indexOf("jumlahNasabah") > -1 || name.indexOf("jumlahNasabah") > -1;
             return {
                 field: name,
-                width: tradeDate ? 110 : 100,
+                width: agentName ? 300 : jumlahNasabah ? 150 : jumlahUnit? 150 : 100,
                 title: name
             };
         })
