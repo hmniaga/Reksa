@@ -311,7 +311,7 @@ namespace ReksaAPI.Controllers
 
             blnResult = cls.ReksaMaintainOutgoingTT(BillId, isProcess, AlasanDelete, NIK, out IsCurrencyHoliday, out dtNewValueDate, out ErrMsg);
             ErrMsg = ErrMsg.Replace("ReksaMaintainOutgoingTT - Core .Net SqlClient Data Provider\n", "");
-            return Json(new { blnResult, ErrMsg });
+            return Json(new { blnResult, ErrMsg, IsCurrencyHoliday, dtNewValueDate });
         }
         [Route("api/Transaction/ManualUpdateRiskProfile")]
         [HttpGet("{id}")]

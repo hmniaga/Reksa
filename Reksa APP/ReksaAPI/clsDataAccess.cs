@@ -481,6 +481,31 @@ namespace ReksaAPI
         #endregion
 
         #region "GLOBAL"
+        public bool ReksaGetMenu(out List<NavigationModel> list, out string ErrMsg)
+        {
+            DataSet dsOut = new DataSet();
+            SqlCommand cmdOut = new SqlCommand();
+            bool blnResult = false;
+            ErrMsg = "";
+            list = new List<NavigationModel>();
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                blnResult = this.ExecProc(QueryReksa(), "ReksaGetMenu", ref dbParam, out dsOut, out cmdOut, out ErrMsg);
+
+                if(blnResult)
+                {
+                    DataTable dtOut = dsOut.Tables[0];
+                    List<NavigationModel> result = this.MapListOfObject<NavigationModel>(dtOut);
+                    list.AddRange(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
         public bool ReksaGetMenuReportRDN(out List<ReportMenuModel> list, out string ErrMsg)
         {
             DataSet dsOut = new DataSet();

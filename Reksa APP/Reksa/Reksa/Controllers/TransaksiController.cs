@@ -1026,5 +1026,33 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        public JsonResult MaintainOutgoingTT(int BillId, bool isProcess, string AlasanDelete)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string IsCurrencyHoliday = "";
+            DateTime dtNewValueDate = new DateTime();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Transaction/MaintainOutgoingTT?BillId=" + BillId + "&isProcess=" + isProcess + "&AlasanDelete=" + AlasanDelete + "&NIK=" + _intNIK).Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    IsCurrencyHoliday = Object.SelectToken("isCurrencyHoliday").Value<string>();
+                    dtNewValueDate = Object.SelectToken("dtNewValueDate").Value<DateTime>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, IsCurrencyHoliday, dtNewValueDate });
+        }
     }
 }

@@ -399,5 +399,16 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaGetMenuReportRDN - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, listMenu });
         }
+        [Route("api/Global/GetMenuReksa")]
+        [HttpGet("{id}")]
+        public JsonResult GetMenuReksa()
+        {
+            bool blnResult;
+            string ErrMsg;
+            List<NavigationModel> listMenu = new List<NavigationModel>();
+            blnResult = cls.ReksaGetMenu(out listMenu, out ErrMsg);
+            ErrMsg = ErrMsg.Replace("ReksaGetMenu - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, listMenu });
+        }
     }
 }
