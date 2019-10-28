@@ -21,5 +21,6 @@ namespace Reksa.Models
         public string IsEOD { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
+        public string icon { get; set; }
     }
 }

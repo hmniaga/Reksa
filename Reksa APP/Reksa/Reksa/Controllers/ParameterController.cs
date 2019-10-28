@@ -296,22 +296,29 @@ namespace Reksa.Controllers
             string strErrMsg = "";
             try
             {
-                model.NIK = _intNIK;
-                model.Guid = _strGuid;
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainParameterGlobal?NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    JToken TokenResult = strObject["blnResult"];
-                    JToken TokenErrMsg = strObject["strErrMsg"];
-                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
-                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
-                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
-                    strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    model.NIK = _intNIK;
+                    model.Guid = _strGuid;
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainParameterGlobal?NIK=" + _intNIK + "&GUID=" + _strGuid, Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        JToken TokenResult = strObject["blnResult"];
+                        JToken TokenErrMsg = strObject["strErrMsg"];
+                        string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                        string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                        blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                        strErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    }
+                }
+                else
+                {
+                    strErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -660,22 +667,29 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             try
             {
-                model.intNIK = _intNIK;
-                model.strModule = strModule;
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainRedempFee", Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    JToken TokenResult = strObject["blnResult"];
-                    JToken TokenErrMsg = strObject["errMsg"];
-                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
-                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
-                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
-                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    model.intNIK = _intNIK;
+                    model.strModule = strModule;
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainRedempFee", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        JToken TokenResult = strObject["blnResult"];
+                        JToken TokenErrMsg = strObject["errMsg"];
+                        string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                        string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                        blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                        ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -691,22 +705,29 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             try
             {
-                model.intNIK = _intNIK;
-                model.strModule = strModule;
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainMFee", Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    JToken TokenResult = strObject["blnResult"];
-                    JToken TokenErrMsg = strObject["errMsg"];
-                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
-                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
-                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
-                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    model.intNIK = _intNIK;
+                    model.strModule = strModule;
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainMFee", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        JToken TokenResult = strObject["blnResult"];
+                        JToken TokenErrMsg = strObject["errMsg"];
+                        string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                        string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                        blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                        ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -722,22 +743,29 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             try
             {
-                model.intNIK = _intNIK;
-                model.strModule = strModule;
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainUpfrontSellingFee", Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    JToken TokenResult = strObject["blnResult"];
-                    JToken TokenErrMsg = strObject["errMsg"];
-                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
-                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
-                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
-                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    model.intNIK = _intNIK;
+                    model.strModule = strModule;
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainUpfrontSellingFee", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        JToken TokenResult = strObject["blnResult"];
+                        JToken TokenErrMsg = strObject["errMsg"];
+                        string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                        string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                        blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                        ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -753,22 +781,29 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             try
             {
-                model.intNIK = _intNIK;
-                model.strModule = strModule;
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainSwcFee", Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    JToken TokenResult = strObject["blnResult"];
-                    JToken TokenErrMsg = strObject["errMsg"];
-                    string JsonResult = JsonConvert.SerializeObject(TokenResult);
-                    string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
-                    blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
-                    ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    model.intNIK = _intNIK;
+                    model.strModule = strModule;
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainSwcFee", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        JToken TokenResult = strObject["blnResult"];
+                        JToken TokenErrMsg = strObject["errMsg"];
+                        string JsonResult = JsonConvert.SerializeObject(TokenResult);
+                        string JsonErrMsg = JsonConvert.SerializeObject(TokenErrMsg);
+                        blnResult = JsonConvert.DeserializeObject<bool>(JsonResult);
+                        ErrMsg = JsonConvert.DeserializeObject<string>(JsonErrMsg);
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -810,17 +845,24 @@ namespace Reksa.Controllers
             DataSet dsError = new DataSet();
             try
             {
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/UploadWAPERD?NIK=" + _intNIK + "&Module=" + strModule, Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(response);
-                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
-                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
-                    dsError = strObject.SelectToken("dsError").Value<DataSet>();
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/UploadWAPERD?NIK=" + _intNIK + "&Module=" + strModule, Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject strObject = JObject.Parse(response);
+                        blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                        dsError = strObject.SelectToken("dsError").Value<DataSet>();
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)
@@ -891,16 +933,23 @@ namespace Reksa.Controllers
             string ErrMsg = "";
             try
             {
-                var Content = new StringContent(JsonConvert.SerializeObject(model));
-                using (HttpClient client = new HttpClient())
+                if (model != null)
                 {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    var request = client.PostAsync("/api/Parameter/MaintainParameter", Content);
-                    var response = request.Result.Content.ReadAsStringAsync().Result;
-                    JObject Object = JObject.Parse(response);
-                    blnResult = Object.SelectToken("blnResult").Value<bool>();
-                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    var Content = new StringContent(JsonConvert.SerializeObject(model));
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(_strAPIUrl);
+                        Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                        var request = client.PostAsync("/api/Parameter/MaintainParameter", Content);
+                        var response = request.Result.Content.ReadAsStringAsync().Result;
+                        JObject Object = JObject.Parse(response);
+                        blnResult = Object.SelectToken("blnResult").Value<bool>();
+                        ErrMsg = Object.SelectToken("errMsg").Value<string>();
+                    }
+                }
+                else
+                {
+                    ErrMsg = "Error Data : Tidak ada data yang dikirimkan (Model = null)";
                 }
             }
             catch (Exception e)

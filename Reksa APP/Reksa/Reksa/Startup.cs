@@ -52,6 +52,8 @@ namespace Reksa
             services.AddKendo();
 
             services.AddSession();
+
+            services.AddTransient<MenuMasterService, MenuMasterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

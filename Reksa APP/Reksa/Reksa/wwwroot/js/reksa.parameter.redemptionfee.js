@@ -15,6 +15,9 @@ function subRefresh() {
         type: 'GET',
         url: '/Parameter/RefreshRedemptionFee',
         data: { ProdukId: $("#ProdId").val() },
+        beforeSend: function () {
+            $("#load_screen").show();
+        }, 
         success: function (data) {
             if (data.blnResult) {
                 $("#_txtMinPctKary").data("kendoNumericTextBox").value(data.redempFee.MinPctFeeEmployee);
@@ -98,6 +101,10 @@ function subRefresh() {
                 swal("Warning", data.ErrMsg, "warning");
                 Reset();
             }
+        }
+        ,
+        complete: function () {
+            $("#load_screen").hide();
         }
     });
 }
@@ -405,6 +412,8 @@ function subSave(intMyType) {
         'listTieringNotif': arrTieringNotif,
         'listTieringPct': arrRedemPeriod
     });
+
+    console.log(model);
 
     $.ajax({
         type: 'POST',

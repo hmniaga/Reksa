@@ -63,7 +63,7 @@ namespace Reksa.Models
     {
         public int Seq { get; set; }
         public string NamaGL { get; set; }
-        public int NomorGL { get; set; }
+        public string NomorGL { get; set; }
         public decimal Persentase { get; set; }
         public string OfficeId { get; set; }
     }

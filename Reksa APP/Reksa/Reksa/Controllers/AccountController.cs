@@ -79,14 +79,10 @@ namespace Reksa.Controllers
                             IsPersistent = true,
                             AllowRefresh = true
                         });
-                }
-                
+                }               
 
                 if (Succeeded)
                 {
-                    List<NavigationModel> listMenu = new List<NavigationModel>();
-                    listMenu = TopNav();
-
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         Redirect(Request.Query["ReturnUrl"].First());
@@ -94,6 +90,7 @@ namespace Reksa.Controllers
                     else
                     {
                         return RedirectToAction("Index", "Home");
+                        //return View("~/Views/Home/Index.cshtml"); 
                     }
                 }
                 else
@@ -102,35 +99,6 @@ namespace Reksa.Controllers
                 }
             }
             return View();
-        }
-
-        private List<NavigationModel> TopNav()
-        {
-            bool blnResult = false;
-            string ErrMsg = "";
-            List<NavigationModel> listMenu = new List<NavigationModel>();
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(_strAPIUrl);
-                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
-                    client.DefaultRequestHeaders.Accept.Add(contentType);
-                    HttpResponseMessage response = client.GetAsync("/api/Global/GetMenuReksa").Result;
-                    string strJson = response.Content.ReadAsStringAsync().Result;
-                    JObject strObject = JObject.Parse(strJson);
-                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
-                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
-                    JToken Token = strObject["listMenu"];
-                    string Json = JsonConvert.SerializeObject(Token);
-                    listMenu = JsonConvert.DeserializeObject<List<NavigationModel>>(Json);
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrMsg = ex.Message;
-            }
-            return listMenu;
         }
 
         public async Task<IActionResult> Logout()
@@ -158,6 +126,6 @@ namespace Reksa.Controllers
         public IActionResult Error503()
         {
             return View();
-        }
+        }        
     }
 }

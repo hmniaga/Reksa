@@ -10,6 +10,9 @@ function subPopulate() {
     $.ajax({
         type: 'GET',
         url: '/Transaksi/PopulateOutgoingTT',
+        beforeSend: function () {
+            $("#load_screen").show();
+        },
         success: function (data) {
             if (data.blnResult) {
                 var gridView = $("#dataGridView1").data("kendoGrid");
@@ -34,6 +37,9 @@ function subPopulate() {
             else {
                 swal("Warning", data.ErrMsg, "warning");
             }
+        },
+        complete: function () {
+            $("#load_screen").hide();
         }
     });
 }
@@ -114,4 +120,26 @@ function subProcess(isProcess) {
         //Get alasan
     }
 
+}
+
+function subProcess2(BillId, isProcess, AlasanDelete) {
+    $.ajax({
+        type: 'GET',
+        url: '/Transaksi/MaintainOutgoingTT',
+        data: { BillId: BillId, isProcess: isProcess, AlasanDelete: AlasanDelete},
+        beforeSend: function () {
+            $("#load_screen").show();
+        },
+        success: function (data) {
+            if (data.blnResult) {
+                
+            }
+            else {
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        },
+        complete: function () {
+            $("#load_screen").hide();
+        }
+    });
 }
