@@ -3278,22 +3278,26 @@ namespace ReksaAPI
             {
                 string XMLTieringNotif = "";
                 string XMLSettingGL = "";
-
                 DataTable dttTieringNotif = new DataTable();
                 DataTable dttSettingGL = new DataTable();
-
-                dttTieringNotif = ListConverter.ToDataTable<listTieringSubsFee>(model.dtTieringSubsFee);
-                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.dtSettingGL);
-
                 System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttTieringNotif.TableName = "TieringNotif";
-                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLTieringNotif = writer.ToString();
 
-                writer = new System.IO.StringWriter();
-                dttSettingGL.TableName = "SettingGL";
-                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLSettingGL = writer.ToString();
+                if (model.dtTieringSubsFee != null)
+                {
+                    dttTieringNotif = ListConverter.ToDataTable<listTieringSubsFee>(model.dtTieringSubsFee);
+                    dttTieringNotif.TableName = "TieringNotif";
+                    dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLTieringNotif = writer.ToString();
+                }
+
+                if (model.dtSettingGL != null)
+                {
+                    dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.dtSettingGL);
+                    writer = new System.IO.StringWriter();
+                    dttSettingGL.TableName = "SettingGL";
+                    dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLSettingGL = writer.ToString();
+                }
 
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
@@ -3329,19 +3333,24 @@ namespace ReksaAPI
 
             DataTable dttTieringNotif = new DataTable();
             DataTable dttSettingGL = new DataTable();
-
-            dttTieringNotif = ListConverter.ToDataTable<PercentTieringMFee>(model.listPercentTiering);
-            dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
-
             System.IO.StringWriter writer = new System.IO.StringWriter();
-            dttTieringNotif.TableName = "TieringMFee";
-            dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-            XMLTieringNotif = writer.ToString();
 
-            writer = new System.IO.StringWriter();
-            dttSettingGL.TableName = "SettingGL";
-            dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-            XMLSettingGL = writer.ToString();
+            if (dttTieringNotif != null)
+            {
+                dttTieringNotif = ListConverter.ToDataTable<PercentTieringMFee>(model.listPercentTiering);
+                dttTieringNotif.TableName = "TieringMFee";
+                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLTieringNotif = writer.ToString();
+            }
+
+            if (dttSettingGL != null)
+            {
+                writer = new System.IO.StringWriter();
+                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+                dttSettingGL.TableName = "SettingGL";
+                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                XMLSettingGL = writer.ToString();
+            }
 
             try
             {
@@ -3380,25 +3389,33 @@ namespace ReksaAPI
                 DataTable dttTieringNotif = new DataTable();
                 DataTable dttSettingGL = new DataTable();
                 DataTable dttTieringPctRedemp = new DataTable();
-
-                dttTieringNotif = ListConverter.ToDataTable<ParameterRedempFeeTieringNotif>(model.listTieringNotif);
-                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
-                dttTieringPctRedemp = ListConverter.ToDataTable<ParameterRedempFeePercentageTiering>(model.listTieringPct);
-
                 System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttTieringNotif.TableName = "TieringNotif";
-                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLTieringNotif = writer.ToString();
 
-                writer = new System.IO.StringWriter();
-                dttSettingGL.TableName = "SettingGL";
-                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLSettingGL = writer.ToString();
+                if (dttTieringNotif != null)
+                {
+                    dttTieringNotif = ListConverter.ToDataTable<ParameterRedempFeeTieringNotif>(model.listTieringNotif);
+                    dttTieringNotif.TableName = "TieringNotif";
+                    dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLTieringNotif = writer.ToString();
+                }
 
-                writer = new System.IO.StringWriter();
-                dttTieringPctRedemp.TableName = "RedemPeriod";
-                dttTieringPctRedemp.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLTieringPctRedemp = writer.ToString();
+                if (dttSettingGL != null)
+                {
+                    writer = new System.IO.StringWriter();
+                    dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+                    dttSettingGL.TableName = "SettingGL";
+                    dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLSettingGL = writer.ToString();
+                }
+
+                if (dttTieringPctRedemp != null)
+                {
+                    writer = new System.IO.StringWriter();
+                    dttTieringPctRedemp = ListConverter.ToDataTable<ParameterRedempFeePercentageTiering>(model.listTieringPct);
+                    dttTieringPctRedemp.TableName = "RedemPeriod";
+                    dttTieringPctRedemp.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLTieringPctRedemp = writer.ToString();
+                }
 
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
@@ -3437,12 +3454,14 @@ namespace ReksaAPI
                 DataTable dttSettingGL = new DataTable();
 
                 dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
-
                 System.IO.StringWriter writer = new System.IO.StringWriter();
-                writer = new System.IO.StringWriter();
-                dttSettingGL.TableName = "SettingGL";
-                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLSettingGL = writer.ToString();
+                if (dttSettingGL != null)
+                {
+                    writer = new System.IO.StringWriter();
+                    dttSettingGL.TableName = "SettingGL";
+                    dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLSettingGL = writer.ToString();
+                }
 
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
@@ -3475,19 +3494,24 @@ namespace ReksaAPI
 
                 DataTable dttTieringNotif = new DataTable();
                 DataTable dttSettingGL = new DataTable();
-
-                dttTieringNotif = ListConverter.ToDataTable<ParameterSwcFeeTieringNotif>(model.listTieringNotif);
-                dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
-
                 System.IO.StringWriter writer = new System.IO.StringWriter();
-                dttTieringNotif.TableName = "TieringNotif";
-                dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLTieringNotif = writer.ToString();
 
-                writer = new System.IO.StringWriter();
-                dttSettingGL.TableName = "SettingGL";
-                dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
-                XMLSettingGL = writer.ToString();
+                if (dttTieringNotif != null)
+                {
+                    dttTieringNotif = ListConverter.ToDataTable<ParameterSwcFeeTieringNotif>(model.listTieringNotif);
+                    dttTieringNotif.TableName = "TieringNotif";
+                    dttTieringNotif.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLTieringNotif = writer.ToString();
+                }
+
+                if (dttSettingGL != null)
+                {
+                    writer = new System.IO.StringWriter();
+                    dttSettingGL = ListConverter.ToDataTable<ListSettingGL>(model.listSettingGL);
+                    dttSettingGL.TableName = "SettingGL";
+                    dttSettingGL.WriteXml(writer, System.Data.XmlWriteMode.IgnoreSchema, false);
+                    XMLSettingGL = writer.ToString();
+                }
 
                 List<SqlParameter> dbParam = new List<SqlParameter>()
                 {
@@ -5908,7 +5932,7 @@ namespace ReksaAPI
                     new SqlParameter() { ParameterName = "@pnTranBranch", Value = strBranch, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pnBillId", Value = intBillId, SqlDbType = System.Data.SqlDbType.Int, Direction = System.Data.ParameterDirection.Input },
                     new SqlParameter() { ParameterName = "@pcJenisJurnal", Value = strJenisJurnal, SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Input },
-                    new SqlParameter() { ParameterName = "@pbIsCurrencyHoliday", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output },
+                    new SqlParameter() { ParameterName = "@pbIsCurrencyHoliday", SqlDbType = System.Data.SqlDbType.VarChar, Direction = System.Data.ParameterDirection.Output, Size = 1 },
                     new SqlParameter() { ParameterName = "@pdNewValueDate", SqlDbType = System.Data.SqlDbType.DateTime, Direction = System.Data.ParameterDirection.Output }
                 };
 
@@ -7302,6 +7326,78 @@ namespace ReksaAPI
                         ErrMsg = "Detail Batch Guid : " + strBatchGuid + " tidak ada di database";
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
+        public bool ReksaViewApprovalDelete( out string ErrMsg, out DataSet dsResult)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            dsResult = new DataSet();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>();
+                intTimeOut = 6000;
+                blnResult = this.ExecProc(QueryReksa(), "ReksaViewApprovalDelete", ref dbParam, out dsResult, out cmdOut, out ErrMsg);
+                if (blnResult)
+                {
+                    if (dsResult == null || dsResult.Tables.Count == 0 || dsResult.Tables[0].Rows.Count == 0)
+                    {
+                        blnResult = false;
+                        ErrMsg = "Data tidak ada di database";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
+        public bool ReksaDeleteBooking(int intTranId, string strNIK, string strGuid, out string ErrMsg)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnTranId", SqlDbType = System.Data.SqlDbType.Int, Value = intTranId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnNik", SqlDbType = System.Data.SqlDbType.Int, Value = strNIK, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pcPcguid", SqlDbType = System.Data.SqlDbType.VarChar, Value = strGuid, Direction = System.Data.ParameterDirection.Input },
+                };
+                intTimeOut = 6000;
+                blnResult = this.ExecProc(QueryReksa(), "ReksaDeleteBooking", ref dbParam, out cmdOut, out ErrMsg);
+            }
+            catch (Exception ex)
+            {
+                ErrMsg = ex.Message;
+            }
+            return blnResult;
+        }
+
+        public bool ReksaRejectDeleteTrans(int intTranId, int intAgentId, out string ErrMsg)
+        {
+            SqlCommand cmdOut = new SqlCommand();
+            bool blnResult = false;
+            ErrMsg = "";
+            try
+            {
+                List<SqlParameter> dbParam = new List<SqlParameter>()
+                {
+                    new SqlParameter() { ParameterName = "@pnIdTrans", SqlDbType = System.Data.SqlDbType.Int, Value = intTranId, Direction = System.Data.ParameterDirection.Input },
+                    new SqlParameter() { ParameterName = "@pnAgentId", SqlDbType = System.Data.SqlDbType.Int, Value = intAgentId, Direction = System.Data.ParameterDirection.Input }
+                };
+                intTimeOut = 6000;
+                blnResult = this.ExecProc(QueryReksa(), "ReksaRejectDeleteTrans", ref dbParam, out cmdOut, out ErrMsg);
             }
             catch (Exception ex)
             {

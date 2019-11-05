@@ -59,36 +59,34 @@ function subProcess(isProcess, JenisProses)
                     }
                     else if (isProcess == true)
                     {
-                        var data = await subProcessTT(BillId, strTTGuid, JenisProses);
+                        var data = await subProcessTT(BillId, JenisProses);
                     }
                 }
             }
         });    
 }
-function subProcessTT(BillId, strTTGuid, JenisProses) {
-
-}
-function PrepareDataPBGL(BillId, JenisJurnal) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            type: 'GET',
-            url: '/Transaksi/AuthorizeOutgoingTT',
-            data: { JenisProses: JenisProses, isProcess: isProcess, BillId: BillId, RemittanceNumber: '' },
-            beforeSend: function () {
-                $("#load_screen").show();
-            },
-            success: function (data) {
-                resolve({
-                    blnResult: data.blnResult,
-                    ErrMsg: data.ErrMsg
-                })
-            },
-            error: reject,
-            complete: function () {
-                $("#load_screen").hide();
+function subProcessTT(listBillId, JenisProses)
+{
+    $.ajax({
+        type: "POST",
+        url: "/Transaksi/subProcessTT",
+        data: { listBillId: listBillId, JenisJurnal: JenisProses },
+        beforeSend: function () {
+            $("#load_screen").show();
+        },
+        success: function (data) {
+            if (data.blnResult) {
+                swal("Success", "Data Berhasil diotorisasi", "success");
+                subPopulate(JenisProses);
             }
-        });
-    })
+            else {
+                swal("Warning", data.ErrMsg, "warning");
+            }
+        },
+        complete: function () {
+            $("#load_screen").hide();
+        }
+    });
 }
 
 function subAuthOutgoingTT(JenisProses, isProcess, BillId) {
@@ -106,7 +104,6 @@ function subAuthOutgoingTT(JenisProses, isProcess, BillId) {
                     ErrMsg: data.ErrMsg
                 })
             },
-            error: reject,
             complete: function () {
                 $("#load_screen").hide();
             }

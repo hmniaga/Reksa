@@ -75,9 +75,9 @@ namespace Reksa.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
                         new AuthenticationProperties
                         {
-                            ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
-                            IsPersistent = true,
-                            AllowRefresh = true
+                            //ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                            //IsPersistent = true,
+                            //AllowRefresh = true
                         });
                 }               
 

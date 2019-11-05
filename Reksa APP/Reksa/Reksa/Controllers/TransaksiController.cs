@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Reksa.Controllers
 {
@@ -25,11 +26,13 @@ namespace Reksa.Controllers
         private IConfiguration _config;
         private string _strAPIUrl;
         #endregion
-
-        public TransaksiController(IConfiguration iconfig)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
+        public TransaksiController(IConfiguration iconfig, IHttpContextAccessor httpContextAccessor)
         {
             _config = iconfig;
             _strAPIUrl = _config.GetValue<string>("APIServices:url");
+            _httpContextAccessor = httpContextAccessor;
         }
         [Authorize]
         public IActionResult Tunggakan()
@@ -940,6 +943,7 @@ namespace Reksa.Controllers
                     JToken TokenData = Object["dsResult"];
                     string JsonData = JsonConvert.SerializeObject(TokenData);
                     dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
                 }
             }
             catch (Exception e)
@@ -1053,6 +1057,48 @@ namespace Reksa.Controllers
                 ErrMsg = e.Message;
             }
             return Json(new { blnResult, ErrMsg, IsCurrencyHoliday, dtNewValueDate });
+        }
+
+        public ActionResult subProcessTT(string listBillId, string JenisJurnal)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] _SelectedBillId;
+                listBillId = (listBillId + "***").Replace("|***", "");
+                _SelectedBillId = listBillId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', _SelectedBillId);
+
+                dv1.RowFilter = " billId in (" + filter + ")";
+
+                DataTable dtData = dv1.ToTable();
+                if (dtData == null || dtData.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+                var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Transaction/ProcessTT?NIK=" + _intNIK + "&Branch=" + _strBranch + "&JenisJurnal=" + JenisJurnal, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
         }
     }
 }

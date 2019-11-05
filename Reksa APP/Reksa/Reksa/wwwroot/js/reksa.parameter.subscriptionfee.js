@@ -5,7 +5,7 @@ $(document).ready(function load() {
     SetControl(intMyType);
 
     var grid = {
-        height: 200
+        height: 300
     };
     $("#dataGridView1").kendoGrid(grid);
     url = "/Global/SearchProduct";
@@ -79,16 +79,17 @@ function subRefresh() {
                 //$("#_TotalPercentGL").val(_TotalPercentGL);
                 $("#_TotalPercentGL").data("kendoNumericTextBox").value(_TotalPercentGL);
 
-                if (data.listReksaTieringNotificationSubs.length != 0) {
-                    var dataSource = new kendo.data.DataSource(
-                        {
-                            data: data.listReksaTieringNotificationSubs
-                        });
-                    var SubsFeegrid = $('#dataGridView1').data('kendoGrid');
-                    SubsFeegrid.setDataSource(dataSource);
-                    SubsFeegrid.dataSource.pageSize(10);
-                    SubsFeegrid.dataSource.page(1);
-                    SubsFeegrid.select("tr:eq(0)");
+                if (data.listReksaTieringNotificationSubs.length != 0)
+                {
+                    var Grid1 = $("#dataGridView1").data("kendoGrid");
+                    var gridData = populateGrid(data.listReksaTieringNotificationSubs);
+                    Grid1.setOptions(gridData);
+                    Grid1.dataSource.pageSize(10);
+                    Grid1.dataSource.page(1);
+                    Grid1.select("tr:eq(0)");
+                    Grid1.hideColumn('TrxType');
+                    Grid1.hideColumn('ProdId');
+
                 } else {
                     $("#dataGridView1").data('kendoGrid').dataSource.data([]);
                 }
@@ -106,6 +107,40 @@ function subRefresh() {
             $("#load_screen").hide();
         }
     });
+}
+
+function populateGrid(response) {
+    if (response.length > 0) {
+        var columns = generateColumns(response);
+        return gridOptions = {
+            dataSource: {
+                transport: {
+                    read: function (options) {
+                        options.success(response);
+                    }
+                },
+                pageSize: 6,
+                page: 1
+            },
+            change: onRowSubsFeeSelect,
+            columns: columns,
+            pageable: true,
+            selectable: true,
+            height: 300
+        };
+    } else {
+        $("#dataGridView1").empty();
+    }
+}
+function generateColumns(response) {
+    var columnNames = Object.keys(response[0]);
+    return columnNames.map(function (name) {
+        return {
+            field: name,
+            width: 400,
+            title: name,
+        };
+    })
 }
 
 function subNew() {
@@ -371,6 +406,10 @@ function subSave(intMyType) {
     obj['Persentase'] = $("#_percentGL5").val();
     arrSettingGL.push(obj);
 
+    var grid1 = $("#dataGridView1").data("kendoGrid");
+    var arrTieringSubsFee;
+    arrTieringSubsFee = grid1.dataSource.view();
+
     var model = JSON.stringify({
         'ProdId': $("#ProdId").val(),
         'TrxType': intMyType,
@@ -378,9 +417,10 @@ function subSave(intMyType) {
         'maxPctFeeNonEmployee': $("#_txtMaxPctNonKary").val(),
         'minPctFeeEmployee': $("#_txtMinPctKary").val(),
         'maxPctFeeEmployee': $("#_txtMaxPctKary").val(),
-        'dtSettingGL': arrSettingGL
+        'dtSettingGL': arrSettingGL,
+        'dtTieringSubsFee': arrTieringSubsFee
     });
-
+    
     $.ajax({
         type: 'POST',
         url: '/Parameter/MaintainSubsFee',
@@ -605,8 +645,7 @@ function subControlTiering(IsTrue) {
         IsTrueReverse = false;
     else
         IsTrueReverse = true;
-    //$("#_fromPercent").prop('disabled', IsTrueReverse);
-    //$("#_toPercent").prop('disabled', IsTrueReverse);
+
     $("#_fromPercent").data("kendoNumericTextBox").enable(IsTrue);
     $("#_toPercent").data("kendoNumericTextBox").enable(IsTrue);
     $("#_Persetujuan").prop('disabled', IsTrueReverse);

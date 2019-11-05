@@ -380,5 +380,51 @@ namespace ReksaAPI.Controllers
             ErrMsg = ErrMsg.Replace("ReksaUpdateOSSHIDPopulateVerifyDetail - Core .Net SqlClient Data Provider\n", "");
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+        [Route("api/Otorisasi/ViewApprovalDelete")]
+        [HttpGet("{id}")]
+        public JsonResult ViewApprovalDelete()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
+
+            blnResult = cls.ReksaViewApprovalDelete(out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaViewApprovalDelete - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Otorisasi/DeleteBooking")]
+        [HttpPost("{id}")]
+        public JsonResult DeleteBooking([FromBody]DataTable dtData, [FromQuery]string NIK, [FromQuery]string Guid)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int intTranId = 0; 
+
+            for (int i = 0; i < dtData.Rows.Count; i++)
+            {
+                int.TryParse(dtData.Rows[i]["TranId"].ToString(), out intTranId);
+                blnResult = cls.ReksaDeleteBooking(intTranId, NIK, Guid, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaDeleteBooking - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+        [Route("api/Otorisasi/RejectDeleteTrans")]
+        [HttpPost("{id}")]
+        public JsonResult RejectDeleteTrans([FromBody]DataTable dtData)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            int intTranId = 0; int intAgentId = 0;
+
+            for (int i = 0; i < dtData.Rows.Count; i++)
+            {
+                int.TryParse(dtData.Rows[i]["TranId"].ToString(), out intTranId);
+                int.TryParse(dtData.Rows[i]["AgentCode"].ToString(), out intAgentId);
+                
+                blnResult = cls.ReksaRejectDeleteTrans(intTranId, intAgentId, out ErrMsg);
+                ErrMsg = ErrMsg.Replace("ReksaRejectDeleteTrans - Core .Net SqlClient Data Provider\n", "");
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

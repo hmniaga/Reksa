@@ -73,7 +73,7 @@ namespace ReksaAPI.Models
         public int ProdId { get; set; }
         public int Sequence { get; set; }
         public string GLName { get; set; }
-        public int GLNumber { get; set; }
+        public string GLNumber { get; set; }
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
     }
@@ -95,7 +95,7 @@ namespace ReksaAPI.Models
     {
         public int Seq { get; set; }
         public string NamaGL { get; set; }
-        public int NomorGL { get; set; }
+        public string NomorGL { get; set; }
         public decimal Persentase { get; set; }
         public string OfficeId { get; set; }
     }
@@ -120,7 +120,7 @@ namespace ReksaAPI.Models
         public int ProdId { get; set; }
         public int Sequence { get; set; }
         public string GLName { get; set; }
-        public int GLNumber { get; set; }
+        public string GLNumber { get; set; }
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
     }
@@ -150,7 +150,7 @@ namespace ReksaAPI.Models
         public int ProdId { get; set; }
         public int Sequence { get; set; }
         public string GLName { get; set; }
-        public int GLNumber { get; set; }
+        public string GLNumber { get; set; }
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
     }
@@ -275,7 +275,7 @@ namespace ReksaAPI.Models
         public int ProdId { get; set; }
         public int Sequence { get; set; }
         public string GLName { get; set; }
-        public int GLNumber { get; set; }
+        public string GLNumber { get; set; }
         public decimal Percentage { get; set; }
         public string OfficeId { get; set; }
     }

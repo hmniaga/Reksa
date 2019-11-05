@@ -33,6 +33,90 @@ $("#btnCancel").click(function () {
     subCancel();
 });
 
+$("#btnAdd").click(function () {
+    subControlTiering(true);
+    subResetTiering();
+});
+
+$("#btnSimpan").click(function () {
+    if ($("#_fromPercent").data("kendoNumericTextBox").value() == 0 ||
+        $("#_toPercent").data("kendoNumericTextBox").value() == 0 ||
+        $("#_Persetujuan").val() == "") {
+        swal("Warning", "Data Tiering Tidak Lengkap", "warning");
+        return;
+    }
+    if ($("#_fromPercent").data("kendoNumericTextBox").value() >
+        $("#_toPercent").data("kendoNumericTextBox").value()) {
+        swal("Warning", "Percent To tidak boleh lebih besar dari Percent From !", "warning");
+        return;
+    }
+    if ($("#_toPercent").data("kendoNumericTextBox").value() > 100) {
+        swal("Warning", "Percent To tidak boleh lebih besar dari 100% !", "warning");
+        return;
+    }
+    if ($("#_fromPercent").data("kendoNumericTextBox").value() > 100) {
+        swal("Warning", "Percent From tidak boleh lebih besar dari 100% !", "warning");
+        return;
+    }
+
+    var blnPassed = true;
+    var grid1 = $("#dataGridView1").data("kendoGrid");
+    grid1.refresh();
+    grid1.tbody.find("tr[role='row']").each(function () {
+        var dataItem = grid1.dataItem(this);
+        if (dataItem.PercentFrom <= $("#_fromPercent").data("kendoNumericTextBox").value() && dataItem.PercentTo >= $("#_fromPercent").data("kendoNumericTextBox").value()) {
+            swal("Warning", "Data fee sudah ada(1)", "warning");
+            blnPassed = false;
+            return;
+        }
+        if (dataItem.PercentFrom <= $("#_toPercent").data("kendoNumericTextBox").value() && dataItem.PercentTo >= $("#_toPercent").data("kendoNumericTextBox").value()) {
+            swal("Warning", "Data fee sudah ada(2)", "warning");
+            blnPassed = false;
+            return;
+        }
+    })
+
+    if (blnPassed) {
+        var arrTieringNotif = [];
+        var obj = {};
+        obj['PercentFrom'] = $("#_fromPercent").data("kendoNumericTextBox").value();
+        obj['PercentTo'] = $("#_toPercent").data("kendoNumericTextBox").value();
+        obj['MustApproveBy'] = $("#_Persetujuan").val();
+
+        arrTieringNotif.push(obj);
+        var dataSet = grid1.dataSource.view();
+        $.merge(arrTieringNotif, dataSet);
+
+        var dataSource = new kendo.data.DataSource(
+            {
+                data: arrTieringNotif
+            });
+        grid1.setDataSource(dataSource);
+        grid1.dataSource.pageSize(5);
+        grid1.dataSource.page(1);
+        grid1.select("tr:eq(0)");
+        subControlTiering(false);
+        subResetTiering();
+    }
+});
+$("#btnHapus").click(function () {
+    var grid1 = $("#dataGridView1").data("kendoGrid");
+    grid1.refresh();
+
+    grid1.tbody.find("tr[role='row']").each(function () {
+        var dataItem = grid1.dataItem(this);
+        if (dataItem.PercentFrom == $("#_fromPercent").val() && dataItem.PercentTo == $("#_toPercent").val()) {
+            grid1.dataSource.remove(dataItem);
+            subControlTiering(false);
+            subResetTiering();
+        }
+    })
+});
+$("#btnBatal").click(function () {
+    subControlTiering(false);
+    subResetTiering();
+});
+
 //change
 $("#_noGL1").change(function () {
     var res = ValidateGL($("#_noGL1").val());
@@ -204,8 +288,6 @@ function onSpin_percentGL5() {
 
 function onRowSubsFeeSelect(e) {
     var data = this.dataItem(this.select());    
-    //$("#_fromPercent").val(data.PercentFrom);
-    //$("#_toPercent").val(data.PercentTo);
     $("#_fromPercent").data("kendoNumericTextBox").value(data.PercentFrom);
     $("#_toPercent").data("kendoNumericTextBox").value(data.PercentTo);
     $("#_Persetujuan").val(data.MustApproveBy);

@@ -1219,5 +1219,121 @@ namespace Reksa.Controllers
             }
             return Json(new { blnResult, ErrMsg, dsResult });
         }
+
+        public JsonResult ViewApprovalDelete()
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+
+            DataSet dsResult = new DataSet();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    MediaTypeWithQualityHeaderValue contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Accept.Add(contentType);
+                    HttpResponseMessage response = client.GetAsync("/api/Otorisasi/ViewApprovalDelete").Result;
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    JObject Object = JObject.Parse(stringData);
+                    blnResult = Object.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = Object.SelectToken("errMsg").Value<string>();
+
+                    JToken TokenData = Object["dsResult"];
+                    string JsonData = JsonConvert.SerializeObject(TokenData);
+                    dsResult = JsonConvert.DeserializeObject<DataSet>(JsonData);
+                    _session.SetString("DataSetJson", JsonConvert.SerializeObject(dsResult));
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+
+        public ActionResult DeleteBooking(string listTranId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] _SelectedTranId;
+                listTranId = (listTranId + "***").Replace("|***", "");
+                _SelectedTranId = listTranId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', _SelectedTranId);
+
+                dv1.RowFilter = " tranId in (" + filter + ")";
+
+                DataTable dtData = dv1.ToTable();
+                if (dtData == null || dtData.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+                var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/DeleteBooking?NIK=" + _intNIK + "&Guid=" + _strGuid, Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }                
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
+
+        public ActionResult RejectDeleteTrans(string listTranId)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            try
+            {
+                string[] _SelectedTranId;
+                listTranId = (listTranId + "***").Replace("|***", "");
+                _SelectedTranId = listTranId.Split('|');
+
+                var sessionDataset = _session.GetString("DataSetJson");
+                DataSet dsSelected = JsonConvert.DeserializeObject<DataSet>(sessionDataset);
+                DataView dv1 = dsSelected.Tables[0].DefaultView;
+                var filter = string.Join(',', _SelectedTranId);
+
+                dv1.RowFilter = " tranId in (" + filter + ")";
+
+                DataTable dtData = dv1.ToTable();
+                if (dtData == null || dtData.Columns.Count == 0)
+                {
+                    ErrMsg = "No data to save!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+                var Content = new StringContent(JsonConvert.SerializeObject(dtData));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_strAPIUrl);
+                    Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                    var request = client.PostAsync("/api/Otorisasi/RejectDeleteTrans", Content);
+                    var response = request.Result.Content.ReadAsStringAsync().Result;
+                    JObject strObject = JObject.Parse(response);
+                    blnResult = strObject.SelectToken("blnResult").Value<bool>();
+                    ErrMsg = strObject.SelectToken("errMsg").Value<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrMsg = e.Message;
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
     }
 }

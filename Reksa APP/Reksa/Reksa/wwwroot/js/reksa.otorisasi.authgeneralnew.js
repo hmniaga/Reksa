@@ -485,7 +485,7 @@ function subAcceptReject(IsAccept) {
                     }
                 }
                 else {
-                    swal("Warning", data.ErrMsg, "warning");
+                    setTimeout(function () { swal("Warning", data.ErrMsg, "warning") }, 500); 
                 }
             },
             complete: function () {

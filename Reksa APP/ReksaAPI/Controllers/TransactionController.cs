@@ -371,324 +371,340 @@ namespace ReksaAPI.Controllers
             }
             return Json(new { blnResult, ErrMsg });
         }
-        //[Route("api/Transaction/PopulateVerifyOutgoingTT")]
-        //[HttpGet("{id}")]
-        //public JsonResult PopulateVerifyOutgoingTT([FromQuery]string JenisProses)
-        //{
-        //    bool blnResult = false;
-        //    string ErrMsg = "";
-        //    DataSet dsResult = new DataSet();
+        [Route("api/Transaction/PopulateVerifyOutgoingTT")]
+        [HttpGet("{id}")]
+        public JsonResult PopulateVerifyOutgoingTT([FromQuery]string JenisProses)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            DataSet dsResult = new DataSet();
 
-        //    blnResult = cls.ReksaPopulateVerifyOutgoingTT(JenisProses, out ErrMsg, out dsResult);
-        //    ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyOutgoingTT - Core .Net SqlClient Data Provider\n", "");
-        //    return Json(new { blnResult, ErrMsg, dsResult });
-        //}
-        //[Route("api/Transaction/ProcessTT")]
-        //[HttpGet("{id}")]
-        //public JsonResult ProcessTT([FromQuery]int NIK, [FromQuery]string Branch, [FromQuery]string BillId, [FromQuery]string JenisJurnal)
-        //{
-        //    bool blnResult = false;
-        //    string ErrMsg = "";
-        //    string strErr = "";
-        //    string IsCurrencyHoliday = "";
-        //    string strNewValueDate = "";
-        //    DataSet dsResult = new DataSet();
+            blnResult = cls.ReksaPopulateVerifyOutgoingTT(JenisProses, out ErrMsg, out dsResult);
+            ErrMsg = ErrMsg.Replace("ReksaPopulateVerifyOutgoingTT - Core .Net SqlClient Data Provider\n", "");
+            return Json(new { blnResult, ErrMsg, dsResult });
+        }
+        [Route("api/Transaction/ProcessTT")]
+        [HttpGet("{id}")]
+        public JsonResult ProcessTT([FromBody]DataTable dtData, [FromQuery]int NIK, [FromQuery]string Branch, [FromQuery]string JenisJurnal)
+        {
+            bool blnResult = false;
+            string ErrMsg = "";
+            string strErr = "";
+            string IsCurrencyHoliday = "";
+            string strNewValueDate = "";
+            DataSet dsResult = new DataSet();
 
-        //    string strRemittanceNumber = "";
-        //    string strGuidPB, strGuidTT;
-        //    bool bStatusPB = true;
-        //    bool bStatusTT = true;
-        //    strGuidPB = System.Guid.NewGuid().ToString();
-        //    strGuidTT = System.Guid.NewGuid().ToString();
-        //    //20130614, liliana, ODKIB12036, begin
-        //    //DataTable dtDataPB = PrepareDataPBGL(BillId, "PB");
-        //    string isHolidayCurrency = "";
-        //    DateTime NewValueDate = DateTime.Today;
+            string strRemittanceNumber = "";
+            string strGuidPB, strGuidTT;
+            bool bStatusPB = true;
+            bool bStatusTT = true;
+            strGuidPB = System.Guid.NewGuid().ToString();
+            strGuidTT = System.Guid.NewGuid().ToString();
+            string isHolidayCurrency = "";
+            DateTime NewValueDate = DateTime.Today;
+            for (int i = 0; i < dtData.Rows.Count; i++)
+            {
 
-        //    DataTable dtDataPB = PrepareDataPBGL(NIK, Branch, BillId, "PB", out isHolidayCurrency, out NewValueDate);
+                DataTable dtDataPB = PrepareDataPBGL(NIK, Branch, dtData.Rows[i]["BillId"].ToString(), "PB", out isHolidayCurrency, out NewValueDate);
 
-        //    if (dtDataPB == null)
-        //    {
-        //        ErrMsg = "Gagal generate data GL vs GNC (1)!";
-        //        return;
-        //    }
+                if (dtDataPB == null)
+                {
+                    blnResult = false;
+                    ErrMsg = "Gagal generate data GL vs GNC (1)!";
+                    return Json(new { blnResult, ErrMsg });
+                }
 
-        //    if (dtDataPB.Rows.Count == 0)
-        //    {
-        //        ErrMsg = "Gagal generate data GL vs GNC (2)!";
-        //        return;
-        //    }
+                if (dtDataPB.Rows.Count == 0)
+                {
+                    blnResult = false;
+                    ErrMsg = "Gagal generate data GL vs GNC (2)!";
+                    return Json(new { blnResult, ErrMsg });
+                }
 
-        //    DataTable dtDataTT = PrepareDataPBGL(NIK, Branch, BillId, "TT", out isHolidayCurrency, out NewValueDate);
+                DataTable dtDataTT = PrepareDataPBGL(NIK, Branch, dtData.Rows[i]["BillId"].ToString(), "TT", out isHolidayCurrency, out NewValueDate);
 
-        //    if (dtDataTT == null)
-        //    {
-        //        ErrMsg = "Gagal generate data TT (1)!";
-        //        return;
-        //    }
+                if (dtDataTT == null)
+                {
+                    blnResult = false;
+                    ErrMsg = "Gagal generate data TT (1)!";
+                    return Json(new { blnResult, ErrMsg });
+                }
 
-        //    if (dtDataTT.Rows.Count == 0)
-        //    {
-        //        ErrMsg = "Gagal generate data TT (2)!";
-        //        return;
-        //    }
-        //    string Today = System.DateTime.Today.ToString("dd-MMM-yyyy");
-        //    string strNewDate = NewValueDate.ToString("dd-MMM-yyyy");
+                if (dtDataTT.Rows.Count == 0)
+                {
+                    blnResult = false;
+                    ErrMsg = "Gagal generate data TT (2)!";
+                    return Json(new { blnResult, ErrMsg });
+                }
+                string Today = System.DateTime.Today.ToString("dd-MMM-yyyy");
+                string strNewDate = NewValueDate.ToString("dd-MMM-yyyy");
 
-        //    if (isHolidayCurrency != "")
-        //    {
-        //        ErrMsg = "Karena tanggal " + Today.ToString() + "adalah Currency Holiday. Tanggal valuta menggunakan tanggal " + strNewDate.ToString();
-        //    }
+                if (isHolidayCurrency != "")
+                {
+                    ErrMsg = "Karena tanggal " + Today.ToString() + "adalah Currency Holiday. Tanggal valuta menggunakan tanggal " + strNewDate.ToString();
+                }
 
-        //    //lakukan transaksi GL vs GNC (valas)
-        //    bStatusPB = TransactionGLvsGNC(BillId, dtDataPB, strGuidPB, strTTMasterGuid, out strErr);
+                //lakukan transaksi GL vs GNC (valas)
+                bStatusPB = TransactionGLvsGNC(NIK, Branch, dtData.Rows[i]["BillId"].ToString(), dtDataPB, strGuidPB, dtData.Rows[i]["TranGuid"].ToString(), out strErr);
 
-        //    if (strErr.ToString() != "")
-        //    {
-        //        ErrMsg = strErr.ToString();
-        //        TransactionCreateABCSReverse(strGuidPB, BillId);
-        //        bStatusPB = false;
-        //    }
+                if (strErr.ToString() != "")
+                {
+                    ErrMsg = strErr.ToString();
+                    TransactionCreateABCSReverse(strGuidPB, dtData.Rows[i]["BillId"].ToString());
+                    bStatusPB = false;
+                }
 
-        //    if (bStatusPB == true)
-        //    {
-        //        //lakukan transaksi TT
-        //        bStatusTT = TransactionTT(BillId, dtDataTT, strGuidTT, strTTMasterGuid, out strErr, out strRemittanceNumber);
+                if (bStatusPB == true)
+                {
+                    //lakukan transaksi TT
+                    bStatusTT = TransactionTT(Branch, dtData.Rows[i]["BillId"].ToString(), dtDataTT, strGuidTT, dtData.Rows[i]["TranGuid"].ToString(), out strErr, out strRemittanceNumber);
 
-        //        if (strErr.ToString() != "")
-        //        {
-        //            ErrMsg = strErr.ToString();
-        //            bStatusTT = false;
-        //        }
+                    if (strErr.ToString() != "")
+                    {
+                        ErrMsg = strErr.ToString();
+                        bStatusTT = false;
+                    }
 
-        //    }
+                }
+                //Kalau ke 2 nya sudah sukses
+                if ((bStatusPB == true) && (bStatusTT == true))
+                {
+                    //ubah status otor menjadi 1
+                    int intBillId = 0;
+                    int.TryParse(dtData.Rows[i]["BillId"].ToString(), out intBillId);
+                    blnResult = cls.ReksaAuthorizeOutgoingTT(NIK, "Proses Outgoing TT", true, intBillId, strRemittanceNumber, out ErrMsg);
+                    ErrMsg = ErrMsg.Replace("ReksaAuthorizeOutgoingTT - Core .Net SqlClient Data Provider\n", "");
 
-        //    //Kalau ke 2 nya sudah sukses
-        //    if ((bStatusPB == true) && (bStatusTT == true))
-        //    {
-        //        //ubah status otor menjadi 1
-        //        if (subAuthOutgoingTT("Proses Outgoing TT", true, BillId, strRemittanceNumber))
-        //        {
-        //            MessageBox.Show("Data berhasil diproses dan dijurnal! Remittance Number : " + strRemittanceNumber.ToString(), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Error Melakukan Approve Data!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        }
-        //    }
-
-        //    //refresh ulang tampilan
-        //    subPopulate(JenisProses);
-
-
+                }
+            }
+            return Json(new { blnResult, ErrMsg });
+        }
 
 
-        //    blnResult = cls.ReksaPrepareDataJurnalTT(NIK, Branch, BillId, JenisJurnal, out ErrMsg, out IsCurrencyHoliday, out strNewValueDate, out dsResult);
-        //    ErrMsg = ErrMsg.Replace("ReksaPrepareDataJurnalTT - Core .Net SqlClient Data Provider\n", "");
-        //    return Json(new { blnResult, ErrMsg, IsCurrencyHoliday, strNewValueDate, dsResult });
-        //}
-        //private DataTable PrepareDataPBGL(int NIK, string Branch, string BillId, string JenisJurnal, out string IsCurrencyHoliday, out DateTime NewValueDate)
-        //{
-        //    string ErrMsg = "";
+        private DataTable PrepareDataPBGL(int NIK, string Branch, string BillId, string JenisJurnal, out string IsCurrencyHoliday, out DateTime NewValueDate)
+        {
+            string ErrMsg = "";
 
-        //    IsCurrencyHoliday = "";
-        //    NewValueDate = DateTime.Today;
-        //    string strNewValueDate = "";
-        //    DataSet dsResult = new DataSet();
-        //    int intBillId;
-        //    int.TryParse(BillId, out intBillId);
+            IsCurrencyHoliday = "";
+            NewValueDate = DateTime.Today;
+            string strNewValueDate = "";
+            DataSet dsResult = new DataSet();
+            int intBillId;
+            int.TryParse(BillId, out intBillId);
 
-        //    if (cls.ReksaPrepareDataJurnalTT(NIK, Branch, intBillId, JenisJurnal, out ErrMsg, out IsCurrencyHoliday, out strNewValueDate, out dsResult))
-        //    {
-        //        DateTime.TryParse(strNewValueDate, out NewValueDate);
-        //        return dsResult.Tables[0];
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-        //private bool TransactionGLvsGNC(int NIK, string Branch, string BillId, DataTable dtDataPB, string strGuid, string strTTGuid, out string strErrorMsg)
-        //{
-        //    string StatusPB;
-        //    bool bSuccess = true;
-        //    strErrorMsg = "";
-        //    StatusPB = dtDataPB.Rows[0]["StatusJurnal"].ToString();
-        //    MaintainStatusJurnalTT model = new MaintainStatusJurnalTT();
+            if (cls.ReksaPrepareDataJurnalTT(NIK, Branch, intBillId, JenisJurnal, out ErrMsg, out IsCurrencyHoliday, out strNewValueDate, out dsResult))
+            {
+                DateTime.TryParse(strNewValueDate, out NewValueDate);
+                return dsResult.Tables[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private bool TransactionGLvsGNC(int NIK, string Branch, string BillId, DataTable dtDataPB, string strGuid, string strTTGuid, out string strErrorMsg)
+        {
+            string StatusPB;
+            bool bSuccess = true;
+            strErrorMsg = "";
+            StatusPB = dtDataPB.Rows[0]["StatusJurnal"].ToString();
+            MaintainStatusJurnalTT model = new MaintainStatusJurnalTT();
 
-        //    //lakukan jurnal, jika status sudah berhasil/suspect tidak dijurnal ulang  
-        //    //lakukan jurnal GL vs GNC via trancode 7092
-        //    if ((StatusPB != "1") && (StatusPB != "3"))
-        //    {
-        //        string strTransactionBranch = Branch;
-        //        string strEffectiveDate = dtDataPB.Rows[0]["EffectiveDate"].ToString();                
-        //        decimal dcChargeAmount = 0;
-        //        decimal dcChargeRate = 0;
-        //        string strChargesCurrency = "";
-        //        string strBranchCodeDebitting = dtDataPB.Rows[0]["BranchCodeDebitting"].ToString();
-        //        string strBranchCodeCreditting = dtDataPB.Rows[0]["BranchCodeCrediting"].ToString();
-        //        string strRemark1 = dtDataPB.Rows[0]["Remark1"].ToString();
-        //        string strRemark2 = "";
-        //        string strRemark3 = "";
-        //        string strDealNoCredit = "";
-        //        string strDealNoDebit = "";
-        //        string strSIBSTranCode = "7092";
-        //        string strSupervisorId = NIK.ToString();
-        //        string strLogDesc = "Online Journal GL vs GNC on authorization - Bill Id : " + BillId.ToString() + " - Debit Account No : " + model.DebitAccount + " - Credit Account No : " + model.CreditAccount;
+            //lakukan jurnal, jika status sudah berhasil/suspect tidak dijurnal ulang  
+            //lakukan jurnal GL vs GNC via trancode 7092
+            if ((StatusPB != "1") && (StatusPB != "3"))
+            {
+                string strTransactionBranch = Branch;
+                string strEffectiveDate = dtDataPB.Rows[0]["EffectiveDate"].ToString();
+                decimal dcChargeAmount = 0;
+                decimal dcChargeRate = 0;
+                string strChargesCurrency = "";
+                string strBranchCodeDebitting = dtDataPB.Rows[0]["BranchCodeDebitting"].ToString();
+                string strBranchCodeCreditting = dtDataPB.Rows[0]["BranchCodeCrediting"].ToString();
+                string strRemark1 = dtDataPB.Rows[0]["Remark1"].ToString();
+                string strRemark2 = "";
+                string strRemark3 = "";
+                string strDealNoCredit = "";
+                string strDealNoDebit = "";
+                string strSIBSTranCode = "7092";
+                string strSupervisorId = NIK.ToString();
+                string strLogDesc = "Online Journal GL vs GNC on authorization - Bill Id : " + BillId.ToString() + " - Debit Account No : " + model.DebitAccount + " - Credit Account No : " + model.CreditAccount;
 
 
-        //        int intBillId;
-        //        int.TryParse(BillId, out intBillId);
-        //        model.BillId = intBillId;
-        //        model.TTGuid = strTTGuid;
-        //        model.Guid = strGuid;
-        //        model.JenisJurnal = "PB";
-        //        model.CreditAccount = dtDataPB.Rows[0]["CredittingAccount"].ToString();
-        //        model.CreditCurrency = dtDataPB.Rows[0]["CredittingCurrency"].ToString();
-        //        model.CreditAmount = decimal.Parse(dtDataPB.Rows[0]["CredittingAmount"].ToString());
-        //        model.DebitAccount = dtDataPB.Rows[0]["DebittingAccount"].ToString();
-        //        model.DebitCurrency = dtDataPB.Rows[0]["DebittingCurrency"].ToString();
-        //        model.DebitAmount = decimal.Parse(dtDataPB.Rows[0]["DebittingAmount"].ToString());
-        //        model.TTBuy = decimal.Parse(dtDataPB.Rows[0]["TTBuy"].ToString());
-        //        model.TTSell = decimal.Parse(dtDataPB.Rows[0]["TTSell"].ToString());
-        //        model.BNBuy = decimal.Parse(dtDataPB.Rows[0]["TTBuy"].ToString());
-        //        model.BNSell = decimal.Parse(dtDataPB.Rows[0]["TTSell"].ToString());
-        //        model.FeeFullAmount = 0;
-        //        model.FeeCurrency = "";
-        //        model.DebittingAccountFee = "";
-        //        model.Status = bSuccess;
-        //        model.ErrorMsg = strErrorMsg;
+                int intBillId;
+                int.TryParse(BillId, out intBillId);
+                model.BillId = intBillId;
+                model.TTGuid = strTTGuid;
+                model.Guid = strGuid;
+                model.JenisJurnal = "PB";
+                model.CreditAccount = dtDataPB.Rows[0]["CredittingAccount"].ToString();
+                model.CreditCurrency = dtDataPB.Rows[0]["CredittingCurrency"].ToString();
+                model.CreditAmount = decimal.Parse(dtDataPB.Rows[0]["CredittingAmount"].ToString());
+                model.DebitAccount = dtDataPB.Rows[0]["DebittingAccount"].ToString();
+                model.DebitCurrency = dtDataPB.Rows[0]["DebittingCurrency"].ToString();
+                model.DebitAmount = decimal.Parse(dtDataPB.Rows[0]["DebittingAmount"].ToString());
+                model.TTBuy = decimal.Parse(dtDataPB.Rows[0]["TTBuy"].ToString());
+                model.TTSell = decimal.Parse(dtDataPB.Rows[0]["TTSell"].ToString());
+                model.BNBuy = decimal.Parse(dtDataPB.Rows[0]["TTBuy"].ToString());
+                model.BNSell = decimal.Parse(dtDataPB.Rows[0]["TTSell"].ToString());
+                model.FeeFullAmount = 0;
+                model.FeeCurrency = "";
+                model.DebittingAccountFee = "";
+                model.Status = bSuccess;
+                model.ErrorMsg = strErrorMsg;
+                model.TranBranch = Branch;
 
-        //       //bSuccess = this._clsCoreBankMessaging.TransactionOverbooking7092(
-        //       //this.ClQ, NIK
-        //       //, strLogDesc, strGuid, strTransactionBranch, strEffectiveDate
-        //       //, model.DebitAccount, model.DebitAmount, model.CreditAccount
-        //       //, model.CreditAmount, model.TTBuy, model.TTSell
-        //       //, dcChargeAmount, dcChargeRate, model.DebitCurrency
-        //       //, model.CreditCurrency, strChargesCurrency
-        //       //, strBranchCodeDebitting, strBranchCodeCreditting
-        //       //, strRemark1, strRemark2, strRemark3, strDealNoCredit
-        //       //, strDealNoDebit, strSIBSTranCode, strSupervisorId
-        //       //, out strErrorMsg);
+                //bSuccess = this._clsCoreBankMessaging.TransactionOverbooking7092(
+                //this.ClQ, NIK
+                //, strLogDesc, strGuid, strTransactionBranch, strEffectiveDate
+                //, model.DebitAccount, model.DebitAmount, model.CreditAccount
+                //, model.CreditAmount, model.TTBuy, model.TTSell
+                //, dcChargeAmount, dcChargeRate, model.DebitCurrency
+                //, model.CreditCurrency, strChargesCurrency
+                //, strBranchCodeDebitting, strBranchCodeCreditting
+                //, strRemark1, strRemark2, strRemark3, strDealNoCredit
+                //, strDealNoDebit, strSIBSTranCode, strSupervisorId
+                //, out strErrorMsg);
 
-        //        if (strErrorMsg != "")
-        //        {
-        //            bSuccess = false;
-        //        }                
-        //        bSuccess = cls.ReksaUpdateStatusJurnalTT(model, out strErrorMsg);
-        //    }
-        //    return bSuccess;
-        //}
-        //private bool TransactionCreateABCSReverse(string Guid, string BillId)
-        //{
-        //    bool bOK = false;
-        //    string strErrorMsg = "";
-        //    string strLogDesc = "Reverse Online Journal GL vs GNC on authorization - Bill Id : " + BillId.ToString();
+                if (strErrorMsg != "")
+                {
+                    bSuccess = false;
+                }
+                bSuccess = cls.ReksaUpdateStatusJurnalTT(model, out strErrorMsg);
+            }
+            return bSuccess;
+        }
+        private bool TransactionCreateABCSReverse(string Guid, string BillId)
+        {
+            bool bOK = false;
+            string strErrorMsg = "";
+            string strLogDesc = "Reverse Online Journal GL vs GNC on authorization - Bill Id : " + BillId.ToString();
 
-        //    //bOK = this._clsCoreBankMessaging.TransactionCreateABCSReverse(this.ClQ, strLogDesc, Guid, out strErrorMsg);
+            //sementara true sampe conection to core jadi
+            bOK = true;
+            //bOK = this._clsCoreBankMessaging.TransactionCreateABCSReverse(this.ClQ, strLogDesc, Guid, out strErrorMsg);
 
-        //    return bOK;
-        //}
+            return bOK;
+        }
+        private bool TransactionTT(string TranBranch, string BillId, DataTable dtDataTT, string strGuid, string strTTGuid, out string strErrorMsg, out string strResult)
+        {
+            string StatusTT;
+            bool bSuccess = true;
+            strErrorMsg = "";
+            strResult = "";
+            StatusTT = dtDataTT.Rows[0]["StatusJurnal"].ToString();
 
-        //private bool TransactionTT(string Branch, string BillId, DataTable dtDataTT, string strGuid, string strTTGuid, out string strErrorMsg, out string strResult)
-        //{
-        //    string StatusTT;
-        //    bool bSuccess = true;
-        //    strErrorMsg = "";
-        //    strResult = "";
-        //    StatusTT = dtDataTT.Rows[0]["StatusJurnal"].ToString();
+            //lakukan jurnal, jika status sudah berhasil/suspect tidak dijurnal ulang  
+            //lakukan jurnal transaksi TT
+            if ((StatusTT != "1") && (StatusTT != "3"))
+            {
+                string strBankRef = dtDataTT.Rows[0]["BankRef"].ToString();
+                string strClientRef = dtDataTT.Rows[0]["ClientRef"].ToString();
+                string strValueDate = dtDataTT.Rows[0]["ValueDate"].ToString();
+                string strRemittingCcy = dtDataTT.Rows[0]["RemittingCcy"].ToString();
+                decimal dcRemittingAmt = decimal.Parse(dtDataTT.Rows[0]["RemittingAmt"].ToString());
+                string strDebitAccountCcy = dtDataTT.Rows[0]["DebitAccountCcy"].ToString();
+                string strDebittingAcctNo = dtDataTT.Rows[0]["DebittingAcctNo"].ToString();
+                string strApplicantName = dtDataTT.Rows[0]["ApplicantName"].ToString();
+                string strBeneficiaryName = dtDataTT.Rows[0]["BeneficiaryName"].ToString();
+                string strBeneAcctNo = dtDataTT.Rows[0]["BeneAcctNo"].ToString();
+                string strBeneAddr1 = dtDataTT.Rows[0]["BeneAddr1"].ToString();
+                string strBeneAddr2 = dtDataTT.Rows[0]["BeneAddr2"].ToString();
+                string strBeneAddr3 = dtDataTT.Rows[0]["BeneAddr3"].ToString();
+                string strBeneBankSwiftId = dtDataTT.Rows[0]["BeneBankSwiftId"].ToString();
+                string strBeneBankName = dtDataTT.Rows[0]["BeneBankName"].ToString();
+                string strBeneBankAddr1 = dtDataTT.Rows[0]["BeneBankAddr1"].ToString();
+                string strBeneBankAddr2 = dtDataTT.Rows[0]["BeneBankAddr2"].ToString();
+                string strBeneBankAddr3 = dtDataTT.Rows[0]["BeneBankAddr3"].ToString();
+                string strIntBankSwiftId = dtDataTT.Rows[0]["IntBankSwiftId"].ToString();
+                string strIntBankName = dtDataTT.Rows[0]["IntBankName"].ToString();
+                string strIntBankAddr1 = dtDataTT.Rows[0]["IntBankAddr1"].ToString();
+                string strIntBankAddr2 = dtDataTT.Rows[0]["IntBankAddr2"].ToString();
+                string strIntBankAddr3 = dtDataTT.Rows[0]["IntBankAddr3"].ToString();
+                string strDescription = dtDataTT.Rows[0]["PayDetail1"].ToString() + ' ' + dtDataTT.Rows[0]["PayDetail2"].ToString();
+                string strSenderRecvInfo1 = dtDataTT.Rows[0]["SenderRecvInfo1"].ToString();
+                string strSenderRecvInfo2 = dtDataTT.Rows[0]["SenderRecvInfo2"].ToString();
+                string strSenderRecvInfo3 = dtDataTT.Rows[0]["SenderRecvInfo3"].ToString();
+                string strDetailsOfCharges = dtDataTT.Rows[0]["DetailsOfCharges"].ToString();
+                string strOrderingCustAddr1 = dtDataTT.Rows[0]["OrderingCustAddr1"].ToString();
+                string strOrderingCustAddr2 = dtDataTT.Rows[0]["OrderingCustAddr2"].ToString();
+                string strOrderingCustAddr3 = dtDataTT.Rows[0]["OrderingCustAddr3"].ToString();
+                string strSenderRecvInfo4 = dtDataTT.Rows[0]["SenderRecvInfo4"].ToString();
+                string strSenderRecvInfo5 = dtDataTT.Rows[0]["SenderRecvInfo5"].ToString();
+                string strSenderRecvInfo6 = dtDataTT.Rows[0]["SenderRecvInfo6"].ToString();
+                string strResident = dtDataTT.Rows[0]["Resident"].ToString();
+                string strRemitterCountryOfResidentCode = dtDataTT.Rows[0]["RemitterCountryOfResidentCode"].ToString();
+                string strRemitterCategory = dtDataTT.Rows[0]["RemitterCategory"].ToString();
+                string strBeneficiaryCountryOfResidentCode = dtDataTT.Rows[0]["BeneficiaryCountryOfResidentCode"].ToString();
+                string strBeneficiaryCategory = dtDataTT.Rows[0]["BeneficiaryCategory"].ToString();
+                string strBeneficiaryAffiliationStatus = dtDataTT.Rows[0]["BeneficiaryAffiliationStatus"].ToString();
+                string strPaymentPurpose = dtDataTT.Rows[0]["PaymentPurpose"].ToString();
+                decimal TTBuy = decimal.Parse(dtDataTT.Rows[0]["TTBuy"].ToString());
+                decimal TTSell = decimal.Parse(dtDataTT.Rows[0]["TTSell"].ToString());
+                decimal BNBuy = decimal.Parse(dtDataTT.Rows[0]["BNBuy"].ToString());
+                decimal BNSell = decimal.Parse(dtDataTT.Rows[0]["BNSell"].ToString());
+                decimal NostroFee = decimal.Parse(dtDataTT.Rows[0]["NostroFee"].ToString());
+                decimal TaxFee = decimal.Parse(dtDataTT.Rows[0]["TaxFee"].ToString());
+                decimal FullAmountFee = decimal.Parse(dtDataTT.Rows[0]["FullAmountFee"].ToString());
+                decimal TransferFee = decimal.Parse(dtDataTT.Rows[0]["TransferFee"].ToString());
+                decimal ProvFee = decimal.Parse(dtDataTT.Rows[0]["ProvFee"].ToString());
+                decimal DebittingAmountWithoutFee = decimal.Parse(dtDataTT.Rows[0]["DebittingAmountWithoutFee"].ToString());
+                string strCIFNumber = dtDataTT.Rows[0]["CIFNumber"].ToString();
+                string strNostroBICCode = dtDataTT.Rows[0]["NostroBICCode"].ToString();
+                string strDebittingAccountFee = dtDataTT.Rows[0]["DebittingAccountFee"].ToString();
+                string strFeeCurrencyCode = dtDataTT.Rows[0]["FeeCurrencyCode"].ToString();
 
-        //    //lakukan jurnal, jika status sudah berhasil/suspect tidak dijurnal ulang  
-        //    //lakukan jurnal transaksi TT
-        //    if ((StatusTT != "1") && (StatusTT != "3"))
-        //    {
-        //        string strBankRef = dtDataTT.Rows[0]["BankRef"].ToString();
-        //        string strClientRef = dtDataTT.Rows[0]["ClientRef"].ToString();
-        //        string strValueDate = dtDataTT.Rows[0]["ValueDate"].ToString();
-        //        string strRemittingCcy = dtDataTT.Rows[0]["RemittingCcy"].ToString();
-        //        decimal dcRemittingAmt = decimal.Parse(dtDataTT.Rows[0]["RemittingAmt"].ToString());
-        //        string strDebitAccountCcy = dtDataTT.Rows[0]["DebitAccountCcy"].ToString();
-        //        string strDebittingAcctNo = dtDataTT.Rows[0]["DebittingAcctNo"].ToString();
-        //        string strApplicantName = dtDataTT.Rows[0]["ApplicantName"].ToString();
-        //        string strBeneficiaryName = dtDataTT.Rows[0]["BeneficiaryName"].ToString();
-        //        string strBeneAcctNo = dtDataTT.Rows[0]["BeneAcctNo"].ToString();
-        //        string strBeneAddr1 = dtDataTT.Rows[0]["BeneAddr1"].ToString();
-        //        string strBeneAddr2 = dtDataTT.Rows[0]["BeneAddr2"].ToString();
-        //        string strBeneAddr3 = dtDataTT.Rows[0]["BeneAddr3"].ToString();
-        //        string strBeneBankSwiftId = dtDataTT.Rows[0]["BeneBankSwiftId"].ToString();
-        //        string strBeneBankName = dtDataTT.Rows[0]["BeneBankName"].ToString();
-        //        string strBeneBankAddr1 = dtDataTT.Rows[0]["BeneBankAddr1"].ToString();
-        //        string strBeneBankAddr2 = dtDataTT.Rows[0]["BeneBankAddr2"].ToString();
-        //        string strBeneBankAddr3 = dtDataTT.Rows[0]["BeneBankAddr3"].ToString();
-        //        string strIntBankSwiftId = dtDataTT.Rows[0]["IntBankSwiftId"].ToString();
-        //        string strIntBankName = dtDataTT.Rows[0]["IntBankName"].ToString();
-        //        string strIntBankAddr1 = dtDataTT.Rows[0]["IntBankAddr1"].ToString();
-        //        string strIntBankAddr2 = dtDataTT.Rows[0]["IntBankAddr2"].ToString();
-        //        string strIntBankAddr3 = dtDataTT.Rows[0]["IntBankAddr3"].ToString();
-        //        string strDescription = dtDataTT.Rows[0]["PayDetail1"].ToString() + ' ' + dtDataTT.Rows[0]["PayDetail2"].ToString();
-        //        string strSenderRecvInfo1 = dtDataTT.Rows[0]["SenderRecvInfo1"].ToString();
-        //        string strSenderRecvInfo2 = dtDataTT.Rows[0]["SenderRecvInfo2"].ToString();
-        //        string strSenderRecvInfo3 = dtDataTT.Rows[0]["SenderRecvInfo3"].ToString();
-        //        string strDetailsOfCharges = dtDataTT.Rows[0]["DetailsOfCharges"].ToString();
-        //        string strOrderingCustAddr1 = dtDataTT.Rows[0]["OrderingCustAddr1"].ToString();
-        //        string strOrderingCustAddr2 = dtDataTT.Rows[0]["OrderingCustAddr2"].ToString();
-        //        string strOrderingCustAddr3 = dtDataTT.Rows[0]["OrderingCustAddr3"].ToString();
-        //        string strSenderRecvInfo4 = dtDataTT.Rows[0]["SenderRecvInfo4"].ToString();
-        //        string strSenderRecvInfo5 = dtDataTT.Rows[0]["SenderRecvInfo5"].ToString();
-        //        string strSenderRecvInfo6 = dtDataTT.Rows[0]["SenderRecvInfo6"].ToString();
-        //        string strResident = dtDataTT.Rows[0]["Resident"].ToString();
-        //        string strRemitterCountryOfResidentCode = dtDataTT.Rows[0]["RemitterCountryOfResidentCode"].ToString();
-        //        string strRemitterCategory = dtDataTT.Rows[0]["RemitterCategory"].ToString();
-        //        string strBeneficiaryCountryOfResidentCode = dtDataTT.Rows[0]["BeneficiaryCountryOfResidentCode"].ToString();
-        //        string strBeneficiaryCategory = dtDataTT.Rows[0]["BeneficiaryCategory"].ToString();
-        //        string strBeneficiaryAffiliationStatus = dtDataTT.Rows[0]["BeneficiaryAffiliationStatus"].ToString();
-        //        string strPaymentPurpose = dtDataTT.Rows[0]["PaymentPurpose"].ToString();
-        //        decimal TTBuy = decimal.Parse(dtDataTT.Rows[0]["TTBuy"].ToString());
-        //        decimal TTSell = decimal.Parse(dtDataTT.Rows[0]["TTSell"].ToString());
-        //        decimal BNBuy = decimal.Parse(dtDataTT.Rows[0]["BNBuy"].ToString());
-        //        decimal BNSell = decimal.Parse(dtDataTT.Rows[0]["BNSell"].ToString());
-        //        decimal NostroFee = decimal.Parse(dtDataTT.Rows[0]["NostroFee"].ToString());
-        //        decimal TaxFee = decimal.Parse(dtDataTT.Rows[0]["TaxFee"].ToString());
-        //        decimal FullAmountFee = decimal.Parse(dtDataTT.Rows[0]["FullAmountFee"].ToString());
-        //        decimal TransferFee = decimal.Parse(dtDataTT.Rows[0]["TransferFee"].ToString());
-        //        decimal ProvFee = decimal.Parse(dtDataTT.Rows[0]["ProvFee"].ToString());
-        //        decimal DebittingAmountWithoutFee = decimal.Parse(dtDataTT.Rows[0]["DebittingAmountWithoutFee"].ToString());
-        //        string strCIFNumber = dtDataTT.Rows[0]["CIFNumber"].ToString();
-        //        string strNostroBICCode = dtDataTT.Rows[0]["NostroBICCode"].ToString();
-        //        string strDebittingAccountFee = dtDataTT.Rows[0]["DebittingAccountFee"].ToString();
-        //        string strFeeCurrencyCode = dtDataTT.Rows[0]["FeeCurrencyCode"].ToString();
+                string strLogDesc = "Online Journal TT on authorization - Bill Id : " + BillId.ToString() + " - Debit Account No : " + strDebittingAcctNo + " - Credit Account No : " + strBeneAcctNo;
 
-        //        string strLogDesc = "Online Journal TT on authorization - Bill Id : " + BillId.ToString() + " - Debit Account No : " + strDebittingAcctNo + " - Credit Account No : " + strBeneAcctNo;
+                //Perlu Maintain ke Core Banking
 
-        //        bSuccess = this._clsCoreBankMessaging.CallTransactionTTOrdering(
-        //       this.ClQ, intNIK
-        //       , strLogDesc, strGuid, strBankRef, strClientRef, strValueDate, strRemittingCcy, dcRemittingAmt
-        //       , strDebitAccountCcy, strDebittingAcctNo, strApplicantName, strBeneficiaryName, strBeneAcctNo
-        //       , strBeneAddr1, strBeneAddr2, strBeneAddr3, strBeneBankSwiftId, strBeneBankName, strBeneBankAddr1
-        //       , strBeneBankAddr2, strBeneBankAddr3, strIntBankSwiftId, strIntBankName, strIntBankAddr1, strIntBankAddr2
-        //       , strIntBankAddr3, strDescription, strSenderRecvInfo1, strSenderRecvInfo2, strSenderRecvInfo3, strDetailsOfCharges
-        //       , strOrderingCustAddr1, strOrderingCustAddr2, strOrderingCustAddr3, strSenderRecvInfo4
-        //       , strSenderRecvInfo5, strSenderRecvInfo6, strResident, strRemitterCountryOfResidentCode
-        //       , strRemitterCategory, strBeneficiaryCountryOfResidentCode, strBeneficiaryCategory
-        //       , strBeneficiaryAffiliationStatus, strPaymentPurpose, TTBuy, TTSell, BNBuy, BNSell, NostroFee
-        //       , TaxFee, FullAmountFee, TransferFee, ProvFee, DebittingAmountWithoutFee, Branch
-        //       , strCIFNumber, strNostroBICCode, strDebittingAccountFee, strFeeCurrencyCode
-        //       , out strResult
-        //       , out strErrorMsg);
+               // bSuccess = this._clsCoreBankMessaging.CallTransactionTTOrdering(
+               //this.ClQ, intNIK
+               //, strLogDesc, strGuid, strBankRef, strClientRef, strValueDate, strRemittingCcy, dcRemittingAmt
+               //, strDebitAccountCcy, strDebittingAcctNo, strApplicantName, strBeneficiaryName, strBeneAcctNo
+               //, strBeneAddr1, strBeneAddr2, strBeneAddr3, strBeneBankSwiftId, strBeneBankName, strBeneBankAddr1
+               //, strBeneBankAddr2, strBeneBankAddr3, strIntBankSwiftId, strIntBankName, strIntBankAddr1, strIntBankAddr2
+               //, strIntBankAddr3, strDescription, strSenderRecvInfo1, strSenderRecvInfo2, strSenderRecvInfo3, strDetailsOfCharges
+               //, strOrderingCustAddr1, strOrderingCustAddr2, strOrderingCustAddr3, strSenderRecvInfo4
+               //, strSenderRecvInfo5, strSenderRecvInfo6, strResident, strRemitterCountryOfResidentCode
+               //, strRemitterCategory, strBeneficiaryCountryOfResidentCode, strBeneficiaryCategory
+               //, strBeneficiaryAffiliationStatus, strPaymentPurpose, TTBuy, TTSell, BNBuy, BNSell, NostroFee
+               //, TaxFee, FullAmountFee, TransferFee, ProvFee, DebittingAmountWithoutFee, Branch
+               //, strCIFNumber, strNostroBICCode, strDebittingAccountFee, strFeeCurrencyCode
+               //, out strResult
+               //, out strErrorMsg);
 
-        //        if (strErrorMsg != "")
-        //        {
-        //            bSuccess = false;
-        //        }
+                if (strErrorMsg != "")
+                {
+                    bSuccess = false;
+                }
+                MaintainStatusJurnalTT model = new MaintainStatusJurnalTT();
+                int intBillId;
+                int.TryParse(BillId, out intBillId);
 
-        //        UpdateLogJurnalTransaction(BillId, strTTGuid, strGuid, "TT", strBeneAcctNo, strRemittingCcy, dcRemittingAmt,
-        //            strDebittingAcctNo, strDebitAccountCcy, DebittingAmountWithoutFee, TTBuy, TTSell, BNBuy, BNSell,
-        //            FullAmountFee, strFeeCurrencyCode, strDebittingAccountFee,
-        //            bSuccess,
-        //            strErrorMsg);
-        //    }
-
-        //    return bSuccess;
-        //}
+                model.BillId = intBillId;
+                model.TTGuid = strTTGuid;
+                model.Guid = strGuid;
+                model.JenisJurnal = "TT";
+                model.CreditAccount = strBeneAcctNo;
+                model.CreditCurrency = strRemittingCcy;
+                model.CreditAmount = dcRemittingAmt;
+                model.DebitAccount = strDebittingAcctNo;
+                model.DebitCurrency = strDebitAccountCcy;
+                model.DebitAmount = DebittingAmountWithoutFee;
+                model.TTBuy = TTBuy;
+                model.TTSell = TTSell;
+                model.BNBuy = BNBuy;
+                model.BNSell = BNSell;
+                model.FeeFullAmount = FullAmountFee;
+                model.FeeCurrency = strFeeCurrencyCode;
+                model.DebittingAccountFee = strDebittingAccountFee;
+                model.Status = bSuccess;
+                model.ErrorMsg = strErrorMsg;
+                model.TranBranch = TranBranch;
+                cls.ReksaUpdateStatusJurnalTT(model, out strErrorMsg);
+            }
+            return bSuccess;
+        }
     }
 }

@@ -2,6 +2,9 @@
 var _strTreeInterface;
 var _Id;
 var _tanggalValuta;
+var _LastSelectedNode = "";
+var _LastSelectedNodeName = "";
+
 $(document).ready(function load() {
     var grid = {
         height: 300
@@ -31,21 +34,55 @@ $(document).ready(function load() {
     $("#dtpSP13").data("kendoDatePicker").enable(false);
     $('#dtpSP13_div').attr('style', 'display:none;');
     _intType = 0;
-
-    
 });
 
 function trvSetupParameter_AfterSelect(e) {
-    var dataItem = this.dataItem(e.node);
-    _strTreeInterface = dataItem.id;
     subResetToolBar();
+    var dataItem = this.dataItem(e.node);
+    _strTreeInterface = dataItem.id;    
     $('#lblSP11').text('');
     $('#lblSP12').text('');
     $('#lblSP13').text('');
     $('#txtbSP11').attr('style', 'display:none;');
     $('#dtpSP12_div').attr('style', 'display:none;');
     $('#dtpSP13_div').attr('style', 'display:none;');
+    if (_intType == 1 || _intType == 2) {
+        var message;
+        if (_intType == 1)
+            message = 'new';
+        else
+            message = 'edited';
+        swal({
+            title: "Confirmation",
+            text: "Cancel This " + _LastSelectedNodeName + " " + message + " data ?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonClass: 'btn-info',
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
+        },
+            function (isConfirm) {
+                if (!isConfirm) {
+                    var treeview = $("#trvSetupParameter").data("kendoTreeView");
+                    var barDataItem = treeview.dataSource.get(_LastSelectedNode);
+                    var bar = treeview.findByUid(barDataItem.uid);
+                    treeview.select(bar);
+                }
+                else {
+                    SelectNodes(dataItem.text);
+                    subCancel();
+                }
+            });
+    }
+    else {
+        SelectNodes(dataItem.text);
+        subRefresh();
+    }    
+}
 
+function SelectNodes(strTreeName) {
+    _LastSelectedNode = _strTreeInterface;
+    _LastSelectedNodeName = strTreeName;
     switch (_strTreeInterface) {
         case "PAR":
             LoadDefaultSettings();
@@ -139,7 +176,7 @@ function trvSetupParameter_AfterSelect(e) {
 
             $('#txtbSP1').attr('style', 'display:none;');
             $('#txtbSP2').attr('style', 'display:none;');
-            $("#MoneyNominal").data("kendoNumericTextBox").wrapper.show(); 
+            $("#MoneyNominal").data("kendoNumericTextBox").wrapper.show();
 
             $('#cmpsrSearch1_div').attr('style', '');
             $('#cmpsrSearch1').attr('href', '/Global/SearchGift');
@@ -149,7 +186,6 @@ function trvSetupParameter_AfterSelect(e) {
             LoadDefaultSettings();
             break;
     }
-    subRefresh();
 }
 
 function LoadDefaultSettings() {
@@ -175,6 +211,12 @@ function subClearAll() {
 }
 
 function subResetToolBar() {
+    $("#btnRefresh").show();
+    $("#btnNew").show();
+    $("#btnEdit").show();
+    $("#btnDelete").show();
+    $("#btnSave").show();
+    $("#btnCancel").show();
     if ((_intType == 0) || (_intType == 3)) {
         $("#btnRefresh").show();
         $("#btnNew").show();
@@ -210,6 +252,14 @@ function disableAll(intType) {
 
 function subRefresh() {
     var ProdId = $("#ProdId").val();
+    if (ProdId == '') {
+        document.getElementById("btnEdit").disabled = true;
+        document.getElementById("btnDelete").disabled = true;
+    }
+    else {
+        document.getElementById("btnEdit").disabled = false;
+        document.getElementById("btnDelete").disabled = false;
+    }
     if (ProdId == '') {
         swal("Warning", "Produk Harus Diisi", "warning");
         return;
@@ -315,9 +365,13 @@ function subRefresh() {
                         break;
                 }
 
-            } else {
+            }
+            else
+            {
                 swal("Warning", data.ErrMsg, "warning");
                 $("#dgvParam").data('kendoGrid').dataSource.data([]);
+                document.getElementById("btnEdit").disabled = true;
+                document.getElementById("btnDelete").disabled = true;
             }
         },
         complete: function () {
